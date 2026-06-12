@@ -1044,6 +1044,7 @@ public abstract interface class org/jetbrains/kotlin/gradle/plugin/KotlinHierarc
 	public abstract fun withMingw ()V
 	public abstract fun withMingwX64 ()V
 	public abstract fun withNative ()V
+	public abstract fun withOhosNativeArm64 ()V
 	public abstract fun withTvos ()V
 	public abstract fun withTvosArm64 ()V
 	public abstract fun withTvosSimulatorArm64 ()V

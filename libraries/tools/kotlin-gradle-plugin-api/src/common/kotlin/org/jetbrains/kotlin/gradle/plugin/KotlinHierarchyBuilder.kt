@@ -259,6 +259,8 @@ interface KotlinHierarchyBuilder {
      */
     fun withAndroidNativeArm64()
 
+    fun withOhosNativeArm64()
+
     /**
      * Only includes Kotlin's Apple/iosArm64 target in this [group].
      *

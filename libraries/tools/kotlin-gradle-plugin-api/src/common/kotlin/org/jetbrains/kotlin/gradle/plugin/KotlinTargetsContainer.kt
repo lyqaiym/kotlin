@@ -18,6 +18,7 @@ interface KotlinTargetsContainer {
      * A [NamedDomainObjectContainer] containing all registered [Kotlin targets][KotlinTarget] in this project.
      */
     val targets: NamedDomainObjectCollection<KotlinTarget>
+
 }
 
 /**

@@ -31,8 +31,9 @@ internal val KotlinMultiplatformTargetPresetAction = KotlinProjectSetupAction {
             WATCHOS_X64, WATCHOS_SIMULATOR_ARM64,
             TVOS_X64, TVOS_SIMULATOR_ARM64
         )
-
+        val logger = project.logger
         HostManager().targets.forEach { (_, konanTarget) ->
+            logger.error("KotlinProjectSetupAction:konanTarget=${konanTarget}")
             val targetToAdd = when (konanTarget) {
                 in nativeTargetsWithHostTests ->
                     KotlinNativeTargetWithHostTestsPreset(konanTarget.presetName, project, konanTarget)
@@ -42,7 +43,7 @@ internal val KotlinMultiplatformTargetPresetAction = KotlinProjectSetupAction {
 
                 else -> KotlinNativeTargetPreset(konanTarget.presetName, project, konanTarget)
             }
-
+            logger.error("KotlinProjectSetupAction:konanTarget=${konanTarget},targetToAdd=${targetToAdd}")
             add(targetToAdd)
         }
     }

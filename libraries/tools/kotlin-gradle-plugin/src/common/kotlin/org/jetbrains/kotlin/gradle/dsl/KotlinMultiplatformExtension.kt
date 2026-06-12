@@ -319,7 +319,12 @@ internal fun <T : KotlinTarget> DefaultKotlinTargetContainerWithPresetFunctions.
     project: Project,
     configure: T.() -> Unit = {},
 ): T {
+    val logger = project.logger
+    logger.warn("configureOrCreate:targets=${targets}")
+    logger.warn("configureOrCreate:targets=${targets::class.java}")
+    logger.warn("configureOrCreate:targetName=${targetName}")
     val existingTarget = targets.findByName(targetName)
+    logger.warn("configureOrCreate:existingTarget=${existingTarget}")
     when {
         existingTarget?.isProducedFromPreset(targetPreset) ?: false -> {
             @Suppress("UNCHECKED_CAST")
