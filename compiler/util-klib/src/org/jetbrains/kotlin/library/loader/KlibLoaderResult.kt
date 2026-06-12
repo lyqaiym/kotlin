@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblemCase.LibraryN
 import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblemCase.OtherCheckMismatch
 import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblemCase.PlatformCheckMismatch
 import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblematicLibrary
+import org.jetbrains.kotlin.util.DummyLogger
 
 /**
  * All libraries in [librariesStdlibFirst] are preserved in their original order (CLI-order),
@@ -130,6 +131,13 @@ class KlibLoaderResult(
 fun KlibLoaderResult.reportLoadingProblemsIfAny(
     reporter: (defaultSeverity: KlibLoaderResult.ProblemSeverity, message: String) -> Unit
 ): Boolean {
+    val logger = DummyLogger
+    logger.warning("reportLoadingProblemsIfAny:size=${problematicLibraries.size}")
+    val e = Exception()
+    val stackTraces = e.stackTrace
+    stackTraces.forEach {
+        logger.warning("report:${it.className}.${it.methodName} (${it.fileName}:${it.lineNumber})")
+    }
     if (problematicLibraries.isEmpty()) return false
 
     problematicLibraries.forEach { problematicLibrary ->

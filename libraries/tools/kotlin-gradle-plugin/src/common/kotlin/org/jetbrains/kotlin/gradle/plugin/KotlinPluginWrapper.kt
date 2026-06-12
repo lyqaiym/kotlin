@@ -336,6 +336,14 @@ abstract class AbstractKotlinAndroidPluginWrapper : KotlinBasePluginWrapper() {
         get() = KotlinAndroidProjectExtension::class
 }
 
+abstract class AbstractKotlinOhosPluginWrapper : KotlinBasePluginWrapper() {
+    override fun getPlugin(project: Project): Plugin<Project> =
+        KotlinOhosPlugin()
+
+    override val projectExtensionClass: KClass<out KotlinAndroidProjectExtension>
+        get() = KotlinAndroidProjectExtension::class
+}
+
 abstract class AbstractKotlinJsPluginWrapper : KotlinBasePluginWrapper() {
     override fun getPlugin(project: Project): Plugin<Project> =
         KotlinJsPlugin()

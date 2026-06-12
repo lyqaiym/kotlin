@@ -2290,6 +2290,22 @@ internal object KotlinToolingDiagnostics {
         }
     }
 
+    internal object SourceSetsAccessInOhosExtension : ToolingDiagnosticFactory(
+        WARNING,
+        DiagnosticGroup.Kgp.Deprecation
+    ) {
+        operator fun invoke(trace: Throwable? = null) = build(throwable = trace) {
+            title {"sourceSets collection in Kotlin Android is deprecated" }
+                .description {
+                    """
+                        Kotlin Source Sets collection in Android extension should not be used and is deprecated now.
+                    """.trimIndent()
+                }
+                .solution { "Use source set alternative provided by Android Gradle Plugin: https://kotl.in/b2vftz" }
+                .documentationLink(URI("https://youtrack.jetbrains.com/issue/KT-74451"))
+        }
+    }
+
     internal object DeprecatedKotlinJsPlugin : ToolingDiagnosticFactory(
         FATAL,
         DiagnosticGroup.Kgp.Deprecation,

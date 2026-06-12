@@ -131,3 +131,5 @@ interface GccConfigurables : Configurables, ClangFlags {
 }
 
 interface AndroidConfigurables : Configurables, ClangFlags
+
+interface OhosConfigurables : Configurables, ClangFlags

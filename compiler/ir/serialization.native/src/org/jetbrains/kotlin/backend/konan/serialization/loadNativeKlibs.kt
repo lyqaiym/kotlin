@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.library.loader.KlibLoaderResult
 import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblemCase.OtherCheckMismatch
 import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblematicLibrary
 import org.jetbrains.kotlin.library.loader.KlibPlatformChecker
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.utils.KotlinNativePaths
 import org.jetbrains.kotlin.utils.addToStdlib.runIf
 import java.io.File
@@ -41,9 +42,12 @@ fun loadNativeKlibs(
 ): LoadedNativeKlibs {
     val loadStdlib = !configuration.konanNoStdlib
     val loadPlatformLibs = !configuration.konanNoDefaultLibs
+    val logger = DummyLogger
+    logger.warning("loadNativeKlibs:loadStdlib=${loadStdlib},target=${loadPlatformLibs}")
 
     val distributionLibrariesProvider: KlibNativeDistributionLibraryProvider? = runIf(loadStdlib || loadPlatformLibs) {
         val nativeHome = configuration.konanHome?.let(::File) ?: KotlinNativePaths.homePath
+        logger.warning("loadNativeKlibs:nativeHome=${nativeHome}")
         KlibNativeDistributionLibraryProvider(nativeHome.absoluteFile) {
             runIf(loadStdlib) { withStdlib() }
             runIf(loadPlatformLibs) { withPlatformLibs(nativeTarget) }
@@ -90,7 +94,9 @@ private fun KlibLoaderResult.checkForUnknownIrProviders(): KlibLoaderResult {
     val librariesWithoutOrWithKnownIrProvider = ArrayList<KotlinLibrary>(librariesStdlibFirst.size)
     val problematicLibrariesWithUnknownIrProvider = ArrayList<ProblematicLibrary>()
 
+    val logger = DummyLogger
     librariesStdlibFirst.forEach { library ->
+        logger.warning("checkForUnknownIrProviders:name=${library.irProviderName}")
         when (val irProviderName = library.irProviderName) {
             null, KLIB_INTEROP_IR_PROVIDER_IDENTIFIER -> librariesWithoutOrWithKnownIrProvider += library
             else -> problematicLibrariesWithUnknownIrProvider += ProblematicLibrary(

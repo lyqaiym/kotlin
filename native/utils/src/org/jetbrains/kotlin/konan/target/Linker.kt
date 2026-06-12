@@ -219,6 +219,62 @@ class AndroidLinker(targetProperties: AndroidConfigurables)
     }
 }
 
+class OhosLinker(targetProperties: OhosConfigurables)
+    : LinkerFlags(targetProperties), OhosConfigurables by targetProperties {
+
+    private val clangTarget = when (val targetString = targetProperties.targetTriple.toString()) {
+        "arm-unknown-linux-androideabi" -> "armv7a-linux-androideabi"
+        else -> targetProperties.targetTriple.withoutVendor()
+    }
+    private val prefix = "$absoluteTargetToolchain/bin/${clangTarget}${Android.API}"
+    private val clang = if (HostManager.hostIsMingw) "$prefix-clang.cmd" else "$prefix-clang"
+    private val ar = Ar.GnuAr("$absoluteTargetToolchain/${targetProperties.targetTriple.withoutVendor()}/bin/ar")
+
+    override val useCompilerDriverAsLinker: Boolean get() = true
+
+    override fun filterStaticLibraries(binaries: List<String>) = binaries.filter { it.isUnixStaticLib }
+
+    override fun LinkerArguments.finalLinkCommands(): List<Command> {
+        require(sanitizer == null) {
+            "Sanitizers are unsupported"
+        }
+        if (kind == LinkerOutputKind.STATIC_LIBRARY)
+            return ar.staticArCommands(executable, objectFiles, staticLibraries, tempFiles)
+
+        val dynamic = kind == LinkerOutputKind.DYNAMIC_LIBRARY
+        val toolchainSysroot = "${absoluteTargetToolchain}/sysroot"
+        val architectureDir = Ohos.architectureDirForTarget(target)
+        val apiSysroot = "$absoluteTargetSysRoot/$architectureDir"
+        val clangTarget = targetTriple.withoutVendor()
+        val libDirs = listOf(
+            "--sysroot=$apiSysroot",
+            if (target == KonanTarget.ANDROID_X64) "-L$apiSysroot/usr/lib64" else "-L$apiSysroot/usr/lib",
+            "-L$toolchainSysroot/usr/lib/$clangTarget/${Android.API}",
+            "-L$toolchainSysroot/usr/lib/$clangTarget")
+        return listOf(Command(clang).apply {
+            +"-o"
+            +executable
+            when (kind) {
+                LinkerOutputKind.EXECUTABLE -> +listOf("-fPIE", "-pie")
+                LinkerOutputKind.DYNAMIC_LIBRARY -> +listOf("-fPIC", "-shared")
+                LinkerOutputKind.STATIC_LIBRARY -> {}
+            }
+            +"-target"
+            +clangTarget
+            +libDirs
+            +objectFiles
+            if (optimize) +linkerOptimizationFlags
+            if (!debug) +linkerNoDebugFlags
+            if (dynamic) +linkerDynamicFlags
+            if (dynamic) +"-Wl,-soname,${File(executable).name}"
+            +linkerKonanFlags
+            +staticLibraries
+            +dynamicLibraries
+            +linkerArgs
+        })
+    }
+}
+
 class MacOSBasedLinker(targetProperties: AppleConfigurables)
     : LinkerFlags(targetProperties), AppleConfigurables by targetProperties {
 
@@ -565,6 +621,7 @@ fun linker(configurables: Configurables): LinkerFlags =
             is GccConfigurables -> GccBasedLinker(configurables)
             is AppleConfigurables -> MacOSBasedLinker(configurables)
             is AndroidConfigurables-> AndroidLinker(configurables)
+            is OhosConfigurables-> OhosLinker(configurables)
             is MingwConfigurables -> MingwLinker(configurables)
             else -> error("Unexpected target: ${configurables.target}")
         }

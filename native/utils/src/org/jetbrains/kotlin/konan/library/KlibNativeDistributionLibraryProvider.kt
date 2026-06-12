@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.konan.library
 import org.jetbrains.kotlin.konan.target.KonanTarget
 import org.jetbrains.kotlin.library.Klib
 import org.jetbrains.kotlin.library.loader.KlibLibraryProvider
+import org.jetbrains.kotlin.util.DummyLogger
 import java.io.File
 
 /**
@@ -27,12 +28,16 @@ class KlibNativeDistributionLibraryProvider(
             }
 
             override fun withPlatformLibs(target: KonanTarget) {
+                val logger = DummyLogger
+                logger.warning("withPlatformLibs:target=${target}")
                 withPlatformLibsForTarget = target
             }
         }.init()
     }
 
     override fun getLibraryPaths(): List<String> = buildList {
+        val logger = DummyLogger
+        logger.warning("getLibraryPaths:nativeHome=${nativeHome}")
         if (withStdlib) {
             this += nativeHome.resolve(KONAN_DISTRIBUTION_KLIB_DIR)
                 .resolve(KONAN_DISTRIBUTION_COMMON_LIBS_DIR)

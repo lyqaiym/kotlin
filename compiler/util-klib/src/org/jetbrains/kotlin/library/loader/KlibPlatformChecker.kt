@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.library.impl.BuiltInsPlatform
 import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblemCase.PlatformCheckMismatch
 import org.jetbrains.kotlin.library.nativeTargets
 import org.jetbrains.kotlin.library.wasmTargets
+import org.jetbrains.kotlin.util.DummyLogger
 
 interface KlibPlatformChecker {
     fun check(library: BaseKotlinLibrary): PlatformCheckMismatch?
@@ -22,6 +23,10 @@ interface KlibPlatformChecker {
      */
     class Native(private val target: String? = null) : KlibPlatformChecker {
         override fun check(library: BaseKotlinLibrary): PlatformCheckMismatch? {
+            val logger = DummyLogger
+            logger.warning("check:target=${target}")
+            logger.warning("check:library=${library}")
+            logger.warning("check:library=${library::class.java}")
             val platformMismatch: PlatformCheckMismatch? = checkPlatform(
                 expectedPlatform = BuiltInsPlatform.NATIVE,
                 actualPlatform = library.builtInsPlatform
@@ -112,6 +117,8 @@ interface KlibPlatformChecker {
             expectedPlatform: BuiltInsPlatform,
             actualPlatform: BuiltInsPlatform?
         ): PlatformCheckMismatch? {
+            val logger = DummyLogger
+            logger.warning("checkPlatform:expectedPlatfor=${expectedPlatform},actualPlatform=${actualPlatform}")
             if (actualPlatform == expectedPlatform) return null
 
             return PlatformCheckMismatch(
@@ -126,6 +133,8 @@ interface KlibPlatformChecker {
             expectedTarget: String,
             actualTargets: List<String>,
         ): PlatformCheckMismatch? {
+            val logger = DummyLogger
+            logger.warning("checkTarget:expectedPlatfor=${expectedTarget},actualTargets=${actualTargets}")
             if (expectedTarget in actualTargets) return null
 
             return PlatformCheckMismatch(

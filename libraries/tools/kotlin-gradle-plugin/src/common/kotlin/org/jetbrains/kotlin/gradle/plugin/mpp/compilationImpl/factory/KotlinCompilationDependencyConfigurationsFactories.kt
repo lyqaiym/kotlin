@@ -79,6 +79,18 @@ internal class AndroidCompilationDependencyConfigurationsFactory(
     }
 }
 
+internal class OhosCompilationDependencyConfigurationsFactory(
+    @Suppress("TYPEALIAS_EXPANSION_DEPRECATION") private val variant: DeprecatedOhosBaseVariant,
+) : KotlinCompilationImplFactory.KotlinCompilationDependencyConfigurationsFactory {
+    override fun create(target: KotlinTarget, compilationName: String): KotlinCompilationConfigurationsContainer {
+        return KotlinCompilationDependencyConfigurationsContainer(
+            target = target, compilationName = compilationName, withRuntime = true,
+            compileClasspathConfigurationName = variant.compileConfiguration.name,
+            runtimeClasspathConfigurationName = variant.runtimeConfiguration.name
+        )
+    }
+}
+
 private fun interface ConfigurationNaming {
     fun name(vararg parts: String): String
 

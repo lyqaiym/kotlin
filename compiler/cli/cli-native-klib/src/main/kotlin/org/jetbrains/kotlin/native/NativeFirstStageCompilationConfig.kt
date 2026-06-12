@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.konan.properties.Properties
 import org.jetbrains.kotlin.konan.properties.loadProperties
 import org.jetbrains.kotlin.konan.target.HostManager
 import org.jetbrains.kotlin.konan.target.KonanTarget
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.util.PerformanceManager
 
 class NativeFirstStageCompilationConfig(
@@ -70,14 +71,15 @@ class NativeFirstStagePhaseContext(
 }
 
 internal fun createFirstStageCompilationConfig(configuration: CompilerConfiguration): NativeFirstStageCompilationConfig {
+    val logger = DummyLogger
     val targetName = configuration.konanTarget
+    logger.warning("createFirstStage:targetName=${targetName},target=${KonanTarget.predefinedTargets[targetName]}")
     val target = if (targetName != null) {
         KonanTarget.predefinedTargets[targetName]
             ?: error("Unknown target: $targetName")
     } else {
         HostManager.host
     }
-
     return NativeFirstStageCompilationConfig(
         configuration = configuration,
         target = target,

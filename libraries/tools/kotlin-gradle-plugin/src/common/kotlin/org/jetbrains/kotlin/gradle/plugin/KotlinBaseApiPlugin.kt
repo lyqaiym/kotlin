@@ -18,8 +18,12 @@ import org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAgpCompilationFactory
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAgpOhosCompilationFactory
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmOhosCompilation
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinOhosTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinWithJavaTargetForJvm
 import org.jetbrains.kotlin.gradle.plugin.sources.android.AndroidVariantType
+import org.jetbrains.kotlin.gradle.plugin.sources.ohos.OhosVariantType
 import org.jetbrains.kotlin.gradle.tasks.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.tasks.configuration.KaptGenerateStubsConfig
@@ -75,6 +79,13 @@ abstract class KotlinBaseApiPlugin : DefaultKotlinBasePlugin(), KotlinJvmFactory
     override fun createKotlinAndroidExtension(): KotlinAndroidExtension {
         return myProject.objects.newInstance(KotlinAndroidProjectExtension::class.java, myProject).also { extension ->
             val target = myProject.objects.KotlinAndroidTarget(myProject)
+            extension.targetFuture.complete(target)
+        }
+    }
+
+    override fun createKotlinOhosExtension(): KotlinOhosExtension {
+        return myProject.objects.newInstance(KotlinOhosProjectExtension::class.java, myProject).also { extension ->
+            val target = myProject.objects.KotlinOhosTarget(myProject)
             extension.targetFuture.complete(target)
         }
     }
@@ -219,6 +230,22 @@ abstract class KotlinBaseApiPlugin : DefaultKotlinBasePlugin(), KotlinJvmFactory
         androidVariantType: AndroidVariantType,
     ): KotlinJvmAndroidCompilation {
         val compilationFactory = KotlinJvmAgpCompilationFactory(
+            androidVariantJavaCompileTask,
+            androidVariantType,
+            androidTarget,
+        )
+
+        return compilationFactory.create(name)
+    }
+
+    @InternalKotlinGradlePluginApi
+    fun createKotlinOhosCompilation(
+        name: String,
+        androidTarget: KotlinOhosTarget,
+        androidVariantJavaCompileTask: TaskProvider<JavaCompile>,
+        androidVariantType: OhosVariantType,
+    ): KotlinJvmOhosCompilation {
+        val compilationFactory = KotlinJvmAgpOhosCompilationFactory(
             androidVariantJavaCompileTask,
             androidVariantType,
             androidTarget,

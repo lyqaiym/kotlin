@@ -20,6 +20,17 @@ internal object Android {
             "android-${API}/arch-${architectureMap.getValue(target)}"
 }
 
+internal object Ohos {
+    const val API = "21"
+    private val architectureMap = mapOf(
+        KonanTarget.OHOS_ARM64 to "arm64",
+        KonanTarget.ANDROID_ARM64 to "arm64"
+    )
+
+    fun architectureDirForTarget(target: KonanTarget) =
+        "android-${API}/arch-${architectureMap.getValue(target)}"
+}
+
 sealed class ClangArgs(
         private val configurables: Configurables,
         private val forJni: Boolean
@@ -155,6 +166,22 @@ sealed class ClangArgs(
             ) + when (target) {
                 // KT-73559
                 KonanTarget.ANDROID_ARM64 -> listOf("-mno-outline-atomics")
+                else -> emptyList()
+            }
+        }
+        KonanTarget.OHOS_ARM64 -> {
+            val clangTarget = targetTriple.withoutVendor()
+            val architectureDir = Ohos.architectureDirForTarget(target)
+            val toolchainSysroot = "$absoluteTargetToolchain/sysroot"
+            listOf(
+                "-D__ANDROID_API__=${Ohos.API}",
+                "--sysroot=$absoluteTargetSysRoot/$architectureDir",
+                "-I$toolchainSysroot/usr/include/c++/v1",
+                "-I$toolchainSysroot/usr/include",
+                "-I$toolchainSysroot/usr/include/$clangTarget"
+            ) + when (target) {
+                // KT-73559
+                KonanTarget.OHOS_ARM64 -> listOf("-mno-outline-atomics")
                 else -> emptyList()
             }
         }

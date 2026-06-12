@@ -65,6 +65,8 @@ interface KotlinJvmFactory {
      */
     fun createKotlinAndroidExtension(): KotlinAndroidExtension
 
+    fun createKotlinOhosExtension(): KotlinOhosExtension
+
     /**
      * Creates a new instance of [KotlinJvmCompilerOptions] that can be used to configure JVM or Android-specific compilations.
      *

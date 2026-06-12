@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.gradle.plugin.COMPILER_CLASSPATH_CONFIGURATION_NAME
 import org.jetbrains.kotlin.gradle.plugin.KotlinApiPlugin
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
 import org.jetbrains.kotlin.gradle.plugin.sources.android.AndroidVariantType
+import org.jetbrains.kotlin.gradle.plugin.sources.ohos.OhosVariantType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jetbrains.kotlin.gradle.util.buildProject
@@ -268,6 +269,33 @@ class KotlinCompileApiTest {
             androidExtension.target as KotlinAndroidTarget,
             javaCompileTask,
             AndroidVariantType.Main
+        )
+        val kotlinCompileTask = plugin.registerKotlinJvmCompileTask(
+            compilation.compileKotlinTaskName,
+            plugin.createCompilerJvmOptions(),
+            project.provider { ExplicitApiMode.Disabled }
+        )
+
+        project.evaluate()
+
+        assertEquals(androidExtension.target, compilation.target)
+        assertEquals(javaCompileTask, compilation.compileJavaTaskProvider)
+        @Suppress("DEPRECATION")
+        assertNull(compilation.androidVariant)
+        assertEquals("main", compilation.name)
+        assertEquals(kotlinCompileTask, compilation.compileTaskProvider)
+    }
+
+    @Test
+    fun testCreatingOhosJvmCompilation() {
+        val androidExtension = plugin.createKotlinOhosExtension()
+        project.extensions.add("kotlin", androidExtension)
+        val javaCompileTask = project.tasks.register("mainJavaCompile", JavaCompile::class.java)
+        val compilation = plugin.createKotlinOhosCompilation(
+            "main",
+            androidExtension.target as KotlinAndroidTarget,
+            javaCompileTask,
+            OhosVariantType.Main
         )
         val kotlinCompileTask = plugin.registerKotlinJvmCompileTask(
             compilation.compileKotlinTaskName,

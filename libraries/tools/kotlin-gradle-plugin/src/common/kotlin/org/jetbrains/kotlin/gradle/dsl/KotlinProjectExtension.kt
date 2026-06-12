@@ -22,9 +22,10 @@ import org.jetbrains.kotlin.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginLifecycle.CoroutineStart.Undispatched
 import org.jetbrains.kotlin.gradle.plugin.abi.internal.AbiValidationExtensionImpl
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnostics
-import org.jetbrains.kotlin.gradle.plugin.diagnostics.isCalledOutsideKotlinOrAndroidPlugins
+import org.jetbrains.kotlin.gradle.plugin.diagnostics.isCalledOutsideKotlinOrOhosPlugins
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.reportDiagnosticOncePerProject
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinOhosTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinWithJavaTarget
 import org.jetbrains.kotlin.gradle.plugin.sources.DefaultKotlinSourceSetFactory
 import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
@@ -351,9 +352,48 @@ abstract class KotlinAndroidProjectExtension @Inject constructor(
              * Android Gradle Plugin calls it for configuration purposes
              * Also, this method can be called in KGP code where generic "KotlinExtension" is expected.
              */
-            if (isCalledOutsideKotlinOrAndroidPlugins) {
+            if (isCalledOutsideKotlinOrOhosPlugins) {
                 project.reportDiagnosticOncePerProject(
                     KotlinToolingDiagnostics.SourceSetsAccessInAndroidExtension(Throwable())
+                )
+            }
+            return super.sourceSets
+        }
+        @Deprecated("Assigning new value to 'sourceSets' is deprecated", level = DeprecationLevel.ERROR)
+        set(_) {}
+}
+
+abstract class KotlinOhosProjectExtension @Inject constructor(
+    project: Project
+) : KotlinSingleTargetExtension<KotlinOhosTarget>(project),
+    KotlinOhosExtension {
+    override val target: KotlinOhosTarget get() = targetFuture.getOrThrow()
+    override val targetFuture = CompletableFuture<KotlinOhosTarget>()
+
+    open fun target(body: KotlinOhosTarget.() -> Unit) = project.launch(Undispatched) {
+        targetFuture.await().body()
+    }
+
+    override val compilerOptions: KotlinJvmCompilerOptions = project.objects.KotlinJvmCompilerOptionsDefault(project)
+
+    override fun compilerOptions(configure: Action<KotlinJvmCompilerOptions>) {
+        configure.execute(compilerOptions)
+    }
+
+    override fun compilerOptions(configure: KotlinJvmCompilerOptions.() -> Unit) {
+        configure(compilerOptions)
+    }
+
+    override var sourceSets: NamedDomainObjectContainer<KotlinSourceSet>
+        @Deprecated("Use source sets provided by Ohos Gradle Plugin instead.")
+        get() {
+            /**
+             * Android Gradle Plugin calls it for configuration purposes
+             * Also, this method can be called in KGP code where generic "KotlinExtension" is expected.
+             */
+            if (isCalledOutsideKotlinOrOhosPlugins) {
+                project.reportDiagnosticOncePerProject(
+                    KotlinToolingDiagnostics.SourceSetsAccessInOhosExtension(Throwable())
                 )
             }
             return super.sourceSets

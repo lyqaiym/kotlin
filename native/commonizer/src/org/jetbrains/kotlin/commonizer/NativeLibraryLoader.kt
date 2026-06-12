@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.commonizer.cli.errorAndExitJvmProcess
 import org.jetbrains.kotlin.commonizer.konan.NativeLibrary
 import org.jetbrains.kotlin.library.loader.KlibLoader
 import org.jetbrains.kotlin.library.loader.reportLoadingProblemsIfAny
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.util.Logger
 import java.io.File
 
@@ -21,6 +22,8 @@ internal class DefaultNativeLibraryLoader(
 ) : NativeLibraryLoader {
     override fun invoke(file: File): NativeLibrary {
         try {
+            val logger2 = DummyLogger
+            logger2.warning("NativeLibraryLoader:invoke:file=${file}")
             val klibLoaderResult = KlibLoader { libraryPaths(file) }.load()
             klibLoaderResult.reportLoadingProblemsIfAny { _, message -> logger.errorAndExitJvmProcess(message) }
 

@@ -34,6 +34,16 @@ open class KotlinAndroidPluginWrapper : AbstractKotlinAndroidPluginWrapper() {
     }
 }
 
+open class KotlinOhosPluginWrapper : AbstractKotlinOhosPluginWrapper() {
+
+    override val pluginVariant: String = PLUGIN_VARIANT_NAME
+
+    override fun apply(project: Project) {
+        project.registerVariantImplementations()
+        super.apply(project)
+    }
+}
+
 open class KotlinMultiplatformPluginWrapper : AbstractKotlinMultiplatformPluginWrapper() {
 
     override val pluginVariant: String = PLUGIN_VARIANT_NAME

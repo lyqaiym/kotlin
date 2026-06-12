@@ -34,6 +34,7 @@ class NativeKlibWriterTest : AbstractNativeKlibWriterTest<NewNativeKlibWriterPar
             listOf(KonanTarget.IOS_ARM64, KonanTarget.MACOS_ARM64, KonanTarget.WATCHOS_ARM64),
             listOf(KonanTarget.LINUX_ARM64, KonanTarget.MACOS_X64),
             listOf(KonanTarget.ANDROID_ARM64),
+            listOf(KonanTarget.OHOS_ARM64),
         ).forEach { targets ->
             runTestWithParameters {
                 this.targetsForManifest = targets

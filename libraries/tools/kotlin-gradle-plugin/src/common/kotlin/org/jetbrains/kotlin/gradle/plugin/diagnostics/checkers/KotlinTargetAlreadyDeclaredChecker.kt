@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinGradleProjectChecker
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinGradleProjectCheckerContext
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnostics
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnosticsCollector
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTargetPreset
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinOhosTargetPreset
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.internal
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTargetPreset
@@ -54,7 +54,7 @@ internal object KotlinTargetAlreadyDeclaredChecker : KotlinGradleProjectChecker 
     private val KotlinTarget.targetDslFunctionName
         get() = when (internal.targetPreset) {
             is KotlinJsIrTargetPreset -> "js"
-            is KotlinAndroidTargetPreset -> "androidTarget"
+            is KotlinOhosTargetPreset -> "androidTarget"
             else -> internal.targetPreset?.name
         }
 }
