@@ -27,8 +27,11 @@ import org.jetbrains.kotlin.konan.target.CompilerOutputKind
 import org.jetbrains.kotlin.konan.target.KonanTarget
 import org.jetbrains.kotlin.konan.util.visibleName
 import org.jetbrains.kotlin.platform.konan.NativePlatforms
+import org.jetbrains.kotlin.util.DummyLogger
 
 fun CompilerConfiguration.setupFromArguments(arguments: K2NativeCompilerArguments) = with(NativeConfigurationKeys) {
+    val logger = DummyLogger
+    logger.warning("setupFromArguments")
     val commonSources = arguments.commonSources.toSet().map { it.absoluteNormalizedFile() }
     val hmppModuleStructure = get(CommonConfigurationKeys.HMPP_MODULE_STRUCTURE)
     arguments.freeArgs.forEach {
@@ -337,8 +340,9 @@ fun CompilerConfiguration.setupFromArguments(arguments: K2NativeCompilerArgument
 
     val manifestNativeTargets = parseManifestNativeTargets(arguments.manifestNativeTargets)
     konanManifestNativeTargets = manifestNativeTargets
-    this@setupFromArguments.targetPlatform = NativePlatforms.nativePlatformByTargets(manifestNativeTargets)
-
+    val platform = NativePlatforms.nativePlatformByTargets(manifestNativeTargets);
+    logger.warning("setupFromArguments:platform=${platform},size=${platform.size}")
+    this@setupFromArguments.targetPlatform = platform
     putIfNotNull(LLVM_MODULE_PASSES, arguments.llvmModulePasses)
     putIfNotNull(LLVM_LTO_PASSES, arguments.llvmLTOPasses)
 }

@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.konan.target
 
 import org.jetbrains.kotlin.konan.target.KonanTarget.*
+import org.jetbrains.kotlin.util.DummyLogger
 import java.lang.Exception
 
 @Suppress("DEPRECATION") // Uses deprecated SubTargetProvider in other deprecated APIs
@@ -84,7 +85,12 @@ open class HostManager() {
     )
 
     val enabled: List<KonanTarget>
-        get() = enabledByHost[host]?.toList() ?: throw TargetSupportException("Unknown host platform: $host")
+        get() {
+            val f = enabledByHost[host]?.toList() ?: throw TargetSupportException("Unknown host platform: $host")
+            val logger = DummyLogger
+            logger.warning("enabledByHost=${enabledByHost},host=${host}")
+            return f
+        }
 
     fun isEnabled(target: KonanTarget) = enabled.contains(target)
 

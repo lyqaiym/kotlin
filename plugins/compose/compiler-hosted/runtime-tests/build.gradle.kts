@@ -47,7 +47,7 @@ kotlin {
                 implementation(project(":kotlin-stdlib"))
 
                 // coroutines
-                implementation(commonDependency("org.jetbrains.kotlinx", "kotlinx-coroutines-test-jvm"))
+//                implementation(commonDependency("org.jetbrains.kotlinx", "kotlinx-coroutines-test-jvm"))
 
                 // external deps
                 implementation(composeRuntime()) { isTransitive = false }

@@ -40,6 +40,7 @@ import static BuildPropertiesKt.getKotlinBuildProperties
 buildscript {
 
     repositories {
+        mavenLocal()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -59,6 +60,7 @@ apply plugin: "java"
 
 allprojects {
     repositories {
+        mavenLocal()
         mavenCentral()
         maven {
             url = project.bootstrapKotlinRepo
@@ -108,6 +110,9 @@ configurations {
 apply plugin: CompilationDatabasePlugin
 
 dependencies {
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+//    compileOnly("org.jetbrains.kotlin:kotlin-native-utils:2.4.255-SNAPSHOT")
+    implementation(project(":native:kotlin-native-utils"))
     commonSources project(path: ':kotlin-stdlib', configuration: 'metadataSourcesElements')
     commonSources project(path: ':kotlin-test', configuration: 'metadataSourcesElements')
     compilationDatabase project(":kotlin-native:Interop:Runtime")
@@ -210,6 +215,7 @@ tasks.register("distDef", Sync) {
     dependsOn ":kotlin-native:platformLibs:updateDefFileDependencies"
 
     platformManager.targetValues.each { target ->
+        println("distDef:target=${target}")
         from(project(":kotlin-native:platformLibs").file("src/platform/${target.family.name().toLowerCase()}")) {
             into target.visibleName
             include '**/*.def'

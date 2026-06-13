@@ -21,6 +21,8 @@ import org.jetbrains.kotlin.dependencies.NativeDependenciesExtension
 import org.jetbrains.kotlin.dependencies.NativeDependenciesPlugin
 import org.jetbrains.kotlin.konan.target.HostManager.Companion.hostIsMac
 import org.jetbrains.kotlin.konan.target.HostManager.Companion.hostIsMingw
+import org.jetbrains.kotlin.util.DummyLogger
+import org.jetbrains.kotlin.util.Logger
 import org.jetbrains.kotlin.utils.reproducibilityCompilerFlags
 import org.jetbrains.kotlin.utils.reproducibilityRootsMap
 import org.jetbrains.kotlin.utils.reproduciblySortedFilePaths
@@ -233,7 +235,9 @@ open class NativeToolsExtension(val project: Project) {
         val home = File(System.getProperty("java.home")).canonicalFile
         val parent = home.parentFile
         val javaHome = System.getenv("JAVA_HOME")?.let(::File)
-
+        val logger = DummyLogger
+        logger.warning("home=${home}")
+        logger.warning("javaHome=${javaHome}")
         listOfNotNull(home, parent, javaHome)
                 .firstOrNull { it.resolve("include").exists() }
                 ?: error("JNI headers not found")

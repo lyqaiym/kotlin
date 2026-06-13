@@ -37,7 +37,7 @@ kotlin {
 
         jvmMain.dependencies {
             // coroutines
-            implementation(commonDependency("org.jetbrains.kotlinx", "kotlinx-coroutines-test-jvm"))
+//            implementation(commonDependency("org.jetbrains.kotlinx", "kotlinx-coroutines-test-jvm"))
         }
     }
 }

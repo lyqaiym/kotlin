@@ -1054,7 +1054,8 @@ public abstract interface class org/jetbrains/kotlin/gradle/plugin/KotlinHierarc
 	public abstract fun withMingw ()V
 	public abstract fun withMingwX64 ()V
 	public abstract fun withNative ()V
-	public abstract fun withOhosNativeArm64 ()V
+	public abstract fun withOhos ()V
+	public abstract fun withOhosArm64 ()V
 	public abstract fun withTvos ()V
 	public abstract fun withTvosArm64 ()V
 	public abstract fun withTvosSimulatorArm64 ()V
@@ -1387,6 +1388,10 @@ public final class org/jetbrains/kotlin/gradle/plugin/mpp/DisableCacheInKotlinVe
 
 public final class org/jetbrains/kotlin/gradle/plugin/mpp/DisableCacheInKotlinVersion$2_4_0 : org/jetbrains/kotlin/gradle/plugin/mpp/DisableCacheInKotlinVersion {
 	public static final field INSTANCE Lorg/jetbrains/kotlin/gradle/plugin/mpp/DisableCacheInKotlinVersion$2_4_0;
+}
+
+public final class org/jetbrains/kotlin/gradle/plugin/mpp/DisableCacheInKotlinVersion$2_4_20 : org/jetbrains/kotlin/gradle/plugin/mpp/DisableCacheInKotlinVersion {
+	public static final field INSTANCE Lorg/jetbrains/kotlin/gradle/plugin/mpp/DisableCacheInKotlinVersion$2_4_20;
 }
 
 public abstract interface annotation class org/jetbrains/kotlin/gradle/plugin/mpp/KotlinNativeCacheApi : java/lang/annotation/Annotation {

@@ -28,6 +28,7 @@ import org.jetbrains.kotlin.konan.target.KonanTarget
 import org.jetbrains.kotlin.metadata.deserialization.BinaryVersion
 import org.jetbrains.kotlin.metadata.deserialization.MetadataVersion
 import org.jetbrains.kotlin.platform.konan.NativePlatforms
+import org.jetbrains.kotlin.util.DummyLogger
 
 /**
  * Configuration phase for native klib compilation pipeline.
@@ -70,6 +71,8 @@ object NativeKlibConfigurationUpdater : ConfigurationUpdater<K2NativeCompilerArg
         configuration: CompilerConfiguration,
         arguments: K2NativeCompilerArguments,
     ) {
+        val logger = DummyLogger
+        logger.warning("setupFromArguments:arguments=${arguments.manifestNativeTargets}")
         val commonSources = arguments.commonSources.toSet().map { java.io.File(it).absoluteFile.normalize() }
         val hmppModuleStructure = configuration.get(CommonConfigurationKeys.HMPP_MODULE_STRUCTURE)
         arguments.freeArgs.forEach { path ->

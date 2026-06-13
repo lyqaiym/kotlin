@@ -9,23 +9,25 @@ package org.jetbrains.kotlin.gradle.plugin.mpp
 import org.gradle.api.Project
 import org.jetbrains.kotlin.gradle.internal.diagnostics.AgpWithBuiltInKotlinAppliedCheck.checkIfNewDslIsUsed
 import org.jetbrains.kotlin.gradle.internal.diagnostics.AgpWithBuiltInKotlinAppliedCheck.reportKotlinAndroidDeprecation
-import org.jetbrains.kotlin.gradle.plugin.KotlinAndroidPlugin.Companion.dynamicallyApplyWhenAndroidPluginIsApplied
+import org.jetbrains.kotlin.gradle.plugin.KotlinOhosPlugin.Companion.dynamicallyApplyWhenOhosPluginIsApplied
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnostics
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnostics.AndroidGradlePluginIsMissing
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.reportDiagnostic
-import org.jetbrains.kotlin.gradle.utils.findAppliedAndroidPluginIdOrNull
 import org.jetbrains.kotlin.gradle.targets.android.internal.InternalKotlinTargetPreset
+import org.jetbrains.kotlin.gradle.utils.findAppliedOhosPluginIdOrNull
+import org.jetbrains.kotlin.util.DummyLogger
 
 import javax.inject.Inject
 
 internal abstract class KotlinOhosTargetPreset @Inject constructor(
     private val project: Project
-) : InternalKotlinTargetPreset<KotlinAndroidTarget> {
+) : InternalKotlinTargetPreset<KotlinOhosTarget> {
 
     override val name: String = PRESET_NAME
 
-    override fun createTargetInternal(name: String): KotlinAndroidTarget {
-
+    override fun createTargetInternal(name: String): KotlinOhosTarget {
+        val logger = DummyLogger
+        logger.warning("createTargetInternal:name=${name}")
         /*
         Android Gradle Plugin is required:
         Creating target will fail with Linkage Error instead
@@ -34,7 +36,7 @@ internal abstract class KotlinOhosTargetPreset @Inject constructor(
             > Could not generate a decorated class for type KotlinAndroidTarget.
             > com/android/build/gradle/api/BaseVariant
          */
-        val androidPluginId = project.findAppliedAndroidPluginIdOrNull()
+        val androidPluginId = project.findAppliedOhosPluginIdOrNull()
         if (androidPluginId == null) {
             project.reportDiagnostic(AndroidGradlePluginIsMissing(Throwable()))
         } else {
@@ -44,13 +46,13 @@ internal abstract class KotlinOhosTargetPreset @Inject constructor(
             )
         }
 
-        return project.objects.KotlinAndroidTarget(project, name, true).apply {
+        return project.objects.KotlinOhosTarget(project, name, true).apply {
             targetPreset = this@KotlinOhosTargetPreset
-            project.dynamicallyApplyWhenAndroidPluginIsApplied({ this })
+            project.dynamicallyApplyWhenOhosPluginIsApplied({ this })
         }
     }
 
     companion object {
-        const val PRESET_NAME = "android"
+        const val PRESET_NAME = "ohos"
     }
 }

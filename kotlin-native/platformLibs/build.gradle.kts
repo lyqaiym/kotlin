@@ -63,11 +63,15 @@ val updateDefFileTasksPerFamily = if (HostManager.hostIsMac) {
 
 val nativeBootstrapDistribution = registerNativeBootstrapDistribution()
 
+println("enabledTargets:predefinedTargets=${KonanTarget.predefinedTargets}")
+println("enabledTargets:deprecatedTargets=${KonanTarget.deprecatedTargets}")
+println("enabledTargets:toleratedDeprecatedTargets=${KonanTarget.toleratedDeprecatedTargets}")
+
 enabledTargets(platformManager).forEach { target ->
     val targetName = target.visibleName
     val installTasks = mutableListOf<TaskProvider<out Task>>()
     val cacheTasks = mutableListOf<TaskProvider<out Task>>()
-
+    println("enabledTargets:targetName=${targetName}")
     target.defFiles().forEach { df ->
         val libName = defFileToLibName(targetName, df.name)
         val fileNamePrefix = PlatformLibsInfo.namePrefix

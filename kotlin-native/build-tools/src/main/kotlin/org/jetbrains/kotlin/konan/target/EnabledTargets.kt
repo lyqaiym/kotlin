@@ -5,6 +5,10 @@
 
 package org.jetbrains.kotlin.konan.target
 
+import org.jetbrains.kotlin.util.DummyLogger
+
 fun enabledTargets(platformManager: PlatformManager) = platformManager.enabled.filterNot {
+    val logger = DummyLogger
+    logger.warning("enabledTargets:it=${it}")
     it in KonanTarget.deprecatedTargets && it !in KonanTarget.toleratedDeprecatedTargets
 }

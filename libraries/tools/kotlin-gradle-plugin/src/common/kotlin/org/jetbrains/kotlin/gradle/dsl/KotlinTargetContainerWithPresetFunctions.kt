@@ -8,6 +8,7 @@ import org.gradle.api.model.ObjectFactory
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinTargetsContainer
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTargetPreset
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinOhosTargetPreset
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmTargetPreset
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
@@ -515,7 +516,7 @@ internal abstract class DefaultKotlinTargetContainerWithPresetFunctions @Inject 
     ): KotlinAndroidTarget =
         configureOrCreate(
             name,
-            presets.getByName("android") as KotlinOhosTargetPreset,
+            presets.getByName("android") as KotlinAndroidTargetPreset,
             project,
             configure
         )

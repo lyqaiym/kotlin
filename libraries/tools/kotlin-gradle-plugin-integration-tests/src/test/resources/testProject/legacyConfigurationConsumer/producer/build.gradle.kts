@@ -1,5 +1,5 @@
 plugins {
-    id("base")
+    id("base").version("2.4.255-SNAPSHOT").apply(false)
 }
 
 val producerTask by tasks.registering {

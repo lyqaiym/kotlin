@@ -21,7 +21,7 @@ import org.jetbrains.kotlin.gradle.utils.whenEvaluated
 internal open class KotlinOhosPlugin() : Plugin<Project> {
 
     override fun apply(project: Project) {
-        project.dynamicallyApplyWhenAndroidPluginIsApplied(
+        project.dynamicallyApplyWhenOhosPluginIsApplied(
             {
                 val target = project.objects.KotlinOhosTarget(project)
                 val kotlinAndroidExtension = project.kotlinExtension as KotlinOhosProjectExtension
@@ -46,7 +46,7 @@ internal open class KotlinOhosPlugin() : Plugin<Project> {
     companion object {
         internal fun androidTargetHandler(): OhosProjectHandler = OhosProjectHandler(KotlinTasksProvider())
 
-        internal fun Project.dynamicallyApplyWhenAndroidPluginIsApplied(
+        internal fun Project.dynamicallyApplyWhenOhosPluginIsApplied(
             kotlinAndroidTargetProvider: () -> KotlinOhosTarget,
             additionalConfiguration: (KotlinOhosTarget) -> Unit = {}
         ) {

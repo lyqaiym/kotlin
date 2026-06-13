@@ -49,6 +49,7 @@ import org.jetbrains.kotlin.progress.CompilationCanceledException
 import org.jetbrains.kotlin.progress.CompilationCanceledStatus
 import org.jetbrains.kotlin.progress.ProgressIndicatorAndCompilationCanceledStatus
 import org.jetbrains.kotlin.util.CompilerType
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.util.PerformanceManagerImpl
 import org.jetbrains.kotlin.util.forEachStringMeasurement
 import org.jetbrains.kotlin.util.profile
@@ -93,6 +94,8 @@ class K2Native : CLICompiler<K2NativeCompilerArguments>() {
         services: Services,
         arguments: K2NativeCompilerArguments,
     ): ExitCode {
+        val logger = DummyLogger
+        logger.warning("doExecuteInAnOldWay")
         val performanceManager = createPerformanceManager(arguments, services).apply { compilerType = CompilerType.K2 }
         if (arguments.reportPerf || arguments.dumpPerf != null) {
             performanceManager.enableExtendedStats()

@@ -75,7 +75,7 @@ dependencies {
     testImplementation(project(":plugins:compose-compiler-plugin:compiler-hosted:integration-tests:protobuf-test-classes"))
 
     // coroutines for runtime tests
-    testImplementation(commonDependency("org.jetbrains.kotlinx", "kotlinx-coroutines-test-jvm"))
+//    testImplementation(commonDependency("org.jetbrains.kotlinx", "kotlinx-coroutines-test-jvm"))
 
     // runtime tests
     testImplementationArtifactOnly(composeRuntime())
