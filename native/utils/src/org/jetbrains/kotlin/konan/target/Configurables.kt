@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.konan.target
 
 import org.jetbrains.kotlin.konan.properties.*
+import java.io.File
 
 interface RelocationModeFlags : TargetableExternalStorage {
     val dynamicLibraryRelocationMode get() = targetString("dynamicLibraryRelocationMode").mode()
@@ -74,7 +75,14 @@ interface Configurables : TargetableExternalStorage, RelocationModeFlags {
     // Notice: these ones are host-target.
     val targetToolchain get() = hostTargetString("targetToolchain")
 
-    val absoluteTargetSysRoot get() = absolute(targetSysRoot)
+    //    val absoluteTargetSysRoot get() = absolute(targetSysRoot)
+    val absoluteTargetSysRoot: String
+        get() {
+            println("targetSysRoot=: $targetSysRoot")
+            val path = absolute(targetSysRoot)
+            println("absoluteTargetSysRoot: $path")
+            return path
+        }
     val absoluteTargetToolchain get() = absolute(targetToolchain)
     val absoluteLlvmHome get() = absolute(llvmHome)
 

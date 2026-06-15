@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.konan.file.use
 import org.jetbrains.kotlin.konan.properties.KonanPropertiesLoader
 import org.jetbrains.kotlin.konan.properties.Properties
 import org.jetbrains.kotlin.konan.properties.propertyList
+import org.jetbrains.kotlin.util.DummyLogger
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.RandomAccessFile
@@ -27,6 +28,7 @@ import java.net.InetAddress
 import java.net.URL
 import java.net.UnknownHostException
 import java.nio.file.Paths
+import kotlin.io.path.exists
 
 private val Properties.dependenciesUrl: String
     get() = getProperty("dependenciesUrl")
@@ -45,13 +47,17 @@ private val Properties.downloadingAttemptIntervalMs : Long
 
 private fun Properties.findCandidates(dependencies: List<String>): Map<String, List<DependencySource>> {
     val dependencyProfiles = this.propertyList("dependencyProfiles")
+    val logger = DummyLogger
     return dependencies.map { dependency ->
+        logger.warning("findCandidates:dependency=${dependency}")
         dependency to dependencyProfiles.flatMap { profile ->
+            logger.warning("findCandidates:profile=${profile}")
             val candidateSpecs = propertyList("$dependency.$profile")
             if (profile == "default" && candidateSpecs.isEmpty()) {
                 listOf(DependencySource.Remote.Public())
             } else {
                 candidateSpecs.map { candidateSpec ->
+                    logger.warning("findCandidates:candidateSpec=${candidateSpec}")
                     when {
                         candidateSpec == REMOTE_PUBLIC -> DependencySource.Remote.Public()
                         candidateSpec.startsWith(REMOTE_PUBLIC_SUBDIRECTORY) ->
@@ -116,12 +122,14 @@ class DependencyProcessor(
 
     private val downloader = DependencyDownloader(maxAttempts, attemptIntervalMs, customProgressCallback)
 
-    constructor(dependenciesRoot: File,
-                properties: KonanPropertiesLoader,
-                dependenciesUrl: String = properties.dependenciesUrl,
-                keepUnstable:Boolean = true,
-                archiveType: ArchiveType = ArchiveType.systemDefault,
-                customProgressCallback: ProgressCallback) : this(
+    constructor(
+        dependenciesRoot: File,
+        properties: KonanPropertiesLoader,
+        dependenciesUrl: String = properties.dependenciesUrl,
+        keepUnstable: Boolean = true,
+        archiveType: ArchiveType = ArchiveType.systemDefault,
+        customProgressCallback: ProgressCallback,
+    ) : this(
             dependenciesRoot,
             properties.properties,
             properties.dependencies,
@@ -130,13 +138,15 @@ class DependencyProcessor(
             archiveType = archiveType,
             customProgressCallback = customProgressCallback)
 
-    constructor(dependenciesRoot: File,
-                properties: Properties,
-                dependencies: List<String>,
-                dependenciesUrl: String = properties.dependenciesUrl,
-                keepUnstable:Boolean = true,
-                archiveType: ArchiveType = ArchiveType.systemDefault,
-                customProgressCallback: ProgressCallback) : this(
+    constructor(
+        dependenciesRoot: File,
+        properties: Properties,
+        dependencies: List<String>,
+        dependenciesUrl: String = properties.dependenciesUrl,
+        keepUnstable: Boolean = true,
+        archiveType: ArchiveType = ArchiveType.systemDefault,
+        customProgressCallback: ProgressCallback,
+    ) : this(
             dependenciesRoot,
             dependenciesUrl,
             dependencyToCandidates = properties.findCandidates(dependencies),
@@ -228,6 +238,32 @@ class DependencyProcessor(
             get() = InternalServer.isAvailable
     }
 
+    init {
+        val logger = DummyLogger
+        logger.warning("resolveDependency:dependenciesRoot=${dependenciesRoot}")
+        logger.warning("resolveDependency:dependencyToCandidates=${dependencyToCandidates}")
+//        val e = Exception()
+//        val stack: Array<StackTraceElement> = e.getStackTrace()
+//
+//        // 普通 for 循环
+//        for (j in stack.indices) {
+//            val element = stack[j]
+//            printStackElement(logger,element)
+//        }
+    }
+
+    // 解析单个堆栈元素常用字段
+    private fun printStackElement(logger: DummyLogger, ele: StackTraceElement) {
+        // 类名、方法名、文件名、行号
+        val className = ele.getClassName()
+        val methodName = ele.getMethodName()
+        val fileName = ele.getFileName()
+        val lineNum = ele.getLineNumber()
+        logger.warning(
+            "constructor:类:${className} | 方法:${methodName} | 文件:${fileName} | 行号:${lineNum}"
+        )
+    }
+
     private val resolvedDependencies = dependencyToCandidates.map { (dependency, candidates) ->
         val candidate = candidates.asSequence().mapNotNull { candidate ->
             when (candidate) {
@@ -244,6 +280,9 @@ class DependencyProcessor(
 
     private fun resolveDependency(dependency: String): File {
         val candidate = resolvedDependencies[dependency]
+        val logger = DummyLogger
+        logger.warning("resolveDependency:dependency=${dependency}")
+        logger.warning("resolveDependency:candidate=${candidate}")
         return when (candidate) {
             is DependencySource.Local -> candidate.path
             is DependencySource.Remote -> File(dependenciesDirectory, dependency)
@@ -267,11 +306,16 @@ class DependencyProcessor(
             if (Paths.get(path).isAbsolute) File(path) else resolveRelative(path)
 
     private fun resolveRelative(relative: String): File {
+        val logger = DummyLogger
+        logger.warning("resolveRelative:relative=${relative}")
         val path = Paths.get(relative)
+        logger.warning("resolveRelative:path=${path},exists=${path.exists()}")
         if (path.isAbsolute) error("not a relative path: $relative")
 
         val dependency = path.first().toString()
+        logger.warning("resolveRelative:dependency=${dependency}")
         return resolveDependency(dependency).let {
+            logger.warning("resolveRelative:file=${it}")
             if (path.nameCount > 1) {
                 it.toPath().resolve(path.subpath(1, path.nameCount)).toFile()
             } else {

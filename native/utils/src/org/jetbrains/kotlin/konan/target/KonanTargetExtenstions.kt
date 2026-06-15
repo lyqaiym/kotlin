@@ -32,7 +32,8 @@ fun KonanTarget.pointerBits() = when (architecture) {
 fun KonanTarget.supportsLibBacktrace(): Boolean =
         this.family.isAppleFamily ||
                 this.family == Family.LINUX ||
-                this.family == Family.ANDROID
+                this.family == Family.ANDROID ||
+                this.family == Family.OHOS
 
 // TODO: Add explicit WATCHOS_DEVICE_ARM64 after compiler update.
 fun KonanTarget.supportsCoreSymbolication(): Boolean =
@@ -42,7 +43,7 @@ fun KonanTarget.supportsCoreSymbolication(): Boolean =
                 KonanTarget.WATCHOS_X64, KonanTarget.WATCHOS_SIMULATOR_ARM64
         )
 
-fun KonanTarget.supportsGccUnwind(): Boolean = family == Family.ANDROID || family == Family.LINUX
+fun KonanTarget.supportsGccUnwind(): Boolean = family == Family.ANDROID || family == Family.LINUX || family == Family.OHOS
 // MINGW_X64 target does not support GCC unwind, since its sysroot contains libgcc version < 12 having misfeature, see KT-49240
 fun KonanTarget.supportsWinAPIUnwind(): Boolean = this is KonanTarget.MINGW_X64
 

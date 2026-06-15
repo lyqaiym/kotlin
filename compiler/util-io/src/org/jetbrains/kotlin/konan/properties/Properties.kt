@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.konan.properties
 
 import org.jetbrains.kotlin.konan.file.*
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.util.parseSpaceSeparatedArgs
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
@@ -57,11 +58,15 @@ fun Properties.propertyString(key: String, suffix: String? = null): String? = ge
  */
 fun Properties.propertyList(key: String, suffix: String? = null, escapeInQuotes: Boolean = false): List<String> {
     val value: String? = (getProperty(key.suffix(suffix)) ?: getProperty(key))?.trim(Char::isWhitespace)
-    return when {
+    val logger = DummyLogger
+    logger.warning("propertyList:value=${value}")
+    val v = when {
         value.isNullOrEmpty() -> emptyList()
         escapeInQuotes -> parseSpaceSeparatedArgs(value)
         else -> value.split(Regex("\\s+"))
     }
+    logger.warning("propertyList:v=${v}")
+    return v
 }
 
 fun Properties.hasProperty(key: String, suffix: String? = null): Boolean

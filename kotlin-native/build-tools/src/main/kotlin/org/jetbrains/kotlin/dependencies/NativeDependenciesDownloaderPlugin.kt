@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.konan.target.PlatformManager
 import org.jetbrains.kotlin.konan.target.TargetDomainObjectContainer
 import org.jetbrains.kotlin.konan.target.TargetWithSanitizer
 import org.jetbrains.kotlin.konan.util.DependencyProcessor
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.utils.capitalized
 import java.nio.file.Paths
 import javax.inject.Inject
@@ -120,13 +121,17 @@ abstract class NativeDependenciesDownloaderExtension @Inject constructor(private
         }
 
         init {
+            val logger = DummyLogger
+            logger.warning("init:dependencies=${dependencies}")
             owner.nativeDependenciesElements.outgoing {
                 variants {
                     create("$_target") {
+                        logger.warning("init:_target=${_target}")
                         attributes {
                             attribute(TargetWithSanitizer.TARGET_ATTRIBUTE, _target)
                         }
                         dependencies.forEach { dependency ->
+                            logger.warning("init:dependency=${dependency}")
                             artifact(dependencyProcessor.resolve(dependency)) {
                                 name = dependency
                                 type = "directory"
