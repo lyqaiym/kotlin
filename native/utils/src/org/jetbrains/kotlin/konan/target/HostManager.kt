@@ -88,7 +88,8 @@ open class HostManager() {
         get() {
             val f = enabledByHost[host]?.toList() ?: throw TargetSupportException("Unknown host platform: $host")
             val logger = DummyLogger
-            logger.warning("enabledByHost=${enabledByHost},host=${host}")
+//            logger.warning("enabledByHost=${enabledByHost},host=${host}")
+            logger.warning("host=${host}")
             return f
         }
 

@@ -17,6 +17,7 @@
 package org.jetbrains.kotlin.konan.target
 
 import org.jetbrains.kotlin.konan.properties.*
+import org.jetbrains.kotlin.util.DummyLogger
 import java.io.File
 
 interface RelocationModeFlags : TargetableExternalStorage {
@@ -58,8 +59,10 @@ interface Configurables : TargetableExternalStorage, RelocationModeFlags {
                 ?.let(TargetTriple.Companion::fromString)
                 ?: error("quadruple for $target is not set.")
 
-    val llvmHome get() = hostString("llvmHome")
-    val llvmVersion get() = hostString("llvmVersion")
+//    val llvmHome get() = hostString("llvmHome")
+    // Try to read hostTargetString like 'llvmVersion.macos_x64-ohos_arm64'. Use a different llvm version for ohos.
+    val llvmHome get() = hostTargetString("llvmHome") ?: hostString("llvmHome")
+    val llvmVersion get() = hostTargetString("llvmVersion") ?: hostString("llvmVersion")
     val libffiDir get() = hostString("libffiDir")
 
     val cacheableTargets get() = hostList("cacheableTargets")
@@ -78,13 +81,20 @@ interface Configurables : TargetableExternalStorage, RelocationModeFlags {
     //    val absoluteTargetSysRoot get() = absolute(targetSysRoot)
     val absoluteTargetSysRoot: String
         get() {
-            println("targetSysRoot=: $targetSysRoot")
+            val logger = DummyLogger
+            logger.warning("targetSysRoot=$targetSysRoot")
             val path = absolute(targetSysRoot)
-            println("absoluteTargetSysRoot: $path")
+            logger.warning("absoluteTargetSysRoot=$path")
             return path
         }
     val absoluteTargetToolchain get() = absolute(targetToolchain)
-    val absoluteLlvmHome get() = absolute(llvmHome)
+    val absoluteLlvmHome: String get(){
+            val logger = DummyLogger
+            logger.warning("llvmHome=$llvmHome")
+            val file = absolute(llvmHome)
+            logger.warning("llvmHome=file=$file")
+            return file
+        }
 
     val targetCpu get() = targetString("targetCpu")
     val targetCpuFeatures get() = targetString("targetCpuFeatures")
@@ -140,4 +150,15 @@ interface GccConfigurables : Configurables, ClangFlags {
 
 interface AndroidConfigurables : Configurables, ClangFlags
 
-interface OhosConfigurables : Configurables, ClangFlags
+interface OhosConfigurables : Configurables, ClangFlags {
+    val gccToolchain get() = targetString("gccToolchain")
+    val absoluteGccToolchain get() = absolute(gccToolchain)
+
+    val dynamicLinker get() = targetString("dynamicLinker")!!
+    val abiSpecificLibraries get() = targetList("abiSpecificLibraries")
+    val crtFilesLocation get() = targetString("crtFilesLocation")!!
+
+    val linker get() = hostTargetString("linker")
+    val linkerHostSpecificFlags get() = hostTargetList("linkerHostSpecificFlags")
+    val absoluteLinker get() = absolute(linker)
+}

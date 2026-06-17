@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.konan.target.KonanTarget
 import org.jetbrains.kotlin.konan.target.Configurables
 import org.jetbrains.kotlin.konan.target.HostManager
 import org.jetbrains.kotlin.konan.util.*
+import org.jetbrains.kotlin.util.DummyLogger
 import java.io.File
 
 interface TargetableExternalStorage {
@@ -67,8 +68,23 @@ abstract class KonanPropertiesLoader(
         getPredefinedDependencyOrNull("libffi version", this::libffiDir, predefinedLibffiVersions)
     )
 
+
+//    open val dependencies: List<String>
+//        get() {
+//            val deps = hostTargetList("dependencies") + compilerDependencies()
+//            val logger = DummyLogger
+//            logger.warning("dependencies:deps=${deps}")
+//            return deps
+//        }
+
     open val dependencies: List<String>
-        get() = hostTargetList("dependencies") + compilerDependencies()
+        get() {
+            val deps = hostTargetList("dependencies") + hostList("commonDependencies") + compilerDependencies()
+            val logger = DummyLogger
+            logger.warning("dependencies:deps=${deps}")
+            return deps
+        }
+
 
     override fun downloadDependencies() {
         dependencyProcessor!!.run()
@@ -86,8 +102,14 @@ abstract class KonanPropertiesLoader(
     override fun hostTargetString(key: String): String? = properties.hostTargetString(key, target, host)
     override fun hostTargetList(key: String): List<String> = properties.hostTargetList(key, target, host)
 
-    override fun absolute(value: String?): String =
-        dependencyProcessor!!.resolve(value!!).absolutePath
+    override fun absolute(value: String?): String {
+        val logger = DummyLogger
+        logger.warning("absolute:value=${value}")
+        val file = dependencyProcessor!!.resolve(value!!).absolutePath
+        logger.warning("absolute:file=${file}")
+        return file
+    }
+
 
     private val dependencyProcessor by lazy {
         dependenciesRoot?.let {

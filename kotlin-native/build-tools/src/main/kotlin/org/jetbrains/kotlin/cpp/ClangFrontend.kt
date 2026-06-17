@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.clangArgs
 import org.jetbrains.kotlin.execLlvmUtility
 import org.jetbrains.kotlin.konan.target.PlatformManager
 import org.jetbrains.kotlin.platformManagerProvider
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.utils.reproducibilityCompilerFlags
 import java.io.File
 import javax.inject.Inject
@@ -139,6 +140,8 @@ open class ClangFrontend @Inject constructor(
 
     @TaskAction
     fun compile() {
+        val logger = DummyLogger
+        logger.warning("compile")
         fileOperations.delete(outputDirectory)
         fileOperations.mkdir(outputDirectory)
 
@@ -146,9 +149,11 @@ open class ClangFrontend @Inject constructor(
 
         val platformManager = platformManagerProvider.platformManager.get()
         val target = platformManager.targetByName(targetName.get())
+        logger.warning("compile:target=${target.name}")
         val compilerSpecificArgs = platformManager.clangArgs(target, compiler.get())
+        logger.warning("compile:compilerSpecificArgs=${compilerSpecificArgs}")
         val clangPaths = fileOperations.configurableFiles(platformManager.hostPlatform.clang.clangPaths).asPath
-
+        logger.warning("compile:clangPaths=${clangPaths}")
         inputFilesRelativePaths.get().forEach { inputPathRelativeToWorkingDir ->
             val outputFile = outputDirectory.get().file(inputPathRelativeToWorkingDir.replace("..", "PARENT_DIR").replaceAfterLast(".", "bc"))
             workQueue.submit(ClangFrontendJob::class.java) {

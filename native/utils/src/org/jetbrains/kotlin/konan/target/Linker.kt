@@ -21,6 +21,7 @@ import java.lang.ProcessBuilder
 import java.lang.ProcessBuilder.Redirect
 import org.jetbrains.kotlin.konan.exec.Command
 import org.jetbrains.kotlin.konan.file.*
+import org.jetbrains.kotlin.util.DummyLogger
 
 typealias ObjectFile = String
 typealias ExecutableFile = String
@@ -29,6 +30,35 @@ enum class LinkerOutputKind {
     DYNAMIC_LIBRARY,
     STATIC_LIBRARY,
     EXECUTABLE
+}
+
+// Here we take somewhat unexpected approach - we create the thin
+// library, and then repack it during post-link phase.
+// This way we ensure .a inputs are properly processed.
+private fun staticGnuArCommands(ar: String, executable: ExecutableFile,
+                                objectFiles: List<ObjectFile>, libraries: List<String>) = when {
+    HostManager.hostIsMingw -> {
+        val temp = executable.replace('/', '\\') + "__"
+        val arWindows = ar.replace('/', '\\')
+        listOf(
+            Command(arWindows, "-rucT", temp).apply {
+                +objectFiles
+                +libraries
+            },
+            Command("cmd", "/c").apply {
+                +"(echo create $executable & echo addlib ${temp} & echo save & echo end) | $arWindows -M"
+            },
+            Command("cmd", "/c", "del", "/q", temp))
+    }
+    HostManager.hostIsLinux || HostManager.hostIsMac -> listOf(
+        Command(ar, "cqT", executable).apply {
+            +objectFiles
+            +libraries
+        },
+        Command("/bin/sh", "-c").apply {
+            +"printf 'create $executable\\naddlib $executable\\nsave\\nend' | $ar -M"
+        })
+    else -> TODO("Unsupported host ${HostManager.host}")
 }
 
 private sealed class Ar(val ar: String) {
@@ -219,16 +249,14 @@ class AndroidLinker(targetProperties: AndroidConfigurables)
     }
 }
 
-class OhosLinker(targetProperties: OhosConfigurables)
-    : LinkerFlags(targetProperties), OhosConfigurables by targetProperties {
+class OhosLinker(targetProperties: OhosConfigurables) : LinkerFlags(targetProperties), OhosConfigurables by targetProperties {
 
-    private val clangTarget = when (val targetString = targetProperties.targetTriple.toString()) {
-        "arm-unknown-linux-androideabi" -> "armv7a-linux-androideabi"
-        else -> targetProperties.targetTriple.withoutVendor()
+    private val specificLibs = abiSpecificLibraries.map { "-L${absoluteTargetSysRoot}/$it" }
+    private val ar = if (HostManager.hostIsLinux) {
+        "$absoluteTargetToolchain/bin/ar"
+    } else {
+        "$absoluteTargetToolchain/bin/llvm-ar"
     }
-    private val prefix = "$absoluteTargetToolchain/bin/${clangTarget}${Android.API}"
-    private val clang = if (HostManager.hostIsMingw) "$prefix-clang.cmd" else "$prefix-clang"
-    private val ar = Ar.GnuAr("$absoluteTargetToolchain/${targetProperties.targetTriple.withoutVendor()}/bin/ar")
 
     override val useCompilerDriverAsLinker: Boolean get() = true
 
@@ -239,38 +267,52 @@ class OhosLinker(targetProperties: OhosConfigurables)
             "Sanitizers are unsupported"
         }
         if (kind == LinkerOutputKind.STATIC_LIBRARY)
-            return ar.staticArCommands(executable, objectFiles, staticLibraries, tempFiles)
+            return staticGnuArCommands(ar, executable, objectFiles, staticLibraries)
 
         val dynamic = kind == LinkerOutputKind.DYNAMIC_LIBRARY
-        val toolchainSysroot = "${absoluteTargetToolchain}/sysroot"
-        val architectureDir = Ohos.architectureDirForTarget(target)
-        val apiSysroot = "$absoluteTargetSysRoot/$architectureDir"
-        val clangTarget = targetTriple.withoutVendor()
-        val libDirs = listOf(
-            "--sysroot=$apiSysroot",
-            if (target == KonanTarget.ANDROID_X64) "-L$apiSysroot/usr/lib64" else "-L$apiSysroot/usr/lib",
-            "-L$toolchainSysroot/usr/lib/$clangTarget/${Android.API}",
-            "-L$toolchainSysroot/usr/lib/$clangTarget")
-        return listOf(Command(clang).apply {
+        val targetToolchain = absoluteTargetToolchain
+        val crtPrefix = "$absoluteTargetSysRoot/$crtFilesLocation"
+        // TODO: Can we extract more to the konan.configurables?
+        return listOf(Command(absoluteLinker).apply {
+            +"--sysroot=${absoluteTargetSysRoot}"
+            +"-export-dynamic"
+            +"-z"
+            +"relro"
+            +"--build-id"
+            +"--eh-frame-hdr"
+            +"-dynamic-linker"
+            +dynamicLinker
+            linkerHostSpecificFlags.forEach { +it }
             +"-o"
             +executable
-            when (kind) {
-                LinkerOutputKind.EXECUTABLE -> +listOf("-fPIE", "-pie")
-                LinkerOutputKind.DYNAMIC_LIBRARY -> +listOf("-fPIC", "-shared")
-                LinkerOutputKind.STATIC_LIBRARY -> {}
-            }
-            +"-target"
-            +clangTarget
-            +libDirs
-            +objectFiles
+            +"$crtPrefix/Scrt1.o"
+            +"$crtPrefix/crti.o"
+            +"$crtPrefix/crtn.o"
+            +"--hash-style=gnu"
+            +"-L${targetToolchain}/lib/aarch64-linux-ohos"
+            +"-L${targetToolchain}/lib/aarch64-linux-ohos/c++"
+            +specificLibs
             if (optimize) +linkerOptimizationFlags
             if (!debug) +linkerNoDebugFlags
             if (dynamic) +linkerDynamicFlags
-            if (dynamic) +"-Wl,-soname,${File(executable).name}"
-            +linkerKonanFlags
+            if (dynamic) +"--soname=${File(executable).name}"
+            +objectFiles
             +staticLibraries
-            +dynamicLibraries
             +linkerArgs
+            +linkerKonanFlags
+            when (sanitizer) {
+                null -> {}
+                SanitizerKind.ADDRESS -> {
+                    +"-lrt"
+                    +provideCompilerRtLibrary("asan")!!
+                    +provideCompilerRtLibrary("asan_cxx")!!
+                }
+                SanitizerKind.THREAD -> {
+                    +"-lrt"
+                    +provideCompilerRtLibrary("tsan")!!
+                    +provideCompilerRtLibrary("tsan_cxx")!!
+                }
+            }
         })
     }
 }

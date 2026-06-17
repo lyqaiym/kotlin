@@ -53,6 +53,7 @@ private fun Properties.findCandidates(dependencies: List<String>): Map<String, L
         dependency to dependencyProfiles.flatMap { profile ->
             logger.warning("findCandidates:profile=${profile}")
             val candidateSpecs = propertyList("$dependency.$profile")
+            logger.warning("findCandidates:candidateSpecs=${candidateSpecs}")
             if (profile == "default" && candidateSpecs.isEmpty()) {
                 listOf(DependencySource.Remote.Public())
             } else {
@@ -266,6 +267,13 @@ class DependencyProcessor(
 
     private val resolvedDependencies = dependencyToCandidates.map { (dependency, candidates) ->
         val candidate = candidates.asSequence().mapNotNull { candidate ->
+            val logger = DummyLogger
+            when (candidate) {
+                is DependencySource.Local ->  logger.warning("dependencyToCandidates:candidate=${candidate.path}")
+                is DependencySource.Remote.Public ->  logger.warning("dependencyToCandidates:candidate=${candidate.subDirectory}")
+                DependencySource.Remote.Internal ->  logger.warning("dependencyToCandidates:candidate=${candidate}")
+            }
+//            logger.warning("dependencyToCandidates:candidate=${candidate}")
             when (candidate) {
                 is DependencySource.Local -> candidate.takeIf { it.path.exists() }
                 is DependencySource.Remote.Public -> candidate
@@ -283,11 +291,13 @@ class DependencyProcessor(
         val logger = DummyLogger
         logger.warning("resolveDependency:dependency=${dependency}")
         logger.warning("resolveDependency:candidate=${candidate}")
-        return when (candidate) {
+        val file = when (candidate) {
             is DependencySource.Local -> candidate.path
             is DependencySource.Remote -> File(dependenciesDirectory, dependency)
             null -> error("$dependency not declared as dependency")
         }
+        logger.warning("resolveDependency:file=${file}")
+        return file
     }
 
     /**

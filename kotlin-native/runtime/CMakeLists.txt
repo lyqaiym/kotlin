@@ -67,7 +67,6 @@ add_executable(runtime
 	src/debug/cpp/SourceInfo.cpp
 	src/exceptions_support/cpp/ExceptionsSupport.cpp
 	src/launcher/cpp/androidLauncher.cpp
-	src/launcher/cpp/ohosLauncher.cpp
 	src/launcher/cpp/launcher.cpp
 
 	src/main/cpp/ObjCExport.mm

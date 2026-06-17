@@ -6,6 +6,7 @@ package org.jetbrains.kotlin.cli.utilities
 
 import org.jetbrains.kotlin.konan.exec.Command
 import org.jetbrains.kotlin.konan.target.PlatformManager
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.utils.KotlinNativePaths
 
 fun runLlvmTool(args: Array<String>) {
@@ -30,7 +31,11 @@ fun runLlvmClangToolWithTarget(args: Array<String>) {
     val llvmHome = platform.configurables.absoluteLlvmHome
 
     val toolPath = "$llvmHome/bin/$toolName"
-
+    val logger = DummyLogger
+    logger.warning("runLlvmClangToolWithTarget:targetName=${targetName}")
+    logger.warning("runLlvmClangToolWithTarget:platform=${platform}")
+    logger.warning("runLlvmClangToolWithTarget:clangXXArgs=${platform.clang.clangXXArgs}")
+    logger.warning("runLlvmClangToolWithTarget:clangArgs=${platform.clang.clangArgs}")
     val compilerArgs: Array<String> = when (toolName) {
         "clang++" -> platform.clang.clangXXArgs
         "clang" -> platform.clang.clangArgs

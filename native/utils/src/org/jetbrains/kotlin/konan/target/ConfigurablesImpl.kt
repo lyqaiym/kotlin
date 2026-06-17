@@ -29,9 +29,6 @@ class GccConfigurablesImpl(target: KonanTarget, properties: Properties, dependen
 class AndroidConfigurablesImpl(target: KonanTarget, properties: Properties, dependenciesRoot: String?, progressCallback: ProgressCallback) : AndroidConfigurables,
     KonanPropertiesLoader(target, properties, dependenciesRoot, progressCallback = progressCallback)
 
-class OhosConfigurablesImpl(target: KonanTarget, properties: Properties, dependenciesRoot: String?, progressCallback: ProgressCallback) : OhosConfigurables,
-    KonanPropertiesLoader(target, properties, dependenciesRoot, progressCallback = progressCallback)
-
 fun loadConfigurables(
     target: KonanTarget,
     properties: Properties,

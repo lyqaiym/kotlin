@@ -132,7 +132,9 @@ abstract class NativeDependenciesDownloaderExtension @Inject constructor(private
                         }
                         dependencies.forEach { dependency ->
                             logger.warning("init:dependency=${dependency}")
-                            artifact(dependencyProcessor.resolve(dependency)) {
+                            val resolve = dependencyProcessor.resolve(dependency)
+                            logger.warning("init:resolve=${resolve.path}")
+                            artifact(resolve) {
                                 name = dependency
                                 type = "directory"
                                 extension = ""
