@@ -53,7 +53,7 @@ size_t kotlin::peakResidentSetSizeBytes() noexcept {
 #else
 
 // TODO: Support more platforms
-size_t kotlin::GetPeakResidentSetSizeBytes() noexcept {
+size_t kotlin::peakResidentSetSizeBytes() noexcept {
 return 0;
 }
 
