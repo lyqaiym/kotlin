@@ -27,29 +27,7 @@ size_t kotlin::peakResidentSetSizeBytes() noexcept {
     return memoryCounters.PeakWorkingSetSize;
 }
 
-#elif KONAN_APPLE
-
-#include <unistd.h>
-
-#if KONAN_MACOSX
-#include <libproc.h>
-#else
-// libproc.h is not shipped on non-macOS, but the function is still defined there.
-extern "C" int proc_pid_rusage(int pid, int flavor, rusage_info_t* buffer)
-	__OSX_AVAILABLE_STARTING(__MAC_10_9, __IPHONE_7_0);
-#endif
-
-size_t kotlin::peakResidentSetSizeBytes() noexcept {
-    ::rusage_info_current info;
-    auto failed = proc_pid_rusage(getpid(), RUSAGE_INFO_CURRENT, reinterpret_cast<rusage_info_t*>(&info));
-    if (failed) {
-        return 0;
-    }
-    // Max footprint can't be more than size_t.
-    return static_cast<size_t>(info.ri_lifetime_max_phys_footprint);
-}
-
-#else
+#elif KONAN_LINUX || KONAN_MACOSX || KONAN_IOS || KONAN_WATCHOS || KONAN_OHOS
 
 #include <sys/time.h>
 #include <sys/resource.h>
@@ -57,12 +35,26 @@ size_t kotlin::peakResidentSetSizeBytes() noexcept {
 size_t kotlin::peakResidentSetSizeBytes() noexcept {
     ::rusage usage;
     auto failed = ::getrusage(RUSAGE_SELF, &usage);
+#if KONAN_LINUX || KONAN_OHOS
+    // On Linux it's in kilobytes.
+    size_t maxrss = static_cast<size_t>(usage.ru_maxrss * 1024);
+#elif KONAN_MACOSX || KONAN_IOS || KONAN_WATCHOS
+    // On macOS, iOS and watchOS it's in bytes.
+    size_t maxrss = static_cast<size_t>(usage.ru_maxrss);
+#else
+#error "Check what units ru_maxrss is in."
+#endif
     if (failed) {
         return 0;
     }
-    // ru_maxrss is in KiB on Linux.
-    size_t maxrss = static_cast<size_t>(usage.ru_maxrss * 1024);
     return maxrss;
+}
+
+#else
+
+// TODO: Support more platforms
+size_t kotlin::GetPeakResidentSetSizeBytes() noexcept {
+return 0;
 }
 
 #endif
