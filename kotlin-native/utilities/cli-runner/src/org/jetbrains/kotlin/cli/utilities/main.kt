@@ -10,9 +10,11 @@ import org.jetbrains.kotlin.cli.klib.main as klibMain
 import org.jetbrains.kotlin.cli.bc.mainNoExitWithGradleRenderer as konancMainWithGradleRenderer
 import org.jetbrains.kotlin.cli.bc.mainNoExitWithXcodeRenderer as konancMainWithXcodeRenderer
 import org.jetbrains.kotlin.backend.konan.env.setEnv
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.utils.usingNativeMemoryAllocator
 
 private fun mainImpl(args: Array<String>, runFromDaemon: Boolean, konancMain: (Array<String>) -> Unit) {
+    DummyLogger.warning("mainImpl1")
     val utilityName = args[0]
     val utilityArgs = args.drop(1).toTypedArray()
     when (utilityName) {
@@ -35,6 +37,7 @@ private fun mainImpl(args: Array<String>, runFromDaemon: Boolean, konancMain: (A
 
         else -> error("Unexpected utility name: $utilityName")
     }
+    DummyLogger.warning("mainImpl2")
 }
 
 fun main(args: Array<String>) = mainImpl(args, false, ::konancMain)
@@ -48,9 +51,11 @@ fun daemonMain(args: Array<String>) = inProcessMain(args, ::konancMainWithGradle
 fun daemonMainWithXcodeRenderer(args: Array<String>) = inProcessMain(args, ::konancMainWithXcodeRenderer)
 
 private fun inProcessMain(args: Array<String>, konancMain: (Array<String>) -> Unit) {
+    DummyLogger.warning("inProcessMain1")
     usingNativeMemoryAllocator {
         setupClangEnv() // For in-process invocation have to setup proper environment manually.
         mainImpl(args, true, konancMain)
     }
+    DummyLogger.warning("inProcessMain2")
 }
 

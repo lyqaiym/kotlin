@@ -5,21 +5,25 @@
 
 package org.jetbrains.kotlin.gradle.plugin.konan
 
+import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.provider.Provider
 import org.gradle.api.services.BuildService
 import org.gradle.api.services.BuildServiceParameters
 import org.gradle.api.services.BuildServiceRegistry
+import org.jetbrains.kotlin.utils.KotlinLogger
 import java.io.File
 import java.net.URLClassLoader
 import java.util.concurrent.ConcurrentHashMap
 
 @JvmInline
-private value class IsolatedClassLoaderCacheKey private constructor(private val classpath: String) {
+public value class IsolatedClassLoaderCacheKey private constructor(private val classpath: String) {
     constructor(classpath: Set<File>) : this(classpath.map { it.absolutePath }.sorted().joinToString(separator = File.pathSeparator))
 }
 
 abstract class KonanCliRunnerIsolatedClassLoadersService : BuildService<BuildServiceParameters.None>, AutoCloseable {
-    private val isolatedClassLoaders = ConcurrentHashMap<IsolatedClassLoaderCacheKey, URLClassLoader>()
+//    val isolatedClassLoaders = ConcurrentHashMap<IsolatedClassLoaderCacheKey, URLClassLoader>()
+    val isolatedClassLoaders = ConcurrentHashMap<Any, URLClassLoader>()
 
     override fun close() {
         isolatedClassLoaders.clear()
@@ -31,9 +35,21 @@ abstract class KonanCliRunnerIsolatedClassLoadersService : BuildService<BuildSer
      * During a single build, this will attempt to reuse class loaders for the same [classpath].
      */
     fun getClassLoader(classpath: Set<File>): ClassLoader = isolatedClassLoaders.computeIfAbsent(IsolatedClassLoaderCacheKey(classpath)) {
+        KotlinLogger.warning("getClassLoader1")
         val arrayOfURLs = classpath.map { File(it.absolutePath).toURI().toURL() }.toTypedArray()
-        URLClassLoader(arrayOfURLs, null).apply {
+        val v = URLClassLoader(arrayOfURLs, null).apply {
             setDefaultAssertionStatus(true)
+        }
+        KotlinLogger.warning("getClassLoader2")
+        return@computeIfAbsent v
+    }
+
+    companion object{
+        fun registerIfAbsent(project: Project) = project.gradle.sharedServices.registerIfAbsent("KonanCliRunnerIsolatedClassLoadersService", KonanCliRunnerIsolatedClassLoadersService::class.java) {}
+        fun attachingToTask(task: Task): KonanCliRunnerIsolatedClassLoadersService {
+            val service = registerIfAbsent(task.project)
+            task.usesService(service)
+            return service.get()
         }
     }
 }

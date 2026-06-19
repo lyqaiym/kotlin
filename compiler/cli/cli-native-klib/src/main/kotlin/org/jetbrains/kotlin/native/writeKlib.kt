@@ -26,10 +26,12 @@ import org.jetbrains.kotlin.library.uniqueName
 import org.jetbrains.kotlin.library.writer.KlibWriter
 import org.jetbrains.kotlin.library.writer.includeIr
 import org.jetbrains.kotlin.library.writer.includeMetadata
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.util.metadataVersion
 import java.util.Properties
 
 fun NativePhaseContext.writeKlib(input: KlibWriterInput) {
+    val logger = DummyLogger
     val suffix = ".klib"
     val outputPath = input.outputPath
     val dontCompressKlib = config.configuration.konanDontCompressKlib
@@ -44,6 +46,8 @@ fun NativePhaseContext.writeKlib(input: KlibWriterInput) {
         metadataVersion = configuration.metadataVersion(),
     )
     val target = config.target
+    logger.warning("writeKlib:nativeLibraries=${config.nativeLibraries}")
+    logger.warning("writeKlib:target=$target")
     val manifestProperties = config.manifestProperties ?: Properties()
 
     if (input.produceHeaderKlib) {

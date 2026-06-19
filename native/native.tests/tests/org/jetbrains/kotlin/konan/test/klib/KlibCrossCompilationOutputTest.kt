@@ -91,7 +91,7 @@ class KlibCrossCompilationOutputTest : AbstractNativeSimpleTest() {
          * 2 - klib roots
          */
         private val KLIB_RESOLVER_UNRESOLVED_LIBRARY_DIAGNOSTIC_REGEX = """
-            error: KLIB resolver: Could not find "(.*)" in \[(.*)]
+            error: KLIB resolver: Could not find3 "(.*)" in \[(.*)]
         """.trimIndent().toRegex()
 
         val DEPRECATED_K1_LANGUAGE_VERSIONS_DIAGNOSTIC_REGEX = """

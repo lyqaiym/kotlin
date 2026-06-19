@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.library.KlibConstants.KLIB_FILE_EXTENSION
 import org.jetbrains.kotlin.library.KlibConstants.KLIB_FILE_EXTENSION_WITH_DOT
 import org.jetbrains.kotlin.library.SearchPathResolver.LookupResult
 import org.jetbrains.kotlin.library.SearchPathResolver.SearchRoot
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.util.Logger
 import org.jetbrains.kotlin.util.WithLogger
 import org.jetbrains.kotlin.util.removeSuffixIfPresent
@@ -144,6 +145,8 @@ abstract class KotlinLibrarySearchPathResolver<L : KotlinLibrary>(
 
     override fun resolutionSequence(givenPath: String): Sequence<File> {
         val given: File? = validFileOrNull(givenPath)
+        val logger = DummyLogger
+        logger.warning("resolutionSequence:given=${given}")
         val sequence: Sequence<File?> = when {
             given == null -> {
                 // The given path can't denote a real file, so just look for such
@@ -174,12 +177,22 @@ abstract class KotlinLibrarySearchPathResolver<L : KotlinLibrary>(
     private val resolvedLibraries = HashMap<UnresolvedLibrary, ResolvedLibrary>()
 
     private fun resolveOrNull(unresolved: UnresolvedLibrary): L? {
+        val logger = DummyLogger
         return resolvedLibraries.getOrPut(unresolved) {
             val givenPath = unresolved.path
+            logger.warning("resolveOrNull:givenPath=${givenPath}")
             try {
-                resolutionSequence(givenPath)
-                    .flatMap { libraryComponentBuilder(it).asSequence() }
-                    .map { it.takeIf { libraryMatch(it, unresolved) } }
+                val sequence = resolutionSequence(givenPath)
+                logger.warning("resolveOrNull:sequence=${sequence}")
+                sequence
+                    .flatMap {
+                        logger.warning("resolveOrNull:libraryComponentBuilder")
+                        val builder = libraryComponentBuilder(it)
+                        logger.warning("resolveOrNull:builder=${builder}")
+                        builder.asSequence() }
+                    .map {
+                        logger.warning("resolveOrNull:map")
+                        it.takeIf { libraryMatch(it, unresolved) } }
                     .filterNotNull()
                     .firstOrNull()
                     .let(::ResolvedLibrary)
@@ -193,7 +206,7 @@ abstract class KotlinLibrarySearchPathResolver<L : KotlinLibrary>(
     override fun resolve(unresolved: LenientUnresolvedLibrary): L? {
         return resolveOrNull(unresolved)
             ?: run {
-                logger.log("KLIB resolver: Could not find \"${unresolved.path}\" in ${searchRoots.map { it.searchRootPath.absolutePath }}")
+                logger.log("KLIB resolver: Could not find1 \"${unresolved.path}\" in ${searchRoots.map { it.searchRootPath.absolutePath }}")
                 null
             }
     }
@@ -210,7 +223,7 @@ abstract class KotlinLibrarySearchPathResolver<L : KotlinLibrary>(
                 //    flow of the program and should not be a responsibility of SearchPathResolver.
                 // 3. Finally, we are going to drop SearchPathResolver which is a part of KLIB resolver.
                 @Suppress("DEPRECATION")
-                logger.fatal("KLIB resolver: Could not find \"${unresolved.path}\" in ${searchRoots.map { it.searchRootPath.absolutePath }}")
+                logger.fatal("KLIB resolver: Could not find2 \"${unresolved.path}\" in ${searchRoots.map { it.searchRootPath.absolutePath }}")
             }
     }
 

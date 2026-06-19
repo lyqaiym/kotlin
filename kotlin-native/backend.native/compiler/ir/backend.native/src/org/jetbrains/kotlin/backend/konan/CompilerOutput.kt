@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.backend.konan.llvm.objc.patchObjCRuntimeModule
 import org.jetbrains.kotlin.backend.konan.llvm.runtime.RuntimeModule
 import org.jetbrains.kotlin.backend.konan.llvm.runtime.linkRuntimeModules
 import org.jetbrains.kotlin.backend.konan.serialization.CacheDeserializationStrategy
+import org.jetbrains.kotlin.backend.konan.util.KotlinLogger
 import org.jetbrains.kotlin.config.nativeBinaryOptions.CCallMode
 import org.jetbrains.kotlin.config.nativeBinaryOptions.CInterfaceGenerationMode
 import org.jetbrains.kotlin.config.nativeBinaryOptions.GC
@@ -98,6 +99,7 @@ private data class LlvmModules(
  * - Everything else.
  */
 private fun collectLlvmModules(generationState: NativeGenerationState, generatedBitcodeFiles: List<String>): LlvmModules {
+    KotlinLogger.warning("collectLlvmModules")
     val config = generationState.config
     val runtimeModulesConfig = generationState.runtimeModulesConfig
 

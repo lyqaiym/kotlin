@@ -17,6 +17,7 @@ import org.gradle.work.DisableCachingByDefault
 import org.jetbrains.kotlin.nativeDistribution.NativeDistribution
 import org.jetbrains.kotlin.nativeDistribution.asNativeDistribution
 import org.jetbrains.kotlin.nativeDistribution.nativeDistribution
+import org.jetbrains.kotlin.utils.KotlinLogger
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.Files
@@ -36,6 +37,7 @@ open class CompareDistributionSignatures @Inject constructor(
     companion object {
         @JvmStatic
         fun registerForPlatform(project: Project, target: String) {
+            KotlinLogger.warning("registerForPlatform:target=${target}")
             register(project, "${target}CheckPlatformAbiCompatibility") {
                 libraries = Libraries.Platform(target)
                 dependsOn(":kotlin-native:${target}PlatformLibs") // The task configures inputs on the insides of the distribution
@@ -44,6 +46,7 @@ open class CompareDistributionSignatures @Inject constructor(
 
         @JvmStatic
         fun registerForStdlib(project: Project) {
+            KotlinLogger.warning("registerForStdlib")
             register(project, "checkStdlibAbiCompatibility") {
                 libraries = Libraries.Standard
                 dependsOn(":kotlin-native:distRuntime") // The task configures inputs on the insides of the distribution
@@ -51,6 +54,7 @@ open class CompareDistributionSignatures @Inject constructor(
         }
 
         private fun register(project: Project, name: String, configure: CompareDistributionSignatures.() -> Unit) {
+            KotlinLogger.warning("register:name=${name}")
             project.tasks.register(name, CompareDistributionSignatures::class.java) {
                 val property = project.kotlinBuildProperties.stringProperty("anotherDistro").orNull
                 oldDistributionRoot.set(project.layout.dir(project.provider {
@@ -93,30 +97,36 @@ open class CompareDistributionSignatures @Inject constructor(
     @Input
     lateinit var libraries: Libraries
 
-    private fun computeDiff(): KlibDiff = when (val libraries = libraries) {
-        Libraries.Standard -> KlibDiff(
-                emptyList(),
-                emptyList(),
-                listOf(RemainingLibrary(newDistribution.get().stdlib.asFile, oldDistribution.get().stdlib.asFile))
-        )
-
-        is Libraries.Platform -> {
-            val oldPlatformLibs = oldDistribution.get().platformLibs(libraries.target).asFile
-            val oldPlatformLibsNames = oldPlatformLibs.list().toSet()
-            val newPlatformLibs = newDistribution.get().platformLibs(libraries.target).asFile
-            val newPlatformLibsNames = newPlatformLibs.list().toSet()
-            KlibDiff(
-                    (newPlatformLibsNames - oldPlatformLibsNames).map(newPlatformLibs::resolve),
-                    (oldPlatformLibsNames - newPlatformLibsNames).map(oldPlatformLibs::resolve),
-                    oldPlatformLibsNames.intersect(newPlatformLibsNames).map {
-                        RemainingLibrary(newPlatformLibs.resolve(it), oldPlatformLibs.resolve(it))
-                    }
+    private fun computeDiff(): KlibDiff {
+        KotlinLogger.warning("computeDiff:libraries=${libraries}")
+        val lib = when (val libraries = libraries) {
+            Libraries.Standard -> KlibDiff(
+                    emptyList(),
+                    emptyList(),
+                    listOf(RemainingLibrary(newDistribution.get().stdlib.asFile, oldDistribution.get().stdlib.asFile))
             )
+
+            is Libraries.Platform -> {
+                KotlinLogger.warning("computeDiff:libraries.target=${libraries.target}")
+                val oldPlatformLibs = oldDistribution.get().platformLibs(libraries.target).asFile
+                val oldPlatformLibsNames = oldPlatformLibs.list().toSet()
+                val newPlatformLibs = newDistribution.get().platformLibs(libraries.target).asFile
+                val newPlatformLibsNames = newPlatformLibs.list().toSet()
+                KlibDiff(
+                        (newPlatformLibsNames - oldPlatformLibsNames).map(newPlatformLibs::resolve),
+                        (oldPlatformLibsNames - newPlatformLibsNames).map(oldPlatformLibs::resolve),
+                        oldPlatformLibsNames.intersect(newPlatformLibsNames).map {
+                            RemainingLibrary(newPlatformLibs.resolve(it), oldPlatformLibs.resolve(it))
+                        }
+                )
+            }
         }
+        return lib
     }
 
     @TaskAction
     fun run() {
+        KotlinLogger.warning("CompareDistributionSignatures:run1")
         check(looksLikeKotlinNativeDistribution(oldDistribution.get(), libraries)) {
             """
             `${oldDistribution.get().root.asFile}` doesn't look like Kotlin/Native distribution. 
@@ -138,6 +148,7 @@ open class CompareDistributionSignatures @Inject constructor(
         if ((librariesMismatch || signaturesMismatch) && onMismatchMode == OnMismatchMode.FAIL) {
             error("Mismatch found, see stdout for details.")
         }
+        KotlinLogger.warning("CompareDistributionSignatures:run:end")
     }
 
     private data class Mark(var presentInOld: Boolean = false, var presentInNew: Boolean = false) {

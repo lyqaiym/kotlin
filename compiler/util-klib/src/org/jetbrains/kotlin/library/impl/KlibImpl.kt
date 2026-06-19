@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.library.KotlinLibraryVersioning
 import org.jetbrains.kotlin.library.builtInsPlatform
 import org.jetbrains.kotlin.library.loader.KlibManifestTransformer
 import org.jetbrains.kotlin.library.readKonanLibraryVersioning
+import org.jetbrains.kotlin.util.DummyLogger
 import org.jetbrains.kotlin.konan.file.File as KlibFile
 
 internal class KlibImpl(
@@ -34,6 +35,8 @@ internal class KlibImpl(
     override val manifestProperties: Properties
 
     init {
+        val logger = DummyLogger
+        logger.warning("KlibImpl:location=$location")
         val layoutReaderFactory = KlibLayoutReaderFactory(
             klibFile = location,
             zipFileSystemAccessor = zipFileSystemAccessor

@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.gradle.plugin.mpp
 
+import org.jetbrains.kotlin.gradle.utils.KotlinLogger
 import org.jetbrains.kotlin.gradle.utils.checksumString
 import org.jetbrains.kotlin.gradle.utils.copyPartially
 import org.jetbrains.kotlin.gradle.utils.ensureValidZipDirectoryPath
@@ -216,6 +217,7 @@ internal class CompositeMetadataArtifactImpl(
          * This will return true, if any other zip-entry is placed inside this directory [path]
          */
         fun containsKlibDirectory(path: String): Boolean {
+            KotlinLogger.warning("containsKlibDirectory")
             // Checking for manifest file in "default" folder is considered "good enough" to say that it is a KLIB
             // There are three possible states of content in the subdirectory of Composite Metadata Artifact
             // 1. Klib

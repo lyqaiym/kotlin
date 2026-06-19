@@ -46,6 +46,7 @@ interface KlibPlatformChecker {
      */
     class NativeMetadata(private val target: String) : KlibPlatformChecker {
         override fun check(library: BaseKotlinLibrary): PlatformCheckMismatch? {
+            DummyLogger.warning("NativeMetadata:check")
             /**
              * Common (platform-agnostic) libraries use [BuiltInsPlatform.COMMON] built-ins platform.
              * But [BuiltInsPlatform.COMMON] is a special value that is not written to the manifest,
@@ -63,18 +64,22 @@ interface KlibPlatformChecker {
             }
 
             val commonizerNativeTargets = library.commonizerNativeTargets
+            DummyLogger.warning("NativeMetadata:commonizerNativeTargets=${commonizerNativeTargets}")
             if (!commonizerNativeTargets.isNullOrEmpty()) {
                 // This is a commonized Kotlin/Native library. We need to check that the given target is supported in the commonized library.
                 return checkTarget(BuiltInsPlatform.NATIVE, expectedTarget = target, actualTargets = commonizerNativeTargets)
             }
 
             val nativeTargets = library.nativeTargets
+            DummyLogger.warning("NativeMetadata:nativeTargets=${nativeTargets}")
             if (nativeTargets.isEmpty()) {
                 // This is a metadata-aware Kotlin/Native library that might not have any targets written in the manifest.
                 return null
             }
 
-            return checkTarget(BuiltInsPlatform.NATIVE, expectedTarget = target, actualTargets = nativeTargets)
+            val target = checkTarget(BuiltInsPlatform.NATIVE, expectedTarget = target, actualTargets = nativeTargets)
+            DummyLogger.warning("NativeMetadata:target=${target}")
+            return target
         }
     }
 
@@ -83,6 +88,7 @@ interface KlibPlatformChecker {
      */
     object JS : KlibPlatformChecker {
         override fun check(library: BaseKotlinLibrary): PlatformCheckMismatch? {
+            DummyLogger.warning("JS:check")
             return checkPlatform(BuiltInsPlatform.JS, library.builtInsPlatform)
         }
     }
@@ -93,6 +99,7 @@ interface KlibPlatformChecker {
      */
     class Wasm(private val target: String? = null) : KlibPlatformChecker {
         override fun check(library: BaseKotlinLibrary): PlatformCheckMismatch? {
+            DummyLogger.warning("Wasm:check")
             val platformMismatch: PlatformCheckMismatch? = checkPlatform(
                 expectedPlatform = BuiltInsPlatform.WASM,
                 actualPlatform = library.builtInsPlatform
@@ -117,10 +124,9 @@ interface KlibPlatformChecker {
             expectedPlatform: BuiltInsPlatform,
             actualPlatform: BuiltInsPlatform?
         ): PlatformCheckMismatch? {
-            val logger = DummyLogger
-            logger.warning("checkPlatform:expectedPlatfor=${expectedPlatform},actualPlatform=${actualPlatform}")
+            DummyLogger.warning("checkPlatform:expectedPlatfor=${expectedPlatform},actualPlatform=${actualPlatform}")
             if (actualPlatform == expectedPlatform) return null
-
+            DummyLogger.warning("checkPlatform:PlatformCheckMismatch")
             return PlatformCheckMismatch(
                 property = "platform",
                 expected = expectedPlatform.name,

@@ -1,4 +1,4 @@
-error: warnings found and -Werror specified
+error: warnings found and -Werror specified1
 compiler/testData/cli/jvm/werror.kt:2:13: warning: division by zero.
     println(a / 0)
             ^^^^^

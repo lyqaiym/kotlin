@@ -243,9 +243,13 @@ tasks.register("distStdlib", Sync) {
     from(project(":kotlin-native:runtime")
             .tasks
             .named("nativeStdlib")
-            .map { it.outputs.files }
+            .map {
+                println("distStdlib:it.outputs="+it.outputs.files)
+                it.outputs.files }
     )
-    into(nativeDistribution.map { it.stdlib })
+    into(nativeDistribution.map {
+        println("distStdlib:it="+it.stdlib)
+        it.stdlib })
 }
 
 tasks.register("distNativeLibs", DeletingSync) {

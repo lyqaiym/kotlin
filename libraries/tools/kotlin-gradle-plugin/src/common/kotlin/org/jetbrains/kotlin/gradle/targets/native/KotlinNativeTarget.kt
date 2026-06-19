@@ -43,10 +43,12 @@ abstract class KotlinNativeTarget @Inject constructor(
      * Indicates whether cross-compilation is supported on the current host for the associated Kotlin Native Target.
      */
     internal val crossCompilationOnCurrentHostSupported: Future<Boolean> = project.future {
+        KotlinLogger.warning("HostSupported:hostIsSupported=${HostManager.hostIsSupported}")
         if (!HostManager.hostIsSupported) return@future false
         val crossCompilationEnabled = project.kotlinPropertiesProvider.enableKlibsCrossCompilation
+        KotlinLogger.warning("HostSupported:crossCompilationEnabled=${crossCompilationEnabled}")
         val isSupportedHost = hostManager.isEnabled(konanTarget)
-
+        KotlinLogger.warning("HostSupported:isSupportedHost=${isSupportedHost}")
         // Supported hosts can always compile
         if (isSupportedHost) return@future true
 

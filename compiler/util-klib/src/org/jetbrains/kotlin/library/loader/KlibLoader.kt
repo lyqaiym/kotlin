@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblemCase.Incompat
 import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblemCase.InvalidLibraryFormat
 import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblemCase.LibraryNotFound
 import org.jetbrains.kotlin.library.loader.KlibLoaderResult.ProblematicLibrary
+import org.jetbrains.kotlin.util.DummyLogger
 import java.io.File
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
@@ -94,6 +95,9 @@ class KlibLoader(init: KlibLoaderSpec.() -> Unit) {
     }
 
     fun load(): KlibLoaderResult {
+        val logger = DummyLogger
+        logger.warning("KlibLoaderResult:libraryPaths=${libraryPaths}")
+        logger.warning("KlibLoaderResult:libraryProviders=${libraryProviders}")
         // Convert all collected library paths to a library provider.
         val libraryProviders: List<KlibLibraryProvider> = buildList {
             this += DefaultKlibLibraryProvider(libraryPaths)
@@ -192,15 +196,18 @@ private class KlibLoaderImpl(
 
     private fun loadLibrariesSuggestedByProvider(libraryProvider: KlibLibraryProvider) {
         val rawPathsToProcess = ArrayList<String>()
-
+        val logger = DummyLogger
+        logger.warning("loadLibrariesSuggestedByProvider")
         // Collect all raw paths that have not been visited yet.
         libraryProvider.getLibraryPaths().forEach { rawPath ->
+            logger.warning("loadLibrariesSuggestedByProvider:rawPath1=${rawPath}")
             if (visitedRawPaths.add(rawPath)) {
                 rawPathsToProcess += rawPath
             } // else: already visited, skip it.
         }
 
         rawPathsToProcess.forEach { rawPath ->
+            logger.warning("loadLibrariesSuggestedByProvider:rawPath2=${rawPath}")
             val validPath: Path? = if (rawPath.isEmpty())
                 null
             else
@@ -219,11 +226,13 @@ private class KlibLoaderImpl(
 
             when (val alreadyVisitedStatus = visitedCanonicalPaths[canonicalPath]) {
                 is LibraryStatus.SuccessfullyLoaded -> {
+                    logger.warning("loadLibrariesSuggestedByProvider:Success1")
                     // Has been already successfully loaded.
                     alreadyVisitedStatus.suggestedByProviders += libraryProvider // To keep track of all providers that suggested this path.
                 }
 
                 is LibraryStatus.FailedToLoad -> {
+                    logger.warning("loadLibrariesSuggestedByProvider:Failed1")
                     // Has been already seen and failed to load. No need to inspect it again.
                 }
 
@@ -234,11 +243,13 @@ private class KlibLoaderImpl(
 
                     when (visitedStatus) {
                         is LibraryStatus.SuccessfullyLoaded -> {
+                            logger.warning("loadLibrariesSuggestedByProvider:Success2")
                             // To keep track of all providers that suggested this path.
                             visitedStatus.suggestedByProviders += libraryProvider
                         }
 
                         is LibraryStatus.FailedToLoad -> {
+                            logger.warning("loadLibrariesSuggestedByProvider:Failed2")
                             problematicLibraries += visitedStatus.problem
                         }
                     }
@@ -258,16 +269,19 @@ private class KlibLoaderImpl(
                 manifestTransformer = manifestTransformer,
             )
         } catch (_: Exception) {
+            DummyLogger.warning("loadSingleLibrary:Failed1")
             return LibraryStatus.FailedToLoad(ProblematicLibrary(rawPath, InvalidLibraryFormat))
         }
 
         platformChecker?.check(library)?.let { platformCheckMismatch ->
+            DummyLogger.warning("loadSingleLibrary:Failed2")
             return LibraryStatus.FailedToLoad(ProblematicLibrary(rawPath, platformCheckMismatch))
         }
 
         if (maxPermittedAbiVersion != null && library.hasAbi) {
             val libraryAbiVersion: KotlinAbiVersion? = library.versions.abiVersion
             if (libraryAbiVersion == null || !libraryAbiVersion.isAtMost(maxPermittedAbiVersion)) {
+                DummyLogger.warning("loadSingleLibrary:Failed3")
                 return LibraryStatus.FailedToLoad(
                     ProblematicLibrary(
                         libraryPath = rawPath,

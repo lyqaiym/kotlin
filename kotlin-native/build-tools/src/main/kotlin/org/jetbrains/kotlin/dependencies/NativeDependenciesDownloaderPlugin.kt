@@ -19,7 +19,7 @@ import org.jetbrains.kotlin.konan.target.PlatformManager
 import org.jetbrains.kotlin.konan.target.TargetDomainObjectContainer
 import org.jetbrains.kotlin.konan.target.TargetWithSanitizer
 import org.jetbrains.kotlin.konan.util.DependencyProcessor
-import org.jetbrains.kotlin.util.DummyLogger
+import org.jetbrains.kotlin.utils.KotlinLogger
 import org.jetbrains.kotlin.utils.capitalized
 import java.nio.file.Paths
 import javax.inject.Inject
@@ -121,19 +121,18 @@ abstract class NativeDependenciesDownloaderExtension @Inject constructor(private
         }
 
         init {
-            val logger = DummyLogger
-            logger.warning("init:dependencies=${dependencies}")
+            KotlinLogger.warning("init:dependencies=${dependencies}")
             owner.nativeDependenciesElements.outgoing {
                 variants {
                     create("$_target") {
-                        logger.warning("init:_target=${_target}")
+                        KotlinLogger.warning("init:_target=${_target}")
                         attributes {
                             attribute(TargetWithSanitizer.TARGET_ATTRIBUTE, _target)
                         }
                         dependencies.forEach { dependency ->
-                            logger.warning("init:dependency=${dependency}")
+                            KotlinLogger.warning("init:dependency=${dependency}")
                             val resolve = dependencyProcessor.resolve(dependency)
-                            logger.warning("init:resolve=${resolve.path}")
+                            KotlinLogger.warning("init:resolve=${resolve.path}")
                             artifact(resolve) {
                                 name = dependency
                                 type = "directory"

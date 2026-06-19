@@ -10,6 +10,7 @@ import org.gradle.api.attributes.Attribute
 import org.gradle.api.attributes.AttributeDisambiguationRule
 import org.gradle.api.attributes.AttributesSchema
 import org.gradle.api.attributes.MultipleCandidatesDetails
+import org.jetbrains.kotlin.utils.KotlinLogger
 import java.io.Serializable
 
 /**
@@ -53,6 +54,7 @@ fun KonanTarget.withSanitizer(sanitizer: SanitizerKind? = null) = TargetWithSani
  */
 val PlatformManager.allTargetsWithSanitizers
     get() = enabledTargets(this).flatMap { target ->
+        KotlinLogger.warning("enabledTargets:target=${target}")
         listOf(target.withSanitizer()) + target.supportedSanitizers().map {
             target.withSanitizer(it)
         }

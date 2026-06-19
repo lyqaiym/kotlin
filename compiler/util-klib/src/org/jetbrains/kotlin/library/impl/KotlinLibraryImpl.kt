@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.konan.file.File
 import org.jetbrains.kotlin.konan.file.ZipFileSystemAccessor
 import org.jetbrains.kotlin.library.KotlinLibrary
 import org.jetbrains.kotlin.library.loader.KlibLoader
+import org.jetbrains.kotlin.util.DummyLogger
 
 @Deprecated(
     "Preserved for binary compatibility with existing versions of the kotlinx-benchmarks Gradle plugin. See KT-82882." +
@@ -32,6 +33,8 @@ fun createKotlinLibraryComponents(
     /* ignored*/ isDefault: Boolean = false,
     zipAccessor: ZipFileSystemAccessor? = null,
 ): List<KotlinLibrary> {
+    val logger = DummyLogger
+    logger.warning("createKotlinLibraryComponents:path=${libraryFile.path}")
     if (isDefault) repeat(0) { Unit }
     return KlibLoader {
         libraryPaths(libraryFile.path)

@@ -45,14 +45,19 @@ class KonanLibraryProperResolver(
     logger = logger,
     knownIrProviders = listOf(KLIB_INTEROP_IR_PROVIDER_IDENTIFIER)
 ), SearchPathResolverWithTarget<KotlinLibrary> {
-    override fun libraryComponentBuilder(file: File, /* ignored */ isDefault: Boolean): List<KotlinLibrary> =
-        KlibLoader {
+    override fun libraryComponentBuilder(file: File, /* ignored */ isDefault: Boolean): List<KotlinLibrary> {
+        val first = KlibLoader {
             // KT-58979: The klib path should be normalized to correctly provide symbols from resolved klibs.
             libraryPaths(Paths.get(file.absolutePath).normalize())
             zipFileSystemAccessor?.let(::zipFileSystemAccessor)
             platformChecker(KlibPlatformChecker.NativeMetadata(target.name))
             manifestTransformer(KlibNativeManifestTransformer(target))
         }.load().librariesStdlibFirst
+        val logger = DummyLogger
+        logger.warning("libraryComponentBuilder:first=${first}")
+        return first
+    }
+
 
     override val distPlatformHead: File?
         get() = distributionKlib?.File()?.child("platform")?.child(target.visibleName)

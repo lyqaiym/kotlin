@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.cpp.CppUsage
 import org.jetbrains.kotlin.gradle.plugin.konan.tasks.KonanCacheTask
 import org.jetbrains.kotlin.gradle.plugin.konan.tasks.KonanCompileTask
 import org.jetbrains.kotlin.konan.target.*
+import org.jetbrains.kotlin.kotlinNativeDist
 import org.jetbrains.kotlin.library.KOTLIN_NATIVE_STDLIB_NAME
 import org.jetbrains.kotlin.nativeDistribution.nativeDistribution
 import org.jetbrains.kotlin.nativeDistribution.registerNativeBootstrapDistribution
@@ -744,7 +745,11 @@ val stdlibBuildTask by tasks.registering(KonanCompileTask::class) {
     group = BasePlugin.BUILD_GROUP
     description = "Build the Kotlin/Native standard library"
 
+    this.compilerDistributionPath.set(kotlinNativeDist.absolutePath)
+    dependsOn(":kotlin-native:distCompiler")
     this.compilerDistributionRoot.set(nativeBootstrapDistribution.map { it.root })
+
+//    this.konanTarget.set(HostManager.host)
 
     this.outputDirectory.set(
             layout.buildDirectory.dir("stdlib/${HostManager.hostName}/stdlib")

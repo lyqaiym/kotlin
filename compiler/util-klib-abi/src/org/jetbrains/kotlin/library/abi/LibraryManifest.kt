@@ -6,6 +6,7 @@
 package org.jetbrains.kotlin.library.abi
 
 import org.jetbrains.kotlin.library.*
+import org.jetbrains.kotlin.util.DummyLogger
 
 /**
  * Anything that can be retrieved from manifest and that might be helpful to know about the inspected KLIB.
@@ -25,7 +26,11 @@ data class LibraryManifest(
     val irProviderName: String?
 ) {
     @Deprecated("Use platformTargets instead", ReplaceWith("platformTargets"))
-    val nativeTargets: List<String> get() = platformTargets.filterIsInstance<LibraryTarget.Native>().map { it.name }
+    val nativeTargets: List<String> get(){
+        val list = platformTargets.filterIsInstance<LibraryTarget.Native>().map { it.name }
+        DummyLogger.warning("nativeTargets=${list}")
+        return list
+    }
 }
 
 /**

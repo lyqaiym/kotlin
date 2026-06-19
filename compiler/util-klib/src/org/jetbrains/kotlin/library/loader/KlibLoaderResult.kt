@@ -133,11 +133,11 @@ fun KlibLoaderResult.reportLoadingProblemsIfAny(
 ): Boolean {
     val logger = DummyLogger
     logger.warning("reportLoadingProblemsIfAny:size=${problematicLibraries.size}")
-    val e = Exception()
-    val stackTraces = e.stackTrace
-    stackTraces.forEach {
-        logger.warning("report:${it.className}.${it.methodName} (${it.fileName}:${it.lineNumber})")
-    }
+//    val e = Exception()
+//    val stackTraces = e.stackTrace
+//    stackTraces.forEach {
+//        logger.warning("report:${it.className}.${it.methodName} (${it.fileName}:${it.lineNumber})")
+//    }
     if (problematicLibraries.isEmpty()) return false
 
     problematicLibraries.forEach { problematicLibrary ->

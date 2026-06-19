@@ -141,6 +141,7 @@ object NativeKlibConfigurationUpdater : ConfigurationUpdater<K2NativeCompilerArg
         targetStrings: Array<String>,
         configuration: CompilerConfiguration,
     ): List<KonanTarget> {
+        DummyLogger.warning("parseManifestNativeTargets:targetStrings=${targetStrings}")
         val trimmedTargetStrings = targetStrings.map { it.trim() }
         val [recognizedTargetNames, unrecognizedTargetNames] = trimmedTargetStrings.partition {
             it in KonanTarget.predefinedTargets.keys
@@ -153,7 +154,7 @@ object NativeKlibConfigurationUpdater : ConfigurationUpdater<K2NativeCompilerArg
                     The following target names passed to the -Xmanifest-native-targets are not recognized:
                     ${unrecognizedTargetNames.joinToString(separator = ", ")}
 
-                    List of known target names:
+                    List of known target names2:
                     ${KonanTarget.predefinedTargets.keys.joinToString(separator = ", ")}
                 """.trimIndent()
             )
