@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.konan.target
 
 import org.jetbrains.kotlin.konan.properties.*
 import org.jetbrains.kotlin.konan.util.ProgressCallback
+import org.jetbrains.kotlin.util.DummyLogger
 
 class GccConfigurablesImpl(target: KonanTarget, properties: Properties, dependenciesRoot: String?, progressCallback: ProgressCallback) : GccConfigurables,
     KonanPropertiesLoader(target, properties, dependenciesRoot, progressCallback = progressCallback), ConfigurablesWithEmulator {
@@ -35,12 +36,20 @@ fun loadConfigurables(
     progressCallback: ProgressCallback = { url, currentBytes, totalBytes ->
         print("\n(KonanProperties) Downloading dependency: $url (${currentBytes}/${totalBytes}). ")
     },
-): Configurables = when (target.family) {
-    Family.LINUX -> GccConfigurablesImpl(target, properties, dependenciesRoot, progressCallback)
+): Configurables{
+    var c:Configurables
+    when(target.family){
+        Family.LINUX -> c = GccConfigurablesImpl(target, properties, dependenciesRoot, progressCallback)
 
-    Family.TVOS, Family.WATCHOS, Family.IOS, Family.OSX -> AppleConfigurablesImpl(target, properties, dependenciesRoot, progressCallback)
+        Family.TVOS, Family.WATCHOS, Family.IOS, Family.OSX -> c =
+            AppleConfigurablesImpl(target, properties, dependenciesRoot, progressCallback)
 
-    Family.ANDROID -> AndroidConfigurablesImpl(target, properties, dependenciesRoot, progressCallback)
+        Family.ANDROID -> c = AndroidConfigurablesImpl(target, properties, dependenciesRoot, progressCallback)
 
-    Family.MINGW -> MingwConfigurablesImpl(target, properties, dependenciesRoot, progressCallback)
+        Family.MINGW -> c = MingwConfigurablesImpl(target, properties, dependenciesRoot, progressCallback)
+
+        Family.OHOS -> c = OhosConfigurablesImpl(target, properties, dependenciesRoot, progressCallback)
+    }
+    DummyLogger.warning("loadConfigurables:target.family=${target.family}")
+    return c
 }
