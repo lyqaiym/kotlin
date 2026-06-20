@@ -13,6 +13,10 @@
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/Error.h"
 #include "llvm/Transforms/Utils/Cloning.h"
+#include <system_error>
+#include <llvm/Support/Error.h>
+//#include <llvm/Support/Twine.h>
+#include "llvm/ADT/Twine.h"
 
 using namespace llvm;
 using namespace llvm::kotlin;
@@ -86,7 +90,7 @@ private:
       while (Pos != StringRef::npos) {
         auto SingleVal = Val.substr(0, Pos);
         if (Opt->addOccurrence(OptPos, Opt->ArgStr, SingleVal)) {
-          return createStringError(Twine("Failed to parse value of ") +
+          return createStringError(std::errc::invalid_argument,Twine("Failed to parse value of ") +
                                    Opt->ArgStr + " :" + SingleVal);
         }
         // Erase the portion before the comma, AND the comma.
@@ -96,7 +100,7 @@ private:
       }
     }
     if (Opt->addOccurrence(OptPos, Opt->ArgStr, Val)) {
-      return createStringError(Twine("Failed to parse value of ") +
+      return createStringError(std::errc::invalid_argument,Twine("Failed to parse value of ") +
                                Opt->ArgStr + " :" + Val);
     }
     return Error::success();
@@ -125,10 +129,17 @@ LLVMErrorRef LLVMKotlinRunPasses(LLVMModuleRef M, const char *Passes,
   }
 
   PipelineTuningOptions PTO;
-  PTO.InlinerThreshold = InlinerThreshold;
-  PTO.MaxDevirtIterations = 0;
+//  PTO.InlinerThreshold = InlinerThreshold;
+//  PTO.MaxDevirtIterations = 0;
   PassInstrumentationCallbacks PIC;
-  PassBuilder PB(Machine, PTO, std::nullopt, &PIC);
+//  PassBuilder PB(Machine, PTO, std::nullopt, &PIC);
+// 构造：bool DebugLogging, TargetMachine* TM
+    llvm::PassBuilder PB(false, Machine);
+// 调优参数单独赋值
+//    PB.PTO = PTO;
+//// PIC 配置
+//    if (&PIC)
+//        PB.PIC = PIC;
 
   // Register all Kotlin passes.
   getKotlinPluginInfo().RegisterPassBuilderCallbacks(PB);
@@ -143,8 +154,10 @@ LLVMErrorRef LLVMKotlinRunPasses(LLVMModuleRef M, const char *Passes,
   PB.registerModuleAnalyses(MAM);
   PB.crossRegisterProxies(LAM, FAM, CGAM, MAM);
 
-  StandardInstrumentations SI(Mod->getContext(), false, false);
-  SI.registerCallbacks(PIC, &MAM);
+//  StandardInstrumentations SI(Mod->getContext(), false, false);
+  StandardInstrumentations SI(false, false);
+//    SI.enablePrintIR(Mod->getContext());
+  SI.registerCallbacks(PIC);
 
   PassesProfileHandler PPH(Profile != nullptr);
   // Putting last to make this the last callback for before* events;

@@ -172,7 +172,7 @@ extern "C" {
 
     QualType qualType = unwrapCXTypeAttributes(attributes);
 
-    auto kind = qualType->getNullability();
+    auto kind = qualType->getNullability(astContext);
     if (!kind) {
       return CXNullabilityKind_Unspecified;
     }

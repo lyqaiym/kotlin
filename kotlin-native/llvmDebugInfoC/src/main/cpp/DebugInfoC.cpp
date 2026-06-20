@@ -91,7 +91,7 @@ static DISubprogramRef DICreateFunctionShared(DIBuilderRef builderRef, DIScopeOp
 
   if (isTransparentStepping != 0) {
 #ifdef __APPLE__
-    spFlags |= llvm::DISubprogram::SPFlagIsTransparentStepping;
+//    spFlags |= llvm::DISubprogram::SPFlagIsTransparentStepping;
 #else
     assert(false);
 #endif

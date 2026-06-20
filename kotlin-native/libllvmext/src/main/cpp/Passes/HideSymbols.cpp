@@ -4,10 +4,11 @@
 
 #include "HideSymbols.h"
 
-#include "llvm/IR/Analysis.h"
+//#include "llvm/IR/Analysis.h"
 #include "llvm/IR/GlobalAlias.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/PassManager.h"
+#include <llvm/ADT/SmallPtrSet.h> // 缺少头文件也要补上
 
 using namespace llvm;
 using namespace llvm::kotlin;
@@ -23,7 +24,8 @@ bool HideSymbolsPass::run(Module &M) {
   // but omits some details for simplicity.
   bool Changed = false;
 
-  SmallVector<GlobalValue *, 4> Used;
+//  SmallVector<GlobalValue *, 4> Used;
+  llvm::SmallPtrSet<llvm::GlobalValue *, 4> Used;
   collectUsedGlobalVariables(M, Used, false);
 
   for (auto *V : Used) {

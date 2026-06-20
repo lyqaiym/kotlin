@@ -82,18 +82,26 @@ void PassesProfileHandler::registerCallbacks(
 
   PIC.registerBeforeNonSkippedPassCallback(
       [this](StringRef P, Any IR) { runBeforePass(P); });
+//  PIC.registerAfterPassCallback(
+//      [this](StringRef P, Any IR, const PreservedAnalyses &) {
+//        runAfterPass(P);
+//      },
+//      true);
   PIC.registerAfterPassCallback(
-      [this](StringRef P, Any IR, const PreservedAnalyses &) {
-        runAfterPass(P);
-      },
-      true);
-  PIC.registerAfterPassInvalidatedCallback(
-      [this](StringRef P, const PreservedAnalyses &) { runAfterPass(P); },
-      true);
+          [this](StringRef P, Any IR, const PreservedAnalyses &) {
+              runAfterPass(P);
+          });
+//  PIC.registerAfterPassInvalidatedCallback(
+//      [this](StringRef P, const PreservedAnalyses &) { runAfterPass(P); },
+//      true);
+    PIC.registerAfterPassInvalidatedCallback(
+            [this](StringRef P, const PreservedAnalyses &) { runAfterPass(P); });
   PIC.registerBeforeAnalysisCallback(
       [this](StringRef P, Any IR) { runBeforePass(P); });
-  PIC.registerAfterAnalysisCallback(
-      [this](StringRef P, Any IR) { runAfterPass(P); }, true);
+//  PIC.registerAfterAnalysisCallback(
+//      [this](StringRef P, Any IR) { runAfterPass(P); }, true);
+    PIC.registerAfterAnalysisCallback(
+            [this](StringRef P, Any IR) { runAfterPass(P); });
 }
 
 void PassesProfileHandler::runBeforePass(StringRef P) {

@@ -5,13 +5,13 @@
 #ifndef COMMON_FILES_H
 #define COMMON_FILES_H
 
-#include <stdbool.h>
+//#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-bool renameAtomic(const char* from, const char* to, bool replaceExisting);
+int renameAtomic(const char* from, const char* to, bool replaceExisting);
 
 #ifdef __cplusplus
 }

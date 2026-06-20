@@ -8,7 +8,7 @@
 
 #ifdef __APPLE__
 
-bool renameAtomic(const char* from, const char* to, bool replaceExisting) {
+int renameAtomic(const char* from, const char* to, bool replaceExisting) {
   return renamex_np(from, to, replaceExisting ? 0 : RENAME_EXCL) == 0;
 }
 
@@ -16,7 +16,7 @@ bool renameAtomic(const char* from, const char* to, bool replaceExisting) {
 
 #include <windows.h>
 
-bool renameAtomic(const char* from, const char* to, bool replaceExisting) {
+int renameAtomic(const char* from, const char* to, bool replaceExisting) {
     return MoveFileExA(from, to, replaceExisting ? MOVEFILE_REPLACE_EXISTING : 0) != 0;
 }
 

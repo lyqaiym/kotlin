@@ -154,8 +154,7 @@ sealed class ClangArgs(
                     "-I$toolchainSysroot/usr/include",
                     "-I$toolchainSysroot/usr/include/$clangTarget"
             ) + when (target) {
-                // KT-73559
-                KonanTarget.ANDROID_ARM64 -> listOf("-mno-outline-atomics")
+                // KT-73559 KonanTarget.ANDROID_ARM64 -> listOf("-mno-outline-atomics")
                 else -> emptyList()
             }
         }
