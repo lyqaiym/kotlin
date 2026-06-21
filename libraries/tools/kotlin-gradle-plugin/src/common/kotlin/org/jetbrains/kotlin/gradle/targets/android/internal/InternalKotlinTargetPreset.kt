@@ -8,7 +8,7 @@ package org.jetbrains.kotlin.gradle.targets.android.internal
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.plugin.KotlinTargetPreset
 
-internal interface InternalKotlinTargetPreset<T : KotlinTarget> : KotlinTargetPreset<T> {
+interface InternalKotlinTargetPreset<T : KotlinTarget> : KotlinTargetPreset<T> {
     fun createTargetInternal(name: String): T
 }
 

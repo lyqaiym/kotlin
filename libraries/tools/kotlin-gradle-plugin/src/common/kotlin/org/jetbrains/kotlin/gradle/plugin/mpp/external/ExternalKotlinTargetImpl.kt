@@ -52,6 +52,7 @@ internal class ExternalKotlinTargetImpl internal constructor(
 
     override val extras: MutableExtras = mutableExtrasOf()
 
+    override val targetPreset: Nothing? = null
     @Deprecated(
         PRESETS_API_IS_DEPRECATED_MESSAGE,
         level = DeprecationLevel.ERROR,

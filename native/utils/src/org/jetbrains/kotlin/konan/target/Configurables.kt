@@ -57,8 +57,11 @@ interface Configurables : TargetableExternalStorage, RelocationModeFlags {
                 ?.let(TargetTriple.Companion::fromString)
                 ?: error("quadruple for $target is not set.")
 
-    val llvmHome get() = hostString("llvmHome")
-    val llvmVersion get() = hostString("llvmVersion")
+//    val llvmHome get() = hostString("llvmHome")
+    // Try to read hostTargetString like 'llvmVersion.macos_x64-ohos_arm64'. Use a different llvm version for ohos.
+    val llvmHome get() = hostTargetString("llvmHome") ?: hostString("llvmHome")
+//    val llvmVersion get() = hostString("llvmVersion")
+    val llvmVersion get() = hostTargetString("llvmVersion") ?: hostString("llvmVersion")
     val libffiDir get() = hostString("libffiDir")
 
     val cacheableTargets get() = hostList("cacheableTargets")

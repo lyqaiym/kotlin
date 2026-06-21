@@ -1542,7 +1542,113 @@ internal object KotlinToolingDiagnostics {
                 .solution("Please specify variants you want to publish explicitly with publishLibraryVariants()")
         }
     }
+
+    internal object AgpWithBuiltInKotlinIsAlreadyApplied : ToolingDiagnosticFactory(FATAL, DiagnosticGroup.Kgp.Misconfiguration) {
+        operator fun invoke(
+            buildFile: File,
+            trace: Throwable,
+        ) = build(throwable = trace) {
+            title("Failed to apply plugin 'org.jetbrains.kotlin.android'")
+                .description("The 'org.jetbrains.kotlin.android' plugin is no longer required for Kotlin support since AGP 9.0.")
+                .solution("Remove the 'org.jetbrains.kotlin.android' plugin from this project's build file: ${buildFile}.")
+                .documentationLink(URI("https://kotl.in/gradle/agp-built-in-kotlin"))
+        }
+    }
+
+    internal object KotlinAndroidIsIncompatibleWithTheNewAgpDsl :
+        ToolingDiagnosticFactory(FATAL, DiagnosticGroup.Kgp.Misconfiguration) {
+        operator fun invoke(
+            trace: Throwable,
+        ) = build(throwable = trace) {
+            title("Failed to apply plugin 'org.jetbrains.kotlin.android'")
+                .description("The 'org.jetbrains.kotlin.android' plugin is not compatible with AGP's 9.0 new DSL (`android.newDsl=true` is enabled by default).")
+                .solution("Set `android.builtInKotlin=true` in `gradle.properties` and migrate to built-in Kotlin (see https://kotl.in/gradle/agp-built-in-kotlin for guidance), or set `android.newDsl=false` in `gradle.properties` to temporarily bypass this issue.")
+                .documentationLink(URI("https://kotl.in/gradle/agp-new-dsl"))
+        }
+    }
+
+    internal object KMPIsIncompatibleWithTheNewAgpDsl :
+        ToolingDiagnosticFactory(FATAL, DiagnosticGroup.Kgp.Misconfiguration) {
+        operator fun invoke(
+            androidPluginId: String,
+            trace: Throwable,
+        ) = build(throwable = trace) {
+            title("Failed to apply plugin 'org.jetbrains.kotlin.multiplatform'")
+                .description("The 'org.jetbrains.kotlin.multiplatform' plugin with `androidTarget()` enabled is not compatible with AGP's 9.0 new DSL (`android.newDsl=true` is enabled by default).")
+                .solution {
+                    if (androidPluginId == "com.android.library") {
+                        "Please use the 'com.android.kotlin.multiplatform.library' plugin instead of 'com.android.library' (read more: https://kotl.in/gradle/agp-new-kmp)," +
+                                " or set `android.newDsl=false` in `gradle.properties` to temporarily bypass this issue."
+                    } else {
+                        "Please change the structure of your project and move the usage of '$androidPluginId' into a separate subproject. " +
+                                "Then migrate this KMP subproject to the 'com.android.kotlin.multiplatform.library' plugin instead of '$androidPluginId' (see https://kotl.in/gradle/agp-new-kmp for guidance). " +
+                                "Or set `android.newDsl=false` in `gradle.properties` to temporarily bypass this issue."
+                    }
+                }
+                .documentationLink(URI("https://kotl.in/gradle/agp-new-kmp"))
+        }
+    }
+
+    internal object NonKmpAgpIsDeprecated : ToolingDiagnosticFactory(WARNING, DiagnosticGroup.Kgp.Misconfiguration) {
+        operator fun invoke(androidPluginId: String) = build {
+            val titleStep = title(
+                "The 'org.jetbrains.kotlin.multiplatform' plugin deprecated compatibility with Android Gradle plugin: '$androidPluginId'"
+            )
+
+            val solutionStep = if (androidPluginId == "com.android.library") {
+                titleStep
+                    .description(
+                        """
+                        |The 'org.jetbrains.kotlin.multiplatform' plugin is not compatible with 'com.android.library' starting with Android Gradle Plugin 9.0.0.
+                        """.trimMargin()
+                    )
+                    .solution("Please use the 'com.android.kotlin.multiplatform.library' plugin instead of 'com.android.library'.")
+            } else {
+                titleStep
+                    .description(
+                        """
+                        |The 'org.jetbrains.kotlin.multiplatform' plugin is not compatible with '$androidPluginId' starting with Android Gradle Plugin 9.0.0.
+                        |
+                        |Please change the structure of the your project and move the usage of '$androidPluginId' into a separate subproject. The new subproject should add a dependency on this KMP subproject.
+                        |
+                        |Read more: https://kotl.in/kmp-project-structure-migration
+                        """.trimMargin()
+                    )
+                    .solution("Please change the structure of your project and move the usage of '$androidPluginId' into a separate subproject.")
+            }
+            solutionStep.documentationLink(URI("https://kotl.in/gradle/agp-new-kmp"))
+        }
+    }
+
+    internal object DeprecatedKotlinAndroidPlugin : ToolingDiagnosticFactory(WARNING, DiagnosticGroup.Kgp.Deprecation) {
+        operator fun invoke(
+            projectPath: String
+        ) = build {
+            title("Deprecated 'org.jetbrains.kotlin.android' plugin usage")
+                .description("The 'org.jetbrains.kotlin.android' plugin in project '$projectPath' is no longer required for Kotlin support since AGP 9.0.")
+                .solution("Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.")
+                .documentationLink(URI("https://kotl.in/gradle/agp-built-in-kotlin"))
+        }
+    }
+
+    internal object SourceSetsAccessInOhosExtension : ToolingDiagnosticFactory(
+        WARNING,
+        DiagnosticGroup.Kgp.Deprecation
+    ) {
+        operator fun invoke(trace: Throwable? = null) = build(throwable = trace) {
+            title {"sourceSets collection in Kotlin Android is deprecated" }
+                .description {
+                    """
+                        Kotlin Source Sets collection in Android extension should not be used and is deprecated now.
+                    """.trimIndent()
+                }
+                .solution { "Use source set alternative provided by Android Gradle Plugin: https://kotl.in/b2vftz" }
+                .documentationLink(URI("https://youtrack.jetbrains.com/issue/KT-74451"))
+        }
+    }
+
 }
+
 
 private fun String.indentLines(nSpaces: Int = 4, skipFirstLine: Boolean = true): String {
     val spaces = String(CharArray(nSpaces) { ' ' })

@@ -152,3 +152,36 @@ class JointAndroidKotlinTargetComponent(
     )
     override val sourcesArtifacts: Set<PublishArtifact> = emptySet()
 }
+
+class JointOhosKotlinTargetComponent(
+    override val target: KotlinOhosTarget,
+    private val nestedVariants: Set<KotlinVariant>,
+    val flavorNames: List<String>,
+) : InternalKotlinTargetComponent(), KotlinTargetComponentWithCoordinatesAndPublication {
+
+    override fun getUsages(): Set<KotlinUsageContext> = nestedVariants.filter { it.publishable }.flatMap { it.usages }.toSet()
+
+    override fun getName(): String = lowerCamelCaseName(target.targetName, *flavorNames.toTypedArray())
+
+    override val publishable: Boolean
+        get() = nestedVariants.any { it.publishable }
+
+    override val publishableOnCurrentHost: Boolean
+        get() = publishable
+
+    override val defaultArtifactId: String =
+        dashSeparatedName(
+            target.project.name,
+            target.targetName.toLowerCaseAsciiOnly(),
+            *flavorNames.map { it.toLowerCaseAsciiOnly() }.toTypedArray()
+        )
+
+    override var publicationDelegate: MavenPublication? = null
+
+    @Deprecated(
+        message = "Sources artifacts are now published as separate variant " +
+                "use target.sourcesElementsConfigurationName to obtain necessary information",
+        replaceWith = ReplaceWith("target.sourcesElementsConfigurationName")
+    )
+    override val sourcesArtifacts: Set<PublishArtifact> = emptySet()
+}

@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnostics
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.KotlinToolingDiagnosticsCollector
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTargetPreset
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinOhosTargetPreset
 import org.jetbrains.kotlin.gradle.plugin.mpp.internal
 import org.jetbrains.kotlin.gradle.targets.js.ir.KotlinJsIrTargetPreset
 
@@ -59,6 +60,7 @@ internal object KotlinTargetAlreadyDeclaredChecker : KotlinGradleProjectChecker 
             is KotlinJsIrTargetPreset -> "js"
             is org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJsTargetPreset -> "js"
             is KotlinAndroidTargetPreset -> "androidTarget"
+            is KotlinOhosTargetPreset -> "ohosTarget"
             else -> internal._preset?.name
         }
 }

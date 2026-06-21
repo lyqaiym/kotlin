@@ -30,7 +30,8 @@ dependencies {
     // KT-61897: Workaround for https://github.com/gradle/gradle/issues/26358
     // (wrong conflict resolution, causing selection of not the latest version of `:kotlin-util-klib` module)
     if (isNativeBuildToolsProject || isPerformanceProject) {
-        implementation("org.jetbrains.kotlin:kotlin-native-utils:${project.bootstrapKotlinVersion}")
+//        implementation("org.jetbrains.kotlin:kotlin-native-utils:${project.bootstrapKotlinVersion}")
+        implementation("org.jetbrains.kotlin:kotlin-native-utils:2.2.255-SNAPSHOT")
     } else {
         implementation(project(":native:kotlin-native-utils"))
     }

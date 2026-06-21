@@ -62,7 +62,8 @@ dependencies {
     val shadowVersion = "8.3.0"
 
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
-    api("org.jetbrains.kotlin:kotlin-native-utils:${kotlinVersion}")
+//    api("org.jetbrains.kotlin:kotlin-native-utils:${kotlinVersion}")
+    api("org.jetbrains.kotlin:kotlin-native-utils:2.2.255-SNAPSHOT")
     api("org.jetbrains.kotlin:kotlin-util-klib:${kotlinVersion}")
 
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")

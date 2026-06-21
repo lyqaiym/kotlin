@@ -140,6 +140,7 @@ abstract class AbstractNativeCInteropTest : AbstractNativeCInteropBaseTest() {
             KonanTarget.ANDROID_ARM64 -> "ARM64"
             KonanTarget.ANDROID_X64 -> "X64"
             KonanTarget.ANDROID_X86 -> "CPointerByteVar"
+            KonanTarget.OHOS_ARM64 -> "ARM64"
             KonanTarget.IOS_ARM64 -> "CPointerByteVar"
             KonanTarget.IOS_SIMULATOR_ARM64 -> "CPointerByteVar"
             KonanTarget.IOS_X64 -> "X64"

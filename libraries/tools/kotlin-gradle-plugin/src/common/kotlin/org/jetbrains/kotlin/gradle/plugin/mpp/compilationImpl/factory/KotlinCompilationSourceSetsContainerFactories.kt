@@ -11,8 +11,10 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinOhosTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.compilationImpl.KotlinCompilationSourceSetsContainer
 import org.jetbrains.kotlin.gradle.plugin.sources.android.kotlinAndroidSourceSetLayout
+import org.jetbrains.kotlin.gradle.plugin.sources.ohos.kotlinOhosSourceSetLayout
 import org.jetbrains.kotlin.gradle.utils.*
 
 internal class DefaultKotlinCompilationSourceSetsContainerFactory(
@@ -45,6 +47,17 @@ internal class AndroidCompilationSourceSetsContainerFactory(
 ) : KotlinCompilationImplFactory.KotlinCompilationSourceSetsContainerFactory {
     override fun create(target: KotlinTarget, compilationName: String): KotlinCompilationSourceSetsContainer {
         val sourceSetName = target.project.kotlinAndroidSourceSetLayout.naming.defaultKotlinSourceSetName(this.target, variant)
+            ?: lowerCamelCaseName(target.disambiguationClassifier, compilationName)
+        return KotlinCompilationSourceSetsContainer(target.project.kotlinExtension.sourceSets.maybeCreate(sourceSetName))
+    }
+}
+
+internal class OhosCompilationSourceSetsContainerFactory(
+    private val target: KotlinOhosTarget,
+    @Suppress("TYPEALIAS_EXPANSION_DEPRECATION") private val variant: DeprecatedAndroidBaseVariant
+) : KotlinCompilationImplFactory.KotlinCompilationSourceSetsContainerFactory {
+    override fun create(target: KotlinTarget, compilationName: String): KotlinCompilationSourceSetsContainer {
+        val sourceSetName = target.project.kotlinOhosSourceSetLayout.naming.defaultKotlinSourceSetName(this.target, variant)
             ?: lowerCamelCaseName(target.disambiguationClassifier, compilationName)
         return KotlinCompilationSourceSetsContainer(target.project.kotlinExtension.sourceSets.maybeCreate(sourceSetName))
     }

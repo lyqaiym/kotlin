@@ -118,4 +118,10 @@ internal class DefaultKotlinCompilationFriendPathsResolver(
             return compilation.project.files((compilation.decoratedInstance as KotlinJvmAndroidCompilation).testedVariantArtifacts)
         }
     }
+
+    object AdditionalOhosFriendArtifactResolver : FriendArtifactResolver {
+        override fun resolveFriendArtifacts(compilation: InternalKotlinCompilation<*>): FileCollection {
+            return compilation.project.files((compilation.decoratedInstance as KotlinJvmOhosCompilation).testedVariantArtifacts)
+        }
+    }
 }

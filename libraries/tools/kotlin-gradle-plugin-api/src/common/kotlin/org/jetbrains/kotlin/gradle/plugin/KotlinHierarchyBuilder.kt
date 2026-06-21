@@ -216,6 +216,8 @@ interface KotlinHierarchyBuilder {
      */
     fun withLinux()
 
+    fun withOhos()
+
     /**
      * Only includes Kotlin's Android/Native targets in this [group].
      *
@@ -285,6 +287,8 @@ interface KotlinHierarchyBuilder {
      * For more information, see [Native targets overview](https://kotlinlang.org/docs/native-target-support.html).
      */
     fun withAndroidNativeArm64()
+
+    fun withOhosArm64()
 
     /**
      * Only includes Kotlin's Apple/iosArm64 target in this [group].

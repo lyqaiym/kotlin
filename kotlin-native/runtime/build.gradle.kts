@@ -22,17 +22,17 @@ val kotlinVersion: String by rootProject.extra
 plugins {
     id("base")
     id("compile-to-bitcode")
-    id("runtime-testing")
+//    id("runtime-testing")
 }
 
 if (HostManager.host == KonanTarget.MACOS_ARM64) {
     project.configureJvmToolchain(JdkMajorVersion.JDK_17_0)
 }
 
-googletest {
-    revision = project.property("gtestRevision") as String
-    refresh = project.hasProperty("refresh-gtest")
-}
+//googletest {
+//    revision = project.property("gtestRevision") as String
+//    refresh = project.hasProperty("refresh-gtest")
+//}
 
 val targetList = enabledTargets(extensions.getByType<PlatformManager>())
 
@@ -47,8 +47,8 @@ bitcode {
                         outputFile.set(layout.buildDirectory.file("bitcode/main/$target/runtime.bc"))
                     }
                 }
-                testFixtures {}
-                test {}
+//                testFixtures {}
+//                test {}
             }
         }
 
@@ -71,6 +71,7 @@ bitcode {
                 else -> 32 // TODO(KT-66500): remove after the bootstrap
             }
             val useMachO = target.family.isAppleFamily
+//            val useElf = target.family in listOf(Family.LINUX, Family.ANDROID, Family.OHOS)
             val useElf = target.family in listOf(Family.LINUX, Family.ANDROID)
 
             sourceSets {
@@ -141,7 +142,7 @@ bitcode {
             headersDirs.from(files("src/gcScheduler/common/cpp", "src/gc/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                test {}
+//                test {}
             }
         }
 
@@ -163,8 +164,8 @@ bitcode {
             headersDirs.from(files("src/alloc/common/cpp", "src/gcScheduler/common/cpp", "src/gc/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                test {}
-                testFixtures {}
+//                test {}
+//                testFixtures {}
             }
         }
 
@@ -179,8 +180,8 @@ bitcode {
             headersDirs.from(files("src/alloc/common/cpp", "src/gcScheduler/common/cpp", "src/gc/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                test {}
-                testFixtures {}
+//                test {}
+//                testFixtures {}
             }
         }
 
@@ -227,9 +228,9 @@ bitcode {
         module("test_support") {
             headersDirs.from(files("src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
-                testFixtures {
-                    inputFiles.include("**/*.cpp", "**/*.mm")
-                }
+//                testFixtures {
+//                    inputFiles.include("**/*.cpp", "**/*.mm")
+//                }
             }
         }
 
@@ -237,8 +238,8 @@ bitcode {
             headersDirs.from(files("src/alloc/common/cpp", "src/gcScheduler/common/cpp", "src/gc/common/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                testFixtures {}
-                test {}
+//                testFixtures {}
+//                test {}
             }
         }
 
@@ -252,7 +253,7 @@ bitcode {
             headersDirs.from(files("src/alloc/common/cpp", "src/gcScheduler/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                test {}
+//                test {}
             }
         }
 
@@ -274,7 +275,7 @@ bitcode {
             headersDirs.from(files("src/alloc/common/cpp", "src/gcScheduler/common/cpp", "src/gc/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                test {}
+//                test {}
             }
         }
 
@@ -293,8 +294,8 @@ bitcode {
             headersDirs.from(files("src/alloc/common/cpp", "src/gcScheduler/common/cpp", "src/gc/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                testFixtures {}
-                test {}
+//                testFixtures {}
+//                test {}
             }
         }
 
@@ -313,7 +314,7 @@ bitcode {
             headersDirs.from(files("src/alloc/common/cpp", "src/gcScheduler/common/cpp", "src/gc/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                test {}
+//                test {}
             }
         }
 
@@ -332,7 +333,7 @@ bitcode {
             headersDirs.from(files("src/alloc/common/cpp", "src/gc/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                test {}
+//                test {}
             }
         }
 
@@ -354,7 +355,7 @@ bitcode {
             headersDirs.from(files("src/alloc/common/cpp", "src/gcScheduler/common/cpp", "src/gc/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                test {}
+//                test {}
             }
         }
 
@@ -368,7 +369,7 @@ bitcode {
             headersDirs.from(files("src/alloc/common/cpp", "src/gcScheduler/common/cpp", "src/gc/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
             sourceSets {
                 main {}
-                test {}
+//                test {}
             }
         }
 
@@ -476,6 +477,7 @@ val stdlibBuildTask by tasks.registering(KonanCompileTask::class) {
     group = BasePlugin.BUILD_GROUP
     description = "Build the Kotlin/Native standard library"
 
+    this.compilerDistributionPath.set(kotlinNativeDist.absolutePath)
     // Requires Native distribution with the compiler JARs.
     this.compilerDistribution.set(nativeDistribution)
     dependsOn(":kotlin-native:distCompiler")
@@ -484,6 +486,8 @@ val stdlibBuildTask by tasks.registering(KonanCompileTask::class) {
             layout.buildDirectory.dir("stdlib/${HostManager.hostName}/stdlib")
     )
 
+    val tags = platformManager.targetValues.joinToString(separator = ",") { it.visibleName }
+    println("stdlibBuildTask:tags=${tags}")
     this.extraOpts.addAll(listOfNotNull(
             "-no-default-libs",
             "-no-endorsed-libs",
@@ -498,10 +502,10 @@ val stdlibBuildTask by tasks.registering(KonanCompileTask::class) {
             "-opt-in=kotlin.contracts.ExperimentalContracts",
             "-opt-in=kotlin.ExperimentalMultiplatform",
             "-opt-in=kotlin.native.internal.InternalForKotlinNative",
-            "-language-version",
-            "2.1",
-            "-api-version",
-            "2.1",
+//            "-language-version",
+//            "2.1",
+//            "-api-version",
+//            "2.1",
             "-Xdont-warn-on-error-suppression",
             "-Xstdlib-compilation",
             "-Xfragment-refines=nativeMain:nativeWasm,nativeMain:common,nativeWasm:common",

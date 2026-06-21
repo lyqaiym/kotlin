@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 import org.jetbrains.kotlin.gradle.plugin.*
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinUsageContext.MavenScope.COMPILE
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinUsageContext.MavenScope.RUNTIME
+import org.jetbrains.kotlin.gradle.targets.android.internal.InternalKotlinTargetPreset
 import org.jetbrains.kotlin.gradle.utils.*
 import org.jetbrains.kotlin.tooling.core.MutableExtras
 import org.jetbrains.kotlin.tooling.core.mutableExtrasOf
@@ -176,6 +177,9 @@ abstract class AbstractKotlinTarget(
     override fun onPublicationCreated(publication: MavenPublication) {
         publicationConfigureActions.all { action -> action.execute(publication) }
     }
+
+    override var targetPreset: InternalKotlinTargetPreset<KotlinTarget>? = null
+        internal set
 
     @OptIn(DeprecatedTargetPresetApi::class)
     @get:Deprecated(

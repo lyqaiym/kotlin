@@ -40,6 +40,7 @@ buildscript {
     apply from: "gradle/kotlinGradlePlugin.gradle"
 
     repositories {
+        mavenLocal()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -63,6 +64,7 @@ apply plugin: "java"
 
 allprojects {
     repositories {
+        mavenLocal()
         mavenCentral()
         maven {
             url project.bootstrapKotlinRepo
@@ -113,7 +115,8 @@ configurations {
 apply plugin: CompilationDatabasePlugin
 
 dependencies {
-    distPack project(path: ':kotlin-native:utilities:cli-runner', configuration: 'runtimeElements')
+//    distPack project(path: ':kotlin-native:utilities:cli-runner', configuration: 'runtimeElements')
+    implementation(project(":native:kotlin-native-utils"))
     commonSources project(path: ':kotlin-stdlib', configuration: 'metadataSourcesElements')
     commonSources project(path: ':kotlin-test', configuration: 'metadataSourcesElements')
     compilationDatabase project(":kotlin-native:runtime")
@@ -220,6 +223,7 @@ tasks.register("distDef", Sync) {
     dependsOn ":kotlin-native:platformLibs:updateDefFileDependencies"
 
     platformManager.targetValues.each { target ->
+        println("distDef:target=${target}")
         from(project(":kotlin-native:platformLibs").file("src/platform/${target.family.name().toLowerCase()}")) {
             into target.visibleName
             include '**/*.def'

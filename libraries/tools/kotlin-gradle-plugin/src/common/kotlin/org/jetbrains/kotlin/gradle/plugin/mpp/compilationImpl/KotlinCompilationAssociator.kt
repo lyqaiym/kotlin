@@ -114,6 +114,16 @@ internal object KotlinAndroidCompilationAssociator : KotlinCompilationAssociator
     }
 }
 
+internal object KotlinOhosCompilationAssociator : KotlinCompilationAssociator {
+    override fun associate(target: KotlinTarget, auxiliary: InternalKotlinCompilation<*>, main: InternalKotlinCompilation<*>) {
+        auxiliary.compileDependencyConfigurationName.addAllDependenciesFromOtherConfigurations(
+            target.project,
+            main.legacyApiConfigurationName,
+            main.legacyImplementationConfigurationName,
+        )
+    }
+}
+
 /**
  * Adds `allDependencies` of configurations mentioned in `configurationNames` to configuration named [this] in
  * a lazy manner

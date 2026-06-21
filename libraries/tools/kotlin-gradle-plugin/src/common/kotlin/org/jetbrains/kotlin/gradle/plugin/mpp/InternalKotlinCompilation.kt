@@ -53,3 +53,30 @@ internal suspend fun InternalKotlinCompilation<*>.awaitAllKotlinSourceSets(): Se
 internal fun KotlinCompilation<out KotlinAnyOptionsDeprecated>.addSourceSet(kotlinSourceSet: KotlinSourceSet) {
     internal.decoratedInstance.compilation.sourceSets.source(kotlinSourceSet)
 }
+
+/**
+ * Declaring dependencies and thus having configurations on [KotlinCompilation] level is deprecated.
+ * However, to keep backward compatibility, KGP still has to configure them.
+ * These `legacy*ConfigurationName` accessors are explicit opt-ins for cases when it is necessary to configure those configurations.
+ * In other cases, configurations from `compilation.defaultSourceSet` should be used.
+ *
+ * After KT-81136 is implemented, and compilation-level configurations are removed, replace these methods
+ * to use [KotlinCompilation.defaultSourceSet] configurations directly.
+ */
+internal val KotlinCompilation<*>.legacyApiConfigurationName: String
+    get() {
+        @Suppress("DEPRECATION")
+        return apiConfigurationName
+    }
+
+internal val KotlinCompilation<*>.legacyImplementationConfigurationName: String
+    get() {
+        @Suppress("DEPRECATION")
+        return implementationConfigurationName
+    }
+
+internal val KotlinCompilation<*>.legacyRuntimeOnlyConfigurationName: String
+    get() {
+        @Suppress("DEPRECATION")
+        return runtimeOnlyConfigurationName
+    }
