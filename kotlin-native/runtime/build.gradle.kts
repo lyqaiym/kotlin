@@ -247,7 +247,7 @@ bitcode {
                 else -> 32 // TODO(KT-66500): remove after the bootstrap
             }
             val useMachO = target.family.isAppleFamily
-            val useElf = target.family in listOf(Family.LINUX, Family.ANDROID)
+            val useElf = target.family in listOf(Family.LINUX, Family.ANDROID,Family.OHOS)
 
             sourceSets {
                 main {
@@ -739,6 +739,8 @@ val stdlibBuildTask by tasks.registering(KonanCompileTask::class) {
     group = BasePlugin.BUILD_GROUP
     description = "Build the Kotlin/Native standard library"
 
+    this.compilerDistributionPath.set(kotlinNativeDist.absolutePath)
+    dependsOn(":kotlin-native:distCompiler")
     this.compilerDistributionRoot.set(nativeBootstrapDistribution.map { it.root })
 
     this.outputDirectory.set(

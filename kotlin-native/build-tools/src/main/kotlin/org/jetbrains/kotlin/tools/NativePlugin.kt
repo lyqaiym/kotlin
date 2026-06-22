@@ -199,18 +199,9 @@ open class NativeToolsExtension(val project: Project) {
     // This is copied from `ClangArgs`
     private val jdkDir: File
         get() {
-//            File(System.getProperty("java.home")).canonicalFile.let { home ->
-//                if (home.resolve("include").exists()) {
-//                    home
-//                } else {
-//                    home.parentFile.also {
-//                        check(it.resolve("include").exists())
-//                    }
-//                }
-//            }
-            val home = java.io.File(System.getProperty("java.home")).canonicalFile
+            val home = File(System.getProperty("java.home")).canonicalFile
             val parent = home.parentFile
-            val javaHome = java.io.File(System.getenv("JAVA_HOME"))
+            val javaHome = File(System.getenv("JAVA_HOME"))
             val dir = listOfNotNull(home, parent, javaHome)
                     .firstOrNull { it.resolve("include").exists() } ?: error("JNI headers not found")
             println("Jni:jdkDir:dir=${dir}")

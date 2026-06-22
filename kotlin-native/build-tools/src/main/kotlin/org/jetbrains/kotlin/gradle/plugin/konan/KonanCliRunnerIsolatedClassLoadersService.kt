@@ -14,12 +14,13 @@ import java.net.URLClassLoader
 import java.util.concurrent.ConcurrentHashMap
 
 @JvmInline
-private value class IsolatedClassLoaderCacheKey private constructor(private val classpath: String) {
+value class IsolatedClassLoaderCacheKey private constructor(private val classpath: String) {
     constructor(classpath: Set<File>) : this(classpath.map { it.absolutePath }.sorted().joinToString(separator = File.pathSeparator))
 }
 
 abstract class KonanCliRunnerIsolatedClassLoadersService : BuildService<BuildServiceParameters.None>, AutoCloseable {
-    private val isolatedClassLoaders = ConcurrentHashMap<IsolatedClassLoaderCacheKey, URLClassLoader>()
+//    val isolatedClassLoaders = ConcurrentHashMap<IsolatedClassLoaderCacheKey, URLClassLoader>()
+    val isolatedClassLoaders = ConcurrentHashMap<Any, URLClassLoader>()
 
     override fun close() {
         isolatedClassLoaders.clear()

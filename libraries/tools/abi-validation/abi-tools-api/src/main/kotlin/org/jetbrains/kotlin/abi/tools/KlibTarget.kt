@@ -111,6 +111,7 @@ internal val konanTargetNameMapping = mapOf(
     "android_x86" to "androidNativeX86",
     "android_arm32" to "androidNativeArm32",
     "android_arm64" to "androidNativeArm64",
+    "ohos_arm64" to "ohosArm64",
     "ios_arm64" to "iosArm64",
     "ios_x64" to "iosX64",
     "ios_simulator_arm64" to "iosSimulatorArm64",

@@ -228,6 +228,8 @@ KInt Konan_Platform_getOsFamily() {
   return 4;
 #elif KONAN_ANDROID
   return 5;
+#elif KONAN_OHOS
+    return 6;
 #elif KONAN_TVOS
   return 7;
 #elif KONAN_WATCHOS

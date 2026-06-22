@@ -28,6 +28,7 @@ sealed class ClangArgs(
     private val absoluteTargetToolchain = configurables.absoluteTargetToolchain
     private val absoluteTargetSysRoot = configurables.absoluteTargetSysRoot
     private val absoluteLlvmHome = configurables.absoluteLlvmHome
+    private val targetCPU = configurables.targetCpu
     private val target = configurables.target
     private val targetTriple = configurables.targetTriple
 
@@ -158,7 +159,12 @@ sealed class ClangArgs(
                 else -> emptyList()
             }
         }
-
+        KonanTarget.OHOS_ARM64 -> listOf(
+            "-mcpu=$targetCPU",
+            "-I$absoluteLlvmHome/include/libcxx-ohos/include/c++/v1",
+            "-I$absoluteTargetSysRoot/usr/include",
+            "-I$absoluteTargetSysRoot/usr/include/$targetTriple",
+        )
         else -> emptyList()
     }
 
