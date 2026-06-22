@@ -3,6 +3,7 @@ pluginManagement {
     includeBuild("repo/gradle-build-conventions")
 
     repositories {
+        mavenLocal()
         maven {
             url "https://packages.jetbrains.team/maven/p/ij/intellij-dependencies"
             content {
@@ -1034,7 +1035,7 @@ if (buildProperties.isKotlinNativeEnabled) {
     project(':kotlin-native:backend.native:tests').projectDir = "$rootDir/kotlin-native/backend.native/tests" as File
     include ':kotlin-native:prepare:kotlin-native-compiler-embeddable'
     include ':kotlin-native:tools:compiler-cache-invalidator'
-    include ':native:kotlin-test-native-xctest'
+//    include ':native:kotlin-test-native-xctest'
     include ':native:cli-native'
     include ':native:native.tests:cli-tests'
     include ':kotlin-native:tools:minidump-analyzer'

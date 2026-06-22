@@ -22,6 +22,7 @@ native {
     val isWindows = PlatformInfo.isWindows()
     val obj = if (isWindows) "obj" else "o"
     val lib = if (isWindows) "lib" else "a"
+    println("hostCompilerArgsForJni=${hostPlatform.clangForJni.hostCompilerArgsForJni.joinToString("、")}")
     val cflags = mutableListOf("-I${nativeDependencies.libffiPath}/include",
                                *hostPlatform.clangForJni.hostCompilerArgsForJni)
     suffixes {
