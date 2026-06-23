@@ -28,6 +28,7 @@ sealed class ClangArgs(
     private val absoluteTargetToolchain = configurables.absoluteTargetToolchain
     private val absoluteTargetSysRoot = configurables.absoluteTargetSysRoot
     private val absoluteLlvmHome = configurables.absoluteLlvmHome
+    private val targetCPU = configurables.targetCpu
     private val target = configurables.target
     private val targetTriple = configurables.targetTriple
 
@@ -157,7 +158,12 @@ sealed class ClangArgs(
                 else -> emptyList()
             }
         }
-
+        KonanTarget.OHOS_ARM64 -> listOf(
+            "-mcpu=$targetCPU",
+            "-I$absoluteLlvmHome/include/libcxx-ohos/include/c++/v1",
+            "-I$absoluteTargetSysRoot/usr/include",
+            "-I$absoluteTargetSysRoot/usr/include/$targetTriple",
+        )
         else -> emptyList()
     }
 
@@ -234,11 +240,13 @@ sealed class ClangArgs(
      */
     class Jni(configurables: Configurables) : ClangArgs(configurables, forJni = true) {
         private val jdkDir by lazy {
-            val home = File.javaHome.absoluteFile
-            if (home.child("include").exists)
-                home.absolutePath
-            else
-                home.parentFile.absolutePath
+            val home = java.io.File(System.getProperty("java.home")).canonicalFile
+            val parent = home.parentFile
+            val javaHome = java.io.File(System.getenv("JAVA_HOME"))
+            val dir = listOfNotNull(home, parent, javaHome)
+                .firstOrNull { it.resolve("include").exists() }
+            println("Jni:jdkDir:dir=${dir}")
+            dir
         }
 
         val hostCompilerArgsForJni: Array<String> by lazy {

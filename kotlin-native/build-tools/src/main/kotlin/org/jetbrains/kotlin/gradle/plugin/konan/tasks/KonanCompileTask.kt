@@ -11,14 +11,17 @@ import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.ProjectLayout
+import org.gradle.api.internal.file.FileOperations
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.services.ServiceReference
 import org.gradle.api.tasks.*
+import org.gradle.process.ExecOperations
 import org.gradle.workers.WorkAction
 import org.gradle.workers.WorkParameters
 import org.gradle.workers.WorkerExecutor
+import org.jetbrains.kotlin.gradle.plugin.konan.KonanCliCompilerRunner
 import org.jetbrains.kotlin.gradle.plugin.konan.KonanCliRunnerIsolatedClassLoadersService
 import org.jetbrains.kotlin.gradle.plugin.konan.prepareAsOutput
 import org.jetbrains.kotlin.gradle.plugin.konan.registerIsolatedClassLoadersServiceIfAbsent
@@ -83,7 +86,9 @@ open class KotlinSourceDirectorySet @Inject constructor(
  * A task compiling the target library using Kotlin/Native compiler
  */
 @CacheableTask
-open class KonanCompileTask @Inject constructor(
+abstract class KonanCompileTask @Inject constructor(
+        private val fileOperations: FileOperations,
+        private val execOperations: ExecOperations,
         objectFactory: ObjectFactory,
         private val workerExecutor: WorkerExecutor,
 ) : DefaultTask() {
@@ -92,6 +97,9 @@ open class KonanCompileTask @Inject constructor(
 
     @get:Input
     val extraOpts: ListProperty<String> = objectFactory.listProperty(String::class.java)
+
+    @get:Input
+    abstract val compilerDistributionPath: Property<String>
 
     @get:Internal("Depends only upon the compiler classpath, because compiles into klib only")
     val compilerDistribution: NativeDistributionProperty = objectFactory.nativeDistributionProperty()
@@ -107,6 +115,7 @@ open class KonanCompileTask @Inject constructor(
 
     @TaskAction
     fun run() {
+        val toolRunner = KonanCliCompilerRunner(fileOperations, execOperations, logger, isolatedClassLoadersService.get(), compilerDistributionPath.get())
         outputDirectory.get().asFile.prepareAsOutput()
 
         val args = buildList {
@@ -132,11 +141,12 @@ open class KonanCompileTask @Inject constructor(
             sourceSets.flatMap { it.files }.mapTo(this) { it.absolutePath }
         }
 
-        val workQueue = workerExecutor.noIsolation()
-        workQueue.submit(KonanCompileAction::class.java) {
-            this.isolatedClassLoaderService.set(this@KonanCompileTask.isolatedClassLoadersService)
-            this.compilerClasspath.from(this@KonanCompileTask.compilerClasspath)
-            this.args.addAll(args)
-        }
+        toolRunner.run(args)
+//        val workQueue = workerExecutor.noIsolation()
+//        workQueue.submit(KonanCompileAction::class.java) {
+//            this.isolatedClassLoaderService.set(this@KonanCompileTask.isolatedClassLoadersService)
+//            this.compilerClasspath.from(this@KonanCompileTask.compilerClasspath)
+//            this.args.addAll(args)
+//        }
     }
 }
