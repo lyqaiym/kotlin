@@ -130,6 +130,16 @@ interface KotlinTargetContainerWithPresetFunctions : KotlinTargetsContainer {
 
     fun androidNativeArm64(configure: Action<KotlinNativeTarget>) = androidNativeArm64 { configure.execute(this) }
 
+    fun ohosArm64(
+        name: String = "ohosArm64",
+        configure: KotlinNativeTarget.() -> Unit = { }
+    ): KotlinNativeTarget
+
+    fun ohosArm64() = ohosArm64("ohosArm64") { }
+    fun ohosArm64(name: String) = ohosArm64(name) { }
+    fun ohosArm64(name: String, configure: Action<KotlinNativeTarget>) = ohosArm64(name) { configure.execute(this) }
+    fun ohosArm64(configure: Action<KotlinNativeTarget>) = ohosArm64 { configure.execute(this) }
+
     fun iosArm64(
         name: String = "iosArm64",
         configure: KotlinNativeTarget.() -> Unit = { }
@@ -485,6 +495,25 @@ internal abstract class DefaultKotlinTargetContainerWithPresetFunctions @Inject 
             presets.getByName("androidNativeArm64") as KotlinNativeTargetPreset,
             configure
         )
+
+    override fun ohosArm64(
+        name: String,
+        configure: KotlinNativeTarget.() -> Unit
+    ): KotlinNativeTarget {
+//        val android = presets.getByName("androidNativeArm64")
+//        logger.warn("ohosArm64:android=" + android)
+//        logger.warn("ohosArm64:android=" + android::class.java)
+//        val ohos = presets.getByName("ohosArm64")
+//        logger.debug("ohosArm64:ohos=" + ohos)
+        val target = configureOrCreate(
+            name,
+            @Suppress("DEPRECATION")
+            presets.getByName("ohosArm64") as KotlinNativeTargetPreset,
+            configure
+        )
+        return target
+    }
+
 
     override fun iosArm64(
         name: String,
