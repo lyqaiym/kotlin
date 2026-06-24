@@ -19,6 +19,7 @@ repositories {
     maven("https://redirector.kotlinlang.org/maven/kotlin-dependencies")
     mavenCentral()
     gradlePluginPortal()
+    mavenLocal()
 }
 
 plugins {
@@ -32,7 +33,8 @@ dependencies {
     api("org.jetbrains.kotlin:kotlin-stdlib:${project.bootstrapKotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${project.bootstrapKotlinVersion}") { isTransitive = false }
     implementation("org.jetbrains.kotlin:kotlin-build-gradle-plugin:${kotlinBuildProperties.buildGradlePluginVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-native-utils:${project.bootstrapKotlinVersion}")
+//    implementation("org.jetbrains.kotlin:kotlin-native-utils:${project.bootstrapKotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-native-utils:2.2.255-SNAPSHOT")
 
     // To build Konan Gradle plugin
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${project.bootstrapKotlinVersion}")
