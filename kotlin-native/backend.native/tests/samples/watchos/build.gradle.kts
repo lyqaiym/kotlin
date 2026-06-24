@@ -9,13 +9,12 @@ val sdkName: String? = System.getenv("SDK_NAME")
 
 enum class Target(val simulator: Boolean, val key: String) {
     WATCHOS_X64(true, "watchos"), WATCHOS_ARM64(false, "watchos"),
-    IOS_X64(true, "ios"), IOS_ARM64(false, "ios")
+    IOS_ARM64(false, "ios")
 }
 
 val target = sdkName.orEmpty().let {
     when {
         it.startsWith("iphoneos") -> Target.IOS_ARM64
-        it.startsWith("iphonesimulator") -> Target.IOS_X64
         it.startsWith("watchos") -> Target.WATCHOS_ARM64
         it.startsWith("watchsimulator") -> Target.WATCHOS_X64
         else -> Target.WATCHOS_X64

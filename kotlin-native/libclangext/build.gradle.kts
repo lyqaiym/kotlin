@@ -36,7 +36,7 @@ native {
         cxxflags += "-DLIBCLANGEXT_ENABLE=1"
     }
     if (HostManager.hostIsMac) {
-        cxxflags += "-D_Float16=short"
+//        cxxflags += "-D_Float16=short"
     }
     suffixes {
         (".cpp" to ".$obj") {

@@ -39,11 +39,9 @@ fun KonanTarget.supportsMimallocAllocator(): Boolean =
         is KonanTarget.ANDROID_X64 -> true
         is KonanTarget.ANDROID_ARM64 -> true
         is KonanTarget.IOS_ARM64 -> true
-        is KonanTarget.IOS_X64 -> true
-        is KonanTarget.IOS_SIMULATOR_ARM64 -> true
         is KonanTarget.WATCHOS_ARM32, is KonanTarget.WATCHOS_ARM64,
-        is KonanTarget.WATCHOS_SIMULATOR_ARM64, is KonanTarget.WATCHOS_X64,
-        is KonanTarget.TVOS_ARM64, is KonanTarget.TVOS_SIMULATOR_ARM64, is KonanTarget.TVOS_X64,
+        is KonanTarget.WATCHOS_X64,
+        is KonanTarget.TVOS_ARM64, is KonanTarget.TVOS_X64,
         is KonanTarget.ANDROID_X86, is KonanTarget.ANDROID_ARM32 -> false // aren't tested.
         else -> false
     }
@@ -56,9 +54,9 @@ fun KonanTarget.supportsLibBacktrace(): Boolean =
 // TODO: Add explicit WATCHOS_DEVICE_ARM64 after compiler update.
 fun KonanTarget.supportsCoreSymbolication(): Boolean =
         this in listOf(
-                KonanTarget.MACOS_X64, KonanTarget.MACOS_ARM64, KonanTarget.IOS_X64,
-                KonanTarget.IOS_SIMULATOR_ARM64, KonanTarget.TVOS_X64, KonanTarget.TVOS_SIMULATOR_ARM64,
-                KonanTarget.WATCHOS_X64, KonanTarget.WATCHOS_SIMULATOR_ARM64
+                KonanTarget.MACOS_X64, KonanTarget.MACOS_ARM64,
+                KonanTarget.TVOS_X64,
+                KonanTarget.WATCHOS_X64
         )
 
 fun KonanTarget.supportsGccUnwind(): Boolean = family == Family.ANDROID || family == Family.LINUX

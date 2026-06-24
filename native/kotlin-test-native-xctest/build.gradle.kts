@@ -61,7 +61,6 @@ abstract class DevFrameworkPathValueSource : ValueSource<String, DevFrameworkPat
     private fun KonanTarget.developerFrameworkPath(): String {
         val platform = when (this) {
             KonanTarget.MACOS_ARM64, KonanTarget.MACOS_X64 -> "macosx"
-            KonanTarget.IOS_SIMULATOR_ARM64, KonanTarget.IOS_X64 -> "iphonesimulator"
             KonanTarget.IOS_ARM64 -> "iphoneos"
             else -> error("Target $this is not supported here")
         }

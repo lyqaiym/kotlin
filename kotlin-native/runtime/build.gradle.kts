@@ -39,7 +39,7 @@ bitcode {
     allTargets {
         if (target.family.isAppleFamily) {
             modules.all {
-                compilerArgs.add("-D_Float16=short")
+//                compilerArgs.add("-D_Float16=short")
             }
         }
 
@@ -618,6 +618,10 @@ val stdlibTask = tasks.register<Copy>("nativeStdlib") {
     into(project.layout.buildDirectory.dir("nativeStdlib"))
 
     val allPossibleTargets = project.extensions.getByType<PlatformManager>().targetValues.map { it.name }
+    println("stdlibTask:allPossibleTargets=${allPossibleTargets}")
+    val list2 = allPossibleTargets.toMutableList()
+    list2.remove("ios_x64")
+    println("stdlibTask:list2=${list2}")
     val kotlinVersion = kotlinVersion
     eachFile {
         if (name == "manifest") {
@@ -626,7 +630,7 @@ val stdlibTask = tasks.register<Copy>("nativeStdlib") {
             // So, add all targets to the manifest file.
             KFile(file.absolutePath).run {
                 val props = loadProperties()
-                props[KLIB_PROPERTY_NATIVE_TARGETS] = allPossibleTargets.joinToString(separator = " ")
+                props[KLIB_PROPERTY_NATIVE_TARGETS] = list2.joinToString(separator = " ")
 
                 // Check that we didn't get other than the requested version from cache, previous build or due to some other build issue
                 val versionFromManifest = props[KLIB_PROPERTY_COMPILER_VERSION]

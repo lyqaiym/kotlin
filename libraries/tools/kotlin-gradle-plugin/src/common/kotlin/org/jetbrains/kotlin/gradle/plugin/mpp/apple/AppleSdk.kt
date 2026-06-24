@@ -27,8 +27,6 @@ internal object AppleSdk {
             platform.startsWith("iphonesimulator") -> {
                 targets.addAll(archs.map { arch ->
                     when (arch) {
-                        "arm64", "arm64e" -> KonanTarget.IOS_SIMULATOR_ARM64
-                        "x86_64" -> KonanTarget.IOS_X64
                         else -> throw UnknownArchitectureException(platform, arch)
                     }
                 })

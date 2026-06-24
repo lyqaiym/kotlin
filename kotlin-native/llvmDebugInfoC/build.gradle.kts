@@ -32,7 +32,7 @@ native {
         "-I${projectDir}/src/main/include"
     )
     if (HostManager.hostIsMac) {
-        cxxflags += "-D_Float16=short"
+//        cxxflags += "-D_Float16=short"
     }
     suffixes {
         (".cpp" to ".$obj") {

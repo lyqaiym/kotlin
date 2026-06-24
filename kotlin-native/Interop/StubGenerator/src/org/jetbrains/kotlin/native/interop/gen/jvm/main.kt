@@ -685,12 +685,11 @@ private fun sysrootPathFromXcode(
 ): File {
     val sdk = when (target) {
         KonanTarget.MACOS_ARM64, KonanTarget.MACOS_X64 -> "macosx"
-        KonanTarget.IOS_SIMULATOR_ARM64, KonanTarget.IOS_X64 -> "iphonesimulator"
         KonanTarget.IOS_ARM64 -> "iphoneos"
-        KonanTarget.WATCHOS_X64, KonanTarget.WATCHOS_SIMULATOR_ARM64 -> "watchsimulator"
+        KonanTarget.WATCHOS_X64 -> "watchsimulator"
         KonanTarget.WATCHOS_ARM32, KonanTarget.WATCHOS_ARM64, KonanTarget.WATCHOS_DEVICE_ARM64 -> "watchos"
         KonanTarget.TVOS_ARM64 -> "appletvos"
-        KonanTarget.TVOS_X64, KonanTarget.TVOS_SIMULATOR_ARM64 -> "appletvsimulator"
+        KonanTarget.TVOS_X64 -> "appletvsimulator"
         else -> throw Exception("Can't dump sdk for: ${target}")
     }
     return File(

@@ -37,7 +37,6 @@ abstract class AbstractXCTestExecutor(
     private fun targetPlatform(): String {
         val xcodeTarget = when (target) {
             KonanTarget.MACOS_X64, KonanTarget.MACOS_ARM64 -> "macosx"
-            KonanTarget.IOS_X64, KonanTarget.IOS_SIMULATOR_ARM64 -> "iphonesimulator"
             KonanTarget.IOS_ARM64 -> "iphoneos"
             else -> error("Target $target is not supported buy the executor")
         }
@@ -114,8 +113,6 @@ class XCTestSimulatorExecutor(configurables: AppleConfigurables) :
     }
 
     private fun supportedTargets(): List<KonanTarget> = when (HostManager.host) {
-        KonanTarget.MACOS_X64 -> listOf(KonanTarget.IOS_X64)
-        KonanTarget.MACOS_ARM64 -> listOf(KonanTarget.IOS_SIMULATOR_ARM64)
         else -> emptyList()
     }
 }
