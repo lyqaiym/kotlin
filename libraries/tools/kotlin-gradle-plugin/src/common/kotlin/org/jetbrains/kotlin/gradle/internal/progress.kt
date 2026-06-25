@@ -31,7 +31,7 @@ internal fun ObjectFactory.newBuildOpLogger(): ProgressLogger =
  */
 internal fun <T> ProgressLogger.operation(
     description: String,
-    initialStatus: String? = null,
+    initialStatus: String = "",
     body: ProgressLogger.() -> T,
 ): T {
     start(description, initialStatus)

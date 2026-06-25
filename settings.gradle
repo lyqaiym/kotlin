@@ -6,6 +6,7 @@ pluginManagement {
     apply from: 'repo/scripts/kotlin-bootstrap.settings.gradle.kts'
 
     repositories {
+        mavenLocal()
         maven {
             url "https://packages.jetbrains.team/maven/p/ij/intellij-dependencies"
             content {
