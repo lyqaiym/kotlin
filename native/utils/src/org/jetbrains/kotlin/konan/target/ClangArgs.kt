@@ -234,11 +234,13 @@ sealed class ClangArgs(
      */
     class Jni(configurables: Configurables) : ClangArgs(configurables, forJni = true) {
         private val jdkDir by lazy {
-            val home = File.javaHome.absoluteFile
-            if (home.child("include").exists)
-                home.absolutePath
-            else
-                home.parentFile.absolutePath
+            val home = java.io.File(System.getProperty("java.home")).canonicalFile
+            val parent = home.parentFile
+            val javaHome = java.io.File(System.getenv("JAVA_HOME"))
+            val dir = listOfNotNull(home, parent, javaHome)
+                .firstOrNull { it.resolve("include").exists() }
+            println("Jni:jdkDir:dir=${dir}")
+            dir
         }
 
         val hostCompilerArgsForJni: Array<String> by lazy {
