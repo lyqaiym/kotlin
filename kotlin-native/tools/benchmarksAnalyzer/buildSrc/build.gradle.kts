@@ -68,7 +68,8 @@ dependencies {
     val shadowVersion = "8.3.0"
 
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
-    api("org.jetbrains.kotlin:kotlin-native-utils:${kotlinVersion}")
+//    api("org.jetbrains.kotlin:kotlin-native-utils:${kotlinVersion}")
+    implementation(project(":native:kotlin-native-utils"))
     api("org.jetbrains.kotlin:kotlin-util-klib:${kotlinVersion}")
 
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
@@ -76,7 +77,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     implementation("com.ullink.slack:simpleslackapi:$slackApiVersion")
 
-    api("org.jetbrains.kotlin:kotlin-native-utils:$kotlinVersion")
+//    api("org.jetbrains.kotlin:kotlin-native-utils:$kotlinVersion")
+    implementation(project(":native:kotlin-native-utils"))
 
     // Located in <repo root>/shared and always provided by the composite build.
     //api("org.jetbrains.kotlin:kotlin-native-shared:$konanVersion")

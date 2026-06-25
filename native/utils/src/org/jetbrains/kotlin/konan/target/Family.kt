@@ -18,7 +18,9 @@ enum class Family(
     WATCHOS("kexe", "lib", "dylib", "lib", "a"),
     LINUX("kexe", "lib", "so", "lib", "a"),
     MINGW("exe", "", "dll", "lib", "a"),
-    ANDROID("kexe", "lib", "so", "lib", "a");
+    ANDROID("kexe", "lib", "so", "lib", "a"),
+// ========== 新增 鸿蒙 OHOS ==========
+    OHOS("kexe", "lib", "so", "lib", "a");
 
     @Deprecated(message = REMOVED_TARGET_MESSAGE, level = DeprecationLevel.ERROR)
     object WASM

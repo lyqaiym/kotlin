@@ -31,6 +31,7 @@ val library = lib("clangext")
 native {
     val isWindows = PlatformInfo.isWindows()
     val obj = if (isWindows) "obj" else "o"
+    println("native:llvmDir=${llvmDir}")
     val cxxflags = mutableListOf("--std=c++17", "-g",
                           "-Isrc/main/include",
                           "-I$llvmDir/include",

@@ -756,6 +756,7 @@ if (!buildProperties.inJpsBuildIdeaSync) {
 include ":compiler:android-tests"
 
 rootProject.name = "kotlin"
+//rootProject.name = "native-build-tools"
 
 project(':kotlin-script-runtime').projectDir = "$rootDir/libraries/tools/script-runtime" as File
 project(':kotlin-reflect').projectDir = "$rootDir/libraries/reflect" as File

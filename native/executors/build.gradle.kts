@@ -1,8 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.konan.target.Family
 
 buildscript {
     dependencies {
-        classpath(libs.gson)
+//        classpath(libs.gson)
     }
 }
 
@@ -20,20 +21,30 @@ if (!isNativeBuildToolsProject) {
 }
 
 repositories {
-    mavenCentral()
+//    mavenCentral()
 }
 
 dependencies {
-    implementation(libs.gson)
-    implementation(libs.kotlinx.coroutines.core)
-
+//    implementation(libs.gson)
+//    implementation(libs.kotlinx.coroutines.core)
+    println("dependencies:rootProject.name=${rootProject.name}")
+    println("dependencies:isNativeBuildToolsProject=${isNativeBuildToolsProject}")
+    println("dependencies:isPerformanceProject=${isPerformanceProject}")
     // KT-61897: Workaround for https://github.com/gradle/gradle/issues/26358
     // (wrong conflict resolution, causing selection of not the latest version of `:kotlin-util-klib` module)
     if (isNativeBuildToolsProject || isPerformanceProject) {
-        implementation("org.jetbrains.kotlin:kotlin-native-utils:${project.bootstrapKotlinVersion}")
+        println("dependencies:kotlin-native-utils1")
+//        implementation("org.jetbrains.kotlin:kotlin-native-utils:${project.bootstrapKotlinVersion}")
     } else {
-        implementation(project(":native:kotlin-native-utils"))
+        println("dependencies:kotlin-native-utils2")
+//        implementation(project(":native:kotlin-native-utils"))
     }
+    implementation(project(":native:kotlin-native-utils"))
+}
+
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family6=${ohos}")
 }
 
 group = "org.jetbrains.kotlin"

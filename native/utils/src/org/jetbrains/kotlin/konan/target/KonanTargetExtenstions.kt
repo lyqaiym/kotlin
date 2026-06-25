@@ -19,6 +19,7 @@ fun KonanTarget.binaryFormat() = when (family) {
     Family.ANDROID -> BinaryFormat.ELF
     Family.LINUX -> BinaryFormat.ELF
     Family.MINGW -> BinaryFormat.PE_COFF
+    Family.OHOS -> BinaryFormat.ELF
 }
 
 fun KonanTarget.pointerBits() = when (architecture) {
@@ -36,6 +37,7 @@ fun KonanTarget.supportsMimallocAllocator(): Boolean =
         is KonanTarget.MACOS_ARM64 -> true
         is KonanTarget.LINUX_ARM64 -> true
         is KonanTarget.LINUX_ARM32_HFP -> true
+        is KonanTarget.OHOS_ARM64 -> true
         is KonanTarget.ANDROID_X64 -> true
         is KonanTarget.ANDROID_ARM64 -> true
         is KonanTarget.IOS_ARM64 -> true
@@ -51,7 +53,8 @@ fun KonanTarget.supportsMimallocAllocator(): Boolean =
 fun KonanTarget.supportsLibBacktrace(): Boolean =
         this.family.isAppleFamily ||
                 this.family == Family.LINUX ||
-                this.family == Family.ANDROID
+                this.family == Family.ANDROID ||
+                this.family == Family.OHOS
 
 // TODO: Add explicit WATCHOS_DEVICE_ARM64 after compiler update.
 fun KonanTarget.supportsCoreSymbolication(): Boolean =
@@ -61,7 +64,8 @@ fun KonanTarget.supportsCoreSymbolication(): Boolean =
                 KonanTarget.WATCHOS_X64, KonanTarget.WATCHOS_SIMULATOR_ARM64
         )
 
-fun KonanTarget.supportsGccUnwind(): Boolean = family == Family.ANDROID || family == Family.LINUX
+fun KonanTarget.supportsGccUnwind(): Boolean = family == Family.ANDROID || family == Family.LINUX || family == Family.OHOS
+//fun KonanTarget.supportsGccUnwind(): Boolean = family == Family.ANDROID || family == Family.LINUX
 // MINGW_X64 target does not support GCC unwind, since its sysroot contains libgcc version < 12 having misfeature, see KT-49240
 fun KonanTarget.supportsWinAPIUnwind(): Boolean = this is KonanTarget.MINGW_X64
 

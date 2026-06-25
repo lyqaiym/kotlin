@@ -124,8 +124,10 @@ IdeVersionConfigurator.setCurrentIde(project)
 if (!project.hasProperty("versions.kotlin-native")) {
     // BEWARE! Bumping this version doesn't take an immediate effect on TeamCity: KTI-1107
     extra["versions.kotlin-native"] = if (kotlinBuildProperties.isKotlinNativeEnabled) {
+        println("kotlin-native.versions1")
         kotlinBuildProperties.defaultSnapshotVersion
     } else {
+        println("kotlin-native.versions1")
         "2.2.0-dev-8022"
     }
 }

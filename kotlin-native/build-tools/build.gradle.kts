@@ -4,6 +4,7 @@
  */
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.konan.target.Family
 import java.util.Properties
 
 buildscript {
@@ -28,9 +29,9 @@ plugins {
 }
 
 dependencies {
-    api(gradleApi())
+    implementation(gradleApi())
 
-    api("org.jetbrains.kotlin:kotlin-stdlib:${project.bootstrapKotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${project.bootstrapKotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${project.bootstrapKotlinVersion}") { isTransitive = false }
     implementation("org.jetbrains.kotlin:kotlin-build-gradle-plugin:${kotlinBuildProperties.buildGradlePluginVersion}")
 //    implementation("org.jetbrains.kotlin:kotlin-native-utils:${project.bootstrapKotlinVersion}")
@@ -42,6 +43,13 @@ dependencies {
     implementation(libs.gson)
 
     implementation("org.jetbrains.kotlin:kotlin-util-klib:${project.bootstrapKotlinVersion}")
+//    implementation("org.jetbrains.kotlin:kotlin-native-utils:2.4.255-SNAPSHOT")
+//    implementation("org.jetbrains.kotlin:kotlin-native-utils:2.2.0-dev-7255")
+}
+
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family2=${ohos}")
 }
 
 java {
