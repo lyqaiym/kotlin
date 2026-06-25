@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.target.Family
+
 plugins {
     kotlin("jvm")
 }
@@ -27,4 +29,9 @@ tasks.register("analysisAllTests") {
             ":analysis:low-level-api-fir:low-level-api-fir-native:llFirNativeTests",
         )
     }
+}
+
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family5=${ohos}")
 }

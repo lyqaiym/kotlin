@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.konan.target.Family
 
 plugins {
     kotlin("jvm")
@@ -23,6 +24,11 @@ tasks.withType<KotlinJvmCompile>().configureEach {
                     "kotlinx.cinterop.ExperimentalForeignApi",
             )
     )
+}
+
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family4=${ohos}")
 }
 
 sourceSets {

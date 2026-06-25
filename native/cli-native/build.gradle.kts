@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.target.Family
+
 plugins {
     kotlin("jvm")
 }
@@ -12,6 +14,11 @@ dependencies {
     implementation(project(":compiler:util"))
     implementation(project(":kotlin-native:backend.native"))
     implementation(project(":native:frontend.native"))
+}
+
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family1=${ohos}")
 }
 
 sourceSets {

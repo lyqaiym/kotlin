@@ -6,6 +6,7 @@
 import org.jetbrains.kotlin.buildtools.api.ExperimentalBuildToolsApi
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.konan.target.Family
 import java.util.Properties
 
 buildscript {
@@ -45,6 +46,11 @@ dependencies {
     implementation(libs.gson)
 
     implementation("org.jetbrains.kotlin:kotlin-util-klib:${project.bootstrapKotlinVersion}")
+}
+
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family2=${ohos}")
 }
 
 val compileKotlin: KotlinCompile by tasks
