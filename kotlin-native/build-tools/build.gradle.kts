@@ -4,6 +4,7 @@
  */
 
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.konan.target.Family
 import java.util.Properties
 
 buildscript {
@@ -41,6 +42,11 @@ dependencies {
     implementation(libs.gson)
 //    implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.jetbrains.kotlin:kotlin-util-klib:${project.bootstrapKotlinVersion}")
+}
+
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family2=${ohos}")
 }
 
 java {

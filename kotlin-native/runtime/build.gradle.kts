@@ -34,6 +34,11 @@ if (HostManager.host == KonanTarget.MACOS_ARM64) {
 //    refresh = project.hasProperty("refresh-gtest")
 //}
 
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family3=${ohos}")
+}
+
 val targetList = enabledTargets(extensions.getByType<PlatformManager>())
 
 bitcode {

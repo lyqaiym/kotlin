@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import org.jetbrains.kotlin.konan.target.Family
 
 buildscript {
     dependencies {
@@ -35,6 +36,11 @@ dependencies {
     } else {
         implementation(project(":native:kotlin-native-utils"))
     }
+}
+
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family1=${ohos}")
 }
 
 group = "org.jetbrains.kotlin"

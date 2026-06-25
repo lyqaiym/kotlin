@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.target.Family
+
 plugins {
     kotlin("jvm")
     id("jps-compatible")
@@ -42,3 +44,8 @@ runtimeJar {
 
 sourcesJar()
 javadocJar()
+
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family7=${ohos}")
+}
