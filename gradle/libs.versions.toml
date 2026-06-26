@@ -2,10 +2,10 @@
 dexMemberList = "4.1.1"
 dokka = "1.9.20"
 gradle-custom-user-data = "2.0.2"
-develocity = "3.18.2"
+develocity = "3.17.5"
 gradle-plugin-publish = "1.2.1"
 # Version for foojay should be also synced with version in repo/gradle-settings-conventions/settings.gradle.kts
-gradle-toolchains-foojay-resolver = "0.9.0"
+gradle-toolchains-foojay-resolver = "0.4.0"
 # guava and failureaccess should be aligned relatively
 guava = "33.3.1-jre"
 failureaccess = "1.0.2"
@@ -41,9 +41,7 @@ caffeine = "2.9.3" # We cannot use the latest version of Caffeine (`3.x`) becaus
 compose-stable = "1.7.0-alpha08" # Used for Compose compiler plugin tests
 androidx-collections = "1.5.0-alpha02" # Used for Compose compiler plugin tests
 ant = "1.10.14"
-# It is recommended to skip at least one major release, e.g., use 2.0.21 when the default bootstrap version is 2.2.
-# This ensures additional verification that Gradle-related code does not get dependencies of higher LV
-kotlin-for-gradle-plugins-compilation = "2.0.21"
+kotlin-for-gradle-plugins-compilation = "2.1.0"
 intellij-asm = "9.6.1"
 diff-utils = "4.12"
 opentelemetry-api = "1.41.0"
@@ -60,7 +58,6 @@ json = "20231013"
 dataframe = "0.14.1"
 commons-compress = "1.27.1"
 commons-io = "2.18.0"
-dataframe-dev = "0.16.0-dev-6330"
 
 [libraries]
 dexMemberList = { module = "com.jakewharton.dex:dex-member-list", version.ref = "dexMemberList" }

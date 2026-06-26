@@ -29,10 +29,10 @@ if (HostManager.host == KonanTarget.MACOS_ARM64) {
     project.configureJvmToolchain(JdkMajorVersion.JDK_17_0)
 }
 
-//googletest {
-//    revision = project.property("gtestRevision") as String
-//    refresh = project.hasProperty("refresh-gtest")
-//}
+googletest {
+    revision = project.property("gtestRevision") as String
+    refresh = project.hasProperty("refresh-gtest")
+}
 
 val family by tasks.registering(Sync::class) {
     val ohos = Family.values().joinToString(separator = ",")
@@ -103,6 +103,7 @@ bitcode {
             }
             val useMachO = target.family.isAppleFamily
             val useElf = target.family in listOf(Family.LINUX, Family.ANDROID,Family.OHOS)
+//            val useElf = target.family in listOf(Family.LINUX, Family.ANDROID)
 
             sourceSets {
                 main {
@@ -522,6 +523,7 @@ val stdlibBuildTask by tasks.registering(KonanCompileTask::class) {
     group = BasePlugin.BUILD_GROUP
     description = "Build the Kotlin/Native standard library"
 
+    this.compilerDistributionPath.set(kotlinNativeDist.absolutePath)
     // Requires Native distribution with the compiler JARs.
     this.compilerDistribution.set(nativeDistribution)
     dependsOn(":kotlin-native:distCompiler")
