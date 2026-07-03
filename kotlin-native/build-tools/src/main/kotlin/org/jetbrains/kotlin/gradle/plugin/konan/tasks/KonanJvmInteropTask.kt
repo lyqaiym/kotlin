@@ -55,6 +55,7 @@ private abstract class KonanJvmInteropAction @Inject constructor(
     }
 
     override fun execute() {
+        println("execute:outputDirectory=${parameters.outputDirectory.get().asFile}")
         val hostPlatform = parameters.platformManager.get().hostPlatform
         val outputDirectory = parameters.outputDirectory.get()
         execOperations.javaexec {
@@ -74,7 +75,11 @@ private abstract class KonanJvmInteropAction @Inject constructor(
                 "$key=$value"
             })
             args(parameters.compilerOpts.get().flatMap { listOf("-compiler-option", it) })
+            println("javaexec:compilerOpts=${parameters.compilerOpts.get().joinToString(";")}")
+            println("javaexec:outputDirectory=${outputDirectory.asFile.listFiles()}")
         }
+        println("execute:outputDirectory2=${outputDirectory.asFile.listFiles().size}")
+        println("execute:outputDirectory3=${outputDirectory.asFile.listFiles().joinToString(";")}")
     }
 }
 
@@ -137,6 +142,7 @@ open class KonanJvmInteropTask @Inject constructor(
     fun run() {
         outputDirectory.get().asFile.prepareAsOutput()
 
+        println("run:outputDirectory=${outputDirectory.get().asFile.listFiles()}")
         val workQueue = workerExecutor.noIsolation()
         workQueue.submit(KonanJvmInteropAction::class.java) {
             this.interopStubGeneratorClasspath.from(this@KonanJvmInteropTask.interopStubGeneratorClasspath)

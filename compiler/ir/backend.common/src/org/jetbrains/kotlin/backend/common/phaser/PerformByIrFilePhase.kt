@@ -29,6 +29,7 @@ class PerformByIrFilePhase<Context : LoweringContext>(
     override fun invoke(
         phaseConfig: PhaseConfig, phaserState: PhaserState, context: Context, input: IrModuleFragment
     ): IrModuleFragment {
+        println("PerformByIrFilePhase:invoke:name=${name}")
         for (irFile in input.files) {
             try {
                 ProgressManager.checkCanceled()

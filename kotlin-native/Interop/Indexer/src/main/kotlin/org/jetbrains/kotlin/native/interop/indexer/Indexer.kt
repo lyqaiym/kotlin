@@ -1295,7 +1295,7 @@ private fun indexDeclarations(
                 nativeIndex.typesDefinitions = indexTranslationUnitsForTypesDefinitions(index, allTranslationUnits)
 
                 unitsToProcess.forEach {
-                    indexTranslationUnit(index, it, CXIndexOpt_IndexGeneratedDeclarations, object : Indexer {
+                    indexTranslationUnit(index, it, 0, object : Indexer {
                         override fun indexDeclaration(info: CXIdxDeclInfo) {
                             val file = memScoped {
                                 val fileVar = alloc<CXFileVar>()

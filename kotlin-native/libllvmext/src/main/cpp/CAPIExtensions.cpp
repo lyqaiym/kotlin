@@ -22,15 +22,30 @@ static TargetMachine *unwrap(LLVMTargetMachineRef P) {
 }
 
 void LLVMKotlinInitializeTargets() {
+    printf("LLVMKotlinInitializeTargets");
 #define INIT_LLVM_TARGET(TargetName)                                           \
   LLVMInitialize##TargetName##TargetInfo();                                    \
   LLVMInitialize##TargetName##Target();                                        \
   LLVMInitialize##TargetName##TargetMC();
 
+
   INIT_LLVM_TARGET(AArch64)
   INIT_LLVM_TARGET(ARM)
   INIT_LLVM_TARGET(X86)
+    LLVMInitializeAllTargetInfos();
 
+#if KONAN_OHOS
+    INIT_LLVM_TARGET(AArch64)
+    INIT_LLVM_TARGET(ARM)
+    INIT_LLVM_TARGET(Mips)
+    INIT_LLVM_TARGET(X86)
+    INIT_LLVM_TARGET(WebAssembly)
+#endif
+
+//    LLVMInitializeAllTargets();
+//    LLVMInitializeAllTargetMCs();
+//    LLVMInitializeAllAsmPrinters();
+//    LLVMInitializeAllAsmParsers();
 #undef INIT_LLVM_TARGET
 }
 
@@ -126,7 +141,7 @@ LLVMErrorRef LLVMKotlinRunPasses(LLVMModuleRef M, const char *Passes,
 
   PipelineTuningOptions PTO;
   PTO.InlinerThreshold = InlinerThreshold;
-  PTO.MaxDevirtIterations = 0;
+//  PTO.MaxDevirtIterations = 0;
   PassInstrumentationCallbacks PIC;
   PassBuilder PB(Machine, PTO, std::nullopt, &PIC);
 

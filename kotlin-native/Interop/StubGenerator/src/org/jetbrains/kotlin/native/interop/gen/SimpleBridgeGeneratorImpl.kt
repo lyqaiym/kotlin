@@ -150,7 +150,7 @@ class SimpleBridgeGeneratorImpl(
 
         nativeLines.add("}")
         val kotlinReturnType = returnType.kotlinType.render(topLevelKotlinScope)
-        kotlinLines.add("private external fun $kotlinFunctionName($kotlinParameters): $kotlinReturnType")
+        kotlinLines.add("public external fun $kotlinFunctionName($kotlinParameters): $kotlinReturnType")
 
         val nativeBridge = NativeBridge(kotlinLines, nativeLines)
         nativeBridges.add(nativeBacked to nativeBridge)

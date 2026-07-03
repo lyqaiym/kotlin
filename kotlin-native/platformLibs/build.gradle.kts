@@ -67,7 +67,21 @@ println("enabledTargets:predefinedTargets=${KonanTarget.predefinedTargets}")
 println("enabledTargets:deprecatedTargets=${KonanTarget.deprecatedTargets}")
 println("enabledTargets:toleratedDeprecatedTargets=${KonanTarget.toleratedDeprecatedTargets}")
 
-enabledTargets(platformManager).forEach { target ->
+var targetList = enabledTargets(platformManager)
+println("platformLibs:targetList1=${targetList}")
+val targetList2 = targetList.toMutableList()
+//targetList.forEach { target ->
+//    val targetName = target.visibleName
+//    if ("linux_arm32_hfp" == targetName || "watchos_arm32" == targetName || "ios_arm64" == targetName
+//            || "ios_simulator_arm64" == targetName || "macos_arm64" == targetName || "tvos_arm64" == targetName
+//            || "ios_x64" == targetName || "linux_x64" == targetName || "mingw_x64" == targetName
+//            || "watchos_arm64" == targetName || "tvos_x64" == targetName) {
+//        targetList2.remove(target)
+//    }
+//}
+targetList = targetList2
+println("platformLibs:targetList2=${targetList}")
+targetList.forEach { target ->
     val targetName = target.visibleName
     val installTasks = mutableListOf<TaskProvider<out Task>>()
     val cacheTasks = mutableListOf<TaskProvider<out Task>>()

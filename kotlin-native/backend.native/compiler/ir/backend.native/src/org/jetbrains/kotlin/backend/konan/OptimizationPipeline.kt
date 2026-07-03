@@ -119,6 +119,7 @@ private fun tryGetInlineThreshold(context: NativeBackendPhaseContext): Int? {
 internal fun createLTOPipelineConfigForRuntime(generationState: NativeGenerationState): LlvmPipelineConfig {
     val config = generationState.config
     val configurables: Configurables = config.platform.configurables
+    println("createLTOPipelineConfigForRuntime:targetTriple=${generationState.llvm.targetTriple}")
     return LlvmPipelineConfig(
             generationState.llvm.targetTriple,
             getCpuModel(generationState),
@@ -236,7 +237,15 @@ abstract class LlvmOptimizationPipeline(
     private val arena = Arena()
     private val targetMachineDelegate = lazy {
         val target = arena.alloc<LLVMTargetRefVar>()
-        val foundLlvmTarget = LLVMGetTargetFromTriple(config.targetTriple, target.ptr, null) == 0
+        val errMsgPtr = arena.alloc<CPointerVar<ByteVar>>()
+        val foundLlvmTarget = LLVMGetTargetFromTriple2(config.targetTriple, target.ptr, errMsgPtr.ptr) == 0
+        LLVMGetTargetFromTriple2("arm64-apple-darwin25.4.0", target.ptr, errMsgPtr.ptr)
+        println("targetMachineDelegate:targetTriple=${config.targetTriple},foundLlvmTarget=${foundLlvmTarget}")
+//        if (!foundLlvmTarget) {
+//            val cErrStr = errMsgPtr.pointed?.value
+//            val detail = cErrStr?.toString() ?: "未知错误"
+//            println("匹配失败 raw error: $detail")
+//        }
         check(foundLlvmTarget) { "Cannot get target from triple ${config.targetTriple}." }
         LLVMCreateTargetMachine(
                 target.value,
@@ -251,6 +260,7 @@ abstract class LlvmOptimizationPipeline(
     private val targetMachine: LLVMTargetMachineRef by targetMachineDelegate
 
     fun execute(llvmModule: LLVMModuleRef) {
+        println("OptimizationPipeline:execute:${config.targetTriple}")
         initLLVMOnce()
         executeCustomPreprocessing(config, llvmModule)
         val passDescription = passes.joinToString(",")

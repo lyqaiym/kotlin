@@ -87,8 +87,8 @@ nativeInteropPlugin {
                     "clangToolingCore",
                     "clangTooling", "clangFormat", "LLVMTarget", "LLVMMC", "LLVMLinker", "LLVMTransformUtils",
                     "LLVMBitWriter", "LLVMBitReader", "LLVMAnalysis", "LLVMProfileData", "LLVMCore",
-                    "LLVMSupport", "LLVMBinaryFormat", "LLVMDemangle",
-                    "LLVMTargetParser", "LLVMFrontendOffloading", "LLVMBitstreamReader", "LLVMScalarOpts", "LLVMCASUtil", "LLVMRemarks",
+                    "LLVMSupport","LLVMBinaryFormat", "LLVMDemangle","LLVMRISCVAsmParser","LLVMARMDesc",
+                    "LLVMTargetParser", "LLVMFrontendOffloading", "LLVMBitstreamReader", "LLVMScalarOpts", "LLVMRemarks",
             ).mapTo(this) { "${nativeDependencies.llvmPath}/lib/${lib(it)}" }
         }
     })

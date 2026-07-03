@@ -19,34 +19,38 @@ import org.jetbrains.kotlin.backend.konan.optimizations.handlePerformanceInlineA
 import kotlin.collections.forEach
 
 internal fun linkRuntimeModules(generationState: NativeGenerationState, runtimeNativeLibraries: List<LLVMModuleRef>): List<LLVMModuleRef> {
+    println("linkRuntimeModules1")
     if (runtimeNativeLibraries.isEmpty()) {
         return emptyList()
     }
-
+    println("linkRuntimeModules2")
     runtimeNativeLibraries.forEach {
         prepareRuntimeModule(generationState, it)
     }
-
+    println("linkRuntimeModules3")
     if (generationState.config.runtimeLinkageStrategy == RuntimeLinkageStrategy.Raw) {
         return runtimeNativeLibraries
     }
-
+    println("linkRuntimeModules4")
     val runtimeModule = LLVMModuleCreateWithNameInContext("runtime", generationState.llvmContext)!!
+    println("linkRuntimeModules5")
     runtimeNativeLibraries.forEach {
         val failed = llvmLinkModules2(generationState, runtimeModule, it)
         if (failed != 0) {
             throw Error("Failed to link ${it.getName()}")
         }
     }
+    println("linkRuntimeModules6")
     val config = createLTOPipelineConfigForRuntime(generationState)
-
+    println("linkRuntimeModules7")
     MandatoryOptimizationPipeline(config, generationState.performanceManager, generationState).use {
         it.execute(runtimeModule)
     }
+    println("linkRuntimeModules8")
     ModuleOptimizationPipeline(config, generationState.performanceManager, generationState).use {
         it.execute(runtimeModule)
     }
-
+    println("linkRuntimeModules2")
     return listOf(runtimeModule)
 }
 

@@ -152,6 +152,7 @@ class StubIrDriver(
     }
 
     fun run(): Result {
+        println("StubIrDriver:run")
         (val entryPoint, val moduleName, val outCFile, val outKtFile = outKtFileCreator) = options
 
         val builderResult = StubIrBuilder(context).build()
@@ -167,7 +168,7 @@ class StubIrDriver(
             context.log("GENERATED NATIVE: ${bridgeBuilderResult.nativeBridges.nativeLines.toList().size}")
             bridgeBuilderResult.nativeBridges.nativeLines.forEach { context.log(it) }
         }
-
+        println("StubIrDriver:run:Mode=${context.generationMode}")
         return when (context.generationMode) {
             GenerationMode.SOURCE_CODE -> {
                 emitSourceCode(outKtFile(), builderResult, bridgeBuilderResult)

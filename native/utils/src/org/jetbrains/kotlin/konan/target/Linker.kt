@@ -271,7 +271,9 @@ class OhosLinker(targetProperties: OhosConfigurables) : LinkerFlags(targetProper
 
         val dynamic = kind == LinkerOutputKind.DYNAMIC_LIBRARY
         val targetToolchain = absoluteTargetToolchain
+        println("finalLinkCommands:targetToolchain=${targetToolchain}")
         val crtPrefix = "$absoluteTargetSysRoot/$crtFilesLocation"
+        println("finalLinkCommands:crtPrefix=${crtPrefix}")
         // TODO: Can we extract more to the konan.configurables?
         return listOf(Command(absoluteLinker).apply {
             +"--sysroot=${absoluteTargetSysRoot}"

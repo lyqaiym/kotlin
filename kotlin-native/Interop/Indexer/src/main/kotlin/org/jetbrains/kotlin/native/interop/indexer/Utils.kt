@@ -734,7 +734,7 @@ fun indexTranslationUnitsForTypesDefinitions(
     val enumDefinitionBySpelling = mutableMapOf<String, CValue<CXCursor>>()
 
     translationUnits.forEach {
-        indexTranslationUnit(index, it, CXIndexOpt_IndexGeneratedDeclarations, object : Indexer {
+        indexTranslationUnit(index, it, 0, object : Indexer {
             override fun indexDeclaration(info: CXIdxDeclInfo) {
                 val cursor = info.cursor.readValue()
                 if (!isAvailable(cursor)) return

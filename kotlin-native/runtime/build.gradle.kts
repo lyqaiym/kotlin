@@ -249,6 +249,7 @@ bitcode {
             }
             val useMachO = target.family.isAppleFamily
             val useElf = target.family in listOf(Family.LINUX, Family.ANDROID, Family.OHOS)
+//            val useElf = target.family in listOf(Family.LINUX, Family.ANDROID)
 
             sourceSets {
                 main {
@@ -584,6 +585,8 @@ bitcode {
         module("adaptive_gcScheduler") {
             srcRoot.set(layout.projectDirectory.dir("src/gcScheduler/adaptive"))
             headersDirs.from(files("src/alloc/common/cpp", "src/gcScheduler/common/cpp", "src/gc/common/cpp", "src/mm/cpp", "src/externalCallsChecker/common/cpp", "src/objcExport/cpp", "src/main/cpp"))
+            println("srcRoot=${srcRoot.asFile.get()}")
+            println("headersDirs=${headersDirs}")
             sourceSets {
                 main {}
                 test {}
@@ -825,21 +828,26 @@ val nativeStdlib by tasks.registering(Sync::class) {
 val cacheableTargetNames = platformManager.hostPlatform.cacheableTargets
 
 cacheableTargetNames.forEach { targetName ->
-    tasks.register("${targetName}StdlibCache", KonanCacheTask::class.java) {
-        val dist = nativeDistribution
+    if ("linux_arm32_hfp" == targetName || "ios_arm64" == targetName || "ios_simulator_arm64" == targetName) {
+        println("cacheableTargetNames:targetName1=${targetName}")
+    } else {
+        println("cacheableTargetNames:targetName2=${targetName}")
+        tasks.register("${targetName}StdlibCache", KonanCacheTask::class.java) {
+            val dist = nativeDistribution
 
-        // Requires Native distribution with stdlib klib and runtime modules for `targetName`.
-        this.compilerDistributionRoot.set(dist.map { it.root })
-        dependsOn(":kotlin-native:distCompiler")
-        dependsOn(":kotlin-native:${targetName}CrossDistRuntime")
-        inputs.dir(dist.map { it.runtime(targetName) }) // manually depend on runtime modules (stdlib cache links these modules in)
+            // Requires Native distribution with stdlib klib and runtime modules for `targetName`.
+            this.compilerDistributionRoot.set(dist.map { it.root })
+            dependsOn(":kotlin-native:distCompiler")
+            dependsOn(":kotlin-native:${targetName}CrossDistRuntime")
+            inputs.dir(dist.map { it.runtime(targetName) }) // manually depend on runtime modules (stdlib cache links these modules in)
 
-        this.klib.fileProvider(nativeStdlib.map { it.destinationDir })
-        this.target.set(targetName)
-        this.makePerFileCache.set(true)
-        // This path is used in `:kotlin-native:${targetName}StdlibCache`
-        this.cacheDirectory.set(layout.buildDirectory.dir("cache/$targetName/$targetName-gSTATIC-system"))
-        this.cacheName.set(KOTLIN_NATIVE_STDLIB_NAME)
+            this.klib.fileProvider(nativeStdlib.map { it.destinationDir })
+            this.target.set(targetName)
+            this.makePerFileCache.set(true)
+            // This path is used in `:kotlin-native:${targetName}StdlibCache`
+            this.cacheDirectory.set(layout.buildDirectory.dir("cache/$targetName/$targetName-gSTATIC-system"))
+            this.cacheName.set(KOTLIN_NATIVE_STDLIB_NAME)
+        }
     }
 }
 
