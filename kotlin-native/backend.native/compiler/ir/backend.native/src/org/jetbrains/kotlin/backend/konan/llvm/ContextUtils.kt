@@ -305,7 +305,9 @@ internal open class BasicLlvmHelpers(bitcodeContext: BitcodePostProcessingContex
 
     val llvmContext = bitcodeContext.llvmContext
     val targetTriple by lazy {
-        LLVMGetTarget(module)!!.toKString()
+        val ks = LLVMGetTarget(module)!!.toKString()
+        println("targetTriple:module=${module},ks=${ks}")
+        ks
     }
 
     val runtimeAnnotationMap by lazy {

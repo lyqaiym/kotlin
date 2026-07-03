@@ -241,6 +241,7 @@ internal fun insertAliasToEntryPoint(context: NativeBackendPhaseContext, module:
 
 internal fun linkBitcodeDependencies(generationState: NativeGenerationState,
                                      generatedBitcodeFiles: List<File>) {
+    println("linkBitcodeDependencies:targetTriple=${generationState.llvm.targetTriple}")
     val config = generationState.config
     val produce = config.produce
 

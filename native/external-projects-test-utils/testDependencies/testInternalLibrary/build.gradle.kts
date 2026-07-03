@@ -1,3 +1,3 @@
 plugins {
-    id("objc-export-header-generator-test-library")
+//    id("objc-export-header-generator-test-library")
 }

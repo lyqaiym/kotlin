@@ -84,6 +84,7 @@ abstract class NamedCompilerPhase<in Context : LoggingContext, Input, Output>(
     protected val nlevels: Int = 0
 ) : CompilerPhase<Context, Input, Output> {
     override fun invoke(phaseConfig: PhaseConfig, phaserState: PhaserState, context: Context, input: Input): Output {
+        println("CompilerPhase:invoke:name=${name}")
         if (!phaseConfig.isEnabled(this)) {
             return outputIfNotEnabled(phaseConfig, phaserState, context, input)
         }
