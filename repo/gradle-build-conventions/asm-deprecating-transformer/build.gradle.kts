@@ -1,20 +1,27 @@
+import org.jetbrains.kotlin.buildtools.api.ExperimentalBuildToolsApi
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 plugins {
     `kotlin-dsl`
     id("org.jetbrains.kotlin.jvm")
 }
 
 repositories {
-    mavenCentral()
+    mavenCentral { setUrl("https://cache-redirector.jetbrains.com/maven-central") }
     gradlePluginPortal()
     maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies") {
         content {
             includeGroupByRegex("org\\.jetbrains\\.intellij\\.deps(\\..+)?")
+            includeGroupByRegex("com.intellij.platform.*")
+            includeGroupByRegex("org.jetbrains.jps.*")
         }
     }
 }
 
 kotlin {
-    jvmToolchain(8)
+    @OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalBuildToolsApi::class)
+    compilerVersion = libs.versions.kotlin.`for`.gradle.plugins.compilation
+    jvmToolchain(17)
 
     compilerOptions {
         allWarningsAsErrors.set(true)
@@ -26,7 +33,17 @@ kotlin {
 dependencies {
     compileOnly(kotlin("stdlib", embeddedKotlinVersion))
     implementation(libs.intellij.asm)
-    implementation("org.jetbrains.kotlin:kotlin-metadata-jvm:${project.bootstrapKotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-metadata-jvm:${libs.versions.kotlin.`for`.gradle.plugins.compilation.get()}")
     implementation(libs.diff.utils)
     compileOnly(libs.shadow.gradlePlugin)
 }
+
+project.configurations.named(org.jetbrains.kotlin.gradle.plugin.PLUGIN_CLASSPATH_CONFIGURATION_NAME + "Main") {
+    resolutionStrategy {
+        eachDependency {
+            if (this.requested.group == "org.jetbrains.kotlin") useVersion(libs.versions.kotlin.`for`.gradle.plugins.compilation.get())
+        }
+    }
+}
+
+kotlin.compilerOptions.moduleName.value(project.name)

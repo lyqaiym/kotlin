@@ -32,7 +32,9 @@ fun Project.inheritAndValidateExternalDependencies(
 
     inheritedDependencies.forEach {
         targetConfiguration.dependencies.add(
-            dependencies.create(group = it.group, name = it.name, version = it.version)
+//            e: warnings found and -Werror specified
+//            dependencies.create(group = it.group, name = it.name, version = it.version)
+                    dependencies.create("${it.group}:${it.name}:${it.version}")
         )
     }
 

@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.buildtools.api.ExperimentalBuildToolsApi
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 
 buildscript {
@@ -40,38 +43,39 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
-gradlePlugin {
-    plugins {
-        register("jps-compatible") {
-            id = "jps-compatible"
-            implementationClass = "org.jetbrains.kotlin.pill.JpsCompatiblePlugin"
-        }
-        register("kotlin-build-publishing") {
-            id = "kotlin-build-publishing"
-            implementationClass = "plugins.KotlinBuildPublishingPlugin"
-        }
-    }
-}
-
 repositories {
-    mavenCentral()
-    google()
+    mavenCentral { setUrl("https://cache-redirector.jetbrains.com/maven-central") }
+    google { setUrl("https://cache-redirector.jetbrains.com/dl.google.com/dl/android/maven2") }
     maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
-    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-dependencies")
+    maven("https://redirector.kotlinlang.org/maven/kotlin-dependencies")
     gradlePluginPortal()
-
-    extra["bootstrapKotlinRepo"]?.let {
-        maven(url = it)
-    }
 }
 
 kotlin {
-    jvmToolchain(8)
+    @OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalBuildToolsApi::class)
+    compilerVersion = libs.versions.kotlin.`for`.gradle.plugins.compilation
+    jvmToolchain(17)
 
     compilerOptions {
         allWarningsAsErrors.set(true)
         optIn.add("kotlin.ExperimentalStdlibApi")
-        freeCompilerArgs.add("-Xsuppress-version-warnings")
+        optIn.add("org.jetbrains.kotlin.gradle.swiftexport.ExperimentalSwiftExportDsl")
+    }
+}
+
+afterEvaluate {
+    afterEvaluate {
+        tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
+            // Required to be able to use bootstrap metadata version in the build scripts and Gradle Kotlin runtime version
+            compilerOptions.freeCompilerArgs.add("-Xskip-metadata-version-check")
+        }
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        languageVersion.set(KotlinVersion.KOTLIN_2_1)
+        apiVersion.set(KotlinVersion.KOTLIN_2_1)
     }
 }
 
@@ -85,17 +89,15 @@ java {
 
 dependencies {
     api(project(":gradle-plugins-common"))
-    
+
     implementation(kotlin("stdlib", embeddedKotlinVersion))
-    implementation("org.jetbrains.kotlin:kotlin-build-gradle-plugin:${kotlinBuildProperties.buildGradlePluginVersion}")
+    implementation(kotlinBuildHelpers())
     implementation(libs.gradle.pluginPublish.gradlePlugin)
     implementation(libs.dokka.gradlePlugin)
     implementation(libs.spdx.gradlePlugin)
     implementation(libs.dexMemberList)
     compileOnly(libs.node.gradlePlugin)
 
-    // Keep in mind https://github.com/johnrengelman/shadow/issues/807 issue as shadow plugin brings transitively "org.ow2.asm" dependency,
-    // which could conflict with a version in Kotlin compiler brought by KGP.
     implementation(libs.shadow.gradlePlugin)
     implementation(libs.proguard.gradlePlugin)
 
@@ -104,15 +106,18 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
 
+    implementation(libs.org.tukaani.xz)
+
     compileOnly(libs.develocity.gradlePlugin)
     compileOnly(libs.ant) // for accessing the zip-related classes that are present in Gradle's runtime
     compileOnly(gradleApi())
     compileOnly(project(":android-sdk-provisioner"))
 
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${project.bootstrapKotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${project.bootstrapKotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${project.bootstrapKotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-metadata-jvm:${project.bootstrapKotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$bootstrapKotlinVersion")
+    //implementation("org.jetbrains.kotlin:kotlin-metadata-jvm:${libs.versions.kotlin.`for`.gradle.plugins.compilation.get()}")
+    implementation("org.jetbrains.kotlin:kotlin-metadata-jvm:$bootstrapKotlinVersion") {
+        isTransitive = false
+    }
     implementation(libs.gson)
     implementation(project(":d8-configuration"))
 }
@@ -120,3 +125,13 @@ dependencies {
 tasks.register("checkBuild") {
     dependsOn("test")
 }
+
+project.configurations.named(org.jetbrains.kotlin.gradle.plugin.PLUGIN_CLASSPATH_CONFIGURATION_NAME + "Main") {
+    resolutionStrategy {
+        eachDependency {
+            if (this.requested.group == "org.jetbrains.kotlin") useVersion(libs.versions.kotlin.`for`.gradle.plugins.compilation.get())
+        }
+    }
+}
+
+kotlin.compilerOptions.moduleName.value(project.name)

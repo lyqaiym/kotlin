@@ -76,8 +76,9 @@ abstract class TestSymlinkTransformationExtension {
         nameTransformer.set(transformer)
     }
 
-    fun resolveAgainstSymlinkedArtifacts(configuration: Configuration) {
-        configuration.attributes.attribute(symlinked, true)
+    fun resolveAgainstSymlinkedArtifacts(configuration: org.gradle.api.artifacts.Configuration) {
+//        configuration.attributes.attribute(symlinked, true)
+        configuration.getAttributes().attribute(symlinked, true)
     }
 
     companion object {

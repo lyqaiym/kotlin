@@ -165,7 +165,7 @@ fun Project.configureKotlinCompilationOptions() {
             ) {
                 doFirst {
                     if (!useAbsolutePathsInKlib && this !is KotlinJvmCompile && this !is KotlinCompileCommon) {
-                        @Suppress("DEPRECATION")
+                        @Suppress("DEPRECATION_ERROR", "DEPRECATION")
                         (this as KotlinCompile<*>).kotlinOptions.freeCompilerArgs +=
                             "-Xklib-relative-path-base=${layout.buildDirectory.get().asFile},${layout.projectDirectory.asFile},$rootDir"
                     }

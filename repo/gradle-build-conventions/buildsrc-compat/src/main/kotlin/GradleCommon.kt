@@ -150,7 +150,8 @@ fun Project.createGradleCommonSourceSet(): SourceSet {
 
         // Adding Gradle API to separate configuration, so version will not leak into variants
         val commonGradleApiConfiguration = configurations.create("commonGradleApiCompileOnly") {
-            isVisible = false
+//            e: warnings found and -Werror specified
+            //            isVisible = false
             isCanBeConsumed = false
             isCanBeResolved = true
         }
@@ -357,7 +358,7 @@ fun Project.reconfigureMainSourcesSetForGradlePlugin(
                 configurations.create("${originalConfiguration.name}$FIXED_CONFIGURATION_SUFFIX") {
                     isCanBeResolved = originalConfiguration.isCanBeResolved
                     isCanBeConsumed = originalConfiguration.isCanBeConsumed
-                    isVisible = originalConfiguration.isVisible
+//                    isVisible = originalConfiguration.isVisible
                     setExtendsFrom(originalConfiguration.extendsFrom)
 
                     artifacts {
@@ -420,7 +421,7 @@ fun Project.reconfigureMainSourcesSetForGradlePlugin(
 
                     // Make original configuration unpublishable and not visible
                     originalConfiguration.isCanBeConsumed = false
-                    originalConfiguration.isVisible = false
+//                    originalConfiguration.isVisible = false
                     javaComponent.withVariantsFromConfiguration(originalConfiguration) {
                         skip()
                     }

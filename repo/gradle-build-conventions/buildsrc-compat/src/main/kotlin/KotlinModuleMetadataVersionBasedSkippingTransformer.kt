@@ -3,7 +3,9 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-import com.github.jengelman.gradle.plugins.shadow.transformers.Transformer
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowCopyAction
+import com.github.jengelman.gradle.plugins.shadow.transformers.CacheableTransformer
+import com.github.jengelman.gradle.plugins.shadow.transformers.ResourceTransformer
 import com.github.jengelman.gradle.plugins.shadow.transformers.TransformerContext
 import kotlin.metadata.jvm.JvmMetadataVersion
 import kotlin.metadata.jvm.KotlinModuleMetadata
@@ -26,7 +28,8 @@ data class KotlinMetadataPivotVersion(val major: Int, val minor: Int, val patch:
  * This excludes .kotlin_module files for compiler modules from the fat jars.
  * These files are required only at compilation time, but we include the modules only for runtime
  */
-class KotlinModuleMetadataVersionBasedSkippingTransformer : Transformer {
+@CacheableTransformer
+class KotlinModuleMetadataVersionBasedSkippingTransformer : ResourceTransformer {
     private val kotlinModules: MutableMap<String, ByteArray> = mutableMapOf()
     private val logger = Logging.getLogger(this::class.java)
 
@@ -43,7 +46,7 @@ class KotlinModuleMetadataVersionBasedSkippingTransformer : Transformer {
 
     @OptIn(UnstableMetadataApi::class)
     override fun transform(context: TransformerContext) {
-        val metadataBytes = context.`is`.readBytes()
+        val metadataBytes = context.inputStream.readBytes()
         val version = KotlinModuleMetadata.read(metadataBytes).version
         if (version >= pivotVersionAsMetadataVersion) {
             logger.info("Skipping ${context.path}, because its version $version is >= than $pivotVersionAsMetadataVersion")
@@ -57,7 +60,7 @@ class KotlinModuleMetadataVersionBasedSkippingTransformer : Transformer {
     override fun modifyOutputStream(os: ZipOutputStream, preserveFileTimestamps: Boolean) {
         for ((path, kotlinModule) in kotlinModules) {
             val entry = ZipEntry(path)
-            entry.time = TransformerContext.getEntryTimestamp(preserveFileTimestamps, entry.time)
+            entry.time = if (preserveFileTimestamps) entry.time else ShadowCopyAction.CONSTANT_TIME_FOR_ZIP_ENTRIES
             os.putNextEntry(entry)
             os.write(kotlinModule)
             os.closeEntry()

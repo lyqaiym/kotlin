@@ -1,29 +1,17 @@
 import de.undercouch.gradle.tasks.download.Download
 import gradle.publishGradlePluginsJavadoc
-import org.jetbrains.dokka.gradle.DokkaMultiModuleFileLayout
-import org.jetbrains.dokka.gradle.DokkaTaskPartial
+import org.jetbrains.dokka.gradle.tasks.DokkaBaseTask
 
 plugins {
     id("org.jetbrains.dokka")
     base
 }
 
-val templateConfig = Pair(
-    "org.jetbrains.dokka.base.DokkaBase",
-    "{ \"templatesDir\": \"${project.rootDir.resolve("build/api-reference/templates").also { it.mkdirs() }}\" }"
-)
-
-val documentationExtension = extensions.create<PluginsApiDocumentationExtension>(
-    "pluginsApiDocumentation",
-    { project: Project ->
-        project.tasks.withType<DokkaTaskPartial>().configureEach {
-            pluginsMapConfiguration.put(templateConfig.first, templateConfig.second)
-        }
-    }
-)
+private val dokkaVersioningPlugin = versionCatalogs.named("libs").findLibrary("dokka-versioningPlugin").get()
+val documentationExtension = extensions.create<PluginsApiDocumentationExtension>("pluginsApiDocumentation")
 
 dependencies {
-    dokkaPlugin(versionCatalogs.named("libs").findLibrary("dokka-versioningPlugin").get())
+    dokkaPlugin(dokkaVersioningPlugin)
     dokkaPlugin(versionCatalogs.named("libs").findLibrary("dokka-multiModulePlugin").get())
 }
 
@@ -60,45 +48,33 @@ val unzipTemplates = tasks.register<Copy>("unzipTemplates") {
     into(layout.buildDirectory.dir("template"))
 }
 
-tasks.register<org.jetbrains.dokka.gradle.DokkaMultiModuleTask>("dokkaKotlinlangDocumentation") {
-    description = "Generates documentation for Kotlin Gradle plugins API reference"
-    group = "Documentation"
-    onlyIf("Dokka tasks only enabled on TeamCity (-Pteamcity=true)") {
-        // Dokka v1 Gradle plugin is not compatible with newer Gradle versions
-        // remove this once Dokka v2 Gradle plugin will be used
-        kotlinBuildProperties.publishGradlePluginsJavadoc
+dokka {
+    dokkaPublications.html {
+        includes.from(documentationExtension.moduleDescription)
+
+        outputDirectory.set(
+            documentationExtension.documentationOutput.orElse(
+                layout.buildDirectory.dir("dokka/kotlinlangDocumentation")
+            )
+        )
     }
 
-    // https://github.com/Kotlin/dokka/issues/1217
-    notCompatibleWithConfigurationCache("Dokka is not compatible with Gradle Configuration Cache")
+    pluginsConfiguration.html {
+        templatesDir.set(project.rootDir.resolve("build/api-reference/templates"))
+    }
 
-    moduleName.set("Kotlin Gradle Plugins API reference")
-    outputDirectory.set(
-        documentationExtension.documentationOutput.orElse(
-            layout.buildDirectory.dir("dokka/kotlinlangDocumentation")
-        )
-    )
-
-    dependsOn(unzipTemplates)
-    pluginsMapConfiguration.put(templateConfig.first, templateConfig.second)
-
-    // Documentation: https://github.com/Kotlin/dokka/tree/1.9.20/dokka-subprojects/plugin-versioning
-    pluginsMapConfiguration.put(
-        "org.jetbrains.dokka.versioning.VersioningPlugin",
-        documentationExtension.documentationOldVersions.map { olderVersionsDir ->
-            "{ \"version\":\"$version\", \"olderVersionsDir\":\"${olderVersionsDir.asFile.also { it.mkdirs() }}\" }"
+    documentationExtension.documentationOldVersions.map { oldVersion ->
+        pluginsConfiguration.versioning {
+            version.set(project.version.toString())
+            olderVersionsDir.set(oldVersion.asFile)
         }
-    )
+    }
+}
 
-    fileLayout.set(DokkaMultiModuleFileLayout { parent, child ->
-        parent.outputDirectory.dir(child.project.name)
-    })
-
-    @Suppress("DEPRECATION")
-    addChildTasks(
-        documentationExtension
-            .gradlePluginsProjects
-            .getOrElse(emptySet<Project>()),
-        "dokkaHtmlPartial"
-    )
+tasks.withType<DokkaBaseTask>().configureEach {
+    val publishGradlePluginsJavadoc = kotlinBuildProperties.publishGradlePluginsJavadoc
+    onlyIf("Dokka tasks only enabled on TeamCity (-Pteamcity=true)") {
+        publishGradlePluginsJavadoc
+    }
+    dependsOn(unzipTemplates)
 }
