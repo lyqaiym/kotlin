@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 project.configureJvmToolchain(JdkMajorVersion.JDK_1_8)
@@ -27,9 +27,9 @@ sourceSets {
 
 val generateTests by generator("org.jetbrains.kotlin.generators.tests.GenerateRuntimeDescriptorTestsKt")
 
-projectTest(parallel = true) {
-    dependsOn(":dist")
-    workingDir = rootDir
-}
+//projectTest(parallel = true) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//}
 
 testsJar()

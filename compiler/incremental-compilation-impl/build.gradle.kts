@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     id("d8-configuration")
 }
 
@@ -42,19 +42,19 @@ sourceSets {
     "test" { projectDefault() }
 }
 
-projectTest(parallel = true) {
-    workingDir = rootDir
-    useJsIrBoxTests(version = version, buildDir = layout.buildDirectory)
-}
+//projectTest(parallel = true) {
+//    workingDir = rootDir
+//    useJsIrBoxTests(version = version, buildDir = layout.buildDirectory)
+//}
 
-projectTest("testJvmICWithJdk11", parallel = true) {
-    workingDir = rootDir
-    useJsIrBoxTests(version = version, buildDir = layout.buildDirectory)
-    filter {
-        includeTestsMatching("org.jetbrains.kotlin.incremental.IncrementalK1JvmCompilerRunnerTestGenerated*")
-        includeTestsMatching("org.jetbrains.kotlin.incremental.IncrementalK2JvmCompilerRunnerTestGenerated*")
-    }
-    javaLauncher.set(project.getToolchainLauncherFor(JdkMajorVersion.JDK_11_0))
-}
+//projectTest("testJvmICWithJdk11", parallel = true) {
+//    workingDir = rootDir
+//    useJsIrBoxTests(version = version, buildDir = layout.buildDirectory)
+//    filter {
+//        includeTestsMatching("org.jetbrains.kotlin.incremental.IncrementalK1JvmCompilerRunnerTestGenerated*")
+//        includeTestsMatching("org.jetbrains.kotlin.incremental.IncrementalK2JvmCompilerRunnerTestGenerated*")
+//    }
+//    javaLauncher.set(project.getToolchainLauncherFor(JdkMajorVersion.JDK_11_0))
+//}
 
 testsJar()

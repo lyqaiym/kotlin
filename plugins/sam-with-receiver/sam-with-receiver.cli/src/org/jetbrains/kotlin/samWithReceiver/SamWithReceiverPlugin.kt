@@ -23,6 +23,8 @@ import org.jetbrains.kotlin.samWithReceiver.SamWithReceiverPluginNames.PLUGIN_ID
 import org.jetbrains.kotlin.samWithReceiver.SamWithReceiverPluginNames.PRESET_OPTION_NAME
 import org.jetbrains.kotlin.samWithReceiver.k2.FirSamWithReceiverExtensionRegistrar
 
+//:binaryen-configuration:compileKotlin e: java.lang.NoSuchFieldError: Class org.jetbrains.kotlin.config.CompilerConfigurationKey does not have member field 'org.jetbrains.kotlin.config.CompilerConfigurationKey$Companion Companion'
+//at org.jetbrains.kotlin.samWithReceiver.SamWithReceiverConfigurationKeys.<clinit>(SamWithReceiverPlugin.kt:28)
 object SamWithReceiverConfigurationKeys {
     val ANNOTATION: CompilerConfigurationKey<List<String>> = CompilerConfigurationKey.create("annotation qualified name")
 

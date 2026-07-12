@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.konan.target.Family
+
 plugins {
     kotlin("jvm")
 }
@@ -21,3 +23,8 @@ publishJarsForIde(
     projects = projects,
     libraryDependencies = listOf(protobufFull())
 )
+
+val family by tasks.registering(Sync::class) {
+    val ohos = Family.values().joinToString(separator = ",")
+    println("family8=${ohos}")
+}

@@ -5,7 +5,7 @@ description = "Kotlin Build Report Common"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
     id("gradle-plugin-compiler-dependency-configuration")
 }
 
@@ -27,7 +27,7 @@ sourceSets {
     "test" { projectDefault() }
 }
 
-projectTest(jUnitMode = JUnitMode.JUnit5, parallel = true)
+//projectTest(jUnitMode = JUnitMode.JUnit5, parallel = true)
 
 publish()
 

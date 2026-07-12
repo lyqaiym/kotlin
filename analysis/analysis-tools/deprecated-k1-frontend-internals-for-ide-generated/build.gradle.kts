@@ -1,6 +1,6 @@
 plugins {
     java
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 dependencies {

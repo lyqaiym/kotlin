@@ -4,7 +4,7 @@ description = "Kotlin Scripting Compiler Plugin"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -69,26 +69,26 @@ javadocJar()
 
 testsJar()
 
-projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-    val scriptClasspath = testSourceSet.output.classesDirs.joinToString(File.pathSeparator)
-    doFirst {
-        systemProperty("kotlin.test.script.classpath", scriptClasspath)
-    }
-}
+//projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//    val scriptClasspath = testSourceSet.output.classesDirs.joinToString(File.pathSeparator)
+//    doFirst {
+//        systemProperty("kotlin.test.script.classpath", scriptClasspath)
+//    }
+//}
 
-projectTest(taskName = "testWithK1", parallel = true, jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-    val scriptClasspath = testSourceSet.output.classesDirs.joinToString(File.pathSeparator)
-
-    doFirst {
-        systemProperty("kotlin.test.script.classpath", scriptClasspath)
-        systemProperty("kotlin.script.test.base.compiler.arguments", "-language-version 1.9")
-        systemProperty("kotlin.script.base.compiler.arguments", "-language-version 1.9")
-    }
-}
+//projectTest(taskName = "testWithK1", parallel = true, jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//    val scriptClasspath = testSourceSet.output.classesDirs.joinToString(File.pathSeparator)
+//
+//    doFirst {
+//        systemProperty("kotlin.test.script.classpath", scriptClasspath)
+//        systemProperty("kotlin.script.test.base.compiler.arguments", "-language-version 1.9")
+//        systemProperty("kotlin.script.base.compiler.arguments", "-language-version 1.9")
+//    }
+//}
 

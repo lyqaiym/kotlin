@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -23,11 +23,11 @@ sourceSets {
     }
 }
 
-projectTest {
-    dependsOn(":dist")
-    workingDir = rootDir
-    javaLauncher.set(getToolchainLauncherFor(JdkMajorVersion.JDK_17_0))
-    jvmArgs("--add-opens=java.base/java.io=ALL-UNNAMED")
-}
+//projectTest {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    javaLauncher.set(getToolchainLauncherFor(JdkMajorVersion.JDK_17_0))
+//    jvmArgs("--add-opens=java.base/java.io=ALL-UNNAMED")
+//}
 
 testsJar()

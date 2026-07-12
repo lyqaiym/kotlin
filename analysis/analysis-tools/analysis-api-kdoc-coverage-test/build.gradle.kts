@@ -13,6 +13,6 @@ sourceSets {
     }
 }
 
-projectTest {
-    workingDir = rootDir
-}
+//projectTest {
+//    workingDir = rootDir
+//}

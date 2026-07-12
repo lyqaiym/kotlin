@@ -19,7 +19,9 @@ val projectsToInclude = listOf(
 
 dependencies {
     for (projectName in projectsToInclude) {
-        api(projectTests(projectName)) { isTransitive = false }
+        // TODO
+//        api(projectTests(projectName)) { isTransitive = false }
+        implementation(projectTests(projectName)) { isTransitive = false }
         embedded(projectTests(projectName)) { isTransitive = false }
     }
 }

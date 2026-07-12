@@ -2,7 +2,7 @@ description = "Kotlin metadata manipulation library"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 sourceSets {

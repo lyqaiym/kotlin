@@ -45,7 +45,8 @@ class KotlinBuildProperties(
 
     val isJpsBuildEnabled: Boolean = getBoolean("jpsBuild")
 
-    val isInIdeaSync: Boolean = propertiesProvider.getSystemProperty("idea.sync.active")?.toBoolean() == true
+//    val isInIdeaSync: Boolean = propertiesProvider.getSystemProperty("idea.sync.active")?.toBoolean() == true
+    val isInIdeaSync: Boolean = false
 
     val isInJpsBuildIdeaSync: Boolean
         get() = isJpsBuildEnabled && isInIdeaSync

@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     application
 }
 
@@ -8,8 +8,8 @@ dependencies {
     implementation(kotlinStdlib("jdk8"))
     implementation(project(":compiler:tests-mutes"))
     implementation(libs.ktor.client.cio)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.jackson)
+//    implementation(libs.ktor.client.content.negotiation)
+//    implementation(libs.ktor.serialization.jackson)
     implementation(libs.jackson.module.kotlin)
 }
 

@@ -25,13 +25,15 @@ kotlin {
 
     compilerOptions {
         allWarningsAsErrors.set(true)
-        optIn.add("kotlin.ExperimentalStdlibApi")
+//        optIn.add("kotlin.ExperimentalStdlibApi")
         freeCompilerArgs.add("-Xsuppress-version-warnings")
     }
 }
 
 dependencies {
     compileOnly(kotlin("stdlib", embeddedKotlinVersion))
-    implementation(libs.develocity.gradlePlugin)
-    implementation("org.jetbrains.kotlin:kotlin-build-gradle-plugin:${kotlinBuildProperties.buildGradlePluginVersion}")
+//    implementation(libs.develocity.gradlePlugin)
+//    implementation("org.jetbrains.kotlin:kotlin-build-gradle-plugin:${kotlinBuildProperties.buildGradlePluginVersion}")
+    compileOnly(kotlin("stdlib", embeddedKotlinVersion))
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:${project.bootstrapKotlinVersion}")
 }

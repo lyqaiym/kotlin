@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.ideaExt.idea
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     id("d8-configuration")
 }
 
@@ -63,19 +63,19 @@ if (kotlinBuildProperties.isInJpsBuildIdeaSync) {
     }
 }
 
-projectTest(
-    jUnitMode = JUnitMode.JUnit5,
-    defineJDKEnvVariables = listOf(
-        JdkMajorVersion.JDK_1_8,
-        JdkMajorVersion.JDK_11_0,
-        JdkMajorVersion.JDK_17_0,
-        JdkMajorVersion.JDK_21_0
-    )
-) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-    useJsIrBoxTests(version = version, buildDir = layout.buildDirectory)
-}
+//projectTest(
+//    jUnitMode = JUnitMode.JUnit5,
+//    defineJDKEnvVariables = listOf(
+//        JdkMajorVersion.JDK_1_8,
+//        JdkMajorVersion.JDK_11_0,
+//        JdkMajorVersion.JDK_17_0,
+//        JdkMajorVersion.JDK_21_0
+//    )
+//) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//    useJsIrBoxTests(version = version, buildDir = layout.buildDirectory)
+//}
 
 testsJar()

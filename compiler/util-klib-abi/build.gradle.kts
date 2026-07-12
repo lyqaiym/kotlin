@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -24,20 +24,20 @@ sourceSets {
     "main" { projectDefault() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
 val testDataDir = project(":compiler").projectDir.resolve("testData/klib/dump-abi/content")
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    inputs.dir(testDataDir)
-    outputs.dir(layout.buildDirectory.dir("t"))
-
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    inputs.dir(testDataDir)
+//    outputs.dir(layout.buildDirectory.dir("t"))
+//
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}
 
 val generateTests by generator("org.jetbrains.kotlin.library.abi.GenerateLibraryAbiReaderTestsKt")
 

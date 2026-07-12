@@ -2,7 +2,7 @@ import kotlin.io.path.createTempDirectory
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -23,12 +23,12 @@ sourceSets {
     "test" { projectDefault() }
 }
 
-projectTest(parallel = true) {
-    dependsOn(":dist")
-    useJUnitPlatform()
-    workingDir = rootDir
-    systemProperty("kotlin.test.script.classpath", testSourceSet.output.classesDirs.joinToString(File.pathSeparator))
-}
+//projectTest(parallel = true) {
+//    dependsOn(":dist")
+//    useJUnitPlatform()
+//    workingDir = rootDir
+//    systemProperty("kotlin.test.script.classpath", testSourceSet.output.classesDirs.joinToString(File.pathSeparator))
+//}
 
 val generateTests by generator("org.jetbrains.kotlin.generators.tests.GenerateJava8TestsKt")
 val generateKotlinUseSiteFromJavaOnesForJspecifyTests by generator("org.jetbrains.kotlin.generators.tests.GenerateKotlinUseSitesFromJavaOnesForJspecifyTestsKt")

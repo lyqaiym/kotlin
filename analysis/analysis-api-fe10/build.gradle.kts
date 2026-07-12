@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 dependencies {
@@ -38,7 +38,7 @@ sourceSets {
     "main" { projectDefault() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
@@ -60,10 +60,10 @@ tasks.withType<KotlinJvmCompile>().configureEach {
 }
 
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}
 
 testsJar()

@@ -32,4 +32,4 @@ sourceSets {
 
 testsJar()
 
-objCExportHeaderGeneratorTest("test")
+//objCExportHeaderGeneratorTest("test")

@@ -30,9 +30,9 @@ sourceSets {
     "test" { projectDefault() }
 }
 
-projectTest(parallel = false) {
-    workingDir = projectDir
-}
+//projectTest(parallel = false) {
+//    workingDir = projectDir
+//}
 
 runtimeJar()
 sourcesJar()

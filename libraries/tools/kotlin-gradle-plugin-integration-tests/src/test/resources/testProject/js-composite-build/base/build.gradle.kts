@@ -1,7 +1,8 @@
 group = "com.example"
 
 plugins {
-    kotlin("js")
+//    kotlin("js")
+    kotlin("multiplatform")
 }
 
 repositories {

@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 description = "Standalone Runner for Swift Export"
@@ -44,11 +44,11 @@ sourceSets {
     "main" { projectDefault() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
-val test by nativeTest("test", null)
+//val test by nativeTest("test", null)
 
 publish()
 

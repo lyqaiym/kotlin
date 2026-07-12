@@ -24,6 +24,7 @@ public interface TimeSource {
      * The returned [TimeMark] instance encapsulates the captured time point and allows querying
      * the duration of time interval [elapsed][TimeMark.elapsedNow] from that point.
      */
+    @IgnorableReturnValue
     public fun markNow(): TimeMark
 
     /**

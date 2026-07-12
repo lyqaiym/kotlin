@@ -1,13 +1,13 @@
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
-    api(project(":core:descriptors"))
+    implementation(project(":core:descriptors"))
     api(project(":compiler:util"))
-    api(project(":compiler:frontend"))
+    implementation(project(":compiler:frontend"))
     compileOnly(intellijCore())
 }
 

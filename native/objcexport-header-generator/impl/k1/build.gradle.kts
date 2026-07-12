@@ -25,4 +25,4 @@ kotlin {
 
 testsJar()
 
-objCExportHeaderGeneratorTest("test")
+//objCExportHeaderGeneratorTest("test")

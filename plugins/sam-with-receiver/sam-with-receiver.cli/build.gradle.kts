@@ -2,7 +2,7 @@ description = "Kotlin SamWithReceiver Compiler Plugin (CLI)"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {

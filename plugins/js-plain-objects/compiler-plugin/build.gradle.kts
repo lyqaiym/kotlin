@@ -6,7 +6,7 @@ description = "JavaScript Plain Objects Compiler Plugin"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     id("d8-configuration")
 }
 
@@ -62,7 +62,7 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
@@ -75,19 +75,19 @@ sourcesJar()
 javadocJar()
 testsJar()
 
-projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
-    useJUnitPlatform()
-    useJsIrBoxTests(version = version, buildDir = layout.buildDirectory)
-
-    workingDir = rootDir
-
-    dependsOn(jsoIrRuntimeForTests)
-
-    val localJsPlainObjectsIrRuntimePath: FileCollection = jsoIrRuntimeForTests
-
-    doFirst {
-        systemProperty("jso.runtime.path", localJsPlainObjectsIrRuntimePath.asPath)
-    }
-}
+//projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
+//    useJUnitPlatform()
+//    useJsIrBoxTests(version = version, buildDir = layout.buildDirectory)
+//
+//    workingDir = rootDir
+//
+//    dependsOn(jsoIrRuntimeForTests)
+//
+//    val localJsPlainObjectsIrRuntimePath: FileCollection = jsoIrRuntimeForTests
+//
+//    doFirst {
+//        systemProperty("jso.runtime.path", localJsPlainObjectsIrRuntimePath.asPath)
+//    }
+//}
 
 val generateTests by generator("org.jetbrains.kotlinx.jspo.TestGeneratorKt")

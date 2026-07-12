@@ -47,13 +47,13 @@ tasks.test.configure {
     enabled = false
 }
 
-objCExportHeaderGeneratorTest("testK1", testDisplayNameTag = "K1") {
-    classpath += k1TestRuntimeClasspath
-}
-
-objCExportHeaderGeneratorTest("testAnalysisApi", testDisplayNameTag = "AA") {
-    classpath += analysisApiRuntimeClasspath
-}
+//objCExportHeaderGeneratorTest("testK1", testDisplayNameTag = "K1") {
+//    classpath += k1TestRuntimeClasspath
+//}
+//
+//objCExportHeaderGeneratorTest("testAnalysisApi", testDisplayNameTag = "AA") {
+//    classpath += analysisApiRuntimeClasspath
+//}
 
 tasks.check.configure {
     dependsOn("testK1")

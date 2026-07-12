@@ -3,21 +3,6 @@ import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 buildscript {
-    // a workaround for kotlin compiler classpath in kotlin project: sometimes gradle substitutes
-    // kotlin-stdlib external dependency with local project :kotlin-stdlib in kotlinCompilerClasspath configuration.
-    // see also configureCompilerClasspath@
-    val bootstrapCompilerClasspath by configurations.creating
-    val bootstrapBuildToolsApiClasspath by configurations.creating
-    val gradlePluginsBuildToolsApiClasspath by configurations.creating
-
-    dependencies {
-        bootstrapCompilerClasspath(kotlin("compiler-embeddable", bootstrapKotlinVersion))
-        bootstrapBuildToolsApiClasspath(kotlin("build-tools-impl", bootstrapKotlinVersion))
-        gradlePluginsBuildToolsApiClasspath(kotlin("build-tools-impl", libs.versions.kotlin.`for`.gradle.plugins.compilation.get()))
-
-        classpath("org.jetbrains.kotlin:kotlin-build-gradle-plugin:${kotlinBuildProperties.buildGradlePluginVersion}")
-    }
-
     /**
      * Global Security Fixes for Common Dependencies
      *
@@ -50,6 +35,10 @@ buildscript {
             if (requested.group == "commons-io" && requested.name == "commons-io") {
                 useVersion(libs.versions.commons.io.get())
                 because("CVE-2024-26308, CVE-2023-42503")
+            }
+            if (requested.group == "org.apache.commons" && requested.name == "commons-lang3") {
+                useVersion(libs.versions.commons.lang.get())
+                because("CVE-2025-48924")
             }
         }
     }
@@ -116,9 +105,11 @@ rootProject.apply {
     from(rootProject.file("gradle/versions.gradle.kts"))
     from(rootProject.file("gradle/checkArtifacts.gradle.kts"))
     from(rootProject.file("gradle/checkCacheability.gradle.kts"))
+    from(rootProject.file("gradle/compilerModules.gradle.kts"))
     from(rootProject.file("gradle/retryPublishing.gradle.kts"))
 }
 
+// settings.gradle 的 includeBuild("repo/gradle-build-conventions")
 IdeVersionConfigurator.setCurrentIde(project)
 
 if (!project.hasProperty("versions.kotlin-native")) {
@@ -573,6 +564,7 @@ val dependencyOnSnapshotReflectWhitelist = setOf(
 
 allprojects {
     if (!project.path.startsWith(":kotlin-ide.")) {
+//        common-configuration.gradle.kts
         pluginManager.apply("common-configuration")
     }
 
@@ -659,6 +651,9 @@ allprojects {
         maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies") {
             content {
                 includeGroupByRegex("org\\.jetbrains\\.intellij\\.deps(\\..+)?")
+//                Could not find com.intellij.platform:kotlinx-coroutines-core-jvm:1.8.0-intellij-13.
+                includeGroupByRegex("com.intellij.platform.*")
+                includeGroupByRegex("org.jetbrains.jps.*")
                 includeVersion("org.jetbrains.jps", "jps-javac-extension", "7")
                 includeVersion("com.google.protobuf", "protobuf-parent", "3.24.4-jb.2")
                 includeVersion("com.google.protobuf", "protobuf-java", "3.24.4-jb.2")
@@ -1045,6 +1040,7 @@ tasks {
         dependsOn("test")
     }
 
+//    pluginManager.apply("common-configuration") checkBuild
     named("checkBuild") {
         if (kotlinBuildProperties.isTeamcityBuild) {
             val bootstrapKotlinVersion = bootstrapKotlinVersion

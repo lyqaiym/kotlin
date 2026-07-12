@@ -17,6 +17,7 @@ import org.gradle.api.attributes.java.TargetJvmEnvironment
 import org.gradle.api.attributes.java.TargetJvmVersion
 import org.gradle.api.attributes.plugin.GradlePluginApiVersion
 import org.gradle.api.component.AdhocComponentWithVariants
+import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.JavaPlugin
@@ -36,6 +37,7 @@ import org.gradle.plugin.devel.PluginDeclaration
 import org.gradle.plugin.devel.plugins.JavaGradlePluginPlugin
 import org.gradle.plugin.devel.tasks.ValidatePlugins
 import org.gradle.plugin.use.resolve.internal.ArtifactRepositoriesPluginResolver.PLUGIN_MARKER_SUFFIX
+import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinSingleJavaTargetExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
@@ -148,24 +150,77 @@ fun Project.createGradleCommonSourceSet(): SourceSet {
     val commonSourceSet = sourceSets.create(commonSourceSetName) {
         excludeGradleCommonDependencies(this)
 
-        // Adding Gradle API to separate configuration, so version will not leak into variants
-        val commonGradleApiConfiguration = configurations.create("commonGradleApiCompileOnly") {
-//            e: warnings found and -Werror specified
-            //            isVisible = false
-            isCanBeConsumed = false
-            isCanBeResolved = true
+        repositories {
+            exclusiveContent {
+                forRepository {
+                    maven(url = "https://repo.gradle.org/gradle/libs-releases")
+                }
+                filter {
+                    includeGroup("org.gradle.experimental")
+                }
+            }
         }
-        configurations[compileClasspathConfigurationName].extendsFrom(commonGradleApiConfiguration)
+
+        // Adding Gradle API to separate configuration, so version will not leak into variants
+//        val commonGradleApiConfiguration = configurations.create("commonGradleApiCompileOnly") {
+////            e: warnings found and -Werror specified
+//            //            isVisible = false
+//            isCanBeConsumed = false
+//            isCanBeResolved = true
+//        }
+        val commonGradleApiConfiguration = configurations.dependencyScope("commonGradleApiCompileOnly")
+//        configurations[compileClasspathConfigurationName].extendsFrom(commonGradleApiConfiguration)
+        configurations.named(compileClasspathConfigurationName) {
+            extendsFrom(commonGradleApiConfiguration)
+            // Overriding current project Gradle version to the version common sources compiled against
+            attributes {
+                attribute(
+                    GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE,
+                    objects.named(GradlePluginVariant.GRADLE_COMMON_COMPILE_API_VERSION),
+                )
+            }
+        }
 
         dependencies {
-            compileOnlyConfigurationName(kotlinStdlib())
-            "commonGradleApiCompileOnly"(gradleApi())
-            if (this@createGradleCommonSourceSet.name !in testPlugins) {
-                compileOnlyConfigurationName(project(":kotlin-gradle-plugin-api")) {
-                    capabilities {
-                        requireCapability("org.jetbrains.kotlin:kotlin-gradle-plugin-api-common")
-                    }
+//            compileOnlyConfigurationName(kotlinStdlib())
+//            "commonGradleApiCompileOnly"(gradleApi())
+            compileOnlyConfigurationName("org.jetbrains.kotlin:kotlin-stdlib:${GradlePluginVariant.GRADLE_MIN.bundledKotlinVersion}.0")
+            "commonGradleApiCompileOnly"("org.gradle.experimental:gradle-public-api:${GradlePluginVariant.GRADLE_COMMON_COMPILE_API_VERSION}") {
+                capabilities {
+                    requireCapability("org.gradle.experimental:gradle-public-api-internal")
                 }
+            }
+            if (this@createGradleCommonSourceSet.name !in testPlugins) {
+//                compileOnlyConfigurationName(project(":kotlin-gradle-plugin-api")) {
+//                    capabilities {
+//                        requireCapability("org.jetbrains.kotlin:kotlin-gradle-plugin-api-common")
+//                    }
+//                }
+                compileOnlyConfigurationName(project(":kotlin-gradle-plugin-api"))
+            }
+        }
+    }
+
+    afterEvaluate {
+        // The common source set compilation artifacts are never intended for runtime consumption
+        configurations.getByName(commonSourceSet.runtimeElementsConfigurationName).attributes {
+            attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named("no-op"))
+        }
+
+        listOf(
+            /**
+             * Common source set outgoing variants should be a superset of attributes relative to [FIXED_CONFIGURATION_SUFFIX]. These
+             * variants are not published, but they are used to resolve interproject dependencies
+             */
+            commonSourceSet.apiElementsConfigurationName,
+        ).forEach {
+            val outgoingVariant = configurations.getByName(it)
+            commonVariantAttributes().execute(outgoingVariant)
+            outgoingVariant.attributes {
+                attribute(
+                    GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE,
+                    objects.named(GradlePluginVariant.GRADLE_COMMON_COMPILE_API_VERSION),
+                )
             }
         }
     }
@@ -420,7 +475,8 @@ fun Project.reconfigureMainSourcesSetForGradlePlugin(
                     }
 
                     // Make original configuration unpublishable and not visible
-                    originalConfiguration.isCanBeConsumed = false
+//                    Cannot change the allowed usage of configuration ':atomicfu:runtimeElements', as it was locked upon creation to the role: 'Consumable'.
+//                    originalConfiguration.isCanBeConsumed = false
 //                    originalConfiguration.isVisible = false
                     javaComponent.withVariantsFromConfiguration(originalConfiguration) {
                         skip()
@@ -572,13 +628,14 @@ fun Project.configureRunViaKotlinBuildToolsApi() {
     tasks.withType<KotlinCompile>().configureEach {
         compilerExecutionStrategy.set(KotlinCompilerExecutionStrategy.IN_PROCESS)
     }
-    afterEvaluate {
-        val gradlePluginsBuildToolsApiClasspath by rootProject.buildscript.configurations
-        configurations.findByName("kotlinBuildToolsApiClasspath")?.let {
-            it.dependencies.clear()
-            dependencies.add(it.name, files(gradlePluginsBuildToolsApiClasspath))
-        }
-    }
+//    'gradlePluginsBuildToolsApiClasspath' not found
+//    afterEvaluate {
+//        val gradlePluginsBuildToolsApiClasspath by rootProject.buildscript.configurations
+//        configurations.findByName("kotlinBuildToolsApiClasspath")?.let {
+//            it.dependencies.clear()
+//            dependencies.add(it.name, files(gradlePluginsBuildToolsApiClasspath))
+//        }
+//    }
 }
 
 // Will allow combining outputs of multiple SourceSets
@@ -707,4 +764,50 @@ fun Project.registerValidatePluginTasks(
     }
 
     return validatePluginsTask
+}
+
+/**
+ * Register a kotlin source for a range of Gradle versions [[from], [to]). The sources will be visible to build scripts [from]
+ * [GradlePluginVariant.minimalSupportedGradleVersion] up to but not including [to].
+ *
+ * Use this utility to overwrite or expose some API to build scripts that execute with a range of Gradle versions
+ */
+fun Project.registerKotlinSourceForVersionRange(
+    from: GradlePluginVariant,
+    to: GradlePluginVariant,
+) {
+    if (GradleVersion.version(from.minimalSupportedGradleVersion) >= GradleVersion.version(to.minimalSupportedGradleVersion)) {
+        error("Minimal target version from ${from.minimalSupportedGradleVersion} must be < version to ${to.minimalSupportedGradleVersion}")
+    }
+    val applicableVariants = GradlePluginVariant.values().sortedBy { GradleVersion.version(it.minimalSupportedGradleVersion) }
+        .dropWhile { it != from }
+        .takeWhile { it != to }
+    if (applicableVariants.isEmpty()) {
+        error("Ranged source set [${from}, ${to}) applies to no variants")
+    }
+    val sourceDirectoryName = "from_${applicableVariants.first().sourceSetName}_through_${applicableVariants.last().sourceSetName}"
+    val sourcesDirectory = project.layout.projectDirectory.dir("src/${sourceDirectoryName}")
+    applicableVariants
+        .forEach {
+            val sourceSet = sourceSets.getByName(it.sourceSetName)
+            (sourceSet.extensions.getByName("kotlin") as SourceDirectorySet).srcDir(sourcesDirectory)
+            val kotlinJvmTarget = (extensions.getByName("kotlin") as KotlinSingleJavaTargetExtension).target
+            val compilation = kotlinJvmTarget.compilations.getByName(sourceSet.name)
+            compilation.compileJavaTaskProvider.configure {
+                doFirst {
+                    if (sourcesDirectory.asFileTree.isEmpty) {
+                        error("Ranged Gradle version sources directory\n$sourcesDirectory\nis empty. Remove ranged version or add sources to the directory")
+                    }
+                }
+            }
+        }
+}
+
+/**
+ * Allows resolving dependency targeting [jdkMajorVersion] in the project using an incompatible JDK version.
+ */
+fun ModuleDependency.overrideTargetJvmVersion(jdkMajorVersion: Int) {
+    attributes {
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, jdkMajorVersion)
+    }
 }

@@ -14,11 +14,11 @@ pluginManagement {
 }
 
 buildscript {
-    val buildGradlePluginVersion = extra.get("kotlin.build.gradlePlugin.version")
-    dependencies {
-//        One artifact failed verification: kotlin-build-gradle-plugin-0.0.40.jar
+//    val buildGradlePluginVersion = extra.get("kotlin.build.gradlePlugin.version")
+//    dependencies {
+////        One artifact failed verification: kotlin-build-gradle-plugin-0.0.40.jar
 //        classpath("org.jetbrains.kotlin:kotlin-build-gradle-plugin:$buildGradlePluginVersion")
-    }
+//    }
 }
 
 plugins {

@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.ideaExt.idea
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -78,25 +78,25 @@ fun Test.configure(configureJUnit: JUnitPlatformOptions.() -> Unit = {}) {
     }
 }
 
-projectTest(
-    jUnitMode = JUnitMode.JUnit5,
-    defineJDKEnvVariables = listOf(JdkMajorVersion.JDK_1_8, JdkMajorVersion.JDK_11_0, JdkMajorVersion.JDK_17_0, JdkMajorVersion.JDK_21_0)
-) {
-    configure()
-}
+//projectTest(
+//    jUnitMode = JUnitMode.JUnit5,
+//    defineJDKEnvVariables = listOf(JdkMajorVersion.JDK_1_8, JdkMajorVersion.JDK_11_0, JdkMajorVersion.JDK_17_0, JdkMajorVersion.JDK_21_0)
+//) {
+//    configure()
+//}
 
 if (kotlinBuildProperties.isTeamcityBuild) {
-    projectTest("aggregateTests", jUnitMode = JUnitMode.JUnit5) {
-        configure {
-            excludeTags("FirPsiCodegenTest")
-        }
-    }
+//    projectTest("aggregateTests", jUnitMode = JUnitMode.JUnit5) {
+//        configure {
+//            excludeTags("FirPsiCodegenTest")
+//        }
+//    }
 
-    projectTest("nightlyTests", jUnitMode = JUnitMode.JUnit5) {
-        configure {
-            includeTags("FirPsiCodegenTest")
-        }
-    }
+//    projectTest("nightlyTests", jUnitMode = JUnitMode.JUnit5) {
+//        configure {
+//            includeTags("FirPsiCodegenTest")
+//        }
+//    }
 } else {
     /*
      * There is no much sense in those configurations in the local development

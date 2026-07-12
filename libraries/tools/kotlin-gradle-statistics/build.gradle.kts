@@ -6,7 +6,7 @@ description = "kotlin-gradle-statistics"
 plugins {
     `java-library`
     id("org.jetbrains.kotlin.jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     `maven-publish`
 }
 
@@ -21,9 +21,9 @@ dependencies {
     testImplementation(libs.junit4)
 }
 
-projectTest {
-    workingDir = rootDir
-}
+//projectTest {
+//    workingDir = rootDir
+//}
 
 publishing {
     publications {

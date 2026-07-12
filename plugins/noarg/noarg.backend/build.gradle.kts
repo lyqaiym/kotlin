@@ -2,12 +2,12 @@ description = "Kotlin NoArg Compiler Plugin (Backend)"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
     api(project(":compiler:ir.backend.common"))
-    api(project(":core:descriptors"))
+    implementation(project(":core:descriptors"))
     implementation(project(":compiler:frontend.java"))
     compileOnly(intellijCore())
     compileOnly(libs.intellij.asm)

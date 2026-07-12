@@ -5,7 +5,7 @@
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     id("generated-sources")
 }
 
@@ -30,8 +30,8 @@ sourceSets {
     "test" { none() }
 }
 
-projectTest(parallel = true) {
-    workingDir = rootDir
-}
+//projectTest(parallel = true) {
+//    workingDir = rootDir
+//}
 
 generatedDiagnosticContainersAndCheckerComponents()

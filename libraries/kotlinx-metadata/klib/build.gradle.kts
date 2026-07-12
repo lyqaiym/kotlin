@@ -2,7 +2,7 @@ description = "Kotlin Library (KLIB) metadata manipulation library"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 group = "org.jetbrains.kotlinx"

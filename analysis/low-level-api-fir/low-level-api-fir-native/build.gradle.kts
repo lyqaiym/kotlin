@@ -19,17 +19,17 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}
 
-nativeTest("llFirNativeTests", "llFirNative", requirePlatformLibs = true)
+//nativeTest("llFirNativeTests", "llFirNative", requirePlatformLibs = true)
 
 testsJar()

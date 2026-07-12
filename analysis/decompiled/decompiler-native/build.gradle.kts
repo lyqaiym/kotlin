@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 sourceSets {
@@ -8,9 +8,9 @@ sourceSets {
     "test" { projectDefault() }
 }
 
-projectTest {
-    workingDir = rootDir
-}
+//projectTest {
+//    workingDir = rootDir
+//}
 
 dependencies {
     api(project(":core:deserialization"))

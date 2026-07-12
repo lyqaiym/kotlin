@@ -26,10 +26,12 @@ repositories {
 
 val platformToolsVersion = "r28.0.1"
 val sdkToolsVersion = "4333796" /*26.1.1*/
+val commandLineToolsVersion = "13114758" /*19.0*/
 val emulatorVersion = "5264690"
 
 dependencies {
     listOf("linux", "windows", "darwin").forEach {
+//        pluginManager.apply("common-configuration")
         implicitDependencies("google:platform-tools:$platformToolsVersion:$it@zip")
         implicitDependencies("google:sdk-tools-$it:$sdkToolsVersion@zip")
         implicitDependencies("google:emulator-$it:$emulatorVersion@zip")
@@ -45,6 +47,16 @@ val sdkDestDirName = "androidSdk"
 val toolsOs = when {
     OperatingSystem.current().isWindows -> "windows"
     OperatingSystem.current().isMacOsX -> "macosx"
+    OperatingSystem.current().isLinux -> "linux"
+    else -> {
+        logger.error("Unknown operating system for android tools: ${OperatingSystem.current().name}")
+        ""
+    }
+}
+
+val toolsOsShort = when {
+    OperatingSystem.current().isWindows -> "win"
+    OperatingSystem.current().isMacOsX -> "mac"
     OperatingSystem.current().isLinux -> "linux"
     else -> {
         logger.error("Unknown operating system for android tools: ${OperatingSystem.current().name}")
@@ -202,10 +214,11 @@ androidBuildTools("35.0.0")
 
 unzipSdkTask("android_m2repository", "r44", "extras/android", "")
 unzipSdkTask("platform-tools", platformToolsVersion, "", toolsOsDarwin)
-unzipSdkTask("sdk-tools-$toolsOsDarwin", sdkToolsVersion, "", "")
-unzipSdkTask("emulator-$toolsOsDarwin", emulatorVersion, "", "", prepareTask = prepareEmulator)
-unzipSdkTask("armeabi-v7a", "19", "system-images/android-19/default", "r05", prepareTask = prepareEmulator)
-unzipSdkTask("x86", "19", "system-images/android-19/default", "r06", prepareTask = prepareEmulator)
+unzipSdkTask("commandlinetools-$toolsOsShort", "${commandLineToolsVersion}_latest", "", "")
+//unzipSdkTask("sdk-tools-$toolsOsDarwin", sdkToolsVersion, "", "")
+//unzipSdkTask("emulator-$toolsOsDarwin", emulatorVersion, "", "", prepareTask = prepareEmulator)
+//unzipSdkTask("armeabi-v7a", "19", "system-images/android-19/default", "r05", prepareTask = prepareEmulator)
+//unzipSdkTask("x86", "19", "system-images/android-19/default", "r06", prepareTask = prepareEmulator)
 
 val clean by task<Delete> {
     delete(layout.buildDirectory)

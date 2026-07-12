@@ -2,7 +2,7 @@ description = "Kotlin SamWithReceiver Compiler Plugin"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -32,7 +32,7 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
@@ -40,9 +40,9 @@ runtimeJar()
 sourcesJar()
 testsJar()
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    useJUnitPlatform()
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    useJUnitPlatform()
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}

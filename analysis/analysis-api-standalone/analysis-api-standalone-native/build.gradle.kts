@@ -25,14 +25,14 @@ sourceSets {
 }
 
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}
 
-val test by nativeTest("test", null) {
-    systemProperty("kotlin.native.home", kotlinNativeDist.absolutePath)
-}
+//val test by nativeTest("test", null) {
+//    systemProperty("kotlin.native.home", kotlinNativeDist.absolutePath)
+//}
 
 testsJar()

@@ -2,7 +2,7 @@ description = "Kotlin lombok compiler plugin"
 
 plugins {
     id("gradle-plugin-common-configuration")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -10,7 +10,7 @@ dependencies {
     commonApi(project(":kotlin-gradle-plugin-model"))
 }
 
-projectTest(parallel = true)
+//projectTest(parallel = true)
 
 gradlePlugin {
     plugins {

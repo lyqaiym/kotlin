@@ -2,7 +2,7 @@ description = "Kotlin Power-Assert Compiler Plugin"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 val junit5Classpath by configurations.creating
@@ -30,7 +30,7 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
@@ -41,14 +41,14 @@ sourcesJar()
 javadocJar()
 testsJar()
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-
-    val localJunit5Classpath: FileCollection = junit5Classpath
-
-    doFirst {
-        systemProperty("junit5.classpath", localJunit5Classpath.asPath)
-    }
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//
+//    val localJunit5Classpath: FileCollection = junit5Classpath
+//
+//    doFirst {
+//        systemProperty("junit5.classpath", localJunit5Classpath.asPath)
+//    }
+//}

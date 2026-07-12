@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -16,9 +16,9 @@ sourceSets {
     "main" { projectDefault() }
 }
 
-tasks.withType<KotlinCompilationTask<*>>().configureEach {
-    @Suppress("DEPRECATION")
-    compilerOptions.apiVersion.value(KotlinVersion.KOTLIN_1_8).finalizeValueOnRead()
-    @Suppress("DEPRECATION")
-    compilerOptions.languageVersion.value(KotlinVersion.KOTLIN_1_8).finalizeValueOnRead()
-}
+//tasks.withType<KotlinCompilationTask<*>>().configureEach {
+//    @Suppress("DEPRECATION")
+//    compilerOptions.apiVersion.value(KotlinVersion.KOTLIN_1_8).finalizeValueOnRead()
+//    @Suppress("DEPRECATION")
+//    compilerOptions.languageVersion.value(KotlinVersion.KOTLIN_1_8).finalizeValueOnRead()
+//}

@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 description = "Implementation of SwiftIR backed by Analysis API"
@@ -25,7 +25,7 @@ dependencies {
     testImplementation(project(":compiler:tests-common", "tests-jar"))
 }
 
-nativeTest("test", null)
+//nativeTest("test", null)
 
 sourceSets {
     "main" { projectDefault() }

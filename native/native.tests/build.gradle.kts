@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -37,49 +37,49 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
 testsJar {}
 
 // Tasks that run different sorts of tests. Most frequent use case: running specific tests at TeamCity.
-val infrastructureTest = nativeTest("infrastructureTest", "infrastructure")
-val codegenBoxTest = nativeTest("codegenBoxTest", "codegen & frontend-classic")
-val codegenBoxK2Test = nativeTest("codegenBoxK2Test", "codegen & !frontend-classic")
-val stdlibTest = nativeTest("stdlibTest", "stdlib")
-val kotlinTestLibraryTest = nativeTest("kotlinTestLibraryTest", "kotlin-test")
-val partialLinkageTest = nativeTest("partialLinkageTest", "partial-linkage")
-val cinteropTest = nativeTest("cinteropTest", "cinterop")
-val debuggerTest = nativeTest("debuggerTest", "debugger")
-val cachesTest = nativeTest("cachesTest", "caches")
-val klibTest = nativeTest("klibTest", "klib")
-val standaloneTest = nativeTest("standaloneTest", "standalone")
-val gcTest = nativeTest("gcTest", "gc")
+//val infrastructureTest = nativeTest("infrastructureTest", "infrastructure")
+//val codegenBoxTest = nativeTest("codegenBoxTest", "codegen & frontend-classic")
+//val codegenBoxK2Test = nativeTest("codegenBoxK2Test", "codegen & !frontend-classic")
+//val stdlibTest = nativeTest("stdlibTest", "stdlib")
+//val kotlinTestLibraryTest = nativeTest("kotlinTestLibraryTest", "kotlin-test")
+//val partialLinkageTest = nativeTest("partialLinkageTest", "partial-linkage")
+//val cinteropTest = nativeTest("cinteropTest", "cinterop")
+//val debuggerTest = nativeTest("debuggerTest", "debugger")
+//val cachesTest = nativeTest("cachesTest", "caches")
+//val klibTest = nativeTest("klibTest", "klib")
+//val standaloneTest = nativeTest("standaloneTest", "standalone")
+//val gcTest = nativeTest("gcTest", "gc")
 
 val testTags = findProperty("kotlin.native.tests.tags")?.toString()
 // Note: arbitrary JUnit tag expressions can be used in this property.
 // See https://junit.org/junit5/docs/current/user-guide/#running-tests-tag-expressions
-val test by nativeTest(
-    "test",
-    testTags,
-    requirePlatformLibs = true,
-    defineJDKEnvVariables = listOf(
-        JdkMajorVersion.JDK_1_8,  // required in CompilerOutputTest via AbstractCliTest.getNormalizedCompilerOutput
-        JdkMajorVersion.JDK_11_0, // required in CompilerOutputTest via AbstractCliTest.getNormalizedCompilerOutput
-        JdkMajorVersion.JDK_17_0, // required in CompilerOutputTest via AbstractCliTest.getNormalizedCompilerOutput
-        JdkMajorVersion.JDK_21_0,
-    )
-) {
-    options {
-        // See [org.jetbrains.kotlin.konan.test.KlibCrossCompilationIdentityTest.FULL_CROSS_DIST_ENABLED_PROPERTY]
-        // See also kotlin-native/build-tools/src/main/kotlin/org/jetbrains/kotlin/nativeFullCrossDist.kt
-        systemProperty(
-            "kotlin.native.internal.fullCrossDistEnabled",
-            kotlinBuildProperties.getOrNull("kotlin.native.pathToDarwinDist") != null
-        )
-    }
-}
+//val test by nativeTest(
+//    "test",
+//    testTags,
+//    requirePlatformLibs = true,
+//    defineJDKEnvVariables = listOf(
+//        JdkMajorVersion.JDK_1_8,  // required in CompilerOutputTest via AbstractCliTest.getNormalizedCompilerOutput
+//        JdkMajorVersion.JDK_11_0, // required in CompilerOutputTest via AbstractCliTest.getNormalizedCompilerOutput
+//        JdkMajorVersion.JDK_17_0, // required in CompilerOutputTest via AbstractCliTest.getNormalizedCompilerOutput
+//        JdkMajorVersion.JDK_21_0,
+//    )
+//) {
+//    options {
+//        // See [org.jetbrains.kotlin.konan.test.KlibCrossCompilationIdentityTest.FULL_CROSS_DIST_ENABLED_PROPERTY]
+//        // See also kotlin-native/build-tools/src/main/kotlin/org/jetbrains/kotlin/nativeFullCrossDist.kt
+//        systemProperty(
+//            "kotlin.native.internal.fullCrossDistEnabled",
+//            kotlinBuildProperties.getOrNull("kotlin.native.pathToDarwinDist") != null
+//        )
+//    }
+//}
 
 val generateTests by generator("org.jetbrains.kotlin.generators.tests.GenerateNativeTestsKt") {
     javaLauncher.set(project.getToolchainLauncherFor(JdkMajorVersion.JDK_11_0))

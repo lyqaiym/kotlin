@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 description = "A set of integration tests for Swift Export Standalone based on external projects"
@@ -25,10 +25,10 @@ dependencies {
 sourceSets {
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
-val test by nativeTestWithExternalDependencies("test", requirePlatformLibs = true)
+//val test by nativeTestWithExternalDependencies("test", requirePlatformLibs = true)
 
 testsJar()

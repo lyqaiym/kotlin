@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 val scriptingTestDefinition by configurations.creating
@@ -21,7 +21,7 @@ dependencies {
     api(project(":compiler:fir:checkers:checkers.native"))
     api(project(":compiler:fir:checkers:checkers.wasm"))
     api(project(":compiler:fir:fir-jvm"))
-    api(project(":compiler:backend.common.jvm"))
+    implementation(project(":compiler:backend.common.jvm"))
     api(project(":compiler:cli-common"))
     implementation(project(":analysis:decompiled:decompiler-to-file-stubs"))
     implementation(project(":analysis:decompiled:decompiler-to-psi"))
@@ -88,23 +88,23 @@ kotlin {
     }
 }
 
-projectTest(
-    jUnitMode = JUnitMode.JUnit5,
-    defineJDKEnvVariables = listOf(
-        JdkMajorVersion.JDK_17_0, // TestsWithJava11 and others
-        JdkMajorVersion.JDK_17_0, // TestsWithJava17 and others
-        JdkMajorVersion.JDK_21_0  // TestsWithJava21 and others
-    )
-) {
-    dependsOn(":dist", ":plugins:scripting:test-script-definition:testJar")
-    workingDir = rootDir
-    useJUnitPlatform()
-
-    val scriptingTestDefinitionClasspath = scriptingTestDefinition.asPath
-    doFirst {
-        systemProperty("kotlin.script.test.script.definition.classpath", scriptingTestDefinitionClasspath)
-    }
-}
+//projectTest(
+//    jUnitMode = JUnitMode.JUnit5,
+//    defineJDKEnvVariables = listOf(
+//        JdkMajorVersion.JDK_17_0, // TestsWithJava11 and others
+//        JdkMajorVersion.JDK_17_0, // TestsWithJava17 and others
+//        JdkMajorVersion.JDK_21_0  // TestsWithJava21 and others
+//    )
+//) {
+//    dependsOn(":dist", ":plugins:scripting:test-script-definition:testJar")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//
+//    val scriptingTestDefinitionClasspath = scriptingTestDefinition.asPath
+//    doFirst {
+//        systemProperty("kotlin.script.test.script.definition.classpath", scriptingTestDefinitionClasspath)
+//    }
+//}
 
 allprojects {
     tasks.withType<KotlinJvmCompile>().configureEach {

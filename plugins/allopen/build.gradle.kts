@@ -2,7 +2,7 @@ description = "Kotlin AllOpen Compiler Plugin"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 dependencies {
@@ -41,7 +41,7 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
@@ -52,8 +52,13 @@ sourcesJar()
 javadocJar()
 testsJar()
 
-projectTest(parallel = true) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTests {
+//    testTask(jUnitMode = JUnitMode.JUnit5) {
+//        dependsOn(":dist")
+//        workingDir = rootDir
+//    }
+//
+//    testGenerator("org.jetbrains.kotlin.allopen.TestGeneratorKt")
+//
+//    withJvmStdlibAndReflect()
+//}

@@ -6,9 +6,14 @@ pluginManagement {
 
     includeBuild("../../repo/gradle-settings-conventions")
 
+//    repositories {
+//        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-dependencies")
+//        mavenCentral()
+//        gradlePluginPortal()
+//    }
     repositories {
-        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-dependencies")
-        mavenCentral()
+        maven("https://redirector.kotlinlang.org/maven/kotlin-dependencies")
+        mavenCentral { setUrl("https://cache-redirector.jetbrains.com/maven-central") }
         gradlePluginPortal()
     }
 }
@@ -29,7 +34,7 @@ dependencyResolutionManagement {
 
 buildscript {
     val buildGradlePluginVersion = extra["kotlin.build.gradlePlugin.version"]
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-build-gradle-plugin:$buildGradlePluginVersion")
-    }
+//    dependencies {
+//        classpath("org.jetbrains.kotlin:kotlin-build-gradle-plugin:$buildGradlePluginVersion")
+//    }
 }

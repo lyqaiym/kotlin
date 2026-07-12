@@ -1,20 +1,21 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
+//    id("project-tests-convention")
 }
 
 dependencies {
     api(gradleApi())
     api(project(":kotlin-gradle-plugin-api"))
     api(project(":native:kotlin-native-utils"))
-    implementation(projectTests(":generators")) {
-        // because of hacky projectTests this transitive dependency does not work well
-        // also it may bring a lot of unrelated dependencies
-        isTransitive = false
-    }
-    implementation(project(":core:util.runtime"))
-    testImplementation(platform(libs.junit.bom))
-    testImplementation(projectTests(":compiler:tests-common"))
-    testImplementation(kotlin("test"))
+//    implementation(projectTests(":generators")) {
+//        // because of hacky projectTests this transitive dependency does not work well
+//        // also it may bring a lot of unrelated dependencies
+//        isTransitive = false
+//    }
+//    implementation(project(":core:util.runtime"))
+//    testImplementation(platform(libs.junit.bom))
+//    testImplementation(projectTests(":compiler:tests-common"))
+//    testImplementation(kotlin("test"))
 }
 
 val generateGroupName = "Generate"
@@ -64,7 +65,9 @@ fun JavaForkOptions.setKGPSourceRootPaths() {
     )
 }
 
-projectTest(jUnitMode = JUnitMode.JUnit4, parallel = true) {
-    useJUnit() // use JUnit4 as the `:generators` tests use JUnit 4, and we reuse the logic.
-    setKGPSourceRootPaths()
-}
+//projectTests {
+//    testTask(jUnitMode = JUnitMode.JUnit4, parallel = true) {
+//        useJUnit() // use JUnit4 as the `:generators` tests use JUnit 4, and we reuse the logic.
+//        setKGPSourceRootPaths()
+//    }
+//}

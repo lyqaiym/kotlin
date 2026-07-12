@@ -9,16 +9,19 @@ plugins {
 
 project.configureJvmToolchain(JdkMajorVersion.JDK_1_8)
 
-val builtins by configurations.creating {
-    isCanBeResolved = true
-    isCanBeConsumed = false
-    attributes {
-        attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
-    }
-}
+//val builtins by configurations.creating {
+//    isCanBeResolved = true
+//    isCanBeConsumed = false
+//    attributes {
+//        attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements.JAR))
+//    }
+//}
+
+val builtinsMetadata: Configuration by configurations.creating
 
 dependencies {
-    builtins(project(":core:builtins"))
+//    builtins(project(":core:builtins"))
+    builtinsMetadata(project(":kotlin-stdlib"))
 }
 val stdlibProjectDir = file("$rootDir/libraries/stdlib")
 
@@ -76,6 +79,9 @@ val copySources by task<Sync> {
             "kotlin/io/Serializable.kt",
         )
 
+    from(stdlibProjectDir.resolve("jvm/builtins"))
+        .include("*.kt")
+
     into(layout.buildDirectory.dir("src/jvm"))
 }
 
@@ -86,8 +92,8 @@ kotlin {
                 compileTaskProvider.configure {
                     compilerOptions {
                         moduleName = "kotlin-stdlib"
-                        languageVersion = KotlinVersion.KOTLIN_2_0
-                        apiVersion = KotlinVersion.KOTLIN_2_0
+//                        languageVersion = KotlinVersion.KOTLIN_2_0
+//                        apiVersion = KotlinVersion.KOTLIN_2_0
                         // providing exhaustive list of args here
                         freeCompilerArgs.set(
                             listOfNotNull(
@@ -127,9 +133,16 @@ kotlin {
 }
 
 val jvmJar by tasks.existing(Jar::class) {
-    dependsOn(builtins)
+//    dependsOn(builtins)
     archiveAppendix = null
-    from(provider { zipTree(builtins.singleFile) }) { include("kotlin/**") }
+//    from(provider { zipTree(builtins.singleFile) }) { include("kotlin/**") }
+    dependsOn(builtinsMetadata)
+    from {
+        includeEmptyDirs = false
+        builtinsMetadata.files.map {
+            zipTree(it).matching { include("**/*.kotlin_builtins") }
+        }
+    }
 }
 
 publishing {

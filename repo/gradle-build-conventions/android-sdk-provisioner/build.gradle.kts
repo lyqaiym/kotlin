@@ -35,6 +35,7 @@ dependencies {
 project.configurations.named(org.jetbrains.kotlin.gradle.plugin.PLUGIN_CLASSPATH_CONFIGURATION_NAME + "Main") {
     resolutionStrategy {
         eachDependency {
+            println("android-sdk-provisioner:eachDependency:group=${this.requested.group},n=${this.requested.name},v=${this.requested.version}")
             if (this.requested.group == "org.jetbrains.kotlin") useVersion(libs.versions.kotlin.`for`.gradle.plugins.compilation.get())
         }
     }

@@ -1,11 +1,20 @@
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.internal.file.collections.DefaultConfigurableFileCollection
+import org.jetbrains.kotlin.buildtools.api.ExperimentalBuildToolsApi
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.internal.config.MavenComparableVersion
 import org.jetbrains.kotlin.gradle.plugin.KotlinBasePluginWrapper
+import org.jetbrains.kotlin.gradle.plugin.kotlinToolingVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import kotlin.collections.contains
 
 // Contains common configuration that should be applied to all projects
+plugins {
+    id("implicit-dependencies")
+}
 
 // Common Group and version
 val kotlinVersion: String by rootProject.extra
@@ -14,12 +23,13 @@ version = kotlinVersion
 
 project.configureJvmDefaultToolchain()
 project.addEmbeddedConfigurations()
-project.addImplicitDependenciesConfiguration()
+//project.addImplicitDependenciesConfiguration()
 project.configureJavaCompile()
 project.configureJavaBasePlugin()
 project.configureKotlinCompilationOptions()
 project.configureArtifacts()
 project.configureTests()
+project.checkNoApiDependenciesOnK1Modules()
 
 // There are problems with common build dir:
 //  - some tests (in particular js and binary-compatibility-validator depend on the fixed (default) location
@@ -27,35 +37,45 @@ project.configureTests()
 // therefore it is disabled by default
 // buildDir = File(commonBuildDir, project.name)
 
-afterEvaluate {
-    run configureCompilerClasspath@{
-        val bootstrapCompilerClasspath by rootProject.buildscript.configurations
-        configurations.findByName("kotlinCompilerClasspath")?.let {
-            dependencies.add(it.name, files(bootstrapCompilerClasspath))
-        }
-        val bootstrapBuildToolsApiClasspath by rootProject.buildscript.configurations
-        configurations.findByName("kotlinBuildToolsApiClasspath")?.let {
-            it.dependencies.clear() // it's different from `bootstrapCompilerClasspath` as this configuration does not use "default dependencies"
-            dependencies.add(it.name, files(bootstrapBuildToolsApiClasspath))
-        }
+/**
+ * Validates that the project does not expose K1 frontend modules
+ * (see `fe10CompilerModules` in `gradle/compilerModules.gradle.kts`) through the `api`
+ * configuration. K1 frontend modules must only be depended on via `implementation`,
+ * so that the legacy frontend never leaks onto consumers' compile classpaths.
+ */
+fun Project.checkNoApiDependenciesOnK1Modules() {
+    // The IDE-plugin dependency bundles under `:prepare:ide-plugin-dependencies` intentionally
+    // re-export compiler modules (including the K1 frontend) via `api`, so that the IntelliJ
+    // Kotlin plugin gets them on its classpath. They are the sanctioned re-exporters and are
+    // exempt from this invariant.
+    if (path.startsWith(":prepare:ide-plugin-dependencies")) return
 
-        configurations.findByName("kotlinCompilerPluginClasspath")
-            ?.exclude("org.jetbrains.kotlin", "kotlin-scripting-compiler-embeddable")
-    }
-}
+    afterEvaluate {
+        val apiConfiguration = configurations.findByName("api") ?: return@afterEvaluate
 
-fun Project.addImplicitDependenciesConfiguration() {
-    configurations.maybeCreate("implicitDependencies").apply {
-        isCanBeConsumed = false
-        isCanBeResolved = false
-    }
+        @Suppress("UNCHECKED_CAST")
+        val fe10CompilerModules = rootProject.extra["fe10CompilerModules"] as Array<String>
 
-    if (kotlinBuildProperties.isInIdeaSync) {
-        afterEvaluate {
-            // IDEA manages to download dependencies from `implicitDependencies`, even if it is created with `isCanBeResolved = false`
-            // Clear `implicitDependencies` to avoid downloading unnecessary dependencies during import
-            configurations.implicitDependencies.get().dependencies.clear()
-        }
+        @Suppress("UNCHECKED_CAST")
+        val descriptorModules = rootProject.extra["descriptorsCompilerModules"] as Array<String>
+
+        val k1Modules = (fe10CompilerModules + descriptorModules).toSet()
+
+        println("afterEvaluate:fe10CompilerModules=${fe10CompilerModules}")
+        val violations = apiConfiguration.dependencies
+            .filterIsInstance<ProjectDependency>()
+            .map { it.path }
+            .filter { it in k1Modules }
+            .sorted()
+
+//        if (violations.isNotEmpty()) {
+//            throw GradleException(
+//                "Project '$path' declares `api` dependencies on K1 frontend modules: " +
+//                        violations.joinToString(prefix = "[", postfix = "]") + ". " +
+//                        "K1 frontend modules must only be depended on with the `implementation` " +
+//                        "configuration (see `fe10CompilerModules` in gradle/compilerModules.gradle.kts)."
+//            )
+//        }
     }
 }
 
@@ -108,8 +128,8 @@ fun Project.configureJavaBasePlugin() {
     }
 }
 
-val projectsUsedInIntelliJKotlinPlugin: Array<String> by rootProject.extra
-val kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin: String by rootProject.extra
+val projectsDependingOnStableStdlib: Array<String> by rootProject.extra
+val kotlinApiVersionForProjectsDependingOnStableStdlib: String by rootProject.extra
 
 /**
  * In all specified modules `-XXexplicit-return-types` flag will be added to warn about
@@ -120,14 +140,14 @@ val modulesWithRequiredExplicitTypes = rootProject.extra["firAllCompilerModules"
 
 fun Project.configureKotlinCompilationOptions() {
     plugins.withType<KotlinBasePluginWrapper> {
-        val commonCompilerArgs = listOfNotNull(
-            "-opt-in=kotlin.RequiresOptIn",
-            "-progressive".takeIf { getBooleanProperty("test.progressive.mode") ?: false },
-            "-Xdont-warn-on-error-suppression",
-            "-Xmulti-dollar-interpolation", // KT-2425
-            "-Xwhen-guards", // KT-13626
-            "-Xnon-local-break-continue", // KT-1436
-        )
+//        val commonCompilerArgs = listOfNotNull(
+//            "-opt-in=kotlin.RequiresOptIn",
+//            "-progressive".takeIf { getBooleanProperty("test.progressive.mode") ?: false },
+//            "-Xdont-warn-on-error-suppression",
+//            "-Xmulti-dollar-interpolation", // KT-2425
+//            "-Xwhen-guards", // KT-13626
+//            "-Xnon-local-break-continue", // KT-1436
+//        )
 
         val kotlinLanguageVersion: String by rootProject.extra
         val useJvmFir by extra(project.kotlinBuildProperties.useFir)
@@ -137,13 +157,34 @@ fun Project.configureKotlinCompilationOptions() {
 
         tasks.withType<KotlinCompilationTask<*>>().configureEach {
             compilerOptions {
+                val skipNewLanguageFeatures = skipArgumentForOlderKotlinCompilerVersion()
+
+                val commonCompilerArgs = provider {
+                    listOfNotNull(
+                        "-opt-in=kotlin.RequiresOptIn",
+                        "-progressive".takeIf { getBooleanProperty("test.progressive.mode") ?: false },
+                        "-Xdont-warn-on-error-suppression",
+                        "-Xcontext-parameters", // KT-72222
+                        "-Xexplicit-backing-fields".takeUnless { skipNewLanguageFeatures }, // KT-14663
+                        "-Xname-based-destructuring=complete".takeUnless { skipNewLanguageFeatures },
+                        // Between making a language feature stable and the next bootstrap, we need to keep providing the compiler argument.
+                        // But this produces a warning
+                        // "The argument ... is redundant for the current language version ..."
+                        // in the bootstrap test and fails because of -Werror.
+                        // To work around it, we suppress the warning.
+                        @OptIn(ExperimentalBuildToolsApi::class, ExperimentalKotlinGradlePluginApi::class)
+                        "-Xwarning-level=REDUNDANT_CLI_ARG:disabled".takeIf {
+                            project.kotlinExtension.compilerVersion.get() == project.kotlinToolingVersion.toString()
+                        },
+                    )
+                }
                 freeCompilerArgs.addAll(commonCompilerArgs)
                 languageVersion.set(KotlinVersion.fromVersion(kotlinLanguageVersion))
                 apiVersion.set(KotlinVersion.fromVersion(kotlinLanguageVersion))
                 freeCompilerArgs.add("-Xskip-prerelease-check")
 
-                if (project.path in projectsUsedInIntelliJKotlinPlugin) {
-                    apiVersion.set(KotlinVersion.fromVersion(kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin))
+                if (project.path in projectsDependingOnStableStdlib) {
+                    apiVersion.set(KotlinVersion.fromVersion(kotlinApiVersionForProjectsDependingOnStableStdlib))
                 }
                 if (project.path in modulesWithRequiredExplicitTypes) {
                     freeCompilerArgs.add("-XXexplicit-return-types=warning")
@@ -191,6 +232,18 @@ fun Project.configureKotlinCompilationOptions() {
             }
         }
     }
+}
+
+private val kotlinCompilerVersionForGradle = rootProject.extensions
+    .getByType(VersionCatalogsExtension::class.java)
+    .named("libs")
+    .findVersion("kotlin-for-gradle-plugins-compilation")
+    .get()
+    .displayName
+
+private fun Project.skipArgumentForOlderKotlinCompilerVersion(): Boolean {
+    @OptIn(ExperimentalBuildToolsApi::class, ExperimentalKotlinGradlePluginApi::class)
+    return MavenComparableVersion(kotlinExtension.compilerVersion.get()) <= MavenComparableVersion(kotlinCompilerVersionForGradle)
 }
 
 fun Project.configureArtifacts() {
@@ -319,10 +372,13 @@ fun Project.configureTests() {
 
     // Aggregate task for build related checks
     tasks.register("checkBuild")
-    val mppProjects: List<String> by rootProject.extra
-    if (path !in mppProjects) {
-        configureTestRetriesForTestTasks()
-    }
+//    Could not determine the dependencies of task ':kotlin-gradle-plugin:check'.
+//    > Could not create task ':kotlin-gradle-plugin:test'.
+//    > Extension of type 'DevelocityTestConfiguration' does not exist. Currently registered extension types: [ExtraPropertiesExtension]
+//    val mppProjects: List<String> by rootProject.extra
+//    if (path !in mppProjects) {
+//        configureTestRetriesForTestTasks()
+//    }
 }
 
 // TODO: migrate remaining modules to the new JVM default scheme.

@@ -2,19 +2,32 @@ import gradle.GradlePluginVariant
 
 plugins {
     id("gradle-plugin-dependency-configuration")
-    id("jps-compatible")
+    //    id("jps-compatible")
     id("org.jetbrains.kotlinx.binary-compatibility-validator")
     id("gradle-plugin-api-reference")
 }
 
 pluginApiReference {
-    enableForGradlePluginVariants(GradlePluginVariant.values().toSet())
-    enableKotlinlangDocumentation()
+//    enableForGradlePluginVariants(GradlePluginVariant.values().toSet())
+    enableForAllGradlePluginVariants()
+//    enableForAllGradlePluginVariants()
+//    enableKotlinlangDocumentation()
 
     failOnWarning = true
 
+//    additionalDokkaConfiguration {
+//        reportUndocumented.set(true)
+//    }
     additionalDokkaConfiguration {
-        reportUndocumented.set(true)
+        dokkaSourceSets.configureEach {
+            if (name != "common") {
+                suppress = true
+                return@configureEach
+            }
+
+            reportUndocumented = true
+            includes.from("api-reference-description.md")
+        }
     }
 }
 
@@ -39,5 +52,14 @@ apiValidation {
 tasks {
     apiBuild {
         inputJar.value(jar.flatMap { it.archiveFile })
+    }
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.apache.commons" && requested.name == "commons-lang3") {
+            useVersion(libs.versions.commons.lang.get())
+            because("CVE-2025-48924")
+        }
     }
 }

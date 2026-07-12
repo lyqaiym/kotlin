@@ -6,7 +6,9 @@ import plugins.configureKotlinPomAttributes
 
 plugins {
     `maven-publish`
-    kotlin("js")
+//    'kotlin-js' Gradle plugin is deprecated
+//    kotlin("js")
+    kotlin("multiplatform")
 }
 
 val jsStdlibSources = "${projectDir}/../stdlib/js/src"
@@ -43,7 +45,9 @@ kotlin {
     js()
 
     sourceSets {
-        val main by getting {
+//        KotlinSourceSet with name 'main' not found.
+//        val main by getting {
+        jsMain {
             if (!kotlinBuildProperties.isInIdeaSync) {
                 kotlin.srcDir("$jsStdlibSources/org.w3c")
                 kotlin.srcDir("$jsStdlibSources/kotlinx")

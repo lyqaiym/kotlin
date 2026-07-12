@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     kotlin("multiplatform")
@@ -6,7 +7,7 @@ plugins {
 }
 
 kotlin {
-    js(IR) {
+    js {
         nodejs()
     }
 }
@@ -153,18 +154,24 @@ kotlin {
     }
 }
 
-@Suppress("DEPRECATION")
-tasks.withType<KotlinCompile<*>>().configureEach {
-    kotlinOptions.languageVersion = "2.0"
-    kotlinOptions.apiVersion = "2.0"
-    kotlinOptions.freeCompilerArgs += listOf(
-        "-Xallow-kotlin-package",
-        "-Xexpect-actual-classes",
-        "-Xstdlib-compilation",
-        "-Xdont-warn-on-error-suppression",
-        "-opt-in=kotlin.ExperimentalMultiplatform",
-        "-opt-in=kotlin.contracts.ExperimentalContracts",
-    )
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
+    compilerOptions {
+        // Use this to override language and API versions for stdlib compared to the version used to build the whole Kotlin
+        // languageVersion = KotlinVersion.KOTLIN_...
+        // apiVersion = KotlinVersion.KOTLIN_...
+        freeCompilerArgs.addAll(
+            listOf(
+                "-Xallow-kotlin-package",
+                "-Xexpect-actual-classes",
+                "-Xstdlib-compilation",
+                "-Xdont-warn-on-error-suppression",
+                "-opt-in=kotlin.ExperimentalMultiplatform",
+                "-opt-in=kotlin.contracts.ExperimentalContracts",
+                "-Xcontext-parameters",
+                "-Xreturn-value-checker=full",
+            )
+        )
+    }
 }
 
 tasks {
@@ -172,8 +179,15 @@ tasks {
         enabled = false
     }
 
-    @Suppress("DEPRECATION")
-    named("compileKotlinJs", KotlinCompile::class) {
-        kotlinOptions.freeCompilerArgs += "-Xir-module-name=kotlin"
+    named<KotlinCompilationTask<*>>("compileKotlinJs") {
+        compilerOptions {
+            freeCompilerArgs.addAll(
+                "-Xir-module-name=kotlin",
+                // Use the same name as the full stdlib. This is so that in per-module box tests, the JS module corresponding
+                // to the standard library would have a predicatable name, no matter which flavor of stdlib the test is compiled against.
+                // In some test logic, there are certain assumptions about that name. For example, see `JsWrongModuleHandler`.
+                "-Xir-per-module-output-name=kotlin-kotlin-stdlib"
+            )
+        }
     }
 }

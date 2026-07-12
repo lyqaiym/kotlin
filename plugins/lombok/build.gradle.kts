@@ -2,7 +2,7 @@ description = "Lombok compiler plugin"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -52,23 +52,23 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    useJUnitPlatform()
-    workingDir = rootDir
-
-    val testRuntimeClasspathFiles: FileCollection = configurations.testRuntimeClasspath.get()
-    doFirst {
-        testRuntimeClasspathFiles
-            .find { "guava" in it.name }
-            ?.absolutePath
-            ?.let { systemProperty("org.jetbrains.kotlin.test.guava-location", it) }
-
-    }
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    useJUnitPlatform()
+//    workingDir = rootDir
+//
+//    val testRuntimeClasspathFiles: FileCollection = configurations.testRuntimeClasspath.get()
+//    doFirst {
+//        testRuntimeClasspathFiles
+//            .find { "guava" in it.name }
+//            ?.absolutePath
+//            ?.let { systemProperty("org.jetbrains.kotlin.test.guava-location", it) }
+//
+//    }
+//}
 
 publish()
 

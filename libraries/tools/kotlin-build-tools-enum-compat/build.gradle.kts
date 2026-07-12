@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 configureKotlinCompileTasksGradleCompatibility()

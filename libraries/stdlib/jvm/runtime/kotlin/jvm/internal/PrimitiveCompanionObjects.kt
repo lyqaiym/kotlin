@@ -3,6 +3,9 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
+//This class is not recommended for use in Kotlin. Use 'kotlin.Double.Companion' instead.
+@file:Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+
 package kotlin.jvm.internal
 
 internal object DoubleCompanionObject {

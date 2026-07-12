@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.plugin.KotlinJsCompilerType.IR as IR_TYPE
 
 plugins {
-    kotlin("js")
+//    kotlin("js")
+    kotlin("multiplatform")
 }
 
 dependencies {

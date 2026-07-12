@@ -2,7 +2,7 @@ description = "Runtime library for the Parcelize compiler plugin"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {

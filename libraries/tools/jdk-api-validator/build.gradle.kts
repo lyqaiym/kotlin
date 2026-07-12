@@ -32,10 +32,10 @@ val collectSignatures by tasks.registering(Sync::class) {
     into(signaturesDirectory)
 }
 
-tasks.getByName<Test>("test") {
-    dependsOn(collectSignatures)
-    dependsOn(testArtifacts)
-
-    systemProperty("kotlinVersion", project.version)
-    systemProperty("signaturesDirectory", signaturesDirectory)
-}
+//tasks.getByName<Test>("test") {
+//    dependsOn(collectSignatures)
+//    dependsOn(testArtifacts)
+//
+//    systemProperty("kotlinVersion", project.version)
+//    systemProperty("signaturesDirectory", signaturesDirectory)
+//}

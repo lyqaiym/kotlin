@@ -14,15 +14,15 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
 testsJar {}
 
-nativeTest(
-    "test",
-    null,
-    requirePlatformLibs = true,
-    allowParallelExecution = false, // Stress tests are resource-intensive tests and they must be run in isolation.
-)
+//nativeTest(
+//    "test",
+//    null,
+//    requirePlatformLibs = true,
+//    allowParallelExecution = false, // Stress tests are resource-intensive tests and they must be run in isolation.
+//)

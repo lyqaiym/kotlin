@@ -1,7 +1,7 @@
 plugins {
     java
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 publish()

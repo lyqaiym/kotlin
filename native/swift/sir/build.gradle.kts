@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     id("generated-sources")
 }
 
@@ -9,9 +9,9 @@ description = "Swift Intermediate Representation"
 dependencies {
     compileOnly(kotlinStdlib())
 
-    if (kotlinBuildProperties.isInIdeaSync) {
-        compileOnly(project("tree-generator")) // Provided, so that IDEA can recognize references to this module in KDoc.
-    }
+//    if (kotlinBuildProperties.isInIdeaSync) {
+//        compileOnly(project("tree-generator")) // Provided, so that IDEA can recognize references to this module in KDoc.
+//    }
 }
 
 sourceSets {

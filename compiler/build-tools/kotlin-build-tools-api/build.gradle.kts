@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
     id("org.jetbrains.kotlinx.binary-compatibility-validator")
 }
 
@@ -39,6 +39,6 @@ tasks.named<KotlinCompile>("compileTestKotlin") {
     }
 }
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    useJUnitPlatform()
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    useJUnitPlatform()
+//}

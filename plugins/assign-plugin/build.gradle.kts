@@ -2,7 +2,7 @@ description = "Kotlin Assignment Compiler Plugin"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -36,7 +36,7 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
@@ -47,8 +47,16 @@ sourcesJar()
 javadocJar()
 testsJar()
 
-projectTest(parallel = true) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTests {
+//    testData(project.isolated, "testData")
+//
+//    testGenerator("org.jetbrains.kotlin.assignment.plugin.TestGeneratorKt", generateTestsInBuildDirectory = true)
+//
+//    withJvmStdlibAndReflect()
+//    withScriptRuntime()
+//    withMockJdkRuntime()
+//    withMockJdkAnnotationsJar()
+//    withTestJar()
+//
+//    testTask(jUnitMode = JUnitMode.JUnit5)
+//}

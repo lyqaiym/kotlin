@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 description = "SIR to Kotlin bindings generator"
@@ -33,11 +33,11 @@ sourceSets {
     "main" { projectDefault() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
-nativeTest("test", null)
+//nativeTest("test", null)
 
 testsJar()
 

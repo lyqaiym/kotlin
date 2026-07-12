@@ -7,8 +7,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.jgit)
     implementation("org.slf4j:slf4j-nop:1.7.36")
-    implementation(libs.dataframe)
-    implicitDependencies(libs.dataframe) {
-        because("workaround for KTIJ-30065, remove after its resolution")
-    }
+//    implementation(libs.dataframe)
+//    implicitDependencies(libs.dataframe) {
+//        because("workaround for KTIJ-30065, remove after its resolution")
+//    }
 }

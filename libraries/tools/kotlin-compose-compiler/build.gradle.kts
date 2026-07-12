@@ -24,16 +24,20 @@ gradlePlugin {
 }
 
 pluginApiReference {
-    enableForGradlePluginVariants(GradlePluginVariant.values().toSet())
-    enableKotlinlangDocumentation()
+//    enableForGradlePluginVariants(GradlePluginVariant.values().toSet())
+    enableForAllGradlePluginVariants()
+//    enableKotlinlangDocumentation()
 
     failOnWarning = true
 
     additionalDokkaConfiguration {
-        reportUndocumented.set(true)
-        perPackageOption {
-            matchingRegex.set("org\\.jetbrains\\.kotlin\\.compose\\.compiler\\.gradle\\.model(\$|\\.).*")
-            suppress.set(true)
+        dokkaSourceSets.configureEach {
+            includes.from("api-reference-description.md")
+            reportUndocumented.set(true)
+            perPackageOption {
+                matchingRegex.set("org\\.jetbrains\\.kotlin\\.compose\\.compiler\\.gradle\\.model(\$|\\.).*")
+                suppress.set(true)
+            }
         }
     }
 }
@@ -72,5 +76,14 @@ if (!kotlinBuildProperties.isInJpsBuildIdeaSync) {
 
     tasks.named("check") {
         dependsOn(testing.suites.named("functionalTest"))
+    }
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.apache.commons" && requested.name == "commons-lang3") {
+            useVersion(libs.versions.commons.lang.get())
+            because("CVE-2025-48924")
+        }
     }
 }

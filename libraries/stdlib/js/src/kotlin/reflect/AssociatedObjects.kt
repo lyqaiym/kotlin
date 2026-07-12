@@ -14,9 +14,9 @@ import findAssociatedObject
  * annotating that usage with the [OptIn] annotation, e.g. `@OptIn(ExperimentalAssociatedObjects::class)`,
  * or by using the compiler argument `-opt-in=kotlin.reflect.ExperimentalAssociatedObjects`.
  */
-@RequiresOptIn(level = RequiresOptIn.Level.ERROR)
-@Retention(value = AnnotationRetention.BINARY)
-public annotation class ExperimentalAssociatedObjects
+//@RequiresOptIn(level = RequiresOptIn.Level.ERROR)
+//@Retention(value = AnnotationRetention.BINARY)
+//public annotation class ExperimentalAssociatedObjects
 
 /**
  * Makes the annotated annotation class an associated object key.
@@ -25,10 +25,10 @@ public annotation class ExperimentalAssociatedObjects
  * When applied to a class with reference to an object declaration as an argument, it binds
  * the object to the class, making this binding discoverable at runtime using [findAssociatedObject].
  */
-@ExperimentalAssociatedObjects
-@Retention(AnnotationRetention.BINARY)
-@Target(AnnotationTarget.ANNOTATION_CLASS)
-public annotation class AssociatedObjectKey
+//@ExperimentalAssociatedObjects
+//@Retention(AnnotationRetention.BINARY)
+//@Target(AnnotationTarget.ANNOTATION_CLASS)
+//public annotation class AssociatedObjectKey
 
 /**
  * If [T] is an @[AssociatedObjectKey]-annotated annotation class and [this] class is annotated with @[T] (`S::class`),
@@ -37,5 +37,5 @@ public annotation class AssociatedObjectKey
  * Otherwise returns `null`.
  */
 @ExperimentalAssociatedObjects
-public inline fun <reified T : Annotation> KClass<*>.findAssociatedObject(): Any? =
+public actual inline fun <reified T : Annotation> KClass<*>.findAssociatedObject(): Any? =
     this.findAssociatedObject(T::class)

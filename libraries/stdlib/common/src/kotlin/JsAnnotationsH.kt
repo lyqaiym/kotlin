@@ -173,3 +173,17 @@ public annotation class ExperimentalJsCollectionsApi
 @OptionalExpectation
 @SinceKotlin("2.0")
 public expect annotation class JsStatic()
+
+@RequiresOptIn(level = RequiresOptIn.Level.WARNING)
+@MustBeDocumented
+@Retention(AnnotationRetention.BINARY)
+@SinceKotlin("2.3") // TODO(KT-84002): bump to 2.4 alongside @JsNoRuntime version change
+public annotation class ExperimentalJsNoRuntime
+
+@ExperimentalJsNoRuntime
+@Retention(AnnotationRetention.BINARY)
+@Target(CLASS)
+@MustBeDocumented
+@OptionalExpectation
+@SinceKotlin("2.4")
+public expect annotation class JsNoRuntime()

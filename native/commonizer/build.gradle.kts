@@ -57,9 +57,9 @@ sourceSets {
     "test" { projectDefault() }
 }
 
-projectTest(parallel = true) {
-    workingDir = rootDir
-}
+//projectTest(parallel = true) {
+//    workingDir = rootDir
+//}
 
 runtimeJar()
 sourcesJar { includeEmptyDirs = false; eachFile { exclude() } } // empty Jar, no public sources

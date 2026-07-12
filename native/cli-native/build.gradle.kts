@@ -9,6 +9,7 @@ dependencies {
 
     implementation(project(":compiler:cli"))
     implementation(project(":compiler:cli-common"))
+//    implementation(project(":compiler:ir.backend.common"))
     implementation(project(":compiler:ir.backend.native"))
     implementation(project(":compiler:util"))
     implementation(project(":kotlin-native:backend.native"))
@@ -27,3 +28,5 @@ sourceSets {
 
 sourcesJar()
 javadocJar()
+
+//optInToK1Deprecation()

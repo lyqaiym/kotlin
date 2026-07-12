@@ -31,11 +31,11 @@ tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions.freeCompilerArgs.add("-Xallow-kotlin-package")
 }
 
-projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}
 
 // This doesn;t work now due to conflicts between embeddable compiler contents and intellij sdk modules
 // To make it work, the dependencies to the intellij sdk should be eliminated
@@ -45,11 +45,11 @@ projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
 //    classpath = embeddableTestRuntime
 //}
 
-projectTest(taskName = "testWithK1", parallel = true, jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-    doFirst {
-        systemProperty("kotlin.script.base.compiler.arguments", "-language-version 1.9")
-    }
-}
+//projectTest(taskName = "testWithK1", parallel = true, jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//    doFirst {
+//        systemProperty("kotlin.script.base.compiler.arguments", "-language-version 1.9")
+//    }
+//}

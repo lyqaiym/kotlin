@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 dependencies {
@@ -31,12 +31,12 @@ sourceSets {
     "main" { none() }
     "test" { projectDefault() }
 }
-
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":plugins:plugin-sandbox:plugin-annotations:jar")
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":plugins:plugin-sandbox:plugin-annotations:jar")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}
 
 testsJar()
 

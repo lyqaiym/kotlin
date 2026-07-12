@@ -78,6 +78,7 @@ public actual interface MutableCollection<E> : Collection<E>, MutableIterable<E>
      * @return `true` if the element has been added, `false` if the collection does not support duplicates
      * and the element is already contained in the collection.
      */
+    @IgnorableReturnValue
     public actual fun add(element: E): Boolean
 
     /**
@@ -86,6 +87,7 @@ public actual interface MutableCollection<E> : Collection<E>, MutableIterable<E>
      *
      * @return `true` if the element has been successfully removed; `false` if it was not present in the collection.
      */
+    @IgnorableReturnValue
     public actual fun remove(element: E): Boolean
 
     // Bulk Modification Operations
@@ -94,6 +96,7 @@ public actual interface MutableCollection<E> : Collection<E>, MutableIterable<E>
      *
      * @return `true` if any of the specified elements was added to the collection, `false` if the collection was not modified.
      */
+    @IgnorableReturnValue
     public actual fun addAll(elements: Collection<E>): Boolean
 
     /**
@@ -101,6 +104,7 @@ public actual interface MutableCollection<E> : Collection<E>, MutableIterable<E>
      *
      * @return `true` if any of the specified elements was removed from the collection, `false` if the collection was not modified.
      */
+    @IgnorableReturnValue
     public actual fun removeAll(elements: Collection<E>): Boolean
 
     /**
@@ -108,6 +112,7 @@ public actual interface MutableCollection<E> : Collection<E>, MutableIterable<E>
      *
      * @return `true` if any element was removed from the collection, `false` if the collection was not modified.
      */
+    @IgnorableReturnValue
     public actual fun retainAll(elements: Collection<E>): Boolean
 
     /**
@@ -183,8 +188,10 @@ public actual interface MutableList<E> : List<E>, MutableCollection<E> {
      *
      * @return `true` because the list is always modified as the result of this operation.
      */
+    @IgnorableReturnValue
     actual override fun add(element: E): Boolean
 
+    @IgnorableReturnValue
     actual override fun remove(element: E): Boolean
 
     // Bulk Modification Operations
@@ -195,16 +202,20 @@ public actual interface MutableList<E> : List<E>, MutableCollection<E> {
      *
      * @return `true` if the list was changed as the result of the operation.
      */
-    override fun addAll(elements: Collection<E>): Boolean
+    @IgnorableReturnValue
+    actual override fun addAll(elements: Collection<E>): Boolean
 
     /**
      * Inserts all of the elements of the specified collection [elements] into this list at the specified [index].
      *
      * @return `true` if the list was changed as the result of the operation.
      */
+    @IgnorableReturnValue
     public actual fun addAll(index: Int, elements: Collection<E>): Boolean
 
+    @IgnorableReturnValue
     actual override fun removeAll(elements: Collection<E>): Boolean
+    @IgnorableReturnValue
     actual override fun retainAll(elements: Collection<E>): Boolean
     actual override fun clear(): Unit
 
@@ -214,6 +225,7 @@ public actual interface MutableList<E> : List<E>, MutableCollection<E> {
      *
      * @return the element previously at the specified position.
      */
+    @IgnorableReturnValue
     public actual operator fun set(index: Int, element: E): E
 
     /**
@@ -226,6 +238,7 @@ public actual interface MutableList<E> : List<E>, MutableCollection<E> {
      *
      * @return the element that has been removed.
      */
+    @IgnorableReturnValue
     public actual fun removeAt(index: Int): E
 
     // List Iterators
@@ -271,14 +284,19 @@ public actual interface MutableSet<E> : Set<E>, MutableCollection<E> {
      *
      * @return `true` if the element has been added, `false` if the element is already contained in the set.
      */
+    @IgnorableReturnValue
     actual override fun add(element: E): Boolean
 
+    @IgnorableReturnValue
     actual override fun remove(element: E): Boolean
 
     // Bulk Modification Operations
 
+    @IgnorableReturnValue
     actual override fun addAll(elements: Collection<E>): Boolean
+    @IgnorableReturnValue
     actual override fun removeAll(elements: Collection<E>): Boolean
+    @IgnorableReturnValue
     actual override fun retainAll(elements: Collection<E>): Boolean
     actual override fun clear(): Unit
 }
@@ -326,7 +344,7 @@ public actual interface Map<K, out V> {
      */
     @SinceKotlin("1.1")
     @PlatformDependent
-    public actual fun getOrDefault(key: K, defaultValue: @UnsafeVariance V): V {
+    public fun getOrDefault(key: K, defaultValue: @UnsafeVariance V): V {
         // See default implementation in JDK sources
         throw NotImplementedError()
     }
@@ -379,6 +397,7 @@ public actual interface MutableMap<K, V> : Map<K, V> {
      *
      * @return the previous value associated with the key, or `null` if the key was not present in the map.
      */
+    @IgnorableReturnValue
     public actual fun put(key: K, value: V): V?
 
     /**
@@ -386,6 +405,7 @@ public actual interface MutableMap<K, V> : Map<K, V> {
      *
      * @return the previous value associated with the key, or `null` if the key was not present in the map.
      */
+    @IgnorableReturnValue
     public actual fun remove(key: K): V?
 
     /**
@@ -395,7 +415,8 @@ public actual interface MutableMap<K, V> : Map<K, V> {
      */
     @SinceKotlin("1.1")
     @PlatformDependent
-    public actual fun remove(key: K, value: V): Boolean {
+    @IgnorableReturnValue
+    public fun remove(key: K, value: V): Boolean {
         // See default implementation in JDK sources
         return true
     }
@@ -439,6 +460,7 @@ public actual interface MutableMap<K, V> : Map<K, V> {
          *
          * @return the previous value corresponding to the key.
          */
+        @IgnorableReturnValue
         public actual fun setValue(newValue: V): V
     }
 }

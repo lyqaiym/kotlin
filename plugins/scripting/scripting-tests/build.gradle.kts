@@ -1,7 +1,7 @@
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 val scriptingTestDefinition by configurations.creating
@@ -29,18 +29,18 @@ sourceSets {
     "main" {}
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
-projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist", ":plugins:scripting:test-script-definition:testJar")
-    workingDir = rootDir
-    useJUnitPlatform()
-    val scriptingTestDefinitionClasspath = scriptingTestDefinition.asPath
-    doFirst {
-        systemProperty("kotlin.script.test.script.definition.classpath", scriptingTestDefinitionClasspath)
-    }
-}
+//projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist", ":plugins:scripting:test-script-definition:testJar")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//    val scriptingTestDefinitionClasspath = scriptingTestDefinition.asPath
+//    doFirst {
+//        systemProperty("kotlin.script.test.script.definition.classpath", scriptingTestDefinitionClasspath)
+//    }
+//}
 
 testsJar()

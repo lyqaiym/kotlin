@@ -20,20 +20,15 @@ import com.intellij.openapi.util.Key;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-public class CompilerConfigurationKey<T> {
-    Key<T> ideaKey;
+class CompilerConfigurationKey<out T : Any> private constructor(internal val ideaKey: Key<@UnsafeVariance T>) {
+    constructor(name: String) : this(Key.create(name))
 
-    public CompilerConfigurationKey(@NotNull @NonNls String name) {
-        ideaKey = Key.create(name);
+    override fun toString(): String {
+        return ideaKey.toString()
     }
 
-    @NotNull
-    public static <T> CompilerConfigurationKey<T> create(@NotNull @NonNls String name) {
-        return new CompilerConfigurationKey<>(name);
-    }
-
-    @Override
-    public String toString() {
-        return ideaKey.toString();
+    companion object {
+        @JvmStatic
+        fun <T : Any> create(name: String): CompilerConfigurationKey<T> = CompilerConfigurationKey(name)
     }
 }

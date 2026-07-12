@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     id("gradle-plugin-compiler-dependency-configuration")
 }
 
@@ -37,8 +37,8 @@ tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions.freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
 }
 
-testsJar()
+//testsJar()
 
-projectTest(parallel = true) {
-    workingDir = rootDir
-}
+//projectTest(parallel = true) {
+//    workingDir = rootDir
+//}

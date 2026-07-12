@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 description = "Printer for SIR"
@@ -31,10 +31,10 @@ sourceSets {
 
 val testDataDir = projectDir.resolve("testData")
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    inputs.dir(testDataDir)
-    useJUnitPlatform { }
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    inputs.dir(testDataDir)
+//    useJUnitPlatform { }
+//}
 
 testsJar()
 

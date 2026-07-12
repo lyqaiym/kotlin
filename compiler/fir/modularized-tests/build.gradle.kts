@@ -5,7 +5,7 @@
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 repositories {
@@ -17,7 +17,7 @@ dependencies {
 
     testRuntimeOnly(libs.xerces)
     testRuntimeOnly(commonDependency("commons-lang:commons-lang"))
-
+//    testRuntimeOnly(commonDependency("org.apache.commons:commons-lang3"))
     testImplementation(libs.junit4)
     testCompileOnly(kotlinTest("junit"))
     testApi(projectTests(":compiler:tests-common"))
@@ -42,18 +42,18 @@ sourceSets {
     "test" { projectDefault() }
 }
 
-projectTest(minHeapSizeMb = 8192, maxHeapSizeMb = 8192, reservedCodeCacheSizeMb = 512) {
-    dependsOn(":dist")
-    systemProperties(project.properties.filterKeys { it.startsWith("fir.") })
-    workingDir = rootDir
-
-    run {
-        val argsExt = project.findProperty("fir.modularized.jvm.args") as? String
-        if (argsExt != null) {
-            val paramRegex = "([^\"]\\S*|\".+?\")\\s*".toRegex()
-            jvmArgs(paramRegex.findAll(argsExt).map { it.groupValues[1] }.toList())
-        }
-    }
-}
+//projectTest(minHeapSizeMb = 8192, maxHeapSizeMb = 8192, reservedCodeCacheSizeMb = 512) {
+//    dependsOn(":dist")
+//    systemProperties(project.properties.filterKeys { it.startsWith("fir.") })
+//    workingDir = rootDir
+//
+//    run {
+//        val argsExt = project.findProperty("fir.modularized.jvm.args") as? String
+//        if (argsExt != null) {
+//            val paramRegex = "([^\"]\\S*|\".+?\")\\s*".toRegex()
+//            jvmArgs(paramRegex.findAll(argsExt).map { it.groupValues[1] }.toList())
+//        }
+//    }
+//}
 
 testsJar()

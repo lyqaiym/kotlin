@@ -213,9 +213,9 @@ value class NativeDistributionProperty internal constructor(private val director
 
     override fun filter(spec: Spec<in NativeDistribution>): Provider<NativeDistribution> = ret(directoryProperty.filter { spec.isSatisfiedBy(NativeDistribution(it)) })
 
-    override fun <S : Any?> flatMap(transformer: Transformer<out Provider<out S?>?, in NativeDistribution>): Provider<S> = directoryProperty.flatMap {
-        transformer.transform(NativeDistribution(it))
-    }
+//    override fun <S : Any?> flatMap(transformer: Transformer<out Provider<out S?>?, in NativeDistribution>): Provider<S> = directoryProperty.flatMap {
+//        transformer.transform(NativeDistribution(it))
+//    }
 
     override fun <U : Any?, R : Any?> zip(right: Provider<U?>, combiner: BiFunction<in NativeDistribution, in U, out R?>): Provider<R> = directoryProperty.zip<U, R>(right) { lhs, rhs -> combiner.apply(ret(lhs), rhs) }
 }

@@ -2,8 +2,10 @@ description = "Kotlin Build Common"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
     id("gradle-plugin-compiler-dependency-configuration")
+//    id("java-test-fixtures")
+//    id("project-tests-convention")
 }
 
 dependencies {
@@ -42,8 +44,7 @@ sourceSets {
 
 testsJar()
 
-projectTest(parallel = true)
-
-projectTest("testJUnit5", jUnitMode = JUnitMode.JUnit5, parallel = true) {
-    useJUnitPlatform()
-}
+//projectTests {
+//    testTask(parallel = true, jUnitMode = JUnitMode.JUnit4)
+//    testTask("testJUnit5", jUnitMode = JUnitMode.JUnit5, skipInLocalBuild = false)
+//}

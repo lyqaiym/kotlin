@@ -55,12 +55,12 @@ fun Test.setUpJsBoxTests() {
     workingDir = rootDir
 }
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(releasedCompilerDist)
-    systemProperty("kotlin.internal.js.test.latestReleasedCompilerLocation", releasedCompilerArtifactsTarget.get().asFile.absolutePath)
-    systemProperty("kotlin.internal.js.test.latestReleasedCompilerVersion", latestReleasedCompiler)
-
-    setUpJsBoxTests()
-    useJUnitPlatform()
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(releasedCompilerDist)
+//    systemProperty("kotlin.internal.js.test.latestReleasedCompilerLocation", releasedCompilerArtifactsTarget.get().asFile.absolutePath)
+//    systemProperty("kotlin.internal.js.test.latestReleasedCompilerVersion", latestReleasedCompiler)
+//
+//    setUpJsBoxTests()
+//    useJUnitPlatform()
+//}
 

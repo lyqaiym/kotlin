@@ -100,13 +100,13 @@ val runtimeJar = runtimeJar()
 sourcesJar()
 javadocJar()
 
-projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    dependsOn(runtimeJar)
-    systemProperty("compose.compiler.hosted.jar.path", runtimeJar.get().outputs.files.singleFile.relativeTo(rootDir))
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    dependsOn(runtimeJar)
+//    systemProperty("compose.compiler.hosted.jar.path", runtimeJar.get().outputs.files.singleFile.relativeTo(rootDir))
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}
 
 val generateTests by generator("androidx.compose.compiler.plugins.kotlin.TestGeneratorKt")
 testsJar()

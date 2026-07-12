@@ -67,7 +67,7 @@ dependencies {
     val slackApiVersion = "1.2.0"
     val shadowVersion = "8.3.0"
 
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+//    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 //    api("org.jetbrains.kotlin:kotlin-native-utils:${kotlinVersion}")
     implementation(project(":native:kotlin-native-utils"))
     api("org.jetbrains.kotlin:kotlin-util-klib:${kotlinVersion}")

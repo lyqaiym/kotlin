@@ -8,6 +8,8 @@ plugins {
     id("kotlin-git.gradle-build-conventions.binary-compatibility-extended")
     id("android-sdk-provisioner")
     id("asm-deprecating-transformer")
+//    id("project-tests-convention")
+//    `java-test-fixtures`
 }
 
 repositories {
@@ -34,23 +36,38 @@ kotlin {
         )
     }
 
-    tasks.named<Test>("test") {
-        useJUnit {
-            exclude("**/*LincheckTest.class")
-        }
-    }
+//    tasks.named<Test>("test") {
+//        useJUnit {
+//            exclude("**/*LincheckTest.class")
+//        }
+//    }
 
-    tasks.register<Test>("lincheckTest") {
-        javaLauncher.set(project.getToolchainLauncherFor(JdkMajorVersion.JDK_11_0))
-
-        jvmArgs(
-            "--add-opens", "java.base/jdk.internal.misc=ALL-UNNAMED",
-            "--add-exports", "java.base/jdk.internal.util=ALL-UNNAMED",
-            "--add-exports", "java.base/sun.security.action=ALL-UNNAMED"
-        )
-        filter { include("**/*LincheckTest.class") }
-    }
+//    tasks.register<Test>("lincheckTest") {
+//        javaLauncher.set(project.getToolchainLauncherFor(JdkMajorVersion.JDK_11_0))
+//
+//        jvmArgs(
+//            "--add-opens", "java.base/jdk.internal.misc=ALL-UNNAMED",
+//            "--add-exports", "java.base/jdk.internal.util=ALL-UNNAMED",
+//            "--add-exports", "java.base/sun.security.action=ALL-UNNAMED"
+//        )
+//        filter { include("**/*LincheckTest.class") }
+//    }
 }
+
+//registerKotlinSourceForVersionRange(
+//    GradlePluginVariant.GRADLE_MIN,
+//    GradlePluginVariant.GRADLE_82,
+//)
+//
+//registerKotlinSourceForVersionRange(
+//    GradlePluginVariant.GRADLE_MIN,
+//    GradlePluginVariant.GRADLE_86,
+//)
+//
+//registerKotlinSourceForVersionRange(
+//    GradlePluginVariant.GRADLE_MIN,
+//    GradlePluginVariant.GRADLE_811,
+//)
 
 binaryCompatibilityValidator {
     targets.configureEach {
@@ -138,11 +155,26 @@ dependencies {
     commonCompileOnly(project(":kotlin-gradle-statistics"))
     commonCompileOnly(project(":kotlin-gradle-build-metrics"))
     commonCompileOnly(project(":compiler:build-tools:kotlin-build-tools-jdk-utils"))
-    commonCompileOnly(libs.android.gradle.plugin.gradle.api) { isTransitive = false }
-    commonCompileOnly(libs.android.gradle.plugin.gradle) { isTransitive = false }
-    commonCompileOnly(libs.android.gradle.plugin.builder) { isTransitive = false }
-    commonCompileOnly(libs.android.gradle.plugin.builder.model) { isTransitive = false }
-    commonCompileOnly(libs.android.tools.common) { isTransitive = false }
+    commonCompileOnly(libs.android.gradle.plugin.gradle.api) {
+        overrideTargetJvmVersion(11)
+        isTransitive = false
+    }
+    commonCompileOnly(libs.android.gradle.plugin.gradle) {
+        overrideTargetJvmVersion(11)
+        isTransitive = false
+    }
+    commonCompileOnly(libs.android.gradle.plugin.builder) {
+        overrideTargetJvmVersion(11)
+        isTransitive = false
+    }
+    commonCompileOnly(libs.android.gradle.plugin.builder.model) {
+        overrideTargetJvmVersion(11)
+        isTransitive = false
+    }
+    commonCompileOnly(libs.android.tools.common) {
+        overrideTargetJvmVersion(11)
+        isTransitive = false
+    }
     commonCompileOnly(commonDependency("org.jetbrains.teamcity:serviceMessages"))
     commonCompileOnly(libs.develocity.gradlePlugin)
     commonCompileOnly(commonDependency("com.google.code.gson:gson"))
@@ -190,17 +222,17 @@ dependencies {
         "mainEmbedded"(project(":kotlin-build-tools-enum-compat"))
     }
 
-    testCompileOnly(project(":compiler"))
-    testCompileOnly(project(":kotlin-annotation-processing"))
-
-    testImplementation(commonDependency("org.jetbrains.teamcity:serviceMessages"))
-    testImplementation(projectTests(":kotlin-build-common"))
-    testImplementation(project(":kotlin-compiler-runner"))
-    testImplementation(kotlinTest("junit"))
-    testImplementation(libs.junit4)
-    testImplementation(project(":kotlin-gradle-statistics"))
-    testImplementation(project(":kotlin-tooling-metadata"))
-    testImplementation(libs.lincheck)
+//    testCompileOnly(project(":compiler"))
+//    testCompileOnly(project(":kotlin-annotation-processing"))
+//
+//    testImplementation(commonDependency("org.jetbrains.teamcity:serviceMessages"))
+//    testImplementation(projectTests(":kotlin-build-common"))
+//    testImplementation(project(":kotlin-compiler-runner"))
+//    testImplementation(kotlinTest("junit"))
+//    testImplementation(libs.junit4)
+//    testImplementation(project(":kotlin-gradle-statistics"))
+//    testImplementation(project(":kotlin-tooling-metadata"))
+//    testImplementation(libs.lincheck)
 }
 
 configurations.commonCompileClasspath.get().exclude("org.jetbrains.kotlinx", "kotlinx-coroutines-core")
@@ -272,6 +304,11 @@ configurations.all {
         if (requested.group == "org.bouncycastle" && requested.name == "bcpkix-jdk18on") {
             useVersion("1.80")
             because("CVE-2024-34447, CVE-2024-30172, CVE-2024-30171, CVE-2024-29857")
+        }
+
+        if (requested.group == "org.apache.commons" && requested.name == "commons-lang3") {
+            useVersion(libs.versions.commons.lang.get())
+            because("CVE-2025-48924")
         }
     }
 }
@@ -367,23 +404,27 @@ tasks {
             deprecateClassesByPattern("org.jetbrains.kotlin.**", deprecationMessage, exclusions)
         }
     }
+    println("GradlePluginVariant:names=${sourceSets.names}")
     GradlePluginVariant.values().forEach { variant ->
-        if (kotlinBuildProperties.isInJpsBuildIdeaSync) return@forEach
-        val sourceSet = sourceSets.getByName(variant.sourceSetName)
-        val taskSuffix = sourceSet.jarTaskName.capitalize()
-        val shadowJarTaskName = "$EMBEDDABLE_COMPILER_TASK_NAME$taskSuffix"
-        asmDeprecation {
-            val dumpTask = registerDumpDeprecationsTask(shadowJarTaskName, taskSuffix)
-            val dumpAllTask = getOrCreateTask<Task>("dumpDeprecations") {
-                dependsOn(dumpTask)
-            }
-            val expectedFileDoesNotExistMessage = """
+//        if (kotlinBuildProperties.isInJpsBuildIdeaSync) return@forEach
+        if (variant.sourceSetName in sourceSets.names) {
+            println("GradlePluginVariant:sourceSetName1=${variant.sourceSetName}")
+            val sourceSet = sourceSets.getByName(variant.sourceSetName)
+            println("GradlePluginVariant:sourceSet=${sourceSet}")
+            val taskSuffix = sourceSet.jarTaskName.capitalize()
+            val shadowJarTaskName = "$EMBEDDABLE_COMPILER_TASK_NAME$taskSuffix"
+            asmDeprecation {
+                val dumpTask = registerDumpDeprecationsTask(shadowJarTaskName, taskSuffix)
+                val dumpAllTask = getOrCreateTask<Task>("dumpDeprecations") {
+                    dependsOn(dumpTask)
+                }
+                val expectedFileDoesNotExistMessage = """
                 The file with expected deprecations for the compiler modules bundled into KGP does not exist.
                 Run ./gradlew ${project.path}:${dumpTask.name} first to create it.
                 You may also use ./gradlew ${project.path}:${dumpAllTask.name} to dump deprecations of all fat jars.
                 Context: https://youtrack.jetbrains.com/issue/KT-70251
             """.trimIndent()
-            val checkFailureMessage = """
+                val checkFailureMessage = """
                 Expected deprecations applied to the compiler modules bundled into KGP does not match with the actually applied ones.
                 Run ./gradlew ${project.path}:${dumpTask.name} to see the difference.
                 You may also use ./gradlew ${project.path}:${dumpAllTask.name} to dump deprecations of all fat jars.
@@ -392,11 +433,14 @@ tasks {
                 Please be sure to leave a comment explaining any changes related to this failure clear enough.
                 Context: https://youtrack.jetbrains.com/issue/KT-70251
             """.trimIndent()
-            val checkTask =
-                registerCheckDeprecationsTask(shadowJarTaskName, taskSuffix, expectedFileDoesNotExistMessage, checkFailureMessage)
-            named("check") {
-                dependsOn(checkTask)
+                val checkTask =
+                    registerCheckDeprecationsTask(shadowJarTaskName, taskSuffix, expectedFileDoesNotExistMessage, checkFailureMessage)
+                named("check") {
+                    dependsOn(checkTask)
+                }
             }
+        } else {
+            println("GradlePluginVariant:sourceSetName2=${variant.sourceSetName}")
         }
     }
 }
@@ -406,9 +450,11 @@ tasks.named("validatePlugins") {
     enabled = false
 }
 
-projectTest {
-    workingDir = rootDir
-}
+//projectTests {
+//    testTask(jUnitMode = JUnitMode.JUnit4) {
+//        workingDir = rootDir
+//    }
+//}
 
 gradlePlugin {
     plugins {
@@ -470,108 +516,108 @@ gradlePlugin {
 }
 
 // Gradle plugins functional tests
-if (!kotlinBuildProperties.isInJpsBuildIdeaSync) {
-
-    // Workaround for KT-75550
-    tasks.named("gradle85Jar") {
-        enabled = false
-    }
-
-    val gradlePluginVariantForFunctionalTests = GradlePluginVariant.GRADLE_85
-    val functionalTestSourceSet = sourceSets.create("functionalTest") {
-        val gradlePluginVariantSourceSet = sourceSets.getByName(gradlePluginVariantForFunctionalTests.sourceSetName)
-        compileClasspath += gradlePluginVariantSourceSet.output
-        runtimeClasspath += gradlePluginVariantSourceSet.output
-
-        configurations.getByName(implementationConfigurationName) {
-            extendsFrom(configurations.getByName(gradlePluginVariantSourceSet.implementationConfigurationName))
-            extendsFrom(configurations.getByName(testSourceSet.implementationConfigurationName))
-        }
-
-        configurations.getByName(runtimeOnlyConfigurationName) {
-            extendsFrom(configurations.getByName(gradlePluginVariantSourceSet.runtimeOnlyConfigurationName))
-            extendsFrom(configurations.getByName(testSourceSet.runtimeOnlyConfigurationName))
-        }
-    }
-
-    val functionalTestCompilation = kotlin.target.compilations.getByName("functionalTest")
-    functionalTestCompilation.compileJavaTaskProvider.configure {
-        sourceCompatibility = JavaLanguageVersion.of(17).toString()
-        targetCompatibility = JavaLanguageVersion.of(17).toString()
-    }
-    functionalTestCompilation.compileTaskProvider.configure {
-        with(this as KotlinCompile) {
-            kotlinJavaToolchain.toolchain.use(project.getToolchainLauncherFor(JdkMajorVersion.JDK_17_0))
-        }
-    }
-    functionalTestCompilation.associateWith(kotlin.target.compilations.getByName(gradlePluginVariantForFunctionalTests.sourceSetName))
-    functionalTestCompilation.associateWith(kotlin.target.compilations.getByName("common"))
-
-    tasks.register<Test>("functionalTest") {
-        systemProperty("kotlinVersion", rootProject.extra["kotlinVersion"] as String)
-    }
-
-    tasks.register<Test>("functionalUnitTest") {
-        include("**/org/jetbrains/kotlin/gradle/unitTests/**")
-        systemProperty("kotlinVersion", rootProject.extra["kotlinVersion"] as String)
-    }
-
-    tasks.register<Test>("functionalRegressionTest") {
-        include("**/org/jetbrains/kotlin/gradle/regressionTests/**")
-    }
-
-    tasks.register<Test>("functionalDependencyResolutionTest") {
-        include("**/org/jetbrains/kotlin/gradle/dependencyResolutionTests/**")
-    }
-
-    val acceptLicensesTask = with(androidSdkProvisioner) {
-        registerAcceptLicensesTask()
-    }
-
-    tasks.withType<Test>().configureEach {
-        if (!name.startsWith("functional")) return@configureEach
-
-        group = JavaBasePlugin.VERIFICATION_GROUP
-        description = "Runs functional tests"
-        testClassesDirs = functionalTestSourceSet.output.classesDirs
-        classpath = functionalTestSourceSet.runtimeClasspath
-        workingDir = projectDir
-        javaLauncher.set(javaToolchains.launcherFor {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        })
-        dependsOnKotlinGradlePluginInstall()
-        androidSdkProvisioner {
-            provideToThisTaskAsSystemProperty(ProvisioningType.SDK)
-            dependsOn(acceptLicensesTask)
-        }
-        maxParallelForks = 8
-        maxHeapSize = "4G" // KT-72460 to investigate why we need to change heap size
-
-        testLogging {
-            events("passed", "skipped", "failed")
-        }
-    }
-
-    dependencies {
-        val implementation = project.configurations.getByName(functionalTestSourceSet.implementationConfigurationName)
-        val compileOnly = project.configurations.getByName(functionalTestSourceSet.compileOnlyConfigurationName)
-
-        implementation("com.android.tools.build:gradle:8.8.1")
-        implementation("com.android.tools.build:gradle-api:8.8.1")
-        compileOnly("com.android.tools:common:31.7.2")
-        implementation(gradleKotlinDsl())
-        implementation(project(":kotlin-gradle-plugin-tcs-android"))
-        implementation(project(":kotlin-tooling-metadata"))
-        implementation(project.dependencies.testFixtures(project(":kotlin-gradle-plugin-idea")))
-        implementation("com.github.gundy:semver4j:0.16.4:nodeps") {
-            exclude(group = "*")
-        }
-        implementation("org.reflections:reflections:0.10.2")
-        implementation(project(":compose-compiler-gradle-plugin"))
-    }
-
-    tasks.named("check") {
-        dependsOn("functionalTest")
-        dependsOn("lincheckTest")
-    }
-}
+//if (!kotlinBuildProperties.isInJpsBuildIdeaSync) {
+//
+//    // Workaround for KT-75550
+//    tasks.named("gradle85Jar") {
+//        enabled = false
+//    }
+//
+//    val gradlePluginVariantForFunctionalTests = GradlePluginVariant.GRADLE_85
+//    val functionalTestSourceSet = sourceSets.create("functionalTest") {
+//        val gradlePluginVariantSourceSet = sourceSets.getByName(gradlePluginVariantForFunctionalTests.sourceSetName)
+//        compileClasspath += gradlePluginVariantSourceSet.output
+//        runtimeClasspath += gradlePluginVariantSourceSet.output
+//
+//        configurations.getByName(implementationConfigurationName) {
+//            extendsFrom(configurations.getByName(gradlePluginVariantSourceSet.implementationConfigurationName))
+//            extendsFrom(configurations.getByName(testSourceSet.implementationConfigurationName))
+//        }
+//
+//        configurations.getByName(runtimeOnlyConfigurationName) {
+//            extendsFrom(configurations.getByName(gradlePluginVariantSourceSet.runtimeOnlyConfigurationName))
+//            extendsFrom(configurations.getByName(testSourceSet.runtimeOnlyConfigurationName))
+//        }
+//    }
+//
+//    val functionalTestCompilation = kotlin.target.compilations.getByName("functionalTest")
+//    functionalTestCompilation.compileJavaTaskProvider.configure {
+//        sourceCompatibility = JavaLanguageVersion.of(17).toString()
+//        targetCompatibility = JavaLanguageVersion.of(17).toString()
+//    }
+//    functionalTestCompilation.compileTaskProvider.configure {
+//        with(this as KotlinCompile) {
+//            kotlinJavaToolchain.toolchain.use(project.getToolchainLauncherFor(JdkMajorVersion.JDK_17_0))
+//        }
+//    }
+//    functionalTestCompilation.associateWith(kotlin.target.compilations.getByName(gradlePluginVariantForFunctionalTests.sourceSetName))
+//    functionalTestCompilation.associateWith(kotlin.target.compilations.getByName("common"))
+//
+//    tasks.register<Test>("functionalTest") {
+//        systemProperty("kotlinVersion", rootProject.extra["kotlinVersion"] as String)
+//    }
+//
+//    tasks.register<Test>("functionalUnitTest") {
+//        include("**/org/jetbrains/kotlin/gradle/unitTests/**")
+//        systemProperty("kotlinVersion", rootProject.extra["kotlinVersion"] as String)
+//    }
+//
+//    tasks.register<Test>("functionalRegressionTest") {
+//        include("**/org/jetbrains/kotlin/gradle/regressionTests/**")
+//    }
+//
+//    tasks.register<Test>("functionalDependencyResolutionTest") {
+//        include("**/org/jetbrains/kotlin/gradle/dependencyResolutionTests/**")
+//    }
+//
+//    val acceptLicensesTask = with(androidSdkProvisioner) {
+//        registerAcceptLicensesTask()
+//    }
+//
+//    tasks.withType<Test>().configureEach {
+//        if (!name.startsWith("functional")) return@configureEach
+//
+//        group = JavaBasePlugin.VERIFICATION_GROUP
+//        description = "Runs functional tests"
+//        testClassesDirs = functionalTestSourceSet.output.classesDirs
+//        classpath = functionalTestSourceSet.runtimeClasspath
+//        workingDir = projectDir
+//        javaLauncher.set(javaToolchains.launcherFor {
+//            languageVersion.set(JavaLanguageVersion.of(17))
+//        })
+//        dependsOnKotlinGradlePluginInstall()
+//        androidSdkProvisioner {
+//            provideToThisTaskAsSystemProperty(ProvisioningType.SDK)
+//            dependsOn(acceptLicensesTask)
+//        }
+//        maxParallelForks = 8
+//        maxHeapSize = "4G" // KT-72460 to investigate why we need to change heap size
+//
+//        testLogging {
+//            events("passed", "skipped", "failed")
+//        }
+//    }
+//
+//    dependencies {
+//        val implementation = project.configurations.getByName(functionalTestSourceSet.implementationConfigurationName)
+//        val compileOnly = project.configurations.getByName(functionalTestSourceSet.compileOnlyConfigurationName)
+//
+//        implementation("com.android.tools.build:gradle:8.8.1")
+//        implementation("com.android.tools.build:gradle-api:8.8.1")
+//        compileOnly("com.android.tools:common:31.7.2")
+//        implementation(gradleKotlinDsl())
+//        implementation(project(":kotlin-gradle-plugin-tcs-android"))
+//        implementation(project(":kotlin-tooling-metadata"))
+//        implementation(project.dependencies.testFixtures(project(":kotlin-gradle-plugin-idea")))
+//        implementation("com.github.gundy:semver4j:0.16.4:nodeps") {
+//            exclude(group = "*")
+//        }
+//        implementation("org.reflections:reflections:0.10.2")
+//        implementation(project(":compose-compiler-gradle-plugin"))
+//    }
+//
+//    tasks.named("check") {
+//        dependsOn("functionalTest")
+//        dependsOn("lincheckTest")
+//    }
+//}

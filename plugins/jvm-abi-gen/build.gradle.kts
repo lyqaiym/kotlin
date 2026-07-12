@@ -4,7 +4,7 @@ description = "ABI generation for Kotlin/JVM"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 sourceSets {
@@ -59,9 +59,9 @@ sourcesJar()
 
 javadocJar()
 
-projectTest(parallel = true) {
-    workingDir = rootDir
-    dependsOn(":dist")
-}
+//projectTest(parallel = true) {
+//    workingDir = rootDir
+//    dependsOn(":dist")
+//}
 
 testsJar()

@@ -18,11 +18,12 @@ plugins {
 }
 
 val projectsUsedInIntelliJKotlinPlugin: Array<String> by rootProject.extra
-val kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin: String by rootProject.extra
+val kotlinApiVersionForProjectsDependingOnStableStdlib: String by rootProject.extra
 
 tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions {
-        if (project.path !in projectsUsedInIntelliJKotlinPlugin || KotlinVersion.fromVersion(kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin) > KotlinVersion.KOTLIN_2_0) {
+        println("kotlinApiVersionForProjectsDependingOnStableStdlib=${kotlinApiVersionForProjectsDependingOnStableStdlib}")
+        if (project.path !in projectsUsedInIntelliJKotlinPlugin || KotlinVersion.fromVersion(kotlinApiVersionForProjectsDependingOnStableStdlib) > KotlinVersion.KOTLIN_2_0) {
             // check the `configureKotlinCompilationOptions` in `common-configurations.gradle.kts` out
             apiVersion.set(KotlinVersion.KOTLIN_2_0)
         }

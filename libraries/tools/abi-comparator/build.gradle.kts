@@ -1,12 +1,14 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     application
 }
 
 dependencies {
     implementation(libs.intellij.asm)
-    implementation(commonDependency("org.apache.commons:commons-text"))
+//    Neither versions.commons-text nor versions.org.apache.commons is defined in the root project's extra
+//    implementation(commonDependency("org.apache.commons:commons-text"))
+    implementation(libs.apache.commons.text)
 
     implementation(project(":tools:kotlinp-jvm"))
     implementation(project(":kotlin-metadata-jvm"))

@@ -2,13 +2,15 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 configureKotlinCompileTasksGradleCompatibility()
 
 dependencies {
-    compileOnly(kotlinStdlib())
+//    compileOnly(kotlinStdlib())
+    val coreDepsVersion = libs.versions.kotlin.`for`.gradle.plugins.compilation.get()
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:$coreDepsVersion")
 }
 
 configureJvmToolchain(JdkMajorVersion.JDK_21_0)

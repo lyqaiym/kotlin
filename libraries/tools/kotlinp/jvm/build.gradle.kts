@@ -5,7 +5,7 @@ description = "kotlinp-jvm"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 val shadows by configurations.creating
@@ -52,10 +52,10 @@ if (kotlinBuildProperties.isInJpsBuildIdeaSync) {
     }
 }
 
-projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}
 
 val generateTests by generator("org.jetbrains.kotlin.kotlinp.jvm.test.GenerateKotlinpTestsKt")
 

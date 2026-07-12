@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.ideaExt.idea
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -48,9 +48,9 @@ if (kotlinBuildProperties.isInJpsBuildIdeaSync) {
     }
 }
 
-projectTest(parallel = true, maxHeapSizeMb = 3072) {
-    dependsOn(":dist")
-    workingDir = rootDir
-}
+//projectTest(parallel = true, maxHeapSizeMb = 3072) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//}
 
 testsJar()

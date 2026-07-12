@@ -2,7 +2,6 @@
  * Copyright 2010-2021 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
-import gradle.GradlePluginVariant
 import plugins.signLibraryPublication
 
 plugins {
@@ -16,8 +15,9 @@ plugins {
 val signPublication = !version.toString().contains("-SNAPSHOT") &&
         (project.gradle.startParameter.taskNames.contains("publishPlugins") || signLibraryPublication)
 
+//configureBuildToolsApiVersionForGradleCompatibility()
+//applyWorkaroundForKt85412ForTestCompilations()
 configureCommonPublicationSettingsForGradle(signPublication)
-configureKotlinCompileTasksGradleCompatibility()
 addBomCheckTask()
 extensions.extraProperties["kotlin.stdlib.default.dependency"] = "false"
 
@@ -66,32 +66,9 @@ tasks.named("jar") {
     enabled = false
 }
 
-if (!kotlinBuildProperties.isInJpsBuildIdeaSync) {
-    // Used for Gradle 8.0+ versions
-    val gradle80SourceSet = createGradlePluginVariant(
-        GradlePluginVariant.GRADLE_80,
-        commonSourceSet = commonSourceSet
-    )
-    publishShadowedJar(gradle80SourceSet, commonSourceSet)
-
-    // Used for Gradle 8.1+ versions
-    val gradle81SourceSet = createGradlePluginVariant(
-        GradlePluginVariant.GRADLE_81,
-        commonSourceSet = commonSourceSet
-    )
-    publishShadowedJar(gradle81SourceSet, commonSourceSet)
-
-    // Used for Gradle 8.2+ versions
-    val gradle82SourceSet = createGradlePluginVariant(
-        GradlePluginVariant.GRADLE_82,
-        commonSourceSet = commonSourceSet
-    )
-    publishShadowedJar(gradle82SourceSet, commonSourceSet)
-
-    // Used for Gradle 8.5+ versions
-    val gradle85SourceSet = createGradlePluginVariant(
-        GradlePluginVariant.GRADLE_85,
-        commonSourceSet = commonSourceSet
-    )
-    publishShadowedJar(gradle85SourceSet, commonSourceSet)
-}
+//createGradlePluginVariants(
+//    commonSourceSet = commonSourceSet,
+//    publishShadowedJar = true,
+//)
+//
+//disableCoroutinesStacktraceRecoveryInTestsIfGradleEmbeddedStdlibIsInRuntimeClasspath()

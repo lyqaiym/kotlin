@@ -1194,6 +1194,7 @@ private fun String.parseLong(startIndex: Int, endIndex: Int): Long {
 }
 
 @Suppress("NOTHING_TO_INLINE")
+@IgnorableReturnValue
 private inline fun String.checkContainsAt(index: Int, endIndex: Int, part: String, ignoreCase: Boolean, partName: String): Int {
     if (part.isEmpty()) return index
     for (i in part.indices) {

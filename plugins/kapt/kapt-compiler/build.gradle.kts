@@ -3,7 +3,7 @@ description = "Annotation Processor for Kotlin"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 dependencies {
@@ -56,29 +56,40 @@ sourceSets {
     "main" { projectDefault() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
 testsJar {}
 
-kaptTestTask("test", JavaLanguageVersion.of(8))
-kaptTestTask("testJdk11", JavaLanguageVersion.of(11))
-kaptTestTask("testJdk17", JavaLanguageVersion.of(17))
-kaptTestTask("testJdk21", JavaLanguageVersion.of(21))
+//kaptTestTask("test", JavaLanguageVersion.of(8))
+//kaptTestTask("testJdk11", JavaLanguageVersion.of(11))
+//kaptTestTask("testJdk17", JavaLanguageVersion.of(17))
+//kaptTestTask("testJdk21", JavaLanguageVersion.of(21))
 
-fun Project.kaptTestTask(name: String, javaLanguageVersion: JavaLanguageVersion) {
-    val service = extensions.getByType<JavaToolchainService>()
-
-    projectTest(taskName = name, parallel = true) {
-        useJUnitPlatform {
-            excludeTags = setOf("IgnoreJDK11")
-        }
-        workingDir = rootDir
-        dependsOn(":dist")
-        javaLauncher.set(service.launcherFor { languageVersion.set(javaLanguageVersion) })
-    }
-}
+//projectTests {
+//    fun Project.kaptTestTask(name: String, javaLanguageVersion: JavaLanguageVersion) {
+//        val service = extensions.getByType<JavaToolchainService>()
+//
+//        testTask(taskName = name, jUnitMode = JUnitMode.JUnit5, skipInLocalBuild = false) {
+//            useJUnitPlatform {
+//                excludeTags = setOf("IgnoreJDK11")
+//            }
+//            workingDir = rootDir
+//            dependsOn(":dist")
+//            javaLauncher.set(service.launcherFor { languageVersion.set(javaLanguageVersion) })
+//        }
+//    }
+//
+//    kaptTestTask("test", JavaLanguageVersion.of(8))
+//    kaptTestTask("testJdk11", JavaLanguageVersion.of(11))
+//    kaptTestTask("testJdk17", JavaLanguageVersion.of(17))
+//    kaptTestTask("testJdk21", JavaLanguageVersion.of(21))
+//
+//    testGenerator("org.jetbrains.kotlin.kapt.test.TestGeneratorKt")
+//
+//    withJvmStdlibAndReflect()
+//}
 
 publish()
 

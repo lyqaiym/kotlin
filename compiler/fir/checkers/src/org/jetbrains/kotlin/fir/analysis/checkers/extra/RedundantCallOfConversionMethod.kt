@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
 import org.jetbrains.kotlin.fir.expressions.FirQualifiedAccessExpression
 import org.jetbrains.kotlin.fir.psi
 import org.jetbrains.kotlin.fir.analysis.checkers.fullyExpandedClassId
+import org.jetbrains.kotlin.fir.analysis.checkers.hasIntegerLiteralTypeAmbiguity
 import org.jetbrains.kotlin.fir.types.ConeFlexibleType
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.isMarkedNullable
@@ -38,6 +39,11 @@ object RedundantCallOfConversionMethod : FirQualifiedAccessExpressionChecker(Mpp
     }
 
     private fun FirExpression.isRedundant(qualifiedClassId: ClassId, session: FirSession): Boolean {
+        if (hasIntegerLiteralTypeAmbiguity()){
+            println("isRedundant 1")
+            return false
+        }
+        println("isRedundant 2")
         val thisType = if (this is FirLiteralExpression) {
             this.resolvedType.classId
         } else {

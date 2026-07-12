@@ -117,12 +117,13 @@ private fun checkDebugMetadataVersion(expected: Int, actual: Int) {
  */
 @SinceKotlin("1.3")
 @JvmName("getSpilledVariableFieldMapping")
+@PublishedApi
 internal fun BaseContinuationImpl.getSpilledVariableFieldMapping(): Array<String>? {
     val debugMetadata = getDebugMetadataAnnotation() ?: return null
     checkDebugMetadataVersion(COROUTINES_DEBUG_METADATA_VERSION, debugMetadata.version)
     val res = arrayListOf<String>()
     val label = getLabel()
-    for ((i, labelOfIndex) in debugMetadata.indexToLabel.withIndex()) {
+    for ([i, labelOfIndex] in debugMetadata.indexToLabel.withIndex()) {
         if (labelOfIndex == label) {
             res.add(debugMetadata.spilled[i])
             res.add(debugMetadata.localNames[i])

@@ -2,7 +2,7 @@
  * Copyright 2010-2025 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
-
+@file:kotlin.internal.JvmBuiltin
 package kotlin
 
 /**
@@ -14,7 +14,7 @@ package kotlin
  */
 @Target(AnnotationTarget.FUNCTION)
 @MustBeDocumented
-@Suppress("NEWER_VERSION_IN_SINCE_KOTLIN") // KT-75337
+//@Suppress("NEWER_VERSION_IN_SINCE_KOTLIN") // KT-75337
 @SinceKotlin("2.2")
 public annotation class IgnorableReturnValue
 
@@ -29,6 +29,6 @@ public annotation class IgnorableReturnValue
  * Placing it without enabling the corresponding feature would result in a compiler error.
  */
 @Target(AnnotationTarget.FILE, AnnotationTarget.CLASS)
-@Suppress("NEWER_VERSION_IN_SINCE_KOTLIN") // KT-75337
-@SinceKotlin("2.2")
+//@Suppress("NEWER_VERSION_IN_SINCE_KOTLIN") // KT-75337
+@SinceKotlin("2.3")
 public annotation class MustUseReturnValue

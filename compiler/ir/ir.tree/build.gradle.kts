@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     id("generated-sources")
 }
 
@@ -13,9 +13,9 @@ dependencies {
     implementation(project(":compiler:util"))
     implementation(project(":compiler:config"))
 
-    if (kotlinBuildProperties.isInIdeaSync) {
-        compileOnly(project("tree-generator")) // Provided, so that IDEA can recognize references to this module in KDoc.
-    }
+//    if (kotlinBuildProperties.isInIdeaSync) {
+//        compileOnly(project("tree-generator")) // Provided, so that IDEA can recognize references to this module in KDoc.
+//    }
     compileOnly(intellijCore())
 }
 
@@ -27,8 +27,9 @@ sourceSets {
     "test" {}
 }
 
+optInToK1Deprecation()
+
 tasks.withType<KotlinJvmCompile> {
-    compilerOptions.freeCompilerArgs.add("-Xinline-classes")
     compilerOptions.freeCompilerArgs.add("-Xconsistent-data-class-copy-visibility")
 }
 

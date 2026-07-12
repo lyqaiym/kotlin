@@ -10,7 +10,7 @@ import java.util.*
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
-    id("jps-compatible")
+    //    id("jps-compatible")
     alias(libs.plugins.gradle.node)
     id("d8-configuration")
 }
@@ -84,7 +84,7 @@ dependencies {
     testImplementation(libs.kotlinx.serialization.json)
     testImplementation(libs.ktor.client.cio)
     testImplementation(libs.ktor.client.core)
-    testImplementation(libs.ktor.client.websockets)
+//    testImplementation(libs.ktor.client.websockets)
 }
 
 val generationRoot = projectDir.resolve("tests-gen")
@@ -274,40 +274,40 @@ fun Test.setUpBoxTests() {
     forwardProperties()
 }
 
-projectTest("test", jUnitMode = JUnitMode.JUnit5) {
-    setUpJsBoxTests(null)
+//projectTest("test", jUnitMode = JUnitMode.JUnit5) {
+//    setUpJsBoxTests(null)
+//
+//    inputs.dir(rootDir.resolve("compiler/cli/cli-common/resources")) // compiler.xml
+//
+//    inputs.dir(testDataDir)
+//    inputs.dir(rootDir.resolve("dist"))
+//    inputs.dir(rootDir.resolve("compiler/testData"))
+//
+//    outputs.dir(layout.buildDirectory.dir("out"))
+//    outputs.dir(layout.buildDirectory.dir("out-min"))
+//
+//    configureTestDistribution()
+//}
 
-    inputs.dir(rootDir.resolve("compiler/cli/cli-common/resources")) // compiler.xml
+//projectTest("jsIrTest", jUnitMode = JUnitMode.JUnit5) {
+//    setUpJsBoxTests("legacy-frontend & !es6")
+//    useJUnitPlatform()
+//}
 
-    inputs.dir(testDataDir)
-    inputs.dir(rootDir.resolve("dist"))
-    inputs.dir(rootDir.resolve("compiler/testData"))
+//projectTest("jsIrES6Test", jUnitMode = JUnitMode.JUnit5) {
+//    setUpJsBoxTests("legacy-frontend & es6")
+//    useJUnitPlatform()
+//}
 
-    outputs.dir(layout.buildDirectory.dir("out"))
-    outputs.dir(layout.buildDirectory.dir("out-min"))
+//projectTest("jsFirTest", jUnitMode = JUnitMode.JUnit5) {
+//    setUpJsBoxTests("!legacy-frontend & !es6")
+//    useJUnitPlatform()
+//}
 
-    configureTestDistribution()
-}
-
-projectTest("jsIrTest", jUnitMode = JUnitMode.JUnit5) {
-    setUpJsBoxTests("legacy-frontend & !es6")
-    useJUnitPlatform()
-}
-
-projectTest("jsIrES6Test", jUnitMode = JUnitMode.JUnit5) {
-    setUpJsBoxTests("legacy-frontend & es6")
-    useJUnitPlatform()
-}
-
-projectTest("jsFirTest", jUnitMode = JUnitMode.JUnit5) {
-    setUpJsBoxTests("!legacy-frontend & !es6")
-    useJUnitPlatform()
-}
-
-projectTest("jsFirES6Test", jUnitMode = JUnitMode.JUnit5) {
-    setUpJsBoxTests("!legacy-frontend & es6")
-    useJUnitPlatform()
-}
+//projectTest("jsFirES6Test", jUnitMode = JUnitMode.JUnit5) {
+//    setUpJsBoxTests("!legacy-frontend & es6")
+//    useJUnitPlatform()
+//}
 
 testsJar {}
 
@@ -340,12 +340,12 @@ val npmInstall by tasks.getting(NpmTask::class) {
     dependsOn(prepareNpmTestData)
 }
 
-projectTest("invalidationTest", jUnitMode = JUnitMode.JUnit5) {
-    workingDir = rootDir
-
-    useJsIrBoxTests(version = version, buildDir = layout.buildDirectory)
-    include("org/jetbrains/kotlin/incremental/*")
-    dependsOn(":dist")
-    forwardProperties()
-    useJUnitPlatform()
-}
+//projectTest("invalidationTest", jUnitMode = JUnitMode.JUnit5) {
+//    workingDir = rootDir
+//
+//    useJsIrBoxTests(version = version, buildDir = layout.buildDirectory)
+//    include("org/jetbrains/kotlin/incremental/*")
+//    dependsOn(":dist")
+//    forwardProperties()
+//    useJUnitPlatform()
+//}

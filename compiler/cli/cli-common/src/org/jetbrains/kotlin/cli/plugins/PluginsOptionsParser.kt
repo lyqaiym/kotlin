@@ -82,7 +82,7 @@ fun processCompilerPluginOptions(
         }
 
         for (value in values) {
-            processor.processOption(option, value.value, configuration)
+//            processor.processOption(option, value.value, configuration)
         }
     }
 }

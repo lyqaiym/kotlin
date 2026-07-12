@@ -58,6 +58,8 @@ public class UIntRange(start: UInt, endInclusive: UInt) : UIntProgression(start,
  */
 @SinceKotlin("1.5")
 @WasExperimental(ExperimentalUnsignedTypes::class)
+//Redundant call of conversion method.
+@Suppress("REDUNDANT_CALL_OF_CONVERSION_METHOD")
 public open class UIntProgression
 internal constructor(
     start: UInt,

@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.konan.target.Family
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 description = "Kotlin/Native utils"

@@ -2,7 +2,7 @@ description = "Compiler runner + daemon client"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 dependencies {

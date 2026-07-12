@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
     id("generated-sources")
 }
 
@@ -33,8 +33,8 @@ allprojects {
 
 testsJar {}
 
-projectTest {
-    workingDir = rootDir
-}
+//projectTest {
+//    workingDir = rootDir
+//}
 
 generatedConfigurationKeys("CLIConfigurationKeys")

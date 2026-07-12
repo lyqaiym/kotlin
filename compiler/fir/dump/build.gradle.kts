@@ -5,7 +5,7 @@
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -23,6 +23,7 @@ dependencies {
 
     compileOnly(intellijCore())
     compileOnly(commonDependency("commons-lang:commons-lang"))
+//    compileOnly(commonDependency("org.apache.commons:commons-lang3"))
 }
 
 sourceSets {

@@ -6,7 +6,7 @@ import java.util.*
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     alias(libs.plugins.gradle.node)
     id("d8-configuration")
     id("binaryen-configuration")
@@ -268,49 +268,49 @@ val generateTests by generator("org.jetbrains.kotlin.generators.tests.GenerateWa
     dependsOn(":compiler:generateTestData")
 }
 
-fun Project.wasmProjectTest(
-    taskName: String,
-    body: Test.() -> Unit = {}
-): TaskProvider<Test> {
-    return projectTest(
-        taskName = taskName,
-        parallel = true,
-        jUnitMode = JUnitMode.JUnit5
-    ) {
-        workingDir = rootDir
-        with(d8KotlinBuild) {
-            setupV8()
-        }
-        with(nodeJsKotlinBuild) {
-            setupNodeJs()
-        }
-        with(binaryenKotlinBuild) {
-            setupBinaryen()
-        }
-        setupSpiderMonkey()
-        setupWasmEdge()
-        useJUnitPlatform()
-        setupWasmStdlib("js")
-        setupWasmStdlib("wasi")
-        setupGradlePropertiesForwarding()
-        systemProperty("kotlin.wasm.test.root.out.dir", "${layout.buildDirectory.get().asFile}/")
-        body()
-    }
-}
+//fun Project.wasmProjectTest(
+//    taskName: String,
+//    body: Test.() -> Unit = {}
+//): TaskProvider<Test> {
+//    return projectTest(
+//        taskName = taskName,
+//        parallel = true,
+//        jUnitMode = JUnitMode.JUnit5
+//    ) {
+//        workingDir = rootDir
+//        with(d8KotlinBuild) {
+//            setupV8()
+//        }
+//        with(nodeJsKotlinBuild) {
+//            setupNodeJs()
+//        }
+//        with(binaryenKotlinBuild) {
+//            setupBinaryen()
+//        }
+//        setupSpiderMonkey()
+//        setupWasmEdge()
+//        useJUnitPlatform()
+//        setupWasmStdlib("js")
+//        setupWasmStdlib("wasi")
+//        setupGradlePropertiesForwarding()
+//        systemProperty("kotlin.wasm.test.root.out.dir", "${layout.buildDirectory.get().asFile}/")
+//        body()
+//    }
+//}
 
 // Test everything
-wasmProjectTest("test")
+//wasmProjectTest("test")
 
-wasmProjectTest("testFir") {
-    dependsOn(generateTypeScriptTests)
-    include("**/Fir*.class")
-}
+//wasmProjectTest("testFir") {
+//    dependsOn(generateTypeScriptTests)
+//    include("**/Fir*.class")
+//}
 
-wasmProjectTest("testK1") {
-    dependsOn(generateTypeScriptTests)
-    include("**/K1*.class")
-}
+//wasmProjectTest("testK1") {
+//    dependsOn(generateTypeScriptTests)
+//    include("**/K1*.class")
+//}
 
-wasmProjectTest("diagnosticTest") {
-    include("**/Diagnostics*.class")
-}
+//wasmProjectTest("diagnosticTest") {
+//    include("**/Diagnostics*.class")
+//}

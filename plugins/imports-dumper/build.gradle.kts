@@ -3,14 +3,14 @@ description = "Extension for saving imports of .kt-files in JSON"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 val kotlinxSerializationVersion = "0.14.0"
 
 dependencies {
-    api(project(":compiler:frontend.java"))
-    api(project(":compiler:plugin-api"))
+    implementation(project(":compiler:frontend.java"))
+    implementation(project(":compiler:plugin-api"))
     compileOnly("org.jetbrains.kotlinx", "kotlinx-serialization-runtime", kotlinxSerializationVersion) { isTransitive = false }
 
     compileOnly(intellijCore())
@@ -29,10 +29,10 @@ sourceSets {
     "test" { projectDefault() }
 }
 
-projectTest {
-    workingDir = rootDir
-    dependsOn(":dist")
-}
+//projectTest {
+//    workingDir = rootDir
+//    dependsOn(":dist")
+//}
 
 optInToExperimentalCompilerApi()
 

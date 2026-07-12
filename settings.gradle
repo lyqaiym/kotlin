@@ -1,9 +1,8 @@
 pluginManagement {
-    includeBuild("repo/gradle-settings-conventions")
-    includeBuild("repo/gradle-build-conventions")
 
-    apply from: 'repo/scripts/cache-redirector.settings.gradle.kts'
-    apply from: 'repo/scripts/kotlin-bootstrap.settings.gradle.kts'
+    includeBuild("dependencies/kotlin-build-gradle-plugin")
+//    includeBuild("repo/kotlin-build-helpers")
+    includeBuild("repo/gradle-settings-conventions")
 
     repositories {
         mavenLocal()
@@ -11,6 +10,9 @@ pluginManagement {
             url "https://packages.jetbrains.team/maven/p/ij/intellij-dependencies"
             content {
                 includeGroupByRegex("org\\.jetbrains\\.intellij\\.deps(\\..+)?")
+//                Could not find com.intellij.platform:kotlinx-coroutines-core-jvm:1.8.0-intellij-13.
+                includeGroupByRegex("com.intellij.platform.*")
+                includeGroupByRegex("org.jetbrains.jps.*")
             }
         }
         maven { url "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-dependencies" }
@@ -25,10 +27,19 @@ pluginManagement {
 }
 
 plugins {
-    id "internal-gradle-setup" // it's recommended to apply this plugin at first, as it changes the local.properties file
-    id "develocity"
-    id "jvm-toolchain-provisioning"
-    id "kotlin-daemon-config"
+//    id "internal-gradle-setup" // it's recommended to apply this plugin at first, as it changes the local.properties file
+//    id "develocity"
+//    id "jvm-toolchain-provisioning"
+//    id "kotlin-daemon-config"
+//    id "kotlin-build-helpers"
+
+    id("internal-gradle-setup") // it's recommended to apply this plugin at first, as it changes the local.properties file
+    id("kotlin-build-helpers")
+    id("kotlin-bootstrap")
+    id("develocity")
+    id("jvm-toolchain-provisioning")
+    id("kotlin-daemon-config")
+    id("cache-redirector")
 }
 
 File versionPropertiesFile = new File(rootProject.projectDir, "gradle/versions.properties")
@@ -82,7 +93,80 @@ dependencyResolutionManagement {
     }
 }
 
+//build.gradle.kts 的 IdeVersionConfigurator.setCurrentIde(project)
+includeBuild("repo/gradle-build-conventions")
+
 def buildProperties = BuildPropertiesKt.getKotlinBuildPropertiesForSettings(settings)
+//独立编译
+include ":dependencies:android-sdk"
+include ":dependencies:tools-jar-api"
+include ":dependencies:intellij-core"
+
+include ":prepare:build.version"
+include ":dependencies:bootstrap:kotlin-stdlib-bootstrap"
+//include ":core:builtins"
+include ":kotlin-stdlib-common"
+include ":kotlin-stdlib"
+include ":kotlin-test"
+include ":kotlin-test:kotlin-test-js-it"
+project(':kotlin-stdlib-common').projectDir = "$rootDir/libraries/stdlib/common" as File
+project(':kotlin-stdlib').projectDir = "$rootDir/libraries/stdlib" as File
+project(':kotlin-test').projectDir = "$rootDir/libraries/kotlin.test" as File
+project(':kotlin-test:kotlin-test-js-it').projectDir = "$rootDir/libraries/kotlin.test/js/it" as File
+
+//include ":libraries:kotlin-prepush-hook"
+//include ":libraries:tools:gradle:fus-statistics-gradle-plugin"
+//include ":libraries:tools:mutability-annotations-compat"
+//include ":libraries:tools:abi-comparator"
+//include ":libraries:tools:abi-validation:abi-tools"
+//include ":libraries:tools:abi-validation:abi-tools-api"
+//include ":libraries:tools:abi-validation:kgp-integration-tests"
+//include ":libraries:tools:js-plain-objects"
+//include ":tools:kotlinp"
+//include ":tools:kotlinp-jvm"
+//include ":tools:kotlinp-klib"
+//include ":tools:binary-compatibility-validator"
+//include ":kotlin-metadata"
+//include ":kotlin-gradle-plugin-idea"
+//include ":kotlin-gradle-plugin-idea-proto"
+//include ":kotlin-tooling-core"
+//include ":kotlin-script-runtime"
+//include ":kotlin-gradle-plugins-bom"
+//include ":kotlin-gradle-plugin-annotations"
+//include ":kotlin-gradle-plugin"
+
+//project(":libraries:kotlin-prepush-hook").projectDir = "$rootDir/libraries/tools/kotlin-prepush-hook" as File
+//project(":tools").projectDir = "$rootDir/libraries/tools" as File
+//project(":tools:kotlinp").projectDir = "$rootDir/libraries/tools/kotlinp" as File
+//project(":tools:kotlinp-jvm").projectDir = "$rootDir/libraries/tools/kotlinp/jvm" as File
+//project(":tools:kotlinp-klib").projectDir = "$rootDir/libraries/tools/kotlinp/klib" as File
+//project(":tools:binary-compatibility-validator").projectDir = "$rootDir/libraries/tools/binary-compatibility-validator" as File
+//project(":kotlin-metadata").projectDir = "$rootDir/libraries/kotlinx-metadata" as File
+//project(":kotlin-gradle-plugin").projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin" as File
+//project(":kotlin-gradle-plugin-idea").projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin-idea" as File
+//project(":kotlin-gradle-plugin-idea-proto").projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin-idea-proto" as File
+//project(":kotlin-tooling-core").projectDir = "$rootDir/libraries/tools/kotlin-tooling-core" as File
+//project(":kotlin-script-runtime").projectDir = "$rootDir/libraries/tools/script-runtime" as File
+//project(':kotlin-gradle-plugin-annotations').projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin-annotations" as File
+//project(':kotlin-gradle-plugins-bom').projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugins-bom" as File
+
+//include ":kotlin-compiler-embeddable"
+include ":dependencies:bootstrap:kotlin-compiler-embeddable-bootstrap"
+include ":dependencies:bootstrap:kotlin-compiler-runner-bootstrap"
+include ":dependencies:bootstrap:kotlin-daemon-client-bootstrap"
+include ":dependencies:bootstrap:kotlin-reflect-bootstrap"
+include ":dependencies:bootstrap:kotlin-script-runtime-bootstrap"
+include ":dependencies:bootstrap:kotlin-scripting-common-bootstrap"
+include ":dependencies:bootstrap:kotlin-scripting-jvm-bootstrap"
+include ":dependencies:bootstrap:kotlin-tooling-core-bootstrap"
+include ":dependencies:bootstrap:kotlin-build-tools-api-bootstrap"
+include ":dependencies:bootstrap:kotlin-build-tools-impl-bootstrap"
+//include ":compiler:build-tools:kotlin-build-tools-api"
+//include ":pill:pill-importer"
+
+//project(":kotlin-compiler-embeddable").projectDir = "$rootDir/prepare/compiler-embeddable" as File
+//project(':pill').projectDir = "$rootDir/plugins/pill" as File
+//project(':pill:pill-importer').projectDir = "$rootDir/plugins/pill/pill-importer" as File
 
 // modules
 include ":benchmarks",

@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.incremental.components.ImportTracker
 import org.jetbrains.kotlin.incremental.components.InlineConstTracker
 import org.jetbrains.kotlin.incremental.components.LookupTracker
 import org.jetbrains.kotlin.metadata.deserialization.BinaryVersion
+import org.jetbrains.kotlin.util.PerformanceManager
 
 object CommonConfigurationKeys {
     @JvmField
@@ -223,3 +224,6 @@ var CompilerConfiguration.dontSortSourceFiles: Boolean
     get() = getBoolean(CommonConfigurationKeys.DONT_SORT_SOURCE_FILES)
     set(value) { put(CommonConfigurationKeys.DONT_SORT_SOURCE_FILES, value) }
 
+var CompilerConfiguration.perfManager: PerformanceManager?
+    get() = get(CommonConfigurationKeys.PERF_MANAGER)
+    set(value) { put(CommonConfigurationKeys.PERF_MANAGER, requireNotNull(value) { "nullable values are not allowed" }) }

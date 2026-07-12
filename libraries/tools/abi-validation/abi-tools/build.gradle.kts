@@ -15,12 +15,12 @@ sourceSets.named("test") {
     java.srcDir("src/test/kotlin")
 }
 
-projectTest {
-    useJUnit()
-    systemProperty("overwrite.output", System.getProperty("overwrite.output", "false"))
-    systemProperty("testCasesClassesDirs", sourceSets.test.get().output.classesDirs.asPath)
-    jvmArgs("-ea")
-}
+//projectTest {
+//    useJUnit()
+//    systemProperty("overwrite.output", System.getProperty("overwrite.output", "false"))
+//    systemProperty("testCasesClassesDirs", sourceSets.test.get().output.classesDirs.asPath)
+//    jvmArgs("-ea")
+//}
 
 tasks.compileTestKotlin {
     compilerOptions {

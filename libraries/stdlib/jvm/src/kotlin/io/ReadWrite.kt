@@ -50,6 +50,7 @@ public fun Reader.readLines(): List<String> {
  * the processing is complete.
  * @return the value returned by [block].
  */
+@IgnorableReturnValue
 public inline fun <T> Reader.useLines(block: (Sequence<String>) -> T): T {
     contract {
         callsInPlace(block, InvocationKind.EXACTLY_ONCE)
@@ -109,7 +110,7 @@ private class LinesSequence(private val reader: BufferedReader) : Sequence<Strin
  */
 public fun Reader.readText(): String {
     val buffer = StringWriter()
-    copyTo(buffer)
+    val _ = copyTo(buffer)
     return buffer.toString()
 }
 
@@ -122,6 +123,7 @@ public fun Reader.readText(): String {
  * @param bufferSize size of character buffer to use in process.
  * @return number of characters copied.
  */
+@IgnorableReturnValue
 public fun Reader.copyTo(out: Writer, bufferSize: Int = DEFAULT_BUFFER_SIZE): Long {
     var charsCopied: Long = 0
     val buffer = CharArray(bufferSize)

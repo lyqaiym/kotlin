@@ -2,7 +2,7 @@ description = "Kotlin Android Extensions Compiler"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {

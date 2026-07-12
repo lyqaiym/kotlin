@@ -2,16 +2,19 @@
  * Copyright 2010-2018 JetBrains s.r.o. and Kotlin Programming Language contributors.
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
-
+//Unresolved reference 'KTypeImpl'.
+package kotlin.reflect.js.internal
 // a package is omitted to get declarations directly under the module
 
 // TODO: Remove once JsReflectionAPICallChecker supports more reflection types
-@file:Suppress("Unsupported")
+//@file:Suppress("Unsupported")
 
 import kotlin.reflect.*
 import kotlin.reflect.js.internal.*
+import kotlin.internal.UsedFromCompilerGeneratedCode
 
-@JsName("createKType")
+//@JsName("createKType")
+@UsedFromCompilerGeneratedCode
 internal fun createKType(
     classifier: KClassifier,
     arguments: Array<KTypeProjection>,
@@ -22,8 +25,8 @@ internal fun createKType(
 @JsName("createDynamicKType")
 internal fun createDynamicKType(): KType = DynamicKType
 
-@JsName("markKTypeNullable")
-internal fun markKTypeNullable(kType: KType) = KTypeImpl(kType.classifier!!, kType.arguments, true)
+//@JsName("markKTypeNullable")
+//internal fun markKTypeNullable(kType: KType) = KTypeImpl(kType.classifier!!, kType.arguments, true)
 
 @JsName("createKTypeParameter")
 internal fun createKTypeParameter(

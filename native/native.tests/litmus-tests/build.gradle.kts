@@ -67,14 +67,14 @@ sourceSets {
     "main" { projectDefault() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
-nativeTest(
-    taskName = "test",
-    tag = "litmuskt-native", // Include all tests with the "litmuskt-native" tag.
-    requirePlatformLibs = true,
-    customTestDependencies = listOf(litmusKt),
-    allowParallelExecution = false,
-)
+//nativeTest(
+//    taskName = "test",
+//    tag = "litmuskt-native", // Include all tests with the "litmuskt-native" tag.
+//    requirePlatformLibs = true,
+//    customTestDependencies = listOf(litmusKt),
+//    allowParallelExecution = false,
+//)

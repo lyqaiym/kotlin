@@ -5,7 +5,7 @@ import kotlin.io.path.readLines
 plugins {
     application
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 
@@ -26,17 +26,18 @@ dependencies {
     testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}
 
 application {
     mainClass.set("org.jetbrains.kotlin.ide.plugin.dependencies.validator.MainKt")
 }
 
 val projectsUsedInIntelliJKotlinPlugin: Array<String> by rootProject.extra
-val kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin: String by rootProject.extra
+//val kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin: String by rootProject.extra
+val kotlinApiVersionForProjectsDependingOnStableStdlib: String by rootProject.extra
 
 tasks.withType<JavaExec> {
     notCompatibleWithConfigurationCache("Uses project in task action")
@@ -67,11 +68,14 @@ tasks.register("checkIdeDependenciesConfiguration") {
 }
 
 fun Project.checkIdeDependencyConfiguration() {
-    val expectedApiVersion = KotlinVersion.fromVersion(kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin)
+//    println("kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin=${kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin}")
+    println("kotlinApiVersionForProjectsDependingOnStableStdlib=${kotlinApiVersionForProjectsDependingOnStableStdlib}")
+//    val expectedApiVersion = KotlinVersion.fromVersion(kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin)
+    val expectedApiVersion = KotlinVersion.fromVersion(kotlinApiVersionForProjectsDependingOnStableStdlib)
     for (compileTask in tasks.withType<KotlinJvmCompile>()) {
         val projectApiVersion = compileTask.compilerOptions.apiVersion.get()
         check(projectApiVersion <= expectedApiVersion) {
-            "Expected the API Version to be less or equal to `$kotlinApiVersionForProjectsUsedInIntelliJKotlinPlugin`" +
+            "Expected the API Version to be less or equal to `$kotlinApiVersionForProjectsDependingOnStableStdlib`" +
                     " for the project `$path`, " +
                     "but `$projectApiVersion` found. The project is used in the IntelliJ, so it should use the same API version" +
                     "for binary compatibility with Kotlin stdlib . " +

@@ -1,2 +1,1 @@
-rootProject.name = "kotlin-build-gradle-plugin"
-
+rootProject.name = "kotlin-build-helpers"

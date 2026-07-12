@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 project.updateJvmTarget("1.8")
@@ -11,7 +11,7 @@ dependencies {
     implementation(kotlinStdlib())
     api(project(":kotlin-scripting-dependencies"))
 
-    implementation("org.apache.maven:maven-core:3.9.9")
+    implementation("org.apache.maven:maven-core:3.8.8")
     implementation("org.apache.maven.wagon:wagon-http:3.5.3")
     implementation("org.apache.maven.resolver:maven-resolver-connector-basic:1.9.22")
     implementation("org.apache.maven.resolver:maven-resolver-transport-file:1.9.22")
@@ -26,6 +26,22 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.core)
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "com.google.guava" && requested.name == "guava") {
+            useVersion("32.0.1-android")
+            because("CVE-2023-2976")
+        }
+        if (requested.group == "commons-codec" && requested.name == "commons-codec") {
+            useVersion("1.19.0")
+            because("WS-2019-0379")
+        }
+        if (requested.group == "org.apache.commons" && requested.name == "commons-lang3") {
+            useVersion(libs.versions.commons.lang.get())
+            because("CVE-2025-48924")
+        }
+    }
+}
 sourceSets {
     "main" { projectDefault() }
     "test" { projectDefault() }

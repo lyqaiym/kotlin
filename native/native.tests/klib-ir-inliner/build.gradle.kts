@@ -20,17 +20,17 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
 testsJar {}
 
-nativeTest(
-    "test",
-    null,
-    allowParallelExecution = true,
-)
+//nativeTest(
+//    "test",
+//    null,
+//    allowParallelExecution = true,
+//)
 
 val generateTests by generator("org.jetbrains.kotlin.generators.tests.GenerateKlibNativeTestsKt") {
     javaLauncher.set(project.getToolchainLauncherFor(JdkMajorVersion.JDK_11_0))

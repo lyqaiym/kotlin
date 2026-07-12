@@ -10,7 +10,11 @@ repositories {
 
 dependencies {
     commonCompileOnly(gradleKotlinDsl())
-    commonCompileOnly(libs.android.gradle.plugin.gradle.api) { isTransitive = false }
+//    No matching variant of com.android.tools.build:gradle-api:8.13.2 was found
+    commonCompileOnly(libs.android.gradle.plugin.gradle.api) {
+        overrideTargetJvmVersion(11)
+        isTransitive = false
+    }
 }
 
 gradlePlugin {

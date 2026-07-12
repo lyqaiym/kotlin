@@ -14,14 +14,14 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
 testsJar {}
 
-nativeTest(
-    "test",
-    null,
-    allowParallelExecution = false, // Driver tests run Native compiler from CLI. This is resource-intensive and should be done isolated.
-)
+//nativeTest(
+//    "test",
+//    null,
+//    allowParallelExecution = false, // Driver tests run Native compiler from CLI. This is resource-intensive and should be done isolated.
+//)

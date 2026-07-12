@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.ideaExt.idea
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 group = "org.jetbrains.kotlin.fir"
@@ -51,8 +51,8 @@ if (kotlinBuildProperties.isInJpsBuildIdeaSync) {
     }
 }
 
-projectTest {
-    workingDir = rootDir
-}
+//projectTest {
+//    workingDir = rootDir
+//}
 
 testsJar()

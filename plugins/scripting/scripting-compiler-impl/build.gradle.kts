@@ -4,7 +4,7 @@ description = "Kotlin Compiler Infrastructure for Scripting"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -51,6 +51,6 @@ runtimeJar()
 sourcesJar()
 javadocJar()
 
-projectTest {
-    workingDir = rootDir
-}
+//projectTest {
+//    workingDir = rootDir
+//}

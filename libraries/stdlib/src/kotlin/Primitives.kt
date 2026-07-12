@@ -11,7 +11,7 @@ package kotlin
 import kotlin.internal.ActualizeByJvmBuiltinProvider
 
 /** Represents a 8-bit signed integer. */
-@ActualizeByJvmBuiltinProvider
+//@ActualizeByJvmBuiltinProvider
 public expect class Byte : Number, Comparable<Byte> {
     @Suppress("EXPECTED_PROPERTY_INITIALIZER")
     public companion object {

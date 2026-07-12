@@ -251,11 +251,11 @@ tasks {
     val allMetadataJar by existing(Jar::class) {
         archiveClassifier = "all"
     }
-    val jvmJar by existing(Jar::class) {
-        archiveAppendix = null
-        from(project.sourceSets["jvmJava9"].output)
-        manifestAttributes(manifest, "Test", multiRelease = true)
-    }
+//    val jvmJar by existing(Jar::class) {
+//        archiveAppendix = null
+//        from(project.sourceSets["jvmJava9"].output)
+//        manifestAttributes(manifest, "Test", multiRelease = true)
+//    }
     val jvmSourcesJar by existing(Jar::class) {
         archiveAppendix = null
         kotlin.sourceSets["annotationsCommonMain"].let { sourceSet ->
@@ -425,17 +425,17 @@ configurations {
             isCanBeResolved = true
             isCanBeConsumed = false
         }
-        val legacyConfiguration = create("${configurationName}Elements") {
-            isCanBeResolved = false
-            isCanBeConsumed = false
-            attributes {
-                attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
-            }
-            extendsFrom(legacyConfigurationDeps)
-        }
-        dependencies {
-            legacyConfigurationDeps(project)
-        }
+//        val legacyConfiguration = create("${configurationName}Elements") {
+//            isCanBeResolved = false
+//            isCanBeConsumed = false
+//            attributes {
+//                attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.LIBRARY))
+//            }
+//            extendsFrom(legacyConfigurationDeps)
+//        }
+//        dependencies {
+//            legacyConfigurationDeps(project)
+//        }
     }
 
     val jvmMainApi by getting
@@ -447,7 +447,7 @@ configurations {
                 // there is no dependency anymore from kotlin-test to kotlin-test-common and -annotations-common,
                 // but use this constraint to align it if another library brings it transitively
                 jvmMainApi(artifactCoordinates)
-                metadataApiElements(artifactCoordinates)
+                metadataCompilationApi(artifactCoordinates)
                 nativeApiElements(artifactCoordinates)
             }
         }

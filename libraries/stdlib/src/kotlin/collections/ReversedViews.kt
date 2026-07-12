@@ -53,7 +53,8 @@ private class ReversedList<T>(private val delegate: MutableList<T>) : AbstractMu
             delegateIterator.add(element)
             // After an insertion previous() will return an inserted element.
             // Moving a cursor back by one element to return a correct value from next().
-            delegateIterator.previous()
+//            Unused return value
+            val _ = delegateIterator.previous()
         }
 
         override fun remove() = delegateIterator.remove()

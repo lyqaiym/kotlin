@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 description = "SIR Providers - family of classes, that transforms KaSymbol into corresponding SIR nodes"

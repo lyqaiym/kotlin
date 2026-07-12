@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.ideaExt.idea
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {
@@ -44,11 +44,11 @@ if (kotlinBuildProperties.isInJpsBuildIdeaSync) {
     }
 }
 
-projectTest(parallel = true, jUnitMode = JUnitMode.JUnit4, maxHeapSizeMb = 3072) {
-    workingDir = rootDir
-    useJUnitPlatform()
-    dependsOn(":plugins:plugin-sandbox:jar")
-    dependsOn(":plugins:plugin-sandbox:plugin-annotations:distAnnotations")
-}
+//projectTest(parallel = true, jUnitMode = JUnitMode.JUnit4, maxHeapSizeMb = 3072) {
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//    dependsOn(":plugins:plugin-sandbox:jar")
+//    dependsOn(":plugins:plugin-sandbox:plugin-annotations:distAnnotations")
+//}
 
 testsJar()

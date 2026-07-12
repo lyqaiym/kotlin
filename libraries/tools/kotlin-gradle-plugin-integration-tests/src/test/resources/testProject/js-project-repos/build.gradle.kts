@@ -1,7 +1,8 @@
 import org.jetbrains.kotlin.gradle.targets.js.yarn.yarn
 
 plugins {
-    kotlin("js")
+//    kotlin("js")
+    kotlin("multiplatform")
 }
 
 kotlin {

@@ -66,8 +66,6 @@ abstract class GenerateProjectStructureMetadata : DefaultTask() {
     internal val sourceSetMetadataOutputsFile: Provider<RegularFile> =
         project.layout.buildDirectory.file("internal/kmp/$SOURCE_SET_METADATA")
 
-    private val kmpIsolatedProjectsSupport: Boolean = project.kotlinPropertiesProvider.kotlinKmpProjectIsolationEnabled
-
     /**
      * @param projectCoordinates Should contain resolved configuration with [KotlinProjectCoordinatesData] in artifacts
      */
@@ -93,14 +91,13 @@ abstract class GenerateProjectStructureMetadata : DefaultTask() {
     fun generateMetadataXml() {
         resultFile.parentFile.mkdirs()
 
-        val actualProjectStructureMetadata = if (kmpIsolatedProjectsSupport) {
-            kotlinProjectStructureMetadata.copy(
-                sourceSetModuleDependencies = coordinatesOfProjectDependencies.get().mapValues { (_, resolvedProjectCoordinates) ->
-                    val directDependencies = resolvedProjectCoordinates.rootComponent.dependencies
-                    val result = mutableSetOf<ModuleDependencyIdentifier>()
-                    for (dependency in directDependencies) {
-                        if (dependency.isConstraint) continue
-                        if (dependency !is ResolvedDependencyResult) continue
+        val actualProjectStructureMetadata = kotlinProjectStructureMetadata.copy(
+            sourceSetModuleDependencies = coordinatesOfProjectDependencies.get().mapValues { (_, resolvedProjectCoordinates) ->
+                val directDependencies = resolvedProjectCoordinates.rootComponent.dependencies
+                val result = mutableSetOf<ModuleDependencyIdentifier>()
+                for (dependency in directDependencies) {
+                    if (dependency.isConstraint) continue
+                    if (dependency !is ResolvedDependencyResult) continue
 
                         result.add(dependency.moduleDependencyIdentifier(resolvedProjectCoordinates))
                     }

@@ -1,5 +1,6 @@
 plugins {
-    kotlin("js")
+//    kotlin("js")
+    kotlin("multiplatform")
     `maven-publish`
 }
 

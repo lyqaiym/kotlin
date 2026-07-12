@@ -336,13 +336,13 @@ fun Test.enableJunit5ExtensionsAutodetection() {
 }
 
 //val defaultMaxMemoryPerTestWorkerMb = 1600
-//val reservedMemoryMb = 9000 // system processes, gradle daemon, kotlin daemon, etc ...
-//
-//val totalMaxMemoryForTestsMb: Int
-//    get() {
-//        val mxbean = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
-//        return (mxbean.totalPhysicalMemorySize / 1048576 - reservedMemoryMb).toInt()
-//    }
+val reservedMemoryMb = 9000 // system processes, gradle daemon, kotlin daemon, etc ...
+
+val totalMaxMemoryForTestsMb: Int
+    get() {
+        val mxbean = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
+        return (mxbean.totalMemorySize / 1048576 - reservedMemoryMb).toInt()
+    }
 
 val Test.commandLineIncludePatterns: Set<String>
     get() = (filter as? DefaultTestFilter)?.commandLineIncludePatterns.orEmpty()
@@ -394,4 +394,8 @@ fun Project.optInToUnsafeDuringIrConstructionAPI() {
 
 fun Project.optInToObsoleteDescriptorBasedAPI() {
     optInTo("org.jetbrains.kotlin.ir.ObsoleteDescriptorBasedAPI")
+}
+
+fun Project.optInToK1Deprecation() {
+    optInTo("org.jetbrains.kotlin.K1Deprecation")
 }

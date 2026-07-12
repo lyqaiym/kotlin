@@ -12,9 +12,7 @@ import javax.inject.Inject
 
 private const val PLUGIN_VARIANT_NAME = "gradle80"
 
-open class KotlinPluginWrapper @Inject constructor(
-    registry: ToolingModelBuilderRegistry
-) : AbstractKotlinPluginWrapper(registry) {
+open class KotlinPluginWrapper : AbstractKotlinPluginWrapper() {
 
     override val pluginVariant: String = PLUGIN_VARIANT_NAME
 

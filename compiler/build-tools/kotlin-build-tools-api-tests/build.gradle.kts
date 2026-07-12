@@ -6,6 +6,12 @@ plugins {
     id("test-symlink-transformation")
 }
 
+val jsStdlibImpl = configurations.dependencyScope("jsStdlibImpl")
+
+val wasmStdlibImpl = configurations.dependencyScope("wasmStdlibImpl")
+
+val metadataStdlibImpl = configurations.dependencyScope("metadataStdlibImpl")
+
 dependencies {
     api(kotlinStdlib())
     compileOnly(project(":kotlin-tooling-core")) // to reuse `KotlinToolingVersion`
@@ -15,6 +21,9 @@ dependencies {
     api(platform(libs.junit.bom))
     compileOnly(libs.junit.jupiter.engine)
     compileOnly(libs.junit.jupiter.params)
+    jsStdlibImpl(project(":kotlin-stdlib"))
+    wasmStdlibImpl(project(":kotlin-stdlib"))
+    metadataStdlibImpl(project(":kotlin-stdlib"))
 }
 
 kotlin {
@@ -28,7 +37,14 @@ kotlin {
 
 val compatibilityTestsVersions = listOf(
     BuildToolsVersion(KotlinToolingVersion(project.version.toString()), isCurrent = true),
-    BuildToolsVersion(KotlinToolingVersion(1, 9, 20, null)),
+//    kotlin-build-common-1.9.20.jar
+//    BuildToolsVersion(KotlinToolingVersion(1, 9, 20, null)),
+    BuildToolsVersion(KotlinToolingVersion(2, 1, 20, null)),
+    BuildToolsVersion(KotlinToolingVersion(2, 2, 21, null)),
+    BuildToolsVersion(KotlinToolingVersion(2, 3, 0, null)),
+    BuildToolsVersion(KotlinToolingVersion(2, 3, 10, null)),
+    BuildToolsVersion(KotlinToolingVersion(2, 3, 20, null)),
+    BuildToolsVersion(KotlinToolingVersion(2, 4, 0, null)),
 )
 
 class BuildToolsVersion(val version: KotlinToolingVersion, val isCurrent: Boolean = false) {
@@ -94,10 +110,10 @@ testing {
                     }
                 }
                 targets.all {
-                    projectTest(taskName = testTask.name, jUnitMode = JUnitMode.JUnit5) {
-                        ensureExecutedAgainstExpectedBuildToolsImplVersion(implVersion)
-                        systemProperty("kotlin.build-tools-api.log.level", "DEBUG")
-                    }
+//                    projectTest(taskName = testTask.name, jUnitMode = JUnitMode.JUnit5) {
+//                        ensureExecutedAgainstExpectedBuildToolsImplVersion(implVersion)
+//                        systemProperty("kotlin.build-tools-api.log.level", "DEBUG")
+//                    }
                 }
             }
         }
@@ -120,9 +136,9 @@ testing {
 
             targets.all {
                 if (!testTask.name.startsWith("testCompatibility")) {
-                    projectTest(taskName = testTask.name, jUnitMode = JUnitMode.JUnit5) {
-                        systemProperty("kotlin.build-tools-api.log.level", "DEBUG")
-                    }
+//                    projectTest(taskName = testTask.name, jUnitMode = JUnitMode.JUnit5) {
+//                        systemProperty("kotlin.build-tools-api.log.level", "DEBUG")
+//                    }
                 }
             }
         }

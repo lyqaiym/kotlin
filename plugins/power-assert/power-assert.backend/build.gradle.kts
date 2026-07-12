@@ -2,7 +2,7 @@ description = "Kotlin Power-Assert Compiler Plugin (Backend)"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 dependencies {

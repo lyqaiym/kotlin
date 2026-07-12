@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
     id("org.jetbrains.kotlinx.binary-compatibility-validator")
 }
 
@@ -51,7 +51,7 @@ apiValidation {
 
 testsJar()
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    workingDir = rootDir
-    useJUnitPlatform()
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}

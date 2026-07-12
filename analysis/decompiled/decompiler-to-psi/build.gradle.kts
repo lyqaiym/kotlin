@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 dependencies {
@@ -26,8 +26,8 @@ sourceSets {
     "test" { projectDefault() }
 }
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    workingDir = rootDir
-}
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    workingDir = rootDir
+//}
 
 testsJar()

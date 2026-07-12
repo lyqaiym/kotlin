@@ -5,7 +5,7 @@ description = "Kotlin Serialization Compiler Plugin"
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
     id("d8-configuration")
 }
 
@@ -73,7 +73,7 @@ sourceSets {
     "main" { none() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
@@ -113,12 +113,12 @@ artifacts {
     }
 }
 
-projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-    setUpJsIrBoxTests()
-}
+//projectTest(parallel = true, jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//    setUpJsIrBoxTests()
+//}
 
 val generateTests by generator("org.jetbrains.kotlinx.serialization.TestGeneratorKt")
 

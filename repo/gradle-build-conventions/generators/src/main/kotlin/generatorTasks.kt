@@ -92,6 +92,7 @@ fun Project.generatedSourcesTask(
         java.srcDirs(dependency)
     }
 
+    println("isInIdeaSync=${kotlinBuildProperties.isInIdeaSync}")
     if (kotlinBuildProperties.isInIdeaSync) {
         apply(plugin = "idea")
         (this as org.gradle.api.plugins.ExtensionAware).extensions.configure<IdeaModel>("idea") {

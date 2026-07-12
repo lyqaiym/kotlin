@@ -17,13 +17,13 @@ repositories {
 }
 
 dependencies {
-    api(kotlinStdlib())
-    api(project(":compiler:frontend"))
-    api(projectTests(":compiler:tests-common"))
-    api(project(":compiler:cli"))
-    api(intellijCore())
-    api(jpsModel())
-    api("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:$benchmarks_version")
+    testImplementation(kotlinStdlib())
+    testImplementation(project(":compiler:frontend"))
+    testImplementation(projectTests(":compiler:tests-common"))
+    testImplementation(project(":compiler:cli"))
+    testImplementation(intellijCore())
+    testImplementation(jpsModel())
+    testImplementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:$benchmarks_version")
 }
 
 sourceSets {

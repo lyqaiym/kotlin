@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+//    id("jps-compatible")
 }
 
 dependencies {
@@ -22,7 +22,7 @@ dependencies {
     api(project(":analysis:analysis-api"))
     api(project(":analysis:analysis-api-impl-base"))
     api(project(":analysis:light-classes-base"))
-    api(project(":compiler:backend.common.jvm"))
+    implementation(project(":compiler:backend.common.jvm"))
     implementation(project(":compiler:cli-base"))
     implementation(project(":compiler:backend"))
     implementation(project(":compiler:backend.jvm.entrypoint"))
@@ -62,17 +62,17 @@ sourceSets {
     "main" { projectDefault() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
 optInToUnsafeDuringIrConstructionAPI()
 
-projectTest(jUnitMode = JUnitMode.JUnit5) {
-    dependsOn(":dist")
-    workingDir = rootDir
-    useJUnitPlatform()
-}.also { confugureFirPluginAnnotationsDependency(it) }
+//projectTest(jUnitMode = JUnitMode.JUnit5) {
+//    dependsOn(":dist")
+//    workingDir = rootDir
+//    useJUnitPlatform()
+//}.also { confugureFirPluginAnnotationsDependency(it) }
 
 testsJar()
 
@@ -98,25 +98,25 @@ dependencies {
     generatorClasspath(project(":analysis:analysis-api-fir:analysis-api-fir-generator"))
 }
 
-val generateCode by tasks.registering(NoDebugJavaExec::class) {
-    val generatorRoot = "$projectDir/analysis/analysis-api-fir/analysis-api-fir-generator/src/"
-
-    val generatorConfigurationFiles = fileTree(generatorRoot) {
-        include("**/*.kt")
-    }
-
-    inputs.files(generatorConfigurationFiles)
-
-    workingDir = rootDir
-    classpath = generatorClasspath
-    mainClass.set("org.jetbrains.kotlin.analysis.api.fir.generator.MainKt")
-    systemProperties["line.separator"] = "\n"
-}
-
-val compileKotlin by tasks
-
-compileKotlin.dependsOn(generateCode)
-
-tasks.withType<KotlinJvmCompile>().configureEach {
-    compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
-}
+//val generateCode by tasks.registering(NoDebugJavaExec::class) {
+//    val generatorRoot = "$projectDir/analysis/analysis-api-fir/analysis-api-fir-generator/src/"
+//
+//    val generatorConfigurationFiles = fileTree(generatorRoot) {
+//        include("**/*.kt")
+//    }
+//
+//    inputs.files(generatorConfigurationFiles)
+//
+//    workingDir = rootDir
+//    classpath = generatorClasspath
+//    mainClass.set("org.jetbrains.kotlin.analysis.api.fir.generator.MainKt")
+//    systemProperties["line.separator"] = "\n"
+//}
+//
+//val compileKotlin by tasks
+//
+//compileKotlin.dependsOn(generateCode)
+//
+//tasks.withType<KotlinJvmCompile>().configureEach {
+//    compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
+//}

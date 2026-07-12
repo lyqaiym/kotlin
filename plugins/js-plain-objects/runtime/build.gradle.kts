@@ -4,7 +4,8 @@ import plugins.configureKotlinPomAttributes
 description = "Runtime library for the JS Plain Objects compiler plugin"
 
 plugins {
-    kotlin("js")
+//    kotlin("js")
+    kotlin("multiplatform")
     `maven-publish`
     id("nodejs-cache-redirector-configuration")
 }

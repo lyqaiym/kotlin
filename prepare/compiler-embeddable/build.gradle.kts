@@ -62,14 +62,19 @@ publish {
     setArtifacts(listOf(runtimeJar, sourcesJar, javadocJar))
 }
 
-projectTest {
-    dependsOn(runtimeJar)
-    val testCompilerClasspathProvider = project.provider { testCompilerClasspath.asPath }
-    val testCompilationClasspathProvider = project.provider { testCompilationClasspath.asPath }
-    val runtimeJarPathProvider = project.provider { runtimeJar.get().outputs.files.asPath }
-    doFirst {
-        systemProperty("compilerClasspath", "${runtimeJarPathProvider.get()}${File.pathSeparator}${testCompilerClasspathProvider.get()}")
-        systemProperty("compilationClasspath", testCompilationClasspathProvider.get())
-    }
-}
+//projectTests {
+//    testTask(jUnitMode = JUnitMode.JUnit4) {
+//        dependsOn(runtimeJar)
+//        val testCompilerClasspathProvider = project.provider { testCompilerClasspath.asPath }
+//        val testCompilationClasspathProvider = project.provider { testCompilationClasspath.asPath }
+//        val runtimeJarPathProvider = project.provider { runtimeJar.get().outputs.files.asPath }
+//        doFirst {
+//            systemProperty(
+//                "compilerClasspath",
+//                "${runtimeJarPathProvider.get()}${File.pathSeparator}${testCompilerClasspathProvider.get()}"
+//            )
+//            systemProperty("compilationClasspath", testCompilationClasspathProvider.get())
+//        }
+//    }
+//}
 

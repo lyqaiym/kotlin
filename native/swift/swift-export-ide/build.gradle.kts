@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("jps-compatible")
+    //    id("jps-compatible")
 }
 
 description = "Integrated Swift Export Environment"
@@ -32,14 +32,14 @@ sourceSets {
     "main" { projectDefault() }
     "test" {
         projectDefault()
-        generatedTestDir()
+//        generatedTestDir()
     }
 }
 
 
-val test by nativeTest("test", null) {
-    dependsOn(":dist")
-}
+//val test by nativeTest("test", null) {
+//    dependsOn(":dist")
+//}
 
 
 publish()

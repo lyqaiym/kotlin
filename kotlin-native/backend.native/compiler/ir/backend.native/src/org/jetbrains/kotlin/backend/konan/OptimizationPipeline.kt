@@ -81,6 +81,7 @@ private fun tryGetInlineThreshold(context: PhaseContext): Int? {
 internal fun createLTOPipelineConfigForRuntime(generationState: NativeGenerationState): LlvmPipelineConfig {
     val config = generationState.config
     val configurables: Configurables = config.platform.configurables
+    println("createLTOPipelineConfigForRuntime:targetTriple=${generationState.llvm.targetTriple}")
     return LlvmPipelineConfig(
             generationState.llvm.targetTriple,
             getCpuModel(generationState),
