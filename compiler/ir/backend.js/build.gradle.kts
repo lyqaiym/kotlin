@@ -6,8 +6,8 @@ plugins {
 dependencies {
     api(project(":compiler:cli-base"))
     api(project(":compiler:util"))
-    api(project(":compiler:frontend"))
-    api(project(":compiler:backend-common"))
+    implementation(project(":compiler:frontend"))
+//    api(project(":compiler:backend-common"))
     api(project(":compiler:ir.tree"))
     api(project(":compiler:ir.backend.common"))
     api(project(":compiler:ir.inline"))

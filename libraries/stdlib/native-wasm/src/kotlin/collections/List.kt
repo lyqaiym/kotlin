@@ -71,8 +71,10 @@ public actual interface MutableList<E> : List<E>, MutableCollection<E> {
      *
      * @return `true` because the list is always modified as the result of this operation.
      */
+    @IgnorableReturnValue
     actual override fun add(element: E): Boolean
 
+    @IgnorableReturnValue
     actual override fun remove(element: E): Boolean
 
     // Bulk Modification Operations
@@ -83,6 +85,7 @@ public actual interface MutableList<E> : List<E>, MutableCollection<E> {
      *
      * @return `true` if the list was changed as the result of the operation.
      */
+    @IgnorableReturnValue
     actual override fun addAll(elements: Collection<E>): Boolean
 
     /**
@@ -90,9 +93,12 @@ public actual interface MutableList<E> : List<E>, MutableCollection<E> {
      *
      * @return `true` if the list was changed as the result of the operation.
      */
+    @IgnorableReturnValue
     public actual fun addAll(index: Int, elements: Collection<E>): Boolean
 
+    @IgnorableReturnValue
     actual override fun removeAll(elements: Collection<E>): Boolean
+    @IgnorableReturnValue
     actual override fun retainAll(elements: Collection<E>): Boolean
     actual override fun clear(): Unit
 
@@ -102,6 +108,7 @@ public actual interface MutableList<E> : List<E>, MutableCollection<E> {
      *
      * @return the element previously at the specified position.
      */
+    @IgnorableReturnValue
     public actual operator fun set(index: Int, element: E): E
 
     /**
@@ -114,6 +121,7 @@ public actual interface MutableList<E> : List<E>, MutableCollection<E> {
      *
      * @return the element that has been removed.
      */
+    @IgnorableReturnValue
     public actual fun removeAt(index: Int): E
 
     // List Iterators

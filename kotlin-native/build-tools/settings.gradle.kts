@@ -1,9 +1,9 @@
 rootProject.name = "native-build-tools"
 
 pluginManagement {
-    apply(from = "../../repo/scripts/cache-redirector.settings.gradle.kts")
-    apply(from = "../../repo/scripts/kotlin-bootstrap.settings.gradle.kts")
-
+    includeBuild("../../dependencies/kotlin-build-gradle-plugin")
+//    apply(from = "../../repo/scripts/cache-redirector.settings.gradle.kts")
+//    apply(from = "../../repo/scripts/kotlin-bootstrap.settings.gradle.kts")
     includeBuild("../../repo/gradle-settings-conventions")
 
 //    repositories {
@@ -19,6 +19,9 @@ pluginManagement {
 }
 
 plugins {
+    id("kotlin-build-helpers")
+//    Plugin [id: 'org.jetbrains.kotlin.jvm', apply: false] was not found in any of the following sources:
+    id("kotlin-bootstrap")
     id("jvm-toolchain-provisioning")
     id("develocity")
     id("kotlin-daemon-config")
@@ -31,6 +34,8 @@ dependencyResolutionManagement {
         }
     }
 }
+
+includeBuild("../../repo/gradle-build-conventions")
 
 buildscript {
     val buildGradlePluginVersion = extra["kotlin.build.gradlePlugin.version"]

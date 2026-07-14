@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":compiler:resolution"))
-    api(project(":core:deserialization"))
+    implementation(project(":compiler:resolution"))
+    implementation(project(":core:deserialization"))
     api(project(":compiler:util"))
 
     compileOnly(intellijCore())

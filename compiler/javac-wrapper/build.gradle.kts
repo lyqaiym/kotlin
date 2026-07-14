@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     api(project(":compiler:util"))
-    api(project(":compiler:frontend.java"))
+    implementation(project(":compiler:frontend.java"))
 
     compileOnly(toolsJarApi())
     compileOnly(intellijCore())

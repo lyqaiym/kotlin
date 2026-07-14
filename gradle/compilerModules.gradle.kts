@@ -6,11 +6,9 @@ val descriptorsCompilerModules = arrayOf(
  * Common modules, used by K1 frontend, K2 frontend, backends, AA and CLI
  */
 val commonCompilerModules = descriptorsCompilerModules + arrayOf(
-    ":compiler:psi:psi-api",
-    ":compiler:psi:psi-impl",
-    ":compiler:psi:psi-utils",
-    ":compiler:psi:psi-frontend-utils",
-    ":compiler:psi:parser",
+    ":compiler:psi",
+    ":compiler:cli-common",
+    ":analysis:kt-references",
     ":compiler:frontend.common-psi",
     ":compiler:frontend.common",
     ":compiler:util",
@@ -32,12 +30,6 @@ val commonCompilerModules = descriptorsCompilerModules + arrayOf(
     ":core:compiler.common.wasm",
     ":core:compiler.common.web",
     ":core:util.runtime",
-    ":core:names",
-    ":core:language.model",
-    ":core:language.targets",
-    ":core:language.targets.jvm",
-    ":core:language.version-settings",
-    ":core:reflection.common.jvm",
     ":compiler:frontend.common.jvm",
     ":kotlin-util-io",
     ":kotlin-util-klib",
@@ -48,7 +40,6 @@ val commonCompilerModules = descriptorsCompilerModules + arrayOf(
     ":js:js.ast", // used by js fir checkers and js backend
     ":wasm:wasm.config",
     ":native:base",
-    ":native:native.config",
     ":native:kotlin-native-utils",
 ).also { extra["commonCompilerModules"] = it }
 
@@ -76,7 +67,6 @@ val firCompilerModules = arrayOf(
     ":compiler:fir:checkers:checkers.native",
     ":compiler:fir:checkers:checkers.wasm",
     ":compiler:fir:checkers:checkers.web.common",
-    ":compiler:fir:diagnostic-renderers",
     ":compiler:fir:entrypoint", // TODO should not be in core modules but FIR IDE uses DependencyListForCliModule from this module
     ":compiler:fir:fir2ir:jvm-backend",  // TODO should not be in core modules but FIR IDE uses Fir2IrSignatureComposer from this module
     ":compiler:fir:fir2ir", // TODO should not be in core modules but FIR IDE uses Fir2IrSignatureComposer from this module
@@ -114,7 +104,6 @@ val irCompilerModules = arrayOf(
     ":compiler:ir.actualization",
     ":compiler:ir.interpreter",
     ":compiler:ir.inline",
-    ":compiler:ir.validation",
 ).also { extra["irCompilerModules"] = it }
 
 /**
@@ -139,8 +128,6 @@ val jsCompilerModules = arrayOf(
     ":js:js.serializer",
     ":js:js.parser",
     ":js:js.translator",
-    ":js:typescript-export-model",
-    ":js:typescript-printer",
     ":compiler:ir.serialization.js",
 ).also { extra["jsCompilerModules"] = it }
 
@@ -159,7 +146,6 @@ val nativeCompilerModules = arrayOf(
     ":compiler:ir.backend.native",
     ":compiler:ir.serialization.native",
     ":compiler:ir.objcinterop",
-    ":native:binary-options",
 ).also { extra["nativeCompilerModules"] = it }
 
 /**
@@ -176,27 +162,12 @@ val irCompilerModulesForIDE = arrayOf(
     ":compiler:ir.actualization",
     ":compiler:ir.interpreter",
     ":compiler:ir.inline",
-    ":compiler:ir.validation",
 ).also { extra["irCompilerModulesForIDE"] = it }
 
-val analysisApiSurfaceDependencies by extra {
-    listOf(
-        ":core:names",
-        ":core:language.model",
-        ":core:language.targets",
-        ":core:language.targets.jvm",
-        ":core:language.version-settings",
-        ":compiler:psi:psi-api",
-    )
-}
-
 val cliCompilerModules = arrayOf(
-    ":compiler:arguments.common",
     ":compiler:cli-base",
     ":compiler:cli",
-    ":compiler:cli-jvm",
     ":compiler:cli-js",
-    ":compiler:cli-metadata",
     ":compiler:incremental-compilation-impl",
     ":kotlin-build-common",
 ).also { extra["cliCompilerModules"] = it }
@@ -265,8 +236,6 @@ val projectsDependingOnStableStdlib =
             jvmCompilerModules + // used by K1 plugin
             arrayOf(
                 ":js:js.serializer",
-                ":native:binary-options",
-
                 ":kotlin-allopen-compiler-plugin.cli",
                 ":kotlin-allopen-compiler-plugin.common",
                 ":kotlin-allopen-compiler-plugin.k1",
@@ -337,6 +306,7 @@ val projectsDependingOnStableStdlib =
             ) +
             arrayOf(
                 ":compiler:ir.serialization.native",
+                ":native:analysis-api-klib-reader",
                 ":libraries:tools:analysis-api-based-klib-reader",
                 ":native:base",
                 ":native:objcexport-header-generator",
@@ -356,6 +326,7 @@ val projectsDependingOnStableStdlib =
             )
 
 extra["projectsDependingOnStableStdlib"] = projectsDependingOnStableStdlib
+extra["projectsUsedInIntelliJKotlinPlugin"] = projectsDependingOnStableStdlib
 
 // They are embedded just because we don't publish those dependencies as separate Maven artifacts (yet)
 extra["kotlinJpsPluginEmbeddedDependencies"] = listOf(
@@ -363,11 +334,6 @@ extra["kotlinJpsPluginEmbeddedDependencies"] = listOf(
     ":kotlin-build-tools-enum-compat",
     ":kotlin-compiler-runner-unshaded",
     ":daemon-common",
-    ":core:names",
-    ":core:language.model",
-    ":core:language.targets",
-    ":core:language.targets.jvm",
-    ":core:language.version-settings",
     ":core:compiler.common",
     ":core:compiler.common.jvm",
     ":core:compiler.common.js",
@@ -391,12 +357,10 @@ extra["kotlinJpsPluginEmbeddedDependencies"] = listOf(
     ":compiler:config.jvm",
     ":js:js.config",
     ":wasm:wasm.config",
-    ":native:native.config",
     ":core:util.runtime",
     ":compiler:compiler.version",
     ":compiler:build-tools:kotlin-build-statistics",
     ":kotlin-build-common",
-    ":compiler:arguments.common",
 )
 
 extra["kotlinJpsPluginMavenDependencies"] = listOf(

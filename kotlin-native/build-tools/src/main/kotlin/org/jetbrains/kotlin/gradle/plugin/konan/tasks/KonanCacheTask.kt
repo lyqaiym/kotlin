@@ -7,10 +7,14 @@ package org.jetbrains.kotlin.gradle.plugin.konan.tasks
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.Directory
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.FileCollection
+import org.gradle.api.file.RegularFile
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
 import org.gradle.api.services.ServiceReference
 import org.gradle.api.tasks.*
 import org.gradle.workers.WorkAction
@@ -21,8 +25,8 @@ import org.jetbrains.kotlin.gradle.plugin.konan.prepareAsOutput
 import org.jetbrains.kotlin.gradle.plugin.konan.registerIsolatedClassLoadersServiceIfAbsent
 import org.jetbrains.kotlin.gradle.plugin.konan.runKonanTool
 import org.jetbrains.kotlin.konan.target.PlatformManager
-import org.jetbrains.kotlin.nativeDistribution.NativeDistributionProperty
-import org.jetbrains.kotlin.nativeDistribution.nativeDistributionProperty
+import org.jetbrains.kotlin.nativeDistribution.NativeDistribution
+import org.jetbrains.kotlin.nativeDistribution.asNativeDistribution
 import javax.inject.Inject
 
 private abstract class KonanCacheAction : WorkAction<KonanCacheAction.Parameters> {
@@ -57,10 +61,12 @@ open class KonanCacheTask @Inject constructor(
     val outputDirectory: DirectoryProperty = objectFactory.directoryProperty()
 
     @get:Internal("Depends upon the compiler classpath, native libraries (used by codegen) and konan.properties (compilation flags + dependencies)")
-    val compilerDistribution: NativeDistributionProperty = objectFactory.nativeDistributionProperty()
+    val compilerDistributionRoot: DirectoryProperty = objectFactory.directoryProperty()
+
+    private val compilerDistribution = compilerDistributionRoot.asNativeDistribution()
 
     @get:Classpath
-    protected val compilerClasspath = compilerDistribution.map { it.compilerClasspath }
+    protected val compilerClasspath: Provider<FileCollection> = compilerDistribution.map { it.compilerClasspath }
 
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.NONE)

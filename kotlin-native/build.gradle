@@ -22,6 +22,9 @@ import org.jetbrains.kotlin.cpp.CompilationDatabasePlugin
 import org.jetbrains.kotlin.cpp.CppUsage
 import org.jetbrains.kotlin.cpp.GitClangFormatPlugin
 import org.jetbrains.kotlin.CompareDistributionSignatures
+//import org.jetbrains.kotlin.nativeDistribution.InvalidateStaleCaches
+//import org.jetbrains.kotlin.nativeDistribution.LLVMDistributionKind
+import org.jetbrains.kotlin.nativeDistribution.LLVMDistributionSourceKt
 import org.jetbrains.kotlin.nativeDistribution.NativeDistributionKt
 import org.jetbrains.kotlin.nativeDistribution.NativeProtoDistributionKt
 import org.jetbrains.kotlin.xcode.XcodeOverridePlugin

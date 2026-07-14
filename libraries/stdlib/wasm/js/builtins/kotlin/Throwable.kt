@@ -15,6 +15,7 @@ import kotlin.wasm.internal.jsToKotlinStringAdapter
  * @param message the detail message string.
  * @param cause the cause of this throwable.
  */
+@OptIn(ExperimentalWasmJsInterop::class)
 public actual open class Throwable internal constructor(
     public actual open val message: String?,
     public actual open val cause: kotlin.Throwable?,
@@ -58,5 +59,6 @@ internal actual var Throwable.suppressedExceptionsList: MutableList<Throwable>?
 
 internal actual val Throwable.stack: String get() = this.stack
 
+@OptIn(ExperimentalWasmJsInterop::class)
 internal fun captureStackTrace(): ExternalInterfaceType =
     js("new Error().stack")

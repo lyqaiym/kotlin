@@ -294,6 +294,10 @@ fun Project.publish(moduleMetadata: Boolean = false, sbom: Boolean = true, confi
     }
 }
 
+fun Project.idePluginPublishingLatch(block: () -> Unit) {
+    specialPublishingLatch("publish.ide.plugin.dependencies", block)
+}
+
 fun Project.idePluginDependency(block: () -> Unit) {
     val shouldActivate = rootProject.findProperty("publish.ide.plugin.dependencies")?.toString()?.toBoolean() == true
     if (shouldActivate) {
@@ -301,17 +305,28 @@ fun Project.idePluginDependency(block: () -> Unit) {
     }
 }
 
-fun Project.publishJarsForIde(projects: List<String>, libraryDependencies: List<String> = emptyList()) {
-    val projectsUsedInIntelliJKotlinPlugin: Array<String> by rootProject.extra
+private fun Project.specialPublishingLatch(latchPropertyName: String, block: () -> Unit) {
+    val shouldActivate = rootProject.findProperty(latchPropertyName)?.toString()?.toBoolean() == true
+    if (shouldActivate) {
+        block()
+    }
+}
+
+fun Project.publishJarsForIde(
+    projects: List<String>,
+    libraryDependencies: List<String> = emptyList(),
+    jarTaskConfiguration: Jar.() -> Unit = {},
+) {
+    val projectsDependingOnStableStdlib: Array<String> by rootProject.extra
 
     for (projectName in projects) {
-        check(projectName in projectsUsedInIntelliJKotlinPlugin) {
-            "`$projectName` is used in IntelliJ Kotlin Plugin, it should be added to `extra[\"projectsUsedInIntelliJKotlinPlugin\"]`"
+        check(projectName in projectsDependingOnStableStdlib) {
+            "`$projectName` is used in IntelliJ Kotlin Plugin, it should be added to `extra[\"projectsDependingOnStableStdlib\"]`"
         }
     }
 
-    idePluginDependency {
-        publishProjectJars(projects, libraryDependencies)
+    idePluginPublishingLatch {
+        publishProjectJars(projects, libraryDependencies, jarTaskConfiguration)
     }
     configurations.all {
         // Don't allow `ideaIC` from compiler to leak into Kotlin plugin modules. Compiler and
@@ -347,7 +362,11 @@ fun Project.publishTestJarsForIde(projectNames: List<String>) {
     }
 }
 
-fun Project.publishProjectJars(projects: List<String>, libraryDependencies: List<String> = emptyList()) {
+fun Project.publishProjectJars(
+    projects: List<String>,
+    libraryDependencies: List<String> = emptyList(),
+    jarTaskConfiguration: Jar.() -> Unit = {},
+) {
     apply<JavaPlugin>()
 
     val fatJarContents by configurations.creating
@@ -372,6 +391,7 @@ fun Project.publishProjectJars(projects: List<String>, libraryDependencies: List
         from {
             fatJarContents.map(archiveOperations::zipTree)
         }
+        jarTaskConfiguration()
     }
 
     sourcesJar {

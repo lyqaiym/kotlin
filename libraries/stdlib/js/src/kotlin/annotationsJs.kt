@@ -17,7 +17,7 @@ public annotation class nativeSetter
 
 @Target(FUNCTION)
 @Deprecated("Use inline extension function with body using dynamic")
-public annotation class nativeInvoke
+public actual annotation class nativeInvoke
 
 @Target(CLASS, FUNCTION, PROPERTY)
 internal annotation class library(public val name: String = "")
@@ -101,7 +101,7 @@ public actual annotation class JsFileName(actual val name: String)
  */
 @Retention(AnnotationRetention.BINARY)
 @Target(CLASS, PROPERTY, FUNCTION, FILE)
-public annotation class JsModule(val import: String)
+public actual annotation class JsModule(actual val import: String)
 
 /**
  * Denotes an `external` declaration that can be used without module system.
@@ -164,8 +164,8 @@ public annotation class JsNonModule
  * @see JsModule
  */
 @Retention(AnnotationRetention.BINARY)
-@Target(AnnotationTarget.FILE)
-public annotation class JsQualifier(val value: String)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY, AnnotationTarget.FUNCTION, AnnotationTarget.FILE)
+public actual annotation class JsQualifier(actual val value: String)
 
 /**
  * Exports top-level declaration on JS platform.

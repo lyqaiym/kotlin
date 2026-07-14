@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":core:descriptors.jvm"))
-    api(project(":compiler:frontend.java"))
+    implementation(project(":core:descriptors.jvm"))
+    implementation(project(":compiler:frontend.java"))
     api(project(":compiler:fir:fir-jvm"))
     api(project(":compiler:fir:fir-native"))
     api(project(":compiler:fir:raw-fir:psi2fir"))
@@ -16,8 +16,8 @@ dependencies {
     api(project(":compiler:fir:checkers:checkers.js"))
     api(project(":compiler:fir:checkers:checkers.native"))
     api(project(":compiler:fir:checkers:checkers.wasm"))
-    api(project(":wasm:wasm.frontend"))
-    api(project(":native:frontend.native"))
+    implementation(project(":wasm:wasm.frontend"))
+    implementation(project(":native:frontend.native"))
     api(project(":compiler:ir.actualization"))
 
     implementation(project(":core:compiler.common.native"))

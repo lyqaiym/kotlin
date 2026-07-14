@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.library.KLIB_PROPERTY_COMPILER_VERSION
 import org.jetbrains.kotlin.library.KLIB_PROPERTY_NATIVE_TARGETS
 import org.jetbrains.kotlin.library.KOTLIN_NATIVE_STDLIB_NAME
 import org.jetbrains.kotlin.nativeDistribution.nativeDistribution
+import org.jetbrains.kotlin.nativeDistribution.registerNativeBootstrapDistribution
 import org.jetbrains.kotlin.konan.file.File as KFile
 import org.jetbrains.kotlin.konan.target.Architecture as TargetArchitecture
 
@@ -92,17 +93,18 @@ bitcode {
                     "-DMI_TSAN=1".takeIf { sanitizer == SanitizerKind.THREAD },
             ))
 
-            onlyIf { it.supportsMimallocAllocator() }
+//            onlyIf { it.supportsMimallocAllocator() }
+            onlyIf { it.family == Family.OSX }
         }
 
         module("libbacktrace") {
             val elfSize = when (target.architecture) {
                 TargetArchitecture.X64, TargetArchitecture.ARM64 -> 64
                 TargetArchitecture.X86, TargetArchitecture.ARM32 -> 32
-                else -> 32 // TODO(KT-66500): remove after the bootstrap
+//                else -> 32 // TODO(KT-66500): remove after the bootstrap
             }
             val useMachO = target.family.isAppleFamily
-            val useElf = target.family in listOf(Family.LINUX, Family.ANDROID,Family.OHOS)
+            val useElf = target.family in listOf(Family.LINUX, Family.ANDROID)
 //            val useElf = target.family in listOf(Family.LINUX, Family.ANDROID)
 
             sourceSets {
@@ -519,14 +521,15 @@ tasks.named("clean", Delete::class) {
 
 // region: Stdlib
 
+val nativeBootstrapDistribution = registerNativeBootstrapDistribution()
+
 val stdlibBuildTask by tasks.registering(KonanCompileTask::class) {
     group = BasePlugin.BUILD_GROUP
     description = "Build the Kotlin/Native standard library"
 
     this.compilerDistributionPath.set(kotlinNativeDist.absolutePath)
-    // Requires Native distribution with the compiler JARs.
-    this.compilerDistribution.set(nativeDistribution)
     dependsOn(":kotlin-native:distCompiler")
+    this.compilerDistributionRoot.set(nativeBootstrapDistribution.map { it.root })
 
     this.outputDirectory.set(
             layout.buildDirectory.dir("stdlib/${HostManager.hostName}/stdlib")
@@ -588,7 +591,7 @@ cacheableTargetNames.forEach { targetName ->
         val dist = nativeDistribution
 
         // Requires Native distribution with stdlib klib and runtime modules for `targetName`.
-        this.compilerDistribution.set(dist)
+        this.compilerDistributionRoot.set(dist.map { it.root })
         dependsOn(":kotlin-native:${targetName}CrossDistRuntime")
         inputs.dir(dist.map { it.runtime(targetName) }) // manually depend on runtime modules (stdlib cache links these modules in)
 

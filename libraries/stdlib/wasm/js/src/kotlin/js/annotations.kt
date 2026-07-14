@@ -5,6 +5,8 @@
 
 package kotlin.js
 
+import kotlin.annotation.AnnotationTarget.FUNCTION
+
 /**
  * Exports top-level declaration on JS platform.
  *
@@ -66,7 +68,7 @@ public actual annotation class JsName(actual val name: String)
  */
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY, AnnotationTarget.FUNCTION, AnnotationTarget.FILE)
-public annotation class JsModule(val import: String)
+public actual annotation class JsModule(actual val import: String)
 
 
 /**
@@ -99,5 +101,31 @@ public annotation class JsModule(val import: String)
  * @see JsModule
  */
 @Retention(AnnotationRetention.BINARY)
-@Target(AnnotationTarget.FILE)
-public annotation class JsQualifier(val value: String)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY, AnnotationTarget.FUNCTION, AnnotationTarget.FILE)
+public actual annotation class JsQualifier(actual val value: String)
+
+/**
+ *
+ * Marks a member function of an external declaration as the "invoke operator" of a JavaScript object.
+ * Every call to this function will be translated into a call of the object itself.
+ *
+ * Example:
+ *
+ * ```kotlin
+ * external class A {
+ *   @nativeInvoke
+ *   operator fun invoke()
+ * }
+ *
+ * fun main() {
+ *   val a = A()
+ *   a()
+ * }
+ * ```
+ *
+ */
+@SinceKotlin("2.3")
+@ExperimentalWasmJsInterop
+@Target(FUNCTION)
+@Deprecated("Temporary solution until WasmJs <-> Js interoperability will be designed. It may be removed in the future releases.")
+public actual annotation class nativeInvoke()

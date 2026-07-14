@@ -9,13 +9,17 @@ plugins {
 configureKotlinCompileTasksGradleCompatibility()
 
 dependencies {
-    compileOnly(kotlinStdlib())
+//    compileOnly(kotlinStdlib())
+    val coreDepsVersion = libs.versions.kotlin.`for`.gradle.plugins.compilation.get()
+    compileOnly(kotlin("stdlib", coreDepsVersion))
     compileOnly(project(":compiler:build-tools:kotlin-build-tools-jdk-utils"))
     embedded(project(":compiler:build-tools:kotlin-build-tools-jdk-utils"))
     testApi(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)
-    testImplementation(kotlinStdlib())
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testImplementation(kotlin("stdlib", coreDepsVersion))
+//    testImplementation(kotlinStdlib())
     testImplementation(project(":compiler:build-tools:kotlin-build-tools-jdk-utils"))
 }
 

@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    api(project(":compiler:frontend"))
+    implementation(project(":compiler:frontend"))
     compileOnly(intellijCore())
     compileOnly(libs.guava)
 }

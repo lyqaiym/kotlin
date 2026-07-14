@@ -7,12 +7,12 @@ plugins {
 
 dependencies {
     api(project(":kotlin-annotations-jvm"))
-    api(project(":core:descriptors"))
-    api(project(":core:deserialization"))
+    implementation(project(":core:descriptors"))
+    implementation(project(":core:deserialization"))
     api(project(":compiler:util"))
     api(project(":compiler:config"))
-    api(project(":compiler:container"))
-    api(project(":compiler:resolution"))
+    implementation(project(":compiler:container"))
+    implementation(project(":compiler:resolution"))
     api(project(":compiler:psi"))
     api(project(":compiler:frontend.common"))
     api(project(":compiler:frontend.common-psi"))

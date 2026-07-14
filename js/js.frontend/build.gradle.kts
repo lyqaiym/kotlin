@@ -7,7 +7,7 @@ plugins {
 dependencies {
     implementation(project(":kotlin-util-io"))
     api(project(":compiler:util"))
-    api(project(":compiler:frontend"))
+    implementation(project(":compiler:frontend"))
     api(project(":core:compiler.common.js"))
     implementation(project(":core:compiler.common.web"))
     api(project(":js:js.ast"))

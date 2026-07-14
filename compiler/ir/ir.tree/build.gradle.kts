@@ -7,8 +7,8 @@ plugins {
 }
 
 dependencies {
-    api(project(":core:descriptors"))
-    api(project(":core:deserialization"))
+    implementation(project(":core:descriptors"))
+    implementation(project(":core:deserialization"))
     api(project(":compiler:frontend.common"))
     implementation(project(":compiler:util"))
     implementation(project(":compiler:config"))

@@ -52,6 +52,7 @@ public actual interface MutableCollection<E> : Collection<E>, MutableIterable<E>
      * @return `true` if the element has been added, `false` if the collection does not support duplicates
      * and the element is already contained in the collection.
      */
+    @IgnorableReturnValue
     public actual fun add(element: E): Boolean
 
     /**
@@ -60,6 +61,7 @@ public actual interface MutableCollection<E> : Collection<E>, MutableIterable<E>
      *
      * @return `true` if the element has been successfully removed; `false` if it was not present in the collection.
      */
+    @IgnorableReturnValue
     public actual fun remove(element: E): Boolean
 
     // Bulk Modification Operations
@@ -68,6 +70,7 @@ public actual interface MutableCollection<E> : Collection<E>, MutableIterable<E>
      *
      * @return `true` if any of the specified elements was added to the collection, `false` if the collection was not modified.
      */
+    @IgnorableReturnValue
     public actual fun addAll(elements: Collection<E>): Boolean
 
     /**
@@ -75,6 +78,7 @@ public actual interface MutableCollection<E> : Collection<E>, MutableIterable<E>
      *
      * @return `true` if any of the specified elements was removed from the collection, `false` if the collection was not modified.
      */
+    @IgnorableReturnValue
     public actual fun removeAll(elements: Collection<E>): Boolean
 
     /**
@@ -82,6 +86,7 @@ public actual interface MutableCollection<E> : Collection<E>, MutableIterable<E>
      *
      * @return `true` if any element was removed from the collection, `false` if the collection was not modified.
      */
+    @IgnorableReturnValue
     public actual fun retainAll(elements: Collection<E>): Boolean
 
     /**

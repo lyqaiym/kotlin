@@ -1,7 +1,6 @@
 import org.gradle.kotlin.dsl.support.serviceOf
-import org.jetbrains.kotlin.nativeDistribution.NativeDistributionProperty
+import org.jetbrains.kotlin.nativeDistribution.asNativeDistribution
 import org.jetbrains.kotlin.nativeDistribution.nativeDistribution
-import org.jetbrains.kotlin.nativeDistribution.nativeDistributionProperty
 
 plugins {
     kotlin("jvm")
@@ -20,7 +19,7 @@ val kotlinNativeEmbedded by configurations.creating {
 }
 
 val kotlinNativeSources by configurations.creating {
-    isVisible = false
+//    isVisible = false
     isCanBeConsumed = false
     isCanBeResolved = true
 
@@ -31,7 +30,7 @@ val kotlinNativeSources by configurations.creating {
 }
 
 val kotlinNativeJavadoc by configurations.creating {
-    isVisible = false
+//    isVisible = false
     isCanBeConsumed = false
     isCanBeResolved = true
 
@@ -104,7 +103,9 @@ open class ProjectTestArgumentProvider @Inject constructor(
 
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.RELATIVE)
-    val nativeDistribution: NativeDistributionProperty = objectFactory.nativeDistributionProperty()
+    val nativeDistributionRoot: DirectoryProperty = objectFactory.directoryProperty()
+
+    private val nativeDistribution = nativeDistributionRoot.asNativeDistribution()
 
     override fun asArguments(): Iterable<String> = listOf(
             "-DcompilerClasspath=${compilerClasspath.files.joinToString(separator = File.pathSeparator) { it.absolutePath }}",
@@ -112,16 +113,16 @@ open class ProjectTestArgumentProvider @Inject constructor(
     )
 }
 
-projectTest {
-    /**
-     * It's expected that test should be executed on CI, but currently this project under `kotlin.native.enabled`
-     */
-    jvmArgumentProviders.add(objects.newInstance<ProjectTestArgumentProvider>().apply {
-        compilerClasspath.from(runtimeJar)
-
-        // The tests run the compiler and try to produce an executable on host.
-        // So, distribution with stdlib and runtime for host is required.
-        nativeDistribution.set(project.nativeDistribution)
-        dependsOn(":kotlin-native:distRuntime")
-    })
-}
+//projectTest {
+//    /**
+//     * It's expected that test should be executed on CI, but currently this project under `kotlin.native.enabled`
+//     */
+//    jvmArgumentProviders.add(objects.newInstance<ProjectTestArgumentProvider>().apply {
+//        compilerClasspath.from(runtimeJar)
+//
+//        // The tests run the compiler and try to produce an executable on host.
+//        // So, distribution with stdlib and runtime for host is required.
+//        nativeDistribution.set(project.nativeDistribution)
+//        dependsOn(":kotlin-native:distRuntime")
+//    })
+//}

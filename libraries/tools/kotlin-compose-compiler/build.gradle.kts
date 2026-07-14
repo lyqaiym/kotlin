@@ -10,6 +10,10 @@ dependencies {
     commonApi(platform(project(":kotlin-gradle-plugins-bom")))
     commonApi(project(":kotlin-gradle-plugin-model"))
     commonApi(project(":kotlin-gradle-plugin"))
+    commonCompileOnly(libs.android.gradle.plugin.gradle.api) {
+        overrideTargetJvmVersion(11)
+        isTransitive = false
+    }
 }
 
 gradlePlugin {

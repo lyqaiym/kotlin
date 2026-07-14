@@ -29,9 +29,9 @@ dependencies {
     testApi(project(":compiler:ir.tree")) // used for deepCopyWithSymbols call that is removed by proguard from the compiler TODO: make it more straightforward
     testApi(project(":kotlin-scripting-compiler"))
 
-    otherCompilerModules.forEach {
-        testCompileOnly(project(it))
-    }
+//    otherCompilerModules.forEach {
+//        testCompileOnly(project(it))
+//    }
 
     testImplementation(commonDependency("org.jetbrains.kotlin:kotlin-reflect")) { isTransitive = false }
     testCompileOnly(toolsJarApi())

@@ -25,7 +25,7 @@ project.configureJvmDefaultToolchain()
 project.addEmbeddedConfigurations()
 //project.addImplicitDependenciesConfiguration()
 project.configureJavaCompile()
-project.configureJavaBasePlugin()
+//project.configureJavaBasePlugin()
 project.configureKotlinCompilationOptions()
 project.configureArtifacts()
 project.configureTests()
@@ -61,21 +61,24 @@ fun Project.checkNoApiDependenciesOnK1Modules() {
 
         val k1Modules = (fe10CompilerModules + descriptorModules).toSet()
 
-        println("afterEvaluate:fe10CompilerModules=${fe10CompilerModules}")
+        println("afterEvaluate:fe10CompilerModules=${fe10CompilerModules.joinToString()}")
+        println("afterEvaluate:descriptorModules=${descriptorModules.joinToString()}")
         val violations = apiConfiguration.dependencies
             .filterIsInstance<ProjectDependency>()
             .map { it.path }
-            .filter { it in k1Modules }
+            .filter {
+                println("afterEvaluate:it=${it},in=${it in k1Modules}")
+                it in k1Modules }
             .sorted()
 
-//        if (violations.isNotEmpty()) {
-//            throw GradleException(
-//                "Project '$path' declares `api` dependencies on K1 frontend modules: " +
-//                        violations.joinToString(prefix = "[", postfix = "]") + ". " +
-//                        "K1 frontend modules must only be depended on with the `implementation` " +
-//                        "configuration (see `fe10CompilerModules` in gradle/compilerModules.gradle.kts)."
-//            )
-//        }
+        if (violations.isNotEmpty()) {
+            throw GradleException(
+                "Project '$path' declares `api` dependencies on K1 frontend modules: " +
+                        violations.joinToString(prefix = "[", postfix = "]") + ". " +
+                        "K1 frontend modules must only be depended on with the `implementation` " +
+                        "configuration (see `fe10CompilerModules` in gradle/compilerModules.gradle.kts)."
+            )
+        }
     }
 }
 
@@ -226,12 +229,36 @@ fun Project.configureKotlinCompilationOptions() {
                     freeCompilerArgs.add("-opt-in=org.jetbrains.kotlin.utils.addToStdlib.UnsafeCastFunction")
                 }
 
-                if (!skipJvmDefaultAllForModule(project.path)) {
-                    freeCompilerArgs.add("-Xjvm-default=all")
+//                if (!skipJvmDefaultAllForModule(project.path)) {
+//                    freeCompilerArgs.add("-Xjvm-default=all")
+//                }
+//                -Xjvm-default is deprecated. Use -jvm-default instead.
+                if (!skipJvmDefaultForModule(project.path)) {
+                    freeCompilerArgs.add(
+                        if (project.shouldUseOldJvmDefaultArgument())
+                            "-Xjvm-default=all"
+                        else
+                            "-jvm-default=no-compatibility"
+                    )
+                } else {
+                    freeCompilerArgs.add(
+                        if (project.shouldUseOldJvmDefaultArgument())
+                            "-Xjvm-default=disable"
+                        else
+                            "-jvm-default=disable"
+                    )
                 }
             }
         }
     }
+}
+
+private fun Project.shouldUseOldJvmDefaultArgument(): Boolean {
+    @OptIn(ExperimentalBuildToolsApi::class, ExperimentalKotlinGradlePluginApi::class)
+    val isOldCompilerVersion =
+        MavenComparableVersion(kotlinExtension.compilerVersion.get()) < MavenComparableVersion("2.2")
+
+    return isOldCompilerVersion
 }
 
 private val kotlinCompilerVersionForGradle = rootProject.extensions
@@ -382,7 +409,7 @@ fun Project.configureTests() {
 }
 
 // TODO: migrate remaining modules to the new JVM default scheme.
-fun skipJvmDefaultAllForModule(path: String): Boolean =
+fun skipJvmDefaultForModule(path: String): Boolean =
 // Gradle plugin modules are disabled because different Gradle versions bundle different Kotlin compilers,
     // and not all of them support the new JVM default scheme.
     "-gradle" in path || "-runtime" in path || path == ":kotlin-project-model" ||

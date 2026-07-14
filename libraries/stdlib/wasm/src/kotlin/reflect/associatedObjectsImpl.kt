@@ -5,13 +5,34 @@
 
 package kotlin.wasm.internal
 
+import kotlin.internal.UsedFromCompilerGeneratedCode
 import kotlin.reflect.KClass
+
+//private fun KClass<*>.getTypeId(): Long? = when (this) {
+//    is KClassImpl<*> -> getTypeId(rtti)
+//    is KClassInterfaceImpl<*> -> typeData.typeId
+//    else -> return null
+//}
 
 @PublishedApi
 internal fun findAssociatedObject(klass: KClass<*>, key: Int): Any? {
     val klassId = (klass as? KClassImpl<*>)?.typeData?.typeId ?: return null
     return tryGetAssociatedObject(klassId, key)
 }
+
+//@PublishedApi
+//internal fun findAssociatedObject(klass: KClass<*>, key: KClass<*>): Any? {
+//    val klassId = (klass as? KClassImpl<*>)?.typeData?.typeId ?: return null
+//    val keyId = (klass as? KClassImpl<*>)?.typeData?.typeId ?: return null
+//    return tryGetAssociatedObject(klassId, keyId)
+//}
+
+//@UsedFromCompilerGeneratedCode
+//internal fun tryGetAssociatedObject(klassId: Long, keyId: Long): Any? {
+//    return moduleDescriptors.firstNotNullOfOrNull { moduleDescriptor ->
+//        callAssociatedObjectGetter(klassId, keyId, moduleDescriptor.associatedObjectGetter)
+//    }
+//}
 
 internal fun tryGetAssociatedObject(
     @Suppress("UNUSED_PARAMETER") klassId: Int,

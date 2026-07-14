@@ -428,7 +428,7 @@ class JvmIrCodegenFactory(
         val serializer = context.backendExtension.createBuiltinsSerializer()
         val serializedPackages = serializer.serialize(allBuiltins.map { it.metadata as MetadataSource.File })
         require(serializedPackages.map { it.first }.toSet() == BUILT_INS_PACKAGE_FQ_NAMES) { "Unexpected set of builtin packages" }
-        for ((packageName, serialized) in serializedPackages) {
+        for ([packageName, serialized] in serializedPackages) {
             context.state.factory.addSerializedBuiltinsPackageMetadata(
                 BuiltInSerializerProtocol.getBuiltInsFilePath(packageName),
                 serialized
@@ -470,7 +470,8 @@ class JvmIrCodegenFactory(
             builder.addOptionalAnnotationClass(serializer.serializeOptionalAnnotationClass(metadata, stringTable))
         }
 
-        val (stringTableProto, qualifiedNameTableProto) = stringTable.buildProto()
+//        java.lang.IllegalArgumentException: Unexpected set of builtin packages
+        val [stringTableProto, qualifiedNameTableProto] = stringTable.buildProto()
         builder.setStringTable(stringTableProto)
         builder.setQualifiedNameTable(qualifiedNameTableProto)
 

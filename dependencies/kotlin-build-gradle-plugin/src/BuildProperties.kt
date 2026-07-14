@@ -7,6 +7,8 @@
 import org.gradle.api.Project
 import org.gradle.api.initialization.Settings
 import org.gradle.api.internal.DynamicObjectAware
+import org.gradle.api.provider.Provider
+import org.gradle.api.provider.ProviderFactory
 import java.io.File
 import java.util.*
 
@@ -16,7 +18,9 @@ interface PropertiesProvider {
     fun getSystemProperty(key: String): String?
 }
 
-class KotlinBuildProperties(
+class KotlinBuildProperties internal constructor(
+    private val propertiesBuildService: Provider<BuildPropertiesBuildService>,
+    private val providerFactory: ProviderFactory,
     private val propertiesProvider: PropertiesProvider
 ) {
     private val localProperties: Properties = Properties()
@@ -26,12 +30,28 @@ class KotlinBuildProperties(
         loadPropertyFile("local.properties", localProperties)
         loadPropertyFile("gradle.properties", rootProperties)
     }
-
+//
     private fun loadPropertyFile(fileName: String, propertiesDestination: Properties) {
         val propertiesFile = propertiesProvider.rootProjectDir.resolve(fileName)
         if (propertiesFile.isFile) {
             propertiesFile.reader().use(propertiesDestination::load)
         }
+    }
+
+    fun stringProperty(name: String): Provider<String> = propertiesBuildService.flatMap {
+        it.property(name)
+    }
+
+    fun booleanProperty(
+        name: String,
+        defaultValue: Boolean = false,
+    ): Provider<Boolean> = booleanProperty(name, providerFactory.provider { defaultValue })
+
+    fun booleanProperty(
+        name: String,
+        defaultValue: Provider<Boolean>,
+    ): Provider<Boolean> = propertiesBuildService.flatMap {
+        it.property(name).toBoolean(defaultValue)
     }
 
     fun getOrNull(key: String): Any? =
@@ -102,6 +122,16 @@ class KotlinBuildProperties(
     val renderDiagnosticNames: Boolean = getBoolean("kotlin.build.render.diagnostic.names")
 
     val isCacheRedirectorEnabled: Boolean = getBoolean("cacheRedirectorEnabled")
+
+    private fun Provider<String>.toBoolean(defaultValue: Boolean = false): Provider<Boolean> = map {
+        if (it.isEmpty()) return@map true // has property without value means 'true'
+        return@map it.trim().toBoolean()
+    }.orElse(defaultValue)
+
+    private fun Provider<String>.toBoolean(defaultValue: Provider<Boolean>): Provider<Boolean> = map {
+        if (it.isEmpty()) return@map true // has property without value means 'true'
+        return@map it.trim().toBoolean()
+    }.orElse(defaultValue)
 }
 
 private const val extensionName = "kotlinBuildProperties"
@@ -116,10 +146,15 @@ class ProjectProperties(val project: Project) : PropertiesProvider {
 }
 
 val Project.kotlinBuildProperties: KotlinBuildProperties
-    get() = rootProject.extensions.findByName(extensionName) as KotlinBuildProperties?
-        ?: KotlinBuildProperties(ProjectProperties(rootProject)).also {
-            rootProject.extensions.add(extensionName, it)
-        }
+    get() = KotlinBuildProperties(
+        BuildPropertiesBuildService.registerIfAbsent(
+            gradle,
+            providers,
+            rootDir,
+        ),
+        providers,
+        ProjectProperties(rootProject)
+    )
 
 class SettingsProperties(val settings: Settings) : PropertiesProvider {
     override val rootProjectDir: File
@@ -136,7 +171,12 @@ class SettingsProperties(val settings: Settings) : PropertiesProvider {
 fun getKotlinBuildPropertiesForSettings(settings: Any) = (settings as Settings).kotlinBuildProperties
 
 val Settings.kotlinBuildProperties: KotlinBuildProperties
-    get() = extensions.findByName(extensionName) as KotlinBuildProperties?
-        ?: KotlinBuildProperties(SettingsProperties(this)).also {
-            extensions.add(extensionName, it)
-        }
+    get() = KotlinBuildProperties(
+        BuildPropertiesBuildService.registerIfAbsent(
+            gradle,
+            providers,
+            rootDir,
+        ),
+        providers,
+        SettingsProperties(this)
+    )

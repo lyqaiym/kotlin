@@ -35,7 +35,7 @@ import kotlin.wasm.internal.ExcludedFromCodegen
  */
 @ExcludedFromCodegen
 @Suppress("WRONG_JS_INTEROP_TYPE")
-public external val definedExternally: Nothing
+public actual external val definedExternally: Nothing
 
 /**
  * This function allows you to incorporate JavaScript [code] into Kotlin/Wasm codebase.
@@ -69,4 +69,4 @@ public external val definedExternally: Nothing
  */
 @ExcludedFromCodegen
 @SinceKotlin("1.9")
-public external fun js(code: String): Nothing
+public actual external fun js(code: String): Nothing

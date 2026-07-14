@@ -3,6 +3,8 @@
  * that can be found in the license/LICENSE.txt file.
  */
 
+import org.jetbrains.kotlin.buildtools.api.ExperimentalBuildToolsApi
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.target.Family
 import java.util.Properties
@@ -24,21 +26,24 @@ repositories {
 }
 
 plugins {
-    kotlin("jvm")
+//    kotlin("jvm")
+    id("org.jetbrains.kotlin.jvm") apply false
     `kotlin-dsl`
 }
 
 dependencies {
-    implementation(gradleApi())
+    api(gradleApi())
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${project.bootstrapKotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${project.bootstrapKotlinVersion}") { isTransitive = false }
+    val coreDepsVersion = libs.versions.kotlin.`for`.gradle.plugins.compilation.get()
+    api("org.jetbrains.kotlin:kotlin-stdlib:${coreDepsVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${coreDepsVersion}") { isTransitive = false }
 //    implementation("org.jetbrains.kotlin:kotlin-build-gradle-plugin:${kotlinBuildProperties.buildGradlePluginVersion}")
+    implementation(kotlinBuildHelpers())
 //    implementation("org.jetbrains.kotlin:kotlin-native-utils:${project.bootstrapKotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-native-utils:2.2.255-SNAPSHOT")
 
     // To build Konan Gradle plugin
-//    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${project.bootstrapKotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${project.bootstrapKotlinVersion}")
 
     implementation(libs.gson)
 
@@ -52,11 +57,11 @@ val family by tasks.registering(Sync::class) {
     println("family2=${ohos}")
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
-    }
-}
+//java {
+//    toolchain {
+//        languageVersion.set(JavaLanguageVersion.of(8))
+//    }
+//}
 
 val compileKotlin: KotlinCompile by tasks
 
@@ -79,6 +84,9 @@ kotlin {
             kotlin.srcDir("src/main/kotlin")
         }
     }
+    @OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalBuildToolsApi::class)
+    compilerVersion = libs.versions.kotlin.`for`.gradle.plugins.compilation
+    jvmToolchain(17)
 }
 
 gradlePlugin {
@@ -114,6 +122,14 @@ gradlePlugin {
         create("platformManager") {
             id = "platform-manager"
             implementationClass = "org.jetbrains.kotlin.PlatformManagerPlugin"
+        }
+    }
+}
+
+project.configurations.named(org.jetbrains.kotlin.gradle.plugin.PLUGIN_CLASSPATH_CONFIGURATION_NAME + "Main") {
+    resolutionStrategy {
+        eachDependency {
+            if (this.requested.group == "org.jetbrains.kotlin") useVersion(libs.versions.kotlin.`for`.gradle.plugins.compilation.get())
         }
     }
 }

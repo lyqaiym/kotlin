@@ -75,5 +75,5 @@ internal fun <T> wasmIsInterface(obj: Any): Boolean =
     implementedAsIntrinsic
 
 @ExcludedFromCodegen
-internal fun <T> wasmTypeId(): Int =
+public fun <T> wasmTypeId(): Int =
     implementedAsIntrinsic

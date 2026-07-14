@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.PlatformInfo
 import org.jetbrains.kotlin.konan.target.*
 import org.jetbrains.kotlin.konan.util.*
 import org.jetbrains.kotlin.nativeDistribution.nativeDistribution
+import org.jetbrains.kotlin.nativeDistribution.registerNativeBootstrapDistribution
 import org.jetbrains.kotlin.platformLibs.*
 import org.jetbrains.kotlin.platformManager
 import org.jetbrains.kotlin.utils.capitalized
@@ -56,6 +57,7 @@ val updateDefFileTasksPerFamily = if (HostManager.hostIsMac) {
     emptyMap()
 }
 
+val nativeBootstrapDistribution = registerNativeBootstrapDistribution()
 
 enabledTargets(platformManager).forEach { target ->
     val targetName = target.visibleName
@@ -73,9 +75,14 @@ enabledTargets(platformManager).forEach { target ->
 
             updateDefFileTasksPerFamily[target.family]?.let { dependsOn(it) }
 
-            // Requires Native distribution with compiler JARs and stdlib klib.
-            this.compilerDistribution.set(nativeDistribution)
-            dependsOn(":kotlin-native:distStdlib")
+            if (kotlinBuildProperties.buildPlatformLibsByBootstrapCompiler) {
+                this.compilerDistributionRoot.set(nativeBootstrapDistribution.map { it.root })
+            } else {
+                // Requires Native distribution with compiler JARs and stdlib klib.
+                this.compilerDistributionRoot.set(nativeDistribution.map { it.root })
+                dependsOn(":kotlin-native:distCompiler")
+                dependsOn(":kotlin-native:distStdlib")
+            }
 
             this.target.set(targetName)
             this.outputDirectory.set(
@@ -124,7 +131,7 @@ enabledTargets(platformManager).forEach { target ->
                 val dist = nativeDistribution
 
                 // Requires Native distribution with stdlib klib and its cache for `targetName`.
-                this.compilerDistribution.set(dist)
+                this.compilerDistributionRoot.set(dist.map { it.root })
                 dependsOn(":kotlin-native:${targetName}CrossDist")
                 inputs.dir(dist.map { it.stdlibCache(targetName) }) // manually depend on the contents of stdlib cache
 

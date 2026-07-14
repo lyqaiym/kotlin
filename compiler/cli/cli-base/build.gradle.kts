@@ -7,10 +7,10 @@ plugins {
 dependencies {
     api(project(":compiler:cli-common"))
     api(project(":compiler:resolution.common"))
-    api(project(":compiler:frontend:cfg"))
+    implementation(project(":compiler:frontend:cfg"))
     api(project(":compiler:backend.jvm"))
     api(project(":compiler:light-classes"))
-    api(project(":compiler:javac-wrapper"))
+    implementation(project(":compiler:javac-wrapper"))
     implementation(project(":kotlin-util-klib-metadata"))
 
     compileOnly(toolsJarApi())

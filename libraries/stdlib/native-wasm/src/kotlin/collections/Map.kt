@@ -89,6 +89,7 @@ public actual interface MutableMap<K, V> : Map<K, V> {
      *
      * @return the previous value associated with the key, or `null` if the key was not present in the map.
      */
+    @IgnorableReturnValue
     public actual fun put(key: K, value: V): V?
 
     /**
@@ -96,6 +97,7 @@ public actual interface MutableMap<K, V> : Map<K, V> {
      *
      * @return the previous value associated with the key, or `null` if the key was not present in the map.
      */
+    @IgnorableReturnValue
     public actual fun remove(key: K): V?
 
     // Bulk Modification Operations
@@ -137,6 +139,7 @@ public actual interface MutableMap<K, V> : Map<K, V> {
          *
          * @return the previous value corresponding to the key.
          */
+        @IgnorableReturnValue
         public actual fun setValue(newValue: V): V
     }
 }

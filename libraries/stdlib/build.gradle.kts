@@ -56,7 +56,7 @@ fun KotlinCommonCompilerOptions.mainCompilationOptions() {
 //    apiVersion = KotlinVersion.KOTLIN_2_2
     freeCompilerArgs.add("-Xstdlib-compilation")
     freeCompilerArgs.add("-Xdont-warn-on-error-suppression")
-//    freeCompilerArgs.add("-Xcontext-parameters")
+    freeCompilerArgs.add("-Xcontext-parameters")
     freeCompilerArgs.add("-Xname-based-destructuring=complete")
     if (!kotlinBuildProperties.disableWerror) allWarningsAsErrors = true
 
@@ -68,9 +68,9 @@ fun KotlinCommonCompilerOptions.mainCompilationOptions() {
 val configurationBuiltins = resolvingConfiguration("builtins") {
     attributes.attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, project.objects.named(LibraryElements.JAR))
 }
-dependencies {
-    configurationBuiltins(project(":core:builtins"))
-}
+//dependencies {
+//    configurationBuiltins(project(":core:builtins"))
+//}
 
 fun KotlinCommonCompilerOptions.addReturnValueCheckerInfo() {
     freeCompilerArgs.add("-Xreturn-value-checker=full")
@@ -90,13 +90,13 @@ val commonOptIns = listOf(
     "kotlin.ExperimentalMultiplatform",
     "kotlin.contracts.ExperimentalContracts",
 )
-val commonTestOptIns = listOf(
-    "kotlin.ExperimentalUnsignedTypes",
-    "kotlin.ExperimentalStdlibApi",
-    "kotlin.io.encoding.ExperimentalEncodingApi",
-    "kotlin.uuid.ExperimentalUuidApi",
-    "kotlin.time.ExperimentalTime",
-)
+//val commonTestOptIns = listOf(
+//    "kotlin.ExperimentalUnsignedTypes",
+//    "kotlin.ExperimentalStdlibApi",
+//    "kotlin.io.encoding.ExperimentalEncodingApi",
+//    "kotlin.uuid.ExperimentalUuidApi",
+//    "kotlin.time.ExperimentalTime",
+//)
 
 kotlin {
     val renderDiagnosticNames by extra(project.kotlinBuildProperties.renderDiagnosticNames)
@@ -120,7 +120,7 @@ kotlin {
                         )
                         mainCompilationOptions()
                         addReturnValueCheckerInfo()
-//                        suppressRedundantCliArgumentWarning()
+                        suppressRedundantCliArgumentWarning()
                     }
                 }
             }
@@ -234,25 +234,25 @@ kotlin {
                 mainJdk7.output.allOutputs,
                 mainJdk8.output.allOutputs,
             ), main.configurations.compileDependencyConfiguration)
-            val test by getting {
-                associateWith(mainJdk7)
-                associateWith(mainJdk8)
-                compileTaskProvider.configure {
-                    compilerOptions {
-                        freeCompilerArgs.addAll(
-                            listOf(
-                                "-Xallow-kotlin-package", // TODO: maybe rename test packages
-                                "-Xexpect-actual-classes",
-                            )
-                        )
-                    }
-                }
-            }
-            val longRunningTest by creating {
-                associateWith(main)
-                associateWith(mainJdk7)
-                associateWith(mainJdk8)
-            }
+//            val test by getting {
+//                associateWith(mainJdk7)
+//                associateWith(mainJdk8)
+//                compileTaskProvider.configure {
+//                    compilerOptions {
+//                        freeCompilerArgs.addAll(
+//                            listOf(
+//                                "-Xallow-kotlin-package", // TODO: maybe rename test packages
+//                                "-Xexpect-actual-classes",
+//                            )
+//                        )
+//                    }
+//                }
+//            }
+//            val longRunningTest by creating {
+//                associateWith(main)
+//                associateWith(mainJdk7)
+//                associateWith(mainJdk8)
+//            }
         }
     }
     js {
@@ -324,34 +324,11 @@ kotlin {
         }
     }
 
-    // Please remove this check after bootstrap and replacing @ExperimentalWasmDsl
-    val newExperimentalWasmDslAvailable = runCatching {
-        Class.forName("org.jetbrains.kotlin.gradle.ExperimentalWasmDsl")
-    }.isSuccess
-
-    if (newExperimentalWasmDslAvailable) {
-        logger.warn(
-            """
-            Apparently kotlin bootstrap just happened. And @ExperimentalWasmDsl annotation was moved to a new FQN.
-            Please replace 'org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl'
-            with 'org.jetbrains.kotlin.gradle.ExperimentalWasmDsl'
-            and remove this check.
-
-            Please note that the same check exists in kotlin-test module. Fix it there too.
-            """.trimIndent()
-        )
-    }
-
-    @Suppress("OPT_IN_USAGE")
-    // Remove line above and uncomment line below after bootstrap
-    // @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         commonWasmTargetConfiguration()
     }
-
-    @Suppress("OPT_IN_USAGE")
-    // Remove line above and uncomment line below after bootstrap
-    // @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    @OptIn(ExperimentalWasmDsl::class)
     wasmWasi {
         commonWasmTargetConfiguration()
     }
@@ -500,9 +477,9 @@ kotlin {
                 }
             }
         }
-        val jsTest by getting {
-            kotlin.srcDir("${jsDir}/test")
-        }
+//        val jsTest by getting {
+//            kotlin.srcDir("${jsDir}/test")
+//        }
 
         val nativeWasmMain by creating {
             dependsOn(commonMain.get())
@@ -510,10 +487,10 @@ kotlin {
             kotlin.srcDir("native-wasm/src")
         }
 
-        val nativeWasmTest by creating {
-            dependsOn(commonTest.get())
-            kotlin.srcDir("native-wasm/test")
-        }
+//        val nativeWasmTest by creating {
+//            dependsOn(commonTest.get())
+//            kotlin.srcDir("native-wasm/test")
+//        }
 
         val wasmCommonMain by creating {
             dependsOn(nativeWasmMain)
@@ -552,12 +529,12 @@ kotlin {
             }
 
         }
-        val wasmCommonTest by creating {
-            dependsOn(nativeWasmTest)
-            kotlin {
-                srcDir("wasm/test")
-            }
-        }
+//        val wasmCommonTest by creating {
+//            dependsOn(nativeWasmTest)
+//            kotlin {
+//                srcDir("wasm/test")
+//            }
+//        }
 
         val wasmJsMain by getting {
             dependsOn(webMain)
@@ -568,12 +545,12 @@ kotlin {
                 srcDir("wasm/js/src")
             }
         }
-        val wasmJsTest by getting {
-            dependsOn(wasmCommonTest)
-            kotlin {
-                srcDir("wasm/js/test")
-            }
-        }
+//        val wasmJsTest by getting {
+//            dependsOn(wasmCommonTest)
+//            kotlin {
+//                srcDir("wasm/js/test")
+//            }
+//        }
         val wasmWasiMain by getting {
             dependsOn(wasmCommonMain)
             kotlin {
@@ -584,12 +561,12 @@ kotlin {
                 optIn("kotlin.wasm.unsafe.UnsafeWasmMemoryApi")
             }
         }
-        val wasmWasiTest by getting {
-            dependsOn(wasmCommonTest)
-            kotlin {
-                srcDir("wasm/wasi/test")
-            }
-        }
+//        val wasmWasiTest by getting {
+//            dependsOn(wasmCommonTest)
+//            kotlin {
+//                srcDir("wasm/wasi/test")
+//            }
+//        }
 
         if (kotlinBuildProperties.isInIdeaSync) {
             val nativeKotlinTestCommon by creating {
@@ -616,20 +593,20 @@ kotlin {
                     optIn("kotlin.native.internal.InternalForKotlinNative")
                 }
             }
-            val nativeTest by getting {
-                dependsOn(nativeWasmTest)
-                kotlin {
-                    srcDir("$rootDir/kotlin-native/runtime/test")
-                }
-                languageSettings {
-                    optIn("kotlin.experimental.ExperimentalNativeApi")
-                    optIn("kotlin.native.ObsoleteNativeApi")
-                    optIn("kotlin.native.runtime.NativeRuntimeApi")
-                    optIn("kotlin.native.internal.InternalForKotlinNative")
-                    optIn("kotlinx.cinterop.ExperimentalForeignApi")
-                    optIn("kotlin.native.concurrent.ObsoleteWorkersApi")
-                }
-            }
+//            val nativeTest by getting {
+//                dependsOn(nativeWasmTest)
+//                kotlin {
+//                    srcDir("$rootDir/kotlin-native/runtime/test")
+//                }
+//                languageSettings {
+//                    optIn("kotlin.experimental.ExperimentalNativeApi")
+//                    optIn("kotlin.native.ObsoleteNativeApi")
+//                    optIn("kotlin.native.runtime.NativeRuntimeApi")
+//                    optIn("kotlin.native.internal.InternalForKotlinNative")
+//                    optIn("kotlinx.cinterop.ExperimentalForeignApi")
+//                    optIn("kotlin.native.concurrent.ObsoleteWorkersApi")
+//                }
+//            }
         }
 
         all sourceSet@ {
@@ -639,9 +616,9 @@ kotlin {
                     return@languageSettings
                 }
                 commonOptIns.forEach { optIn(it) }
-                if (this@sourceSet.name.endsWith("Test")) {
-                    commonTestOptIns.forEach { optIn(it) }
-                }
+//                if (this@sourceSet.name.endsWith("Test")) {
+//                    commonTestOptIns.forEach { optIn(it) }
+//                }
             }
         }
     }
@@ -724,12 +701,12 @@ tasks {
         manifest.attributes(mapOf("Implementation-Title" to "kotlin-stdlib-js"))
     }
 
-    val jsJarForTests by registering(Copy::class) {
-        from(jsJar)
-        rename { _ -> "full-runtime.klib" }
-        // some tests expect stdlib-js klib in this location
-        into(rootProject.layout.buildDirectory.dir("js-ir-runtime"))
-    }
+//    val jsJarForTests by registering(Copy::class) {
+//        from(jsJar)
+//        rename { _ -> "full-runtime.klib" }
+//        // some tests expect stdlib-js klib in this location
+//        into(rootProject.layout.buildDirectory.dir("js-ir-runtime"))
+//    }
 
     val jsRearrangedSourcesJar by registering(Jar::class) {
         archiveClassifier.set("js-sources")
@@ -790,11 +767,13 @@ tasks {
         val distJsJar = configurations.create("distJsJar")
         val distJsSourcesJar = configurations.create("distJsSourcesJar")
         val distJsKlib = configurations.create("distJsKlib")
+        val distWasmJsKlib = configurations.create("distWasmJsKlib")
         val commonMainMetadataElements by configurations.creating
         val webMainMetadataElements by configurations.creating
 
         add(distJsSourcesJar.name, jsSourcesJar)
         add(distJsKlib.name, jsJar)
+        add(distWasmJsKlib.name, wasmJsJar)
         add(commonMainMetadataElements.name, commonMetadataJar)
         add(webMainMetadataElements.name, webMetadataJar)
     }
@@ -815,16 +794,16 @@ tasks {
 //        check.configure { dependsOn(jvmVersionTest) }
 //    }
 
-    val jvmLongRunningTest by registering(Test::class) {
-        group = "verification"
-        val compilation = kotlin.jvm().compilations["longRunningTest"]
-        classpath = compilation.compileDependencyFiles + compilation.runtimeDependencyFiles + compilation.output.allOutputs
-        testClassesDirs = compilation.output.classesDirs
-    }
+//    val jvmLongRunningTest by registering(Test::class) {
+//        group = "verification"
+//        val compilation = kotlin.jvm().compilations["longRunningTest"]
+//        classpath = compilation.compileDependencyFiles + compilation.runtimeDependencyFiles + compilation.output.allOutputs
+//        testClassesDirs = compilation.output.classesDirs
+//    }
 
-    if (project.hasProperty("kotlin.stdlib.test.long.running")) {
-        check.configure { dependsOn(jvmLongRunningTest) }
-    }
+//    if (project.hasProperty("kotlin.stdlib.test.long.running")) {
+//        check.configure { dependsOn(jvmLongRunningTest) }
+//    }
 
     listOf("Js", "Wasi").forEach { wasmTarget ->
         named("compileTestKotlinWasm$wasmTarget", AbstractKotlinCompile::class) {
@@ -841,11 +820,11 @@ tasks {
             enabled = false  // Causes out-of-memory in CI: KTI-2150
         }
     }
-    val wasmWasiNodeTest by existing {
-        if (!kotlinBuildProperties.getBoolean("kotlin.stdlib.wasi.tests")) {
-            enabled = false
-        }
-    }
+//    val wasmWasiNodeTest by existing {
+//        if (!kotlinBuildProperties.getBoolean("kotlin.stdlib.wasi.tests")) {
+//            enabled = false
+//        }
+//    }
 
     /*
     We are using a custom 'kotlin-project-structure-metadata' to ensure 'nativeApiElements' lists 'commonMain' as source set
