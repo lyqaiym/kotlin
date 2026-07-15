@@ -9,7 +9,8 @@ class Chars {
     @Sample
     fun isLetter() {
         val chars = listOf('a', 'β', '+', '1')
-        val (letters, notLetters) = chars.partition { it.isLetter() }
+//        val (letters, notLetters) = chars.partition { it.isLetter() }
+        val [letters, notLetters] = chars.partition { it.isLetter() }
         assertPrints(letters, "[a, β]")
         assertPrints(notLetters, "[+, 1]")
     }
@@ -17,7 +18,8 @@ class Chars {
     @Sample
     fun isLetterOrDigit() {
         val chars = listOf('a', '1', '+')
-        val (letterOrDigitList, notLetterOrDigitList) = chars.partition { it.isLetterOrDigit() }
+//        val (letterOrDigitList, notLetterOrDigitList) = chars.partition { it.isLetterOrDigit() }
+        val [letterOrDigitList, notLetterOrDigitList] = chars.partition { it.isLetterOrDigit() }
         assertPrints(letterOrDigitList, "[a, 1]")
         assertPrints(notLetterOrDigitList, "[+]")
     }
@@ -25,7 +27,8 @@ class Chars {
     @Sample
     fun isDigit() {
         val chars = listOf('a', '+', '1')
-        val (digits, notDigits) = chars.partition { it.isDigit() }
+//        val (digits, notDigits) = chars.partition { it.isDigit() }
+        val [digits, notDigits] = chars.partition { it.isDigit() }
         assertPrints(digits, "[1]")
         assertPrints(notDigits, "[a, +]")
     }
@@ -33,7 +36,8 @@ class Chars {
     @Sample
     fun isISOControl() {
         val chars = listOf('\u0000', '\u000E', '\u0009', '1', 'a')
-        val (isoControls, notIsoControls) = chars.partition { it.isISOControl() }
+//        val (isoControls, notIsoControls) = chars.partition { it.isISOControl() }
+        val [isoControls, notIsoControls] = chars.partition { it.isISOControl() }
         // some ISO-control char codes
         assertPrints(isoControls.map(Char::code), "[0, 14, 9]")
         // non-ISO-control chars
@@ -43,7 +47,8 @@ class Chars {
     @Sample
     fun isJavaIdentifierPart() {
         val chars = listOf('a', '_', '1', 'β', '$', '+', ';')
-        val (javaIdentifierParts, notJavaIdentifierParts) = chars.partition { it.isJavaIdentifierPart() }
+//        val (javaIdentifierParts, notJavaIdentifierParts) = chars.partition { it.isJavaIdentifierPart() }
+        val [javaIdentifierParts, notJavaIdentifierParts] = chars.partition { it.isJavaIdentifierPart() }
         assertPrints(javaIdentifierParts, "[a, _, 1, β, $]")
         assertPrints(notJavaIdentifierParts, "[+, ;]")
     }
@@ -51,7 +56,8 @@ class Chars {
     @Sample
     fun isJavaIdentifierStart() {
         val chars = listOf('a', '_', 'β', '$', '1', '+', ';')
-        val (javaIdentifierStarts, notJavaIdentifierStarts) = chars.partition { it.isJavaIdentifierStart() }
+//        val (javaIdentifierStarts, notJavaIdentifierStarts) = chars.partition { it.isJavaIdentifierStart() }
+        val [javaIdentifierStarts, notJavaIdentifierStarts] = chars.partition { it.isJavaIdentifierStart() }
         assertPrints(javaIdentifierStarts, "[a, _, β, $]")
         assertPrints(notJavaIdentifierStarts, "[1, +, ;]")
     }
@@ -59,7 +65,8 @@ class Chars {
     @Sample
     fun isWhitespace() {
         val chars = listOf(' ', '\t', '\n', '1', 'a', '\u00A0')
-        val (whitespaces, notWhitespaces) = chars.partition { it.isWhitespace() }
+//        val (whitespaces, notWhitespaces) = chars.partition { it.isWhitespace() }
+        val [whitespaces, notWhitespaces] = chars.partition { it.isWhitespace() }
         // whitespace char codes
         assertPrints(whitespaces.map(Char::code), "[32, 9, 10, 160]")
         // non-whitespace chars
@@ -69,7 +76,8 @@ class Chars {
     @Sample
     fun isUpperCase() {
         val chars = listOf('A', 'Ψ', 'a', '1', '+')
-        val (upperCases, notUpperCases) = chars.partition { it.isUpperCase() }
+//        val (upperCases, notUpperCases) = chars.partition { it.isUpperCase() }
+        val [upperCases, notUpperCases] = chars.partition { it.isUpperCase() }
         assertPrints(upperCases, "[A, Ψ]")
         assertPrints(notUpperCases, "[a, 1, +]")
     }
@@ -77,7 +85,8 @@ class Chars {
     @Sample
     fun isLowerCase() {
         val chars = listOf('a', 'λ', 'A', '1', '+')
-        val (lowerCases, notLowerCases) = chars.partition { it.isLowerCase() }
+//        val (lowerCases, notLowerCases) = chars.partition { it.isLowerCase() }
+        val [lowerCases, notLowerCases] = chars.partition { it.isLowerCase() }
         assertPrints(lowerCases, "[a, λ]")
         assertPrints(notLowerCases, "[A, 1, +]")
     }
@@ -123,7 +132,8 @@ class Chars {
     @Sample
     fun isTitleCase() {
         val chars = listOf('ǅ', 'ǈ', 'ǋ', 'ǲ', '1', 'A', 'a', '+')
-        val (titleCases, notTitleCases) = chars.partition { it.isTitleCase() }
+//        val (titleCases, notTitleCases) = chars.partition { it.isTitleCase() }
+        val [titleCases, notTitleCases] = chars.partition { it.isTitleCase() }
         assertPrints(titleCases, "[ǅ, ǈ, ǋ, ǲ]")
         assertPrints(notTitleCases, "[1, A, a, +]")
     }

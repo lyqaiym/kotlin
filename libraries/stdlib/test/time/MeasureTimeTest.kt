@@ -42,7 +42,7 @@ class MeasureTimeTest {
         val measured: TimedValue<String> = measureTimedValue { longRunningCalc().also { someResult = it } }
         println("measured: $measured")
 
-        val (result, elapsed) = measured
+        (val result, val elapsed) = measured
 
         assertEquals(someResult, result)
         assertTrue(elapsed > Duration.ZERO)
@@ -61,7 +61,7 @@ class MeasureTimeTest {
 
         val expectedResult: Long
 
-        val (result, elapsed2) = timeSource.measureTimedValue {
+        (val result, val elapsed2) = timeSource.measureTimedValue {
             timeSource += expectedNs.nanoseconds
             expectedResult = expectedNs
             expectedNs

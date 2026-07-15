@@ -598,15 +598,17 @@ private fun Project.commonVariantAttributes(): Action<Configuration> = Action<Co
 }
 
 fun Project.configureKotlinCompileTasksGradleCompatibility() {
+//    configureBuildToolsApiVersionForGradleCompatibility()
     tasks.withType<KotlinCompile>().configureEach {
         compilerOptions {
-            if (!kotlinBuildProperties.isInJpsBuildIdeaSync) {
-                // check https://docs.gradle.org/current/userguide/compatibility.html#kotlin for Kotlin-Gradle versions matrix
-                @Suppress("DEPRECATION", "DEPRECATION_ERROR") // we can't use language version greater than 1.8 as our minimal supported Gradle 7.6 embeds Kotlin 1.7.10
-                languageVersion.set(KotlinVersion.KOTLIN_1_7)
-                @Suppress("DEPRECATION", "DEPRECATION_ERROR") // we can't use api version greater than 1.7 as our minimal supported Gradle version 7.6 uses kotlin-stdlib 1.7
-                apiVersion.set(KotlinVersion.KOTLIN_1_7)
-            }
+//            Language version 1.7 is no longer supported; please, use version 1.8 or greater.
+//            if (!kotlinBuildProperties.isInJpsBuildIdeaSync) {
+//                // check https://docs.gradle.org/current/userguide/compatibility.html#kotlin for Kotlin-Gradle versions matrix
+//                @Suppress("DEPRECATION", "DEPRECATION_ERROR") // we can't use language version greater than 1.8 as our minimal supported Gradle 7.6 embeds Kotlin 1.7.10
+//                languageVersion.set(KotlinVersion.KOTLIN_1_7)
+//                @Suppress("DEPRECATION", "DEPRECATION_ERROR") // we can't use api version greater than 1.7 as our minimal supported Gradle version 7.6 uses kotlin-stdlib 1.7
+//                apiVersion.set(KotlinVersion.KOTLIN_1_7)
+//            }
             freeCompilerArgs.addAll(
                 listOf(
                     "-Xskip-prerelease-check",

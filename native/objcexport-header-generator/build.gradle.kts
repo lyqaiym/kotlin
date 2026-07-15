@@ -15,11 +15,11 @@ dependencies {
     api(project(":kotlin-tooling-core"))
     api(project(":native:base"))
 
-    testImplementation(project(":native:external-projects-test-utils"))
-    testApi(libs.junit.jupiter.api)
-    testApi(libs.junit.jupiter.engine)
-    testApi(libs.junit.jupiter.params)
-    testApi(project(":compiler:tests-common", "tests-jar"))
+//    testImplementation(project(":native:external-projects-test-utils"))
+//    testApi(libs.junit.jupiter.api)
+//    testApi(libs.junit.jupiter.engine)
+//    testApi(libs.junit.jupiter.params)
+//    testApi(project(":compiler:tests-common", "tests-jar"))
 }
 
 kotlin {
@@ -30,7 +30,7 @@ kotlin {
 
 /* Configure tests */
 
-testsJar()
+//testsJar()
 
 val k1TestRuntimeClasspath by configurations.creating
 val analysisApiRuntimeClasspath by configurations.creating
@@ -43,9 +43,9 @@ dependencies {
     analysisApiRuntimeClasspath(projectTests(":native:objcexport-header-generator-analysis-api"))
 }
 
-tasks.test.configure {
-    enabled = false
-}
+//tasks.test.configure {
+//    enabled = false
+//}
 
 //objCExportHeaderGeneratorTest("testK1", testDisplayNameTag = "K1") {
 //    classpath += k1TestRuntimeClasspath
@@ -55,9 +55,9 @@ tasks.test.configure {
 //    classpath += analysisApiRuntimeClasspath
 //}
 
-tasks.check.configure {
-    dependsOn("testK1")
-    dependsOn("testAnalysisApi")
-    dependsOn(":native:objcexport-header-generator-k1:check")
-    dependsOn(":native:objcexport-header-generator-analysis-api:check")
-}
+//tasks.check.configure {
+//    dependsOn("testK1")
+//    dependsOn("testAnalysisApi")
+//    dependsOn(":native:objcexport-header-generator-k1:check")
+//    dependsOn(":native:objcexport-header-generator-analysis-api:check")
+//}

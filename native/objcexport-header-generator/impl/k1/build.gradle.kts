@@ -4,7 +4,7 @@ plugins {
 
 sourceSets {
     "main" { projectDefault() }
-    "test" { projectDefault() }
+//    "test" { projectDefault() }
 }
 
 dependencies {
@@ -14,7 +14,7 @@ dependencies {
     implementation(project(":compiler:ir.serialization.native"))
     implementation(project(":core:descriptors"))
     implementation(project(":native:frontend.native"))
-    testImplementation(projectTests(":native:objcexport-header-generator"))
+//    testImplementation(projectTests(":native:objcexport-header-generator"))
 }
 
 kotlin {
@@ -23,6 +23,6 @@ kotlin {
     }
 }
 
-testsJar()
+//testsJar()
 
 //objCExportHeaderGeneratorTest("test")

@@ -27,7 +27,8 @@ dependencies {
 }
 
 sourceSets {
-    "main" { projectDefault() }
+//    "main" { projectDefault() }
+    "main" { none() }
 }
 
 benchmark {

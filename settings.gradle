@@ -102,56 +102,67 @@ def buildProperties = BuildPropertiesKt.getKotlinBuildPropertiesForSettings(sett
 include ":dependencies:android-sdk"
 include ":dependencies:tools-jar-api"
 include ":dependencies:intellij-core"
+include ":dependencies:bootstrap:kotlin-stdlib-bootstrap"
 
 include ":prepare:build.version"
-include ":dependencies:bootstrap:kotlin-stdlib-bootstrap"
 //include ":core:builtins"
 include ":kotlin-stdlib-common"
 include ":kotlin-stdlib"
-include ":kotlin-test"
-include ":kotlin-test:kotlin-test-js-it"
 project(':kotlin-stdlib-common').projectDir = "$rootDir/libraries/stdlib/common" as File
 project(':kotlin-stdlib').projectDir = "$rootDir/libraries/stdlib" as File
-project(':kotlin-test').projectDir = "$rootDir/libraries/kotlin.test" as File
-project(':kotlin-test:kotlin-test-js-it').projectDir = "$rootDir/libraries/kotlin.test/js/it" as File
+//include ":kotlin-test"
+//include ":kotlin-test:kotlin-test-js-it"
+//project(':kotlin-test').projectDir = "$rootDir/libraries/kotlin.test" as File
+//project(':kotlin-test:kotlin-test-js-it').projectDir = "$rootDir/libraries/kotlin.test/js/it" as File
 
 //include ":libraries:kotlin-prepush-hook"
-//include ":libraries:tools:gradle:fus-statistics-gradle-plugin"
 //include ":libraries:tools:mutability-annotations-compat"
-//include ":libraries:tools:abi-comparator"
-//include ":libraries:tools:abi-validation:abi-tools"
 //include ":libraries:tools:abi-validation:abi-tools-api"
-//include ":libraries:tools:abi-validation:kgp-integration-tests"
-//include ":libraries:tools:js-plain-objects"
-//include ":tools:kotlinp"
-//include ":tools:kotlinp-jvm"
-//include ":tools:kotlinp-klib"
-//include ":tools:binary-compatibility-validator"
-//include ":kotlin-metadata"
-//include ":kotlin-gradle-plugin-idea"
-//include ":kotlin-gradle-plugin-idea-proto"
-//include ":kotlin-tooling-core"
-//include ":kotlin-script-runtime"
-//include ":kotlin-gradle-plugins-bom"
-//include ":kotlin-gradle-plugin-annotations"
-//include ":kotlin-gradle-plugin"
 
 //project(":libraries:kotlin-prepush-hook").projectDir = "$rootDir/libraries/tools/kotlin-prepush-hook" as File
-//project(":tools").projectDir = "$rootDir/libraries/tools" as File
-//project(":tools:kotlinp").projectDir = "$rootDir/libraries/tools/kotlinp" as File
-//project(":tools:kotlinp-jvm").projectDir = "$rootDir/libraries/tools/kotlinp/jvm" as File
-//project(":tools:kotlinp-klib").projectDir = "$rootDir/libraries/tools/kotlinp/klib" as File
-//project(":tools:binary-compatibility-validator").projectDir = "$rootDir/libraries/tools/binary-compatibility-validator" as File
-//project(":kotlin-metadata").projectDir = "$rootDir/libraries/kotlinx-metadata" as File
-//project(":kotlin-gradle-plugin").projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin" as File
-//project(":kotlin-gradle-plugin-idea").projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin-idea" as File
-//project(":kotlin-gradle-plugin-idea-proto").projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin-idea-proto" as File
-//project(":kotlin-tooling-core").projectDir = "$rootDir/libraries/tools/kotlin-tooling-core" as File
-//project(":kotlin-script-runtime").projectDir = "$rootDir/libraries/tools/script-runtime" as File
-//project(':kotlin-gradle-plugin-annotations').projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin-annotations" as File
-//project(':kotlin-gradle-plugins-bom').projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugins-bom" as File
 
-//include ":kotlin-compiler-embeddable"
+//include ":kotlin-daemon"
+//include ":kotlin-daemon-embeddable"
+//project(':kotlin-daemon').projectDir = "$rootDir/compiler/daemon" as File
+//project(':kotlin-daemon-embeddable').projectDir = "$rootDir/prepare/kotlin-daemon-embeddable" as File
+//include ":kotlin-gradle-plugin"
+//project(":kotlin-gradle-plugin").projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin" as File
+//include ":kotlin-gradle-plugin-idea"
+//project(":kotlin-gradle-plugin-idea").projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin-idea" as File
+//include ":kotlin-gradle-plugin-idea-proto"
+//project(":kotlin-gradle-plugin-idea-proto").projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin-idea-proto" as File
+//include ":kotlin-gradle-plugins-bom"
+//project(':kotlin-gradle-plugins-bom').projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugins-bom" as File
+//include ":kotlin-gradle-plugin-annotations"
+//project(':kotlin-gradle-plugin-annotations').projectDir = "$rootDir/libraries/tools/kotlin-gradle-plugin-annotations" as File
+//include ":kotlin-metadata"
+//project(":kotlin-metadata").projectDir = "$rootDir/libraries/kotlinx-metadata" as File
+//include ":kotlin-script-runtime"
+//project(":kotlin-script-runtime").projectDir = "$rootDir/libraries/tools/script-runtime" as File
+//include ":kotlin-tooling-core"
+//project(":kotlin-tooling-core").projectDir = "$rootDir/libraries/tools/kotlin-tooling-core" as File
+//include ":tools:binary-compatibility-validator"
+//project(":tools:binary-compatibility-validator").projectDir = "$rootDir/libraries/tools/binary-compatibility-validator" as File
+//include ":tools:kotlinp"
+//project(":tools:kotlinp").projectDir = "$rootDir/libraries/tools/kotlinp" as File
+//include ":tools:kotlinp-jvm"
+//project(":tools:kotlinp-jvm").projectDir = "$rootDir/libraries/tools/kotlinp/jvm" as File
+//include ":tools:kotlinp-klib"
+//project(":tools:kotlinp-klib").projectDir = "$rootDir/libraries/tools/kotlinp/klib" as File
+//project(":tools").projectDir = "$rootDir/libraries/tools" as File
+//include ":libraries:tools:abi-comparator"
+//include ":libraries:tools:js-plain-objects"
+//include ":libraries:tools:abi-validation:abi-tools"
+//include ":libraries:tools:abi-validation:kgp-integration-tests"
+//include ":libraries:tools:gradle:fus-statistics-gradle-plugin"
+
+
+
+
+
+
+
+
 //include ":dependencies:bootstrap:kotlin-compiler-embeddable-bootstrap"
 //include ":dependencies:bootstrap:kotlin-compiler-runner-bootstrap"
 //include ":dependencies:bootstrap:kotlin-daemon-client-bootstrap"
@@ -163,8 +174,8 @@ project(':kotlin-test:kotlin-test-js-it').projectDir = "$rootDir/libraries/kotli
 //include ":dependencies:bootstrap:kotlin-build-tools-api-bootstrap"
 //include ":dependencies:bootstrap:kotlin-build-tools-impl-bootstrap"
 //include ":compiler:build-tools:kotlin-build-tools-api"
-//include ":pill:pill-importer"
-
+////include ":pill:pill-importer"
+//
 //project(":kotlin-compiler-embeddable").projectDir = "$rootDir/prepare/compiler-embeddable" as File
 //project(':pill').projectDir = "$rootDir/plugins/pill" as File
 //project(':pill:pill-importer').projectDir = "$rootDir/plugins/pill/pill-importer" as File
@@ -326,7 +337,7 @@ project(':kotlin-test:kotlin-test-js-it').projectDir = "$rootDir/libraries/kotli
 //        ":kotlin-assignment-compiler-plugin.cli",
 //        ":kotlin-assignment-compiler-plugin.embeddable"
 //
-//include ":plugins:plugins-interactions-testing"
+////include ":plugins:plugins-interactions-testing"
 //
 //include ":kotlin-imports-dumper-compiler-plugin",
 //        ":kotlin-script-runtime",

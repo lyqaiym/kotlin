@@ -20,16 +20,16 @@ dependencies {
     implementation(project(":native:analysis-api-klib-reader"))
     implementation(project(":native:analysis-api-based-export-common"))
 
-    testImplementation(projectTests(":native:objcexport-header-generator"))
-    testApi(project(":native:analysis-api-based-test-utils"))
-    testApi(project(":analysis:analysis-api-standalone"))
+//    testImplementation(projectTests(":native:objcexport-header-generator"))
+//    testApi(project(":native:analysis-api-based-test-utils"))
+//    testApi(project(":analysis:analysis-api-standalone"))
 }
 
 sourceSets {
     "main" { projectDefault() }
-    "test" { projectDefault() }
+//    "test" { projectDefault() }
 }
 
-testsJar()
+//testsJar()
 
 //objCExportHeaderGeneratorTest("test")

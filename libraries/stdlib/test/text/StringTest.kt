@@ -902,7 +902,8 @@ class StringTest {
             assertCompareResult(expectedResultIgnoreCase, v1, v2, true)
         }
 
-        val (EQ, LT, GT) = listOf(0, -1, 1)
+//        val (EQ, LT, GT) = listOf(0, -1, 1)
+        val [EQ, LT, GT] = listOf(0, -1, 1)
 
         assertCompareResult(EQ, EQ, "ABC", "ABC")
         assertCompareResult(LT, EQ, "ABC", "ABc")

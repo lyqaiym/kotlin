@@ -113,8 +113,9 @@ abstract class DexMethodCountStats : DefaultTask() {
 
     private val isTeamCityBuild = project.kotlinBuildProperties.isTeamcityBuild
 
+//    Method 'printStats' is private and annotated with @TaskAction.
     @TaskAction
-    private fun printStats() {
+    internal fun printStats() {
         val artifactOrArchiveName = artifactOrArchiveName.get()
         inputFile.get().asFile.reader().useLines { lines ->
             fun String.getStatValue() = substringBefore("\t").trim()
@@ -158,9 +159,13 @@ fun Project.printStats(dexMethodCount: TaskProvider<DexMethodCount>) {
 }
 
 fun Project.dexMethodCount(action: DexMethodCount.() -> Unit): TaskProvider<DexMethodCount> {
+    println("dexMethodCount1")
     val dexMethodCount = tasks.register("dexMethodCount", DexMethodCount::class.java, action)
+    println("dexMethodCount2")
     printStats(dexMethodCount)
+    println("dexMethodCount3")
     tasks.getByName("check").dependsOn(dexMethodCount)
+    println("dexMethodCount4")
     return dexMethodCount
 }
 
