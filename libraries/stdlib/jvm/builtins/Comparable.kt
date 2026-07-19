@@ -3,6 +3,11 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
+//PathUtils.kt:1167:59 Cannot access 'kotlin.Comparable' which is a supertype of 'kotlin.contracts.InvocationKind'.
+//Check your module classpath for missing or conflicting dependencies.
+@file:kotlin.internal.JvmBuiltin
+@file:kotlin.internal.SuppressBytecodeGeneration
+
 package kotlin
 
 /**

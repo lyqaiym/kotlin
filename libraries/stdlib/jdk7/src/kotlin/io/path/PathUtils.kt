@@ -217,6 +217,7 @@ private object PathRelativizer {
 @WasExperimental(ExperimentalPathApi::class)
 @Throws(IOException::class)
 @kotlin.internal.InlineOnly
+@IgnorableReturnValue
 public inline fun Path.copyTo(target: Path, overwrite: Boolean = false): Path {
     val options = if (overwrite) arrayOf<CopyOption>(StandardCopyOption.REPLACE_EXISTING) else emptyArray()
     return Files.copy(this, target, *options)
@@ -257,6 +258,7 @@ public inline fun Path.copyTo(target: Path, overwrite: Boolean = false): Path {
 @WasExperimental(ExperimentalPathApi::class)
 @Throws(IOException::class)
 @kotlin.internal.InlineOnly
+@IgnorableReturnValue
 public inline fun Path.copyTo(target: Path, vararg options: CopyOption): Path {
     return Files.copy(this, target, *options)
 }
@@ -482,6 +484,7 @@ public inline fun Path.deleteExisting() {
 @WasExperimental(ExperimentalPathApi::class)
 @Throws(IOException::class)
 @kotlin.internal.InlineOnly
+@IgnorableReturnValue
 public inline fun Path.deleteIfExists(): Boolean =
     Files.deleteIfExists(this)
 
@@ -534,6 +537,7 @@ public inline fun Path.createDirectory(vararg attributes: FileAttribute<*>): Pat
 @WasExperimental(ExperimentalPathApi::class)
 @Throws(IOException::class)
 @kotlin.internal.InlineOnly
+@IgnorableReturnValue
 public inline fun Path.createDirectories(vararg attributes: FileAttribute<*>): Path =
     Files.createDirectories(this, *attributes)
 

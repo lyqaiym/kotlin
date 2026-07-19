@@ -13,7 +13,7 @@ class BuildTimes<T : BuildTime> : Serializable {
     private val buildTimesNs = HashMap<T, Long>()
 
     fun addAll(other: BuildTimes<T>) {
-        for ((buildTime, timeNs) in other.buildTimesNs) {
+        for ([buildTime, timeNs] in other.buildTimesNs) {
             addTimeNs(buildTime, timeNs)
         }
     }

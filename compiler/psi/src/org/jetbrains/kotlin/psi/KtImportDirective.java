@@ -45,6 +45,7 @@ public class KtImportDirective extends KtElementImplStub<KotlinImportDirectiveSt
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtImportAlias getAlias() {
         return getStubOrPsiChild(KtStubElementTypes.IMPORT_ALIAS);
     }

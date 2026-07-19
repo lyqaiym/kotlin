@@ -20,13 +20,34 @@ plugins {
 val projectsUsedInIntelliJKotlinPlugin: Array<String> by rootProject.extra
 val kotlinApiVersionForProjectsDependingOnStableStdlib: String by rootProject.extra
 
-tasks.withType<KotlinJvmCompile>().configureEach {
-    compilerOptions {
-        println("kotlinApiVersionForProjectsDependingOnStableStdlib=${kotlinApiVersionForProjectsDependingOnStableStdlib}")
-        if (project.path !in projectsUsedInIntelliJKotlinPlugin || KotlinVersion.fromVersion(kotlinApiVersionForProjectsDependingOnStableStdlib) > KotlinVersion.KOTLIN_2_0) {
-            // check the `configureKotlinCompilationOptions` in `common-configurations.gradle.kts` out
-            apiVersion.set(KotlinVersion.KOTLIN_2_0)
+//tasks.withType<KotlinJvmCompile>().configureEach {
+////    :core:util.runtime:compileKotlin e: Language version 2.0 is deprecated
+//    compilerOptions {
+//        println("kotlinApiVersionForProjectsDependingOnStableStdlib=${kotlinApiVersionForProjectsDependingOnStableStdlib}")
+//        if (project.path !in projectsUsedInIntelliJKotlinPlugin || KotlinVersion.fromVersion(kotlinApiVersionForProjectsDependingOnStableStdlib) > KotlinVersion.KOTLIN_2_0) {
+//            // check the `configureKotlinCompilationOptions` in `common-configurations.gradle.kts` out
+//            apiVersion.set(KotlinVersion.KOTLIN_2_2)
+//        }
+//        languageVersion.set(KotlinVersion.KOTLIN_2_2)
+//    }
+//}
+
+limitLanguageAndApiVersions(KotlinVersion.KOTLIN_2_2)
+
+internal fun Project.limitLanguageAndApiVersions(version: KotlinVersion) {
+    val projectsDependingOnStableStdlib: Array<String> by rootProject.extra
+    val kotlinApiVersionForProjectsDependingOnStableStdlib: String by rootProject.extra
+
+    tasks.withType<KotlinJvmCompile>().configureEach {
+        compilerOptions {
+            if (project.path !in projectsDependingOnStableStdlib ||
+                KotlinVersion.fromVersion(kotlinApiVersionForProjectsDependingOnStableStdlib) > version
+            ) {
+                // check the `configureKotlinCompilationOptions` in `common-configurations.gradle.kts` out
+                apiVersion.set(version)
+            }
+            languageVersion.set(version)
+            freeCompilerArgs.add("-Xsuppress-version-warnings")
         }
-        languageVersion.set(KotlinVersion.KOTLIN_2_0)
     }
 }

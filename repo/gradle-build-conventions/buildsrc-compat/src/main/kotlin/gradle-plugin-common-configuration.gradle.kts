@@ -15,7 +15,7 @@ plugins {
 val signPublication = !version.toString().contains("-SNAPSHOT") &&
         (project.gradle.startParameter.taskNames.contains("publishPlugins") || signLibraryPublication)
 
-//configureBuildToolsApiVersionForGradleCompatibility()
+configureBuildToolsApiVersionForGradleCompatibility()
 //applyWorkaroundForKt85412ForTestCompilations()
 configureCommonPublicationSettingsForGradle(signPublication)
 addBomCheckTask()
@@ -66,9 +66,9 @@ tasks.named("jar") {
     enabled = false
 }
 
-//createGradlePluginVariants(
-//    commonSourceSet = commonSourceSet,
-//    publishShadowedJar = true,
-//)
-//
+createGradlePluginVariants(
+    commonSourceSet = commonSourceSet,
+    publishShadowedJar = true,
+)
+
 //disableCoroutinesStacktraceRecoveryInTestsIfGradleEmbeddedStdlibIsInRuntimeClasspath()

@@ -20,6 +20,8 @@ import org.jetbrains.kotlin.konan.KonanExternalToolFailure
 import org.jetbrains.kotlin.konan.MissingXcodeException
 import org.jetbrains.kotlin.konan.exec.Command
 import org.jetbrains.kotlin.konan.file.File
+import java.util.Locale
+import java.util.Locale.getDefault
 
 data class XcodeVersion(val major: Int, val minor: Int) : Comparable<XcodeVersion> {
     override fun compareTo(other: XcodeVersion): Int {
@@ -67,7 +69,7 @@ interface Xcode {
      * when compatible version of bootstrap will be available.
      */
     @Suppress("DEPRECATION")
-    fun pathToPlatformSdk(platformName: String): String = when (platformName.toLowerCase()) {
+    fun pathToPlatformSdk(platformName: String): String = when (platformName.lowercase(getDefault())) {
         "macosx" -> macosxSdk
         "iphoneos" -> iphoneosSdk
         "iphonesimulator" -> iphonesimulatorSdk

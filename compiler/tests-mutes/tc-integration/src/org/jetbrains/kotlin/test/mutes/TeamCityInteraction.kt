@@ -77,7 +77,7 @@ private suspend fun traverseAll(
 }
 
 internal suspend fun uploadMutedTests(uploadMap: Map<String, MuteTestJson>) {
-    for ((_, muteTestJson) in uploadMap) {
+    for ([_, muteTestJson] in uploadMap) {
         val response = httpClient.post("$buildServerUrl/app/rest/mutes") {
             applyCommonProperties()
             contentType(ContentType.Application.Json)
@@ -88,7 +88,7 @@ internal suspend fun uploadMutedTests(uploadMap: Map<String, MuteTestJson>) {
 }
 
 internal suspend fun deleteMutedTests(deleteMap: Map<String, MuteTestJson>) {
-    for ((_, muteTestJson) in deleteMap) {
+    for ([_, muteTestJson] in deleteMap) {
         val response = httpClient.delete("$buildServerUrl/app/rest/mutes/id:${muteTestJson.id}") {
             applyCommonProperties()
         }

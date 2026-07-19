@@ -15,7 +15,10 @@ configureCommonPublicationSettingsForGradle(signLibraryPublication)
 extensions.extraProperties["kotlin.stdlib.default.dependency"] = "false"
 
 dependencies {
-    compileOnly(kotlinStdlib())
+//    compileOnly(kotlinStdlib())
+    val coreDepsVersion = libs.versions.kotlin.`for`.gradle.plugins.compilation.get()
+    println("kotlin-gradle-build-metrics:coreDepsVersion=${coreDepsVersion}")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:$coreDepsVersion")
 
     testImplementation(kotlinTest("junit"))
     testImplementation(libs.junit4)

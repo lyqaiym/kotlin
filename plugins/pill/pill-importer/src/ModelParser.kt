@@ -276,7 +276,7 @@ class ModelParser(private val modulePrefix: String, private val globalExcludedDi
 
         val extraArguments = getExtraArguments(compileArguments) { arg ->
             // Skip 'warnings-as-errors' in cases when API/language versions are absent or too old to be compiled with JPS
-            !isVersionUnspecified || arg != "-Werror"
+//            !isVersionUnspecified || arg != "-Werror"
         }
 
         val pluginClasspath = mutableListOf<String>()

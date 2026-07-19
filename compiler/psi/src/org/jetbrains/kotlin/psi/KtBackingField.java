@@ -35,6 +35,7 @@ public class KtBackingField extends KtDeclarationStub<KotlinBackingFieldStub>
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtTypeReference getReturnTypeReference() {
         return getStubOrPsiChild(KtStubElementTypes.TYPE_REFERENCE);
     }

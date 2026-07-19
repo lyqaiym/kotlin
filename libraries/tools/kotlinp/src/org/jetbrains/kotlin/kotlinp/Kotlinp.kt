@@ -11,7 +11,7 @@ import kotlin.metadata.*
 abstract class Kotlinp(protected val settings: Settings) {
     fun renderAnnotation(annotation: KmAnnotation, printer: Printer): Unit = with(printer) {
         append(annotation.className)
-        appendCollectionIfNotEmpty(annotation.arguments.entries, prefix = "(", postfix = ")") { (name, argument) ->
+        appendCollectionIfNotEmpty(annotation.arguments.entries, prefix = "(", postfix = ")") { [name, argument] ->
             append(name, " = ")
             renderAnnotationArgument(argument, printer)
         }
@@ -53,7 +53,7 @@ abstract class Kotlinp(protected val settings: Settings) {
             is KmAnnotationArgument.EnumValue -> append(argument.enumClassName, '.', argument.enumEntryName)
             is KmAnnotationArgument.AnnotationValue -> argument.annotation.let { annotation ->
                 append(annotation.className)
-                appendCollection(annotation.arguments.entries, prefix = "(", postfix = ")") { (name, argument) ->
+                appendCollection(annotation.arguments.entries, prefix = "(", postfix = ")") { [name, argument] ->
                     append(name, " = ")
                     renderAnnotationArgument(argument, printer)
                 }
@@ -401,7 +401,7 @@ abstract class Kotlinp(protected val settings: Settings) {
                 if (argument == KmTypeProjection.STAR) {
                     append("*")
                 } else {
-                    val (variance, argumentType) = argument
+                    val [variance, argumentType] = argument
                     if (variance == null || argumentType == null)
                         throw IllegalArgumentException("Variance and type must be set for non-star type projection")
 

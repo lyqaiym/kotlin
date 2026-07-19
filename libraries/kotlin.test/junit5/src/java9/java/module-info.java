@@ -1,7 +1,7 @@
 @SuppressWarnings({"module", "requires-transitive-automatic"}) // suppress warning about terminal digit, jupiter.api being an auto-module
 module kotlin.test.junit5 {
     requires transitive kotlin.stdlib;
-    requires transitive kotlin.test;
+    //requires transitive kotlin.test;
 
     requires transitive org.junit.jupiter.api;
 

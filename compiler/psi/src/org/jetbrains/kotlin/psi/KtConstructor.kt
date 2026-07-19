@@ -23,7 +23,11 @@ abstract class KtConstructor<T : KtConstructor<T>> : KtDeclarationStub<KotlinCon
 
     override fun isLocal() = false
 
-    override fun getValueParameterList() = getStubOrPsiChild(KtStubElementTypes.VALUE_PARAMETER_LIST)
+//    override fun getValueParameterList() = getStubOrPsiChild(KtStubElementTypes.VALUE_PARAMETER_LIST)
+
+    override fun getValueParameterList() =
+        @Suppress("DEPRECATION") // KT-78356
+        getStubOrPsiChild(KtStubElementTypes.VALUE_PARAMETER_LIST)
 
     override fun getValueParameters() = valueParameterList?.parameters ?: emptyList()
 

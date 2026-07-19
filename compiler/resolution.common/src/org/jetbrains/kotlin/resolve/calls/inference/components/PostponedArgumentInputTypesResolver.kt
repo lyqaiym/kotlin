@@ -91,7 +91,7 @@ class PostponedArgumentInputTypesResolver(
         val extensionFunctionTypePresentInConstraints = functionalTypesFromConstraints.any { it.type.isExtensionFunctionType() }
 
         // An extension function flag can only come from a declaration of anonymous function: `select({ this + it }, fun Int.(x: Int) = 10)`
-        val (parameterTypesFromDeclarationOfRelatedLambdas, isThereExtensionFunctionAmongRelatedLambdas, maxParameterCount) =
+        val [parameterTypesFromDeclarationOfRelatedLambdas, isThereExtensionFunctionAmongRelatedLambdas, maxParameterCount] =
             computeParameterInfoFromRelatedLambdas(
                 argument,
                 postponedArguments,
@@ -188,7 +188,7 @@ class PostponedArgumentInputTypesResolver(
         val isFeatureEnabled =
             considerExtensionReceiverFromConstrainsInLambda()
 
-        parameterTypesFromDeclarationOfRelatedLambdas.mapTo(declaredParameterTypes) { (types, isLambda) ->
+        parameterTypesFromDeclarationOfRelatedLambdas.mapTo(declaredParameterTypes) { [types, isLambda] ->
             if (
                 isFeatureEnabled && isLambda &&
                 (extensionFunctionTypePresentInConstraints || isAnyFunctionExpressionWithReceiver) &&

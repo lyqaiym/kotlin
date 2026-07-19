@@ -53,6 +53,7 @@ public abstract class KtModifierList extends KtElementImplStub<KotlinModifierLis
      * Experimental context parameter API.
      */
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtContextReceiverList getContextReceiverList() {
         return getStubOrPsiChild(KtStubElementTypes.CONTEXT_RECEIVER_LIST);
     }

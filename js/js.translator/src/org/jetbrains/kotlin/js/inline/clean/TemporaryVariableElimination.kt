@@ -137,7 +137,7 @@ internal class TemporaryVariableElimination(private val function: JsFunction) {
             private fun processBinaryExpression(expression: JsBinaryOperation, synthetic: Boolean, orElse: () -> Unit) {
                 val assignment = JsAstUtils.decomposeAssignmentToVariable(expression)
                 if (assignment != null) {
-                    val (name, value) = assignment
+                    val [name, value] = assignment
                     if (name in localVariables) {
                         assignVariable(name, value)
                         addVar(name)
@@ -239,7 +239,7 @@ internal class TemporaryVariableElimination(private val function: JsFunction) {
                 val expression = x.expression
                 val assignment = JsAstUtils.decomposeAssignmentToVariable(expression)
                 if (assignment != null) {
-                    val (name, value) = assignment
+                    val [name, value] = assignment
                     handleDefinition(name, value, x)
                 } else {
                     if (handleExpression(expression)) {
@@ -373,7 +373,7 @@ internal class TemporaryVariableElimination(private val function: JsFunction) {
             }
 
             private fun invalidateTemporariesUsingName(name: JsName) {
-                lastAssignedVars.removeAll { (_, expr) ->
+                lastAssignedVars.removeAll { [_, expr] ->
                     var nameUsed = false
                     object : RecursiveJsVisitor() {
                         override fun visitNameRef(nameRef: JsNameRef) {
@@ -393,7 +393,7 @@ internal class TemporaryVariableElimination(private val function: JsFunction) {
 
                 var candidates = candidateFinder.substitutableVariableReferences
                 while (lastAssignedVars.isNotEmpty()) {
-                    val (assignedVar, assignedStatement) = lastAssignedVars.last()
+                    val [assignedVar, assignedStatement] = lastAssignedVars.last()
                     val candidateIndex = candidates.lastIndexOf(assignedVar)
                     if (candidateIndex < 0) break
 
@@ -532,7 +532,7 @@ internal class TemporaryVariableElimination(private val function: JsFunction) {
                 if (ranges.size == 1 && !ranges[0].second) return super.visit(x, ctx)
 
                 hasChanges = true
-                for ((subList, isRemoved) in ranges) {
+                for ([subList, isRemoved] in ranges) {
                     val initializers = subList.mapNotNull { it.initExpression }
                     initializers.forEach { accept(it) }
                     if (isRemoved) {
@@ -561,7 +561,7 @@ internal class TemporaryVariableElimination(private val function: JsFunction) {
 
                 val assignment = JsAstUtils.decomposeAssignmentToVariable(expression)
                 if (assignment != null) {
-                    val (name, value) = assignment
+                    val [name, value] = assignment
                     if (shouldConsiderUnused(name)) {
                         hasChanges = true
                         ctx.replaceMe(accept(JsExpressionStatement(value)).apply { synthetic = true })

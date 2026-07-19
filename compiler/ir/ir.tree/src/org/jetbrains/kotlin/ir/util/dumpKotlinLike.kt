@@ -245,7 +245,7 @@ private class KotlinLikeDumper(val p: Printer, val options: KotlinLikeDumpOption
             it !is IrClassSymbol || !it.owner.isInterface
         } ?: true
 
-        val (classTypes, interfaceTypes) = partition(::isNonInterfaceType)
+        val [classTypes, interfaceTypes] = partition(::isNonInterfaceType)
 
         return classTypes.sortedBy(IrType::render) + interfaceTypes.sortedBy(IrType::render)
     }
@@ -300,7 +300,7 @@ private class KotlinLikeDumper(val p: Printer, val options: KotlinLikeDumpOption
         // TODO omit Companion name for companion objects?
         // TODO do we need to print info about `thisReceiver`?
         // TODO special support for objects?
-        if (declaration.isExpect && !options.printExpectDeclarations) return
+        if (declaration.isExpect && !options.printExpectDeclarations) return@wrap
 
         declaration.printlnAnnotations()
         p.printIndent()
@@ -833,7 +833,7 @@ private class KotlinLikeDumper(val p: Printer, val options: KotlinLikeDumpOption
     }
 
     override fun visitProperty(declaration: IrProperty, data: IrDeclaration?) = wrap(declaration, data) {
-        if (options.printFakeOverridesStrategy == FakeOverridesStrategy.NONE && declaration.isFakeOverride) return
+        if (options.printFakeOverridesStrategy == FakeOverridesStrategy.NONE && declaration.isFakeOverride) return@wrap
 
         declaration.printlnAnnotations()
         p.printIndent()
@@ -1085,7 +1085,9 @@ private class KotlinLikeDumper(val p: Printer, val options: KotlinLikeDumpOption
         // TODO no tests for IrReturnableBlock?
         if (expression.origin == OBJECT_LITERAL && options.collapseObjectLiteralBlock) {
             p.printWithNoIndent("<anonymous object>")
-            return
+//            Return in function with expression body and without explicit return type.
+//            Use block body '{...}' or add an explicit return type.
+            return@wrap
         }
         val kind = when (expression) {
             is IrReturnableBlock -> "RETURNABLE BLOCK"
@@ -1182,7 +1184,7 @@ private class KotlinLikeDumper(val p: Printer, val options: KotlinLikeDumpOption
 
         if (typeArguments.isNotEmpty()) {
             p.printWithNoIndent("<")
-            for ((i, param) in typeArguments.withIndex()) {
+            for ([i, param] in typeArguments.withIndex()) {
                 p(i > 0, ",")
                 // TODO flag to print type param name?
                 param?.printTypeWithNoIndent() ?: p.printWithNoIndent(commentBlock("null"))
@@ -1193,7 +1195,7 @@ private class KotlinLikeDumper(val p: Printer, val options: KotlinLikeDumpOption
         p.printWithNoIndent("(")
         var isCommentOpen = false
         var printComma = false
-        for ((i, arg) in arguments.withIndex()) {
+        for ([i, arg] in arguments.withIndex()) {
             // If the symbol is unbound then valueArgumentsCount disagrees with
             // valueParameters.
             val param = valueParameters?.getOrNull(i)
@@ -1424,7 +1426,7 @@ private class KotlinLikeDumper(val p: Printer, val options: KotlinLikeDumpOption
     override fun visitConst(expression: IrConst, data: IrDeclaration?) = wrap(expression, data) {
         val kind = expression.kind
 
-        val (prefix, postfix) = when (kind) {
+        val [prefix, postfix] = when (kind) {
             is IrConstKind.Null -> "" to ""
             is IrConstKind.Boolean -> "" to ""
             is IrConstKind.Char -> "'" to "'"
@@ -1468,7 +1470,7 @@ private class KotlinLikeDumper(val p: Printer, val options: KotlinLikeDumpOption
     }
 
     override fun visitTypeOperator(expression: IrTypeOperatorCall, data: IrDeclaration?) = wrap(expression, data) {
-        val (operator, after) = when (expression.operator) {
+        val [operator, after] = when (expression.operator) {
             IrTypeOperator.CAST -> "as" to ""
             IrTypeOperator.IMPLICIT_CAST -> "/*as" to " */"
             IrTypeOperator.IMPLICIT_NOTNULL -> "/*!!" to " */"

@@ -58,7 +58,7 @@ sealed class IrFunction : IrDeclarationBase(), IrPossiblyExternalDeclaration, Ir
 
             var newContextParametersCount = 0
             var oldIndex = 0
-            for ((index, parameter) in newParameters.withIndex()) {
+            for ([index, parameter] in newParameters.withIndex()) {
                 val kind = requireNotNull(parameter._kind) { "Kind must be set explicitly when adding a parameter" }
 
                 parameter.indexInParameters = index
@@ -256,7 +256,7 @@ sealed class IrFunction : IrDeclarationBase(), IrPossiblyExternalDeclaration, Ir
             param.kind = IrParameterKind.Regular
         }
 
-        for ((i, param) in parameters.withIndex()) {
+        for ([i, param] in parameters.withIndex()) {
             param.indexInParameters = i
         }
     }

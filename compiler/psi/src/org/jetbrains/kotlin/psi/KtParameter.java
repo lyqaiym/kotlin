@@ -41,6 +41,7 @@ public class KtParameter extends KtNamedDeclarationStub<KotlinParameterStub> imp
 
     @Override
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtTypeReference getTypeReference() {
         return getStubOrPsiChild(KtStubElementTypes.TYPE_REFERENCE);
     }

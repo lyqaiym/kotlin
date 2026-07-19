@@ -106,7 +106,7 @@ object AbstractExpectActualMatcher {
 
         val matched = ArrayList<DeclarationSymbolMarker>()
         val mismatched = HashMap<ExpectActualMatchingCompatibility.Mismatch, MutableList<DeclarationSymbolMarker>>()
-        for ((actualMember, compatibility) in mapping) {
+        for ([actualMember, compatibility] in mapping) {
             when (compatibility) {
                 ExpectActualMatchingCompatibility.MatchedSuccessfully -> {
                     onMatchedMembers(expectMember, actualMember, expectClassSymbol, actualClassSymbol)

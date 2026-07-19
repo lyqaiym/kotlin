@@ -94,7 +94,7 @@ fun KaptContext.doAnnotationProcessing(
             val additionalClassNames = JavacList.from(binaryTypesToReprocess)
             if (isJava9OrLater()) {
                 val processAnnotationsMethod =
-                    compiler.javaClass.getMethod("processAnnotations", JavacList::class.java, java.util.Collection::class.java)
+                    compiler.javaClass.getMethod("processAnnotations", JavacList::class.java, Collection::class.java)
                 processAnnotationsMethod.invoke(compiler, analyzedFiles, additionalClassNames)
                 compiler
             } else {
@@ -213,7 +213,7 @@ private class ProcessorWrapper(private val delegate: IncrementalProcessor) : Pro
     private val sourcesGenerated = mutableListOf<Int>()
 
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        val (time, result) = measureTimeMillisWithResult {
+        val [time, result] = measureTimeMillisWithResult {
             delegate.process(annotations, roundEnv)
         }
 
@@ -229,19 +229,19 @@ private class ProcessorWrapper(private val delegate: IncrementalProcessor) : Pro
     }
 
     override fun getSupportedOptions(): MutableSet<String> {
-        val (time, result) = measureTimeMillisWithResult { delegate.supportedOptions }
+        val [time, result] = measureTimeMillisWithResult { delegate.supportedOptions }
         initTime += time
         return result
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {
-        val (time, result) = measureTimeMillisWithResult { delegate.supportedSourceVersion }
+        val [time, result] = measureTimeMillisWithResult { delegate.supportedSourceVersion }
         initTime += time
         return result
     }
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        val (time, result) = measureTimeMillisWithResult { delegate.supportedAnnotationTypes }
+        val [time, result] = measureTimeMillisWithResult { delegate.supportedAnnotationTypes }
         initTime += time
         return result
     }

@@ -106,6 +106,10 @@ object CommonConfigurationKeys {
     @JvmField
     val DONT_CREATE_SEPARATE_SESSION_FOR_SCRIPTS = CompilerConfigurationKey.create<Boolean>("don't create separate session for scripts")
 
+    // A helper that can be used to measure performance (compiler phases, JIT and GC info) or collect stats (e.g. number of lines in a project). It might be inaccurate if use in multithreading mode.
+    @JvmField
+    val PERF_MANAGER = CompilerConfigurationKey.create<PerformanceManager>("PERF_MANAGER")
+
     // Should be used only in tests, impossible to set via compiler arguments
     @JvmField
     val DONT_SORT_SOURCE_FILES = CompilerConfigurationKey.create<Boolean>("don't sort source files in FS order")

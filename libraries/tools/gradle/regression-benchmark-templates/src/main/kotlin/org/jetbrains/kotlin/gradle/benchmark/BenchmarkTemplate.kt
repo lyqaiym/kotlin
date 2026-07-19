@@ -11,10 +11,14 @@ import okio.IOException
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.api.ResetCommand
 import org.eclipse.jgit.lib.TextProgressMonitor
+import org.eclipse.jgit.submodule.SubmoduleWalk
 import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.io.*
-import org.jetbrains.kotlinx.dataframe.math.median
+import org.jetbrains.kotlinx.dataframe.io.readCsv
+//import org.jetbrains.kotlinx.dataframe.math.median
+import org.jetbrains.kotlinx.dataframe.io.toStandaloneHtml
+import org.jetbrains.kotlinx.dataframe.io.writeCsv
 import java.io.File
 import java.io.InputStream
 import java.util.zip.ZipInputStream
@@ -33,7 +37,7 @@ abstract class BenchmarkTemplate(
     private val projectName: String,
     private val projectGitUrl: String,
     private val gitCommitSha: String,
-    private val stableKotlinVersions: String
+    private val stableKotlinVersions: String,
 ) {
     private val workingDir = File(args.first())
     val currentKotlinVersion: String = args[1]
@@ -55,7 +59,7 @@ abstract class BenchmarkTemplate(
 
         repoReset()
         repoPatch?.let {
-            it().forEach { (patchName, patch) ->
+            it().forEach { [patchName, patch] ->
                 repoApplyPatch(patchName, patch)
             }
         }
@@ -200,15 +204,42 @@ abstract class BenchmarkTemplate(
     fun aggregateBenchmarkResults(benchmarkResult: BenchmarkResult) {
         println("Aggregating benchmark results...")
         val results = DataFrame
-            .readCSV(benchmarkResult.result, duplicate = true)
+            .readCsv(
+                file = benchmarkResult.result,
+                delimiter = ',',
+                header = listOf<String>(),
+                colTypes = mapOf<String, ColType>(),
+                skipLines = 0,
+                readLines = null,
+                allowMissingColumns = true,
+                parserOptions = null
+            )
             .drop {
                 // Removing unused rows
                 it["scenario"] in listOf("version", "tasks") ||
                         it["scenario"].toString().startsWith("warm-up build")
             }
             .flipColumnsWithRows()
+            .groupBy { it["scenario"] }.map {
+                val totalExecutionTime = it.group.single { it["value"] == "total execution time" }
+                val configurationTime = it.group.single { it["value"] == "task start" }
+                it.group.concat(
+                    dataFrameOf<String, Any>(it.group.columnNames()) { column ->
+                        listOf(
+                            when {
+                                column == "scenario" -> totalExecutionTime[column]
+                                column == "value" -> "execution only time"
+                                column.startsWith("measured") -> (totalExecutionTime[column] as Double) - (configurationTime[column] as Double)
+                                else -> error(column)
+                            }!!
+                        )
+                    }
+                )
+            }
+            .concat()
             .add("median build time") { // squashing build times into median build time
-                valuesOf<Int>().median()
+//                valuesOf<Int>().median()
+                rowMedianOf<Double>()
             }
             .remove { nameContains("measured build") } // removing iterations results
             .groupBy("scenario").aggregate { // merging configuration and build times into one row
@@ -262,10 +293,10 @@ abstract class BenchmarkTemplate(
 
         val benchmarkOutputDir = benchmarkOutputsDir.resolve(projectName)
         val benchmarkCsv = benchmarkOutputDir.resolve("$projectName.csv")
-        results.writeCSV(benchmarkCsv)
+        results.writeCsv(file = benchmarkCsv)
         val benchmarkHtml = benchmarkOutputDir.resolve("$projectName.html")
         benchmarkHtml.writeText(
-            results.toStandaloneHTML(
+            results.toStandaloneHtml(
                 configuration = DisplayConfiguration(
                     cellContentLimit = 120,
                     cellFormatter = { dataRow, dataColumn ->
@@ -340,7 +371,7 @@ abstract class BenchmarkTemplate(
                 kotlinVersions.map { scenario to it }
             }
             .flatten()
-            .map { (scenario, version) ->
+            .map { [scenario, version] ->
                 "${scenario.title} $version".normalizeTitle
             }
         output.writeText(
@@ -417,7 +448,7 @@ abstract class BenchmarkTemplate(
 
     private fun <T : Any?> DataFrame<*>.rowToColumn(
         rowName: String,
-        typeConversion: (Any?) -> T
+        typeConversion: (Any?) -> T,
     ): List<T> =
         rows().first { it.values().first() == rowName }.values().drop(1).map { typeConversion(it) }
 
@@ -499,8 +530,8 @@ internal class BenchmarkScriptConfigurator : RefineScriptCompilationConfiguratio
         context: ScriptConfigurationRefinementContext
     ): ResultWithDiagnostics<ScriptCompilationConfiguration> {
         val benchmarkProject = context.collectedData
-            ?.get(ScriptCollectedData.foundAnnotations)
-            ?.find { it is BenchmarkProject } as? BenchmarkProject
+            ?.get(ScriptCollectedData.collectedAnnotations)
+            ?.find { it.annotation is BenchmarkProject }?.annotation as? BenchmarkProject
             ?: return run {
                 makeFailureResult("Script does not contain ${BenchmarkProject::name} annotation!")
             }

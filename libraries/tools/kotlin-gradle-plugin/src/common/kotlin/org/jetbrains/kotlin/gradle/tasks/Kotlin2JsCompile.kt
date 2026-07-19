@@ -44,7 +44,8 @@ import org.jetbrains.kotlin.gradle.utils.newInstance
 import org.jetbrains.kotlin.gradle.utils.toPathsArray
 import org.jetbrains.kotlin.incremental.ClasspathChanges
 import org.jetbrains.kotlin.library.KLIB_MANIFEST_FILE_NAME
-import org.jetbrains.kotlin.library.impl.isKotlinLibrary
+//import org.jetbrains.kotlin.library.impl.isKotlinLibrary
+import org.jetbrains.kotlin.library.loader.KlibLoader
 import java.io.File
 import javax.inject.Inject
 
@@ -244,6 +245,14 @@ abstract class Kotlin2JsCompile @Inject constructor(
             this
         )
 
+    /**
+     * Checks whether the specified [location] points to a really existing Klib library.
+     */
+    private fun isSomeKindOfAKlib(location: File): Boolean =
+        libraryFilterCacheService.get().getOrCompute(location.asLibraryFilterCacheKey) {
+            KlibLoader { libraryPaths(it.absolutePath) }.load().librariesStdlibFirst.isNotEmpty()
+        }
+
     @get:Internal
     abstract override val libraries: ConfigurableFileCollection
 
@@ -264,9 +273,10 @@ abstract class Kotlin2JsCompile @Inject constructor(
 
     @get:Internal
     protected val libraryFilter: (File) -> Boolean
-        get() = { file ->
-            libraryFilterCacheService.get().getOrCompute(file.asLibraryFilterCacheKey, ::isKotlinLibrary)
-        }
+//        get() = { file ->
+//            libraryFilterCacheService.get().getOrCompute(file.asLibraryFilterCacheKey, ::isKotlinLibrary)
+//        }
+          get() = { file -> isSomeKindOfAKlib(file) }
 
     override val incrementalProps: List<FileCollection>
         /*

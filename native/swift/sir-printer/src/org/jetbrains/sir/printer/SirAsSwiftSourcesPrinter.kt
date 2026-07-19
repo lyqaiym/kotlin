@@ -288,7 +288,7 @@ public class SirAsSwiftSourcesPrinter private constructor(
         }
 
     private fun SirDeclaration.printInheritanceClause() {
-        val (superclass, interfaces) = this.inheritedTypes
+        val [superclass, interfaces] = this.inheritedTypes
 
         (listOfNotNull(superclass?.swiftRender) + interfaces.map { it.swiftFqName })
             .takeIf { it.isNotEmpty() }

@@ -82,7 +82,7 @@ fun main(vararg args: String) {
     val fromRevision = args[0]
     val toRevision = args[1]
 
-    val (fixes, features) = getCommits(fromRevision, toRevision)
+    val [fixes, features] = getCommits(fromRevision, toRevision)
         .filter {
             (it.relnote != null && !ignoreRelnotes.contains(it.relnote.lowercase())) ||
                     it.issues.isNotEmpty()

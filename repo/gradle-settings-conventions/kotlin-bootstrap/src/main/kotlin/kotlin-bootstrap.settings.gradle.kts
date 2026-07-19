@@ -327,13 +327,13 @@ fun Settings.applyBootstrapConfiguration(
                 substituteProjectsWithBootstrap(buildToolsAPIClasspathSubstituteReason)
             }
 
-//            if (name == "kotlinKlibCommonizerClasspath" && path == ":kotlin-stdlib") {
-//                resolutionStrategy.dependencySubstitution {
-//                    substitute(module("org.jetbrains.kotlin:kotlin-stdlib"))
-//                        .using(project(":dependencies:bootstrap:kotlin-stdlib-bootstrap"))
-//                        .because("Override commonizer classpath with bootstrap")
-//                }
-//            }
+            if (name == "kotlinKlibCommonizerClasspath" && path == ":kotlin-stdlib") {
+                resolutionStrategy.dependencySubstitution {
+                    substitute(module("org.jetbrains.kotlin:kotlin-stdlib"))
+                        .using(project(":dependencies:bootstrap:kotlin-stdlib-bootstrap"))
+                        .because("Override commonizer classpath with bootstrap")
+                }
+            }
         }
         logBootstrapApplied(logMessage)
     }

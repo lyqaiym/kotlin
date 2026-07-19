@@ -134,7 +134,7 @@ fun <TElement : KtElement> createByPattern(
     // convert arguments that can be converted into plain text
     @Suppress("NAME_SHADOWING")
     val args = args.zip(argumentTypes).map {
-        val (arg, type) = it
+        val [arg, type] = it
         if (type is PlainTextArgumentType)
             @Suppress("UNCHECKED_CAST") // Suppress compiler checks as types checks were done in runtime
             (type.toPlainText as Function1<Any, String>).invoke(arg)
@@ -142,7 +142,7 @@ fun <TElement : KtElement> createByPattern(
             arg
     }
 
-    val (processedText, allPlaceholders) = processPattern(pattern, args)
+    val [processedText, allPlaceholders] = processPattern(pattern, args)
 
     var resultElement: KtElement = factory(processedText.trim())
     val project = resultElement.project
@@ -154,12 +154,12 @@ fun <TElement : KtElement> createByPattern(
     val pointers = LinkedHashMap<SmartPsiElementPointer<PsiElement>, Int>()
 
     PlaceholdersLoop@
-    for ((n, placeholders) in allPlaceholders) {
+    for ([n, placeholders] in allPlaceholders) {
         val arg = args[n]
         if (arg is String) continue // already in the text
         val expectedElementType = (argumentTypes[n] as PsiElementPlaceholderArgumentType<*, *>).placeholderClass
 
-        for ((range, _) in placeholders) {
+        for ([range, _] in placeholders) {
             val token = resultElement.findElementAt(range.startOffset)!!
             for (element in token.parentsWithSelf) {
                 val elementRange = element.textRange.shiftRight(-start)
@@ -208,14 +208,14 @@ fun <TElement : KtElement> createByPattern(
 
     // it is needed to place logical operators first for expressions like `xyz xyz xyz` to become `xyz && xyz`
     // otherwise if when we place an expression we have to wrap it with extra parenthesis => it becomes `(a != null) xyz xyz`
-    val (left, right) = pointers.entries.partition {
+    val [left, right] = pointers.entries.partition {
         val n = it.value
         val elementType = (args[n] as? KtOperationReferenceExpression)?.getReferencedNameElementType()
         elementType == KtTokens.ANDAND || elementType == KtTokens.OROR
     }
 
     for (partition in listOf(left, right)) {
-        for ((pointer, n) in partition) {
+        for ([pointer, n] in partition) {
             var element = pointer.element!!
 
             if (element is KtFunctionLiteral) {
@@ -335,7 +335,7 @@ class BuilderByPattern<TElement> {
     }
 
     fun appendExpressions(expressions: Iterable<KtExpression?>, separator: String = ","): BuilderByPattern<TElement> {
-        for ((index, expression) in expressions.withIndex()) {
+        for ([index, expression] in expressions.withIndex()) {
             if (index > 0) {
                 appendFixedText(separator)
             }

@@ -39,6 +39,7 @@ public class KtModifierListOwnerStub<T extends StubElement<?>> extends KtElement
 
     @Override
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtModifierList getModifierList() {
         return getStubOrPsiChild(KtStubElementTypes.MODIFIER_LIST);
     }

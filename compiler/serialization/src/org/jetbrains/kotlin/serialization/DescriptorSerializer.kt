@@ -177,11 +177,11 @@ class DescriptorSerializer private constructor(
 
         classDescriptor.multiFieldValueClassRepresentation?.let { multiFieldValueClassRepresentation ->
             val namesToTypes = multiFieldValueClassRepresentation.underlyingPropertyNamesToTypes
-            builder.addAllMultiFieldValueClassUnderlyingName(namesToTypes.map { (name, _) -> getSimpleNameIndex(name) })
+            builder.addAllMultiFieldValueClassUnderlyingName(namesToTypes.map { [name, _] -> getSimpleNameIndex(name) })
             if (useTypeTable()) {
-                builder.addAllMultiFieldValueClassUnderlyingTypeId(namesToTypes.map { (_, kotlinType) -> typeId(kotlinType) })
+                builder.addAllMultiFieldValueClassUnderlyingTypeId(namesToTypes.map { [_, kotlinType] -> typeId(kotlinType) })
             } else {
-                builder.addAllMultiFieldValueClassUnderlyingType(namesToTypes.map { (_, kotlinType) -> type(kotlinType).build() })
+                builder.addAllMultiFieldValueClassUnderlyingType(namesToTypes.map { [_, kotlinType] -> type(kotlinType).build() })
             }
         }
 

@@ -20,34 +20,39 @@ extensions.extraProperties["kotlin.stdlib.default.dependency"] = "false"
 
 val commonSourceSet = createGradleCommonSourceSet()
 reconfigureMainSourcesSetForGradlePlugin(commonSourceSet)
+//SourceSet with name 'gradle86' not found.
+createGradlePluginVariants(
+    commonSourceSet = commonSourceSet,
+    publishShadowedJar = false
+)
 
 // Used for Gradle 8.0+ versions
-createGradlePluginVariant(
-    GradlePluginVariant.GRADLE_80,
-    commonSourceSet = commonSourceSet,
-    isGradlePlugin = false
-)
-
-// Used for Gradle 8.1+ versions
-createGradlePluginVariant(
-    GradlePluginVariant.GRADLE_81,
-    commonSourceSet = commonSourceSet,
-    isGradlePlugin = false
-)
-
-// Used for Gradle 8.2+ versions
-createGradlePluginVariant(
-    GradlePluginVariant.GRADLE_82,
-    commonSourceSet = commonSourceSet,
-    isGradlePlugin = false
-)
-
-// Used for Gradle 8.5+ versions
-createGradlePluginVariant(
-    GradlePluginVariant.GRADLE_85,
-    commonSourceSet = commonSourceSet,
-    isGradlePlugin = false
-)
+//createGradlePluginVariant(
+//    GradlePluginVariant.GRADLE_80,
+//    commonSourceSet = commonSourceSet,
+//    isGradlePlugin = false
+//)
+//
+//// Used for Gradle 8.1+ versions
+//createGradlePluginVariant(
+//    GradlePluginVariant.GRADLE_81,
+//    commonSourceSet = commonSourceSet,
+//    isGradlePlugin = false
+//)
+//
+//// Used for Gradle 8.2+ versions
+//createGradlePluginVariant(
+//    GradlePluginVariant.GRADLE_82,
+//    commonSourceSet = commonSourceSet,
+//    isGradlePlugin = false
+//)
+//
+//// Used for Gradle 8.5+ versions
+//createGradlePluginVariant(
+//    GradlePluginVariant.GRADLE_85,
+//    commonSourceSet = commonSourceSet,
+//    isGradlePlugin = false
+//)
 
 publishing {
     publications {

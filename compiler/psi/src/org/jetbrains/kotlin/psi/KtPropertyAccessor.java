@@ -49,6 +49,7 @@ public class KtPropertyAccessor extends KtDeclarationStub<KotlinPropertyAccessor
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtParameterList getParameterList() {
         return getStubOrPsiChild(KtStubElementTypes.VALUE_PARAMETER_LIST);
     }
@@ -135,6 +136,7 @@ public class KtPropertyAccessor extends KtDeclarationStub<KotlinPropertyAccessor
     }
 
     @Override
+    @SuppressWarnings("deprecation") // KT-78356
     public KtContractEffectList getContractDescription() {
         return getStubOrPsiChild(KtStubElementTypes.CONTRACT_EFFECT_LIST);
     }
@@ -145,6 +147,7 @@ public class KtPropertyAccessor extends KtDeclarationStub<KotlinPropertyAccessor
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtTypeReference getReturnTypeReference() {
         return getStubOrPsiChild(KtStubElementTypes.TYPE_REFERENCE);
     }

@@ -394,11 +394,11 @@ class NewConstraintSystemImpl(
             notProperTypesCache.clear()
         }
 
-        for ((variable, constraints) in otherSystem.notFixedTypeVariables) {
+        for ([variable, constraints] in otherSystem.notFixedTypeVariables) {
             notFixedTypeVariables[variable] = MutableVariableWithConstraints(this, constraints)
         }
 
-        for ((variable, variablesThatReferenceGivenOne) in otherSystem.typeVariableDependencies) {
+        for ([variable, variablesThatReferenceGivenOne] in otherSystem.typeVariableDependencies) {
             typeVariableDependencies[variable] = variablesThatReferenceGivenOne.toMutableSet()
         }
 
@@ -539,7 +539,7 @@ class NewConstraintSystemImpl(
         // Each of them defines two sets of constraints, e.g. for the first for point:
         // 1. {Xv=Int} – is a one-element set (but potentially there might be more constraints in the set)
         // 2. {Xv=T} – second constraints set
-        for ((position, forkPointData) in allForkPointsData) {
+        for ([position, forkPointData] in allForkPointsData) {
             applyTheBestBranchFromForkPoint(forkPointData, position)
         }
     }
@@ -568,7 +568,7 @@ class NewConstraintSystemImpl(
 
         val isThereAnyUnsuccessful: Boolean
         runTransaction {
-            isThereAnyUnsuccessful = allForkPointsData.any { (position, forkPointData) ->
+            isThereAnyUnsuccessful = allForkPointsData.any { [position, forkPointData] ->
                 !applyTheBestBranchFromForkPoint(forkPointData, position)
             }
 
@@ -706,9 +706,9 @@ class NewConstraintSystemImpl(
         val constraintSystem = this@NewConstraintSystemImpl
         val errorsByMissedConstraints = buildList {
             runTransaction {
-                for ((position, constraints) in storage.missedConstraints) {
+                for ([position, constraints] in storage.missedConstraints) {
                     val fixedVariableConstraints =
-                        constraints.filter { (typeVariable, _) -> typeVariable.freshTypeConstructor() in notFixedTypeVariables }
+                        constraints.filter { [typeVariable, _] -> typeVariable.freshTypeConstructor() in notFixedTypeVariables }
                     constraintInjector.processMissedConstraints(constraintSystem, position, fixedVariableConstraints)
                 }
                 errors.filterIsInstance<NewConstraintError>().forEach(::add)
@@ -726,9 +726,9 @@ class NewConstraintSystemImpl(
 
     private fun substituteMissedConstraints() {
         val substitutor = buildCurrentSubstitutor()
-        for ((_, constraints) in storage.missedConstraints) {
-            for ((index, variableWithConstraint) in constraints.withIndex()) {
-                val (typeVariable, constraint) = variableWithConstraint
+        for ([_, constraints] in storage.missedConstraints) {
+            for ([index, variableWithConstraint] in constraints.withIndex()) {
+                val [typeVariable, constraint] = variableWithConstraint
                 constraints[index] = typeVariable to constraint.replaceType(substitutor.safeSubstitute(constraint.type))
             }
         }
@@ -772,7 +772,7 @@ class NewConstraintSystemImpl(
         val substitutor = buildCurrentSubstitutor()
         val approximator = constraintInjector.typeApproximator
         val projectedInputCallTypes = variableWithConstraints.getProjectedInputCallTypes(utilContext)
-        val isResultTypeEqualSomeInputType = projectedInputCallTypes.any { (inputType, constraintKind) ->
+        val isResultTypeEqualSomeInputType = projectedInputCallTypes.any { [inputType, constraintKind] ->
             val inputTypeConstructor = inputType.typeConstructor()
             val otherResultType = inputType.substituteAndApproximateIfNecessary(substitutor, approximator, constraintKind)
 
@@ -858,7 +858,7 @@ class NewConstraintSystemImpl(
     }
 
     override fun removePostponedTypeVariablesFromConstraints(postponedTypeVariables: Set<TypeConstructorMarker>) {
-        for ((_, variableWithConstraints) in storage.notFixedTypeVariables) {
+        for ([_, variableWithConstraints] in storage.notFixedTypeVariables) {
             variableWithConstraints.removeConstraints { constraint ->
                 constraint.type.contains { it is StubTypeMarker && it.getOriginalTypeVariable() in postponedTypeVariables }
             }

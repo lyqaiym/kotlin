@@ -38,7 +38,7 @@ class ResultTypeResolver(
         constraints: List<Constraint>,
         typeVariable: TypeVariableMarker,
     ): KotlinTypeMarker? {
-        val typeVariableConstructor = typeVariable.freshTypeConstructor() as TypeVariableTypeConstructorMarker
+        val typeVariableConstructor = typeVariable.freshTypeConstructor()
         val typesForRecursiveTypeParameters = constraints.mapNotNull { constraint ->
             if (constraint.position.from !is DeclaredUpperBoundConstraintPosition<*>) return@mapNotNull null
             val typeParameter = typeVariableConstructor.typeParameter ?: return@mapNotNull null
@@ -100,7 +100,7 @@ class ResultTypeResolver(
         val subType = c.findSubType(variableWithConstraints)
         val superType = c.findSuperType(variableWithConstraints)
 
-        val (preparedSubType, preparedSuperType) = if (c.isK2 && useImprovedCapturedTypeApproximation) {
+        val [preparedSubType, preparedSuperType] = if (c.isK2 && useImprovedCapturedTypeApproximation) {
             c.prepareSubAndSuperTypes(subType, superType, variableWithConstraints)
         } else {
             c.prepareSubAndSuperTypesLegacy(subType, superType, variableWithConstraints)

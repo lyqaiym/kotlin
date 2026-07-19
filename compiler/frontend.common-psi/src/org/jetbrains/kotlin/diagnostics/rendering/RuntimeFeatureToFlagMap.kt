@@ -33,9 +33,9 @@ private fun Field.getAnnotationsNamedAs(annotationClass: Class<*>) = annotations
 fun buildRuntimeFeatureToFlagMap(classLoader: ClassLoader): Map<LanguageFeature, String> {
     val compilerArgumentsClass = classLoader.loadClass(COMPILER_ARGUMENTS_CLASS)
 
-    val (argumentClass, getValueFromArgument) = classLoader.loadAnnotationClassWithMethod(ARGUMENT_CLASS, ARGUMENT_VALUE)
-    val (enablesClass, getFeatureFromEnables) = classLoader.loadAnnotationClassWithMethod(ENABLES_CLASS, FEATURE)
-    val (disablesClass, getFeatureFromDisables) = classLoader.loadAnnotationClassWithMethod(DISABLES_CLASS, FEATURE)
+    val [argumentClass, getValueFromArgument] = classLoader.loadAnnotationClassWithMethod(ARGUMENT_CLASS, ARGUMENT_VALUE)
+    val [enablesClass, getFeatureFromEnables] = classLoader.loadAnnotationClassWithMethod(ENABLES_CLASS, FEATURE)
+    val [disablesClass, getFeatureFromDisables] = classLoader.loadAnnotationClassWithMethod(DISABLES_CLASS, FEATURE)
 
     return compilerArgumentsClass.declaredFields.flatMap { field ->
         val name = field.getAnnotationNamedAs(argumentClass)?.let { getValueFromArgument(it) as? String }

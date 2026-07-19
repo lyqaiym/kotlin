@@ -59,6 +59,7 @@ public class KtEnumEntry extends KtClass {
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtInitializerList getInitializerList() {
         return getStubOrPsiChild(KtStubElementTypes.INITIALIZER_LIST);
     }

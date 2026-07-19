@@ -39,7 +39,7 @@ open class ConeTypeRenderer(
         }
         val typeArguments = type.typeArguments
         val isExtension = type.isExtensionFunctionType
-        val (receiver, otherTypeArguments) = if (isExtension && typeArguments.size >= 2 && typeArguments.first() != ConeStarProjection) {
+        val [receiver, otherTypeArguments] = if (isExtension && typeArguments.size >= 2 && typeArguments.first() != ConeStarProjection) {
             typeArguments.first() to typeArguments.drop(1)
         } else {
             null to typeArguments.toList()
@@ -51,7 +51,7 @@ open class ConeTypeRenderer(
             builder.append(".")
         }
         builder.append("(")
-        for ((index, argument) in arguments.withIndex()) {
+        for ([index, argument] in arguments.withIndex()) {
             if (index != 0) {
                 builder.append(", ")
             }
@@ -137,7 +137,7 @@ open class ConeTypeRenderer(
     private fun ConeClassLikeType.renderTypeArguments() {
         if (typeArguments.isEmpty()) return
         builder.append("<")
-        for ((index, typeArgument) in typeArguments.withIndex()) {
+        for ([index, typeArgument] in typeArguments.withIndex()) {
             if (index > 0) {
                 builder.append(", ")
             }
@@ -230,7 +230,7 @@ open class ConeTypeRenderer(
 
     protected open fun render(type: ConeIntersectionType) {
         builder.append("it(")
-        for ((index, intersected) in type.intersectedTypes.withIndex()) {
+        for ([index, intersected] in type.intersectedTypes.withIndex()) {
             if (index > 0) {
                 builder.append(" & ")
             }

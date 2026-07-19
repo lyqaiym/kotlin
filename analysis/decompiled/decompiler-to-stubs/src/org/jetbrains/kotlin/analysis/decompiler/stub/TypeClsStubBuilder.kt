@@ -115,11 +115,11 @@ class TypeClsStubBuilder(private val c: ClsStubBuilderContext) {
 
         val shouldBuildAsFunctionType = isBuiltinFunctionClass(classId) && type.argumentList.none { it.projection == Projection.STAR }
         if (shouldBuildAsFunctionType) {
-            val (extensionAnnotations, notExtensionAnnotations) = annotations.partition {
+            val [extensionAnnotations, notExtensionAnnotations] = annotations.partition {
                 it.annotationWithArgs.classId.asSingleFqName() == StandardNames.FqNames.extensionFunctionType
             }
 
-            val (contextReceiverAnnotations, otherAnnotations) = notExtensionAnnotations.partition {
+            val [contextReceiverAnnotations, otherAnnotations] = notExtensionAnnotations.partition {
                 it.annotationWithArgs.classId.asSingleFqName() == StandardNames.FqNames.contextFunctionTypeParams
             }
 
@@ -281,7 +281,7 @@ class TypeClsStubBuilder(private val c: ClsStubBuilderContext) {
         val typeArgumentsWithoutReceiverAndReturnType = typeArgumentList.subList(processedTypes, typeArgumentList.size - 1)
         var suspendParameterType: Type? = null
 
-        for ((index, argument) in typeArgumentsWithoutReceiverAndReturnType.withIndex()) {
+        for ([index, argument] in typeArgumentsWithoutReceiverAndReturnType.withIndex()) {
             val parameterType = argument.type(c.typeTable)!!
             if (isSuspend && index == typeArgumentsWithoutReceiverAndReturnType.size - 1) {
                 if (parameterType.hasClassName() && parameterType.argumentCount == 1) {
@@ -338,7 +338,7 @@ class TypeClsStubBuilder(private val c: ClsStubBuilderContext) {
         callableKind: AnnotatedCallableKind = callableProto.annotatedCallableKind
     ) {
         val parameterListStub = KotlinPlaceHolderStubImpl<KtParameterList>(parent, KtStubElementTypes.VALUE_PARAMETER_LIST)
-        for ((index, valueParameterProto) in parameters.withIndex()) {
+        for ([index, valueParameterProto] in parameters.withIndex()) {
             val parameterName = computeParameterName(c.nameResolver.getName(valueParameterProto.name))
             val hasDefaultValue = Flags.DECLARES_DEFAULT_VALUE.get(valueParameterProto.flags)
             val parameterStub = KotlinParameterStubImpl(
@@ -418,7 +418,7 @@ class TypeClsStubBuilder(private val c: ClsStubBuilderContext) {
             return
         }
         val typeConstraintListStub = KotlinPlaceHolderStubImpl<KtTypeConstraintList>(parent, KtStubElementTypes.TYPE_CONSTRAINT_LIST)
-        for ((name, type) in protosForTypeConstraintList) {
+        for ([name, type] in protosForTypeConstraintList) {
             val typeConstraintStub = KotlinPlaceHolderStubImpl<KtTypeConstraint>(typeConstraintListStub, KtStubElementTypes.TYPE_CONSTRAINT)
             KotlinNameReferenceExpressionStubImpl(typeConstraintStub, name.ref())
             createTypeReferenceStub(typeConstraintStub, type)

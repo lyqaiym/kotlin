@@ -3,6 +3,11 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
+//ExperimentalPathApi.kt:37:19 Cannot access 'kotlin.Annotation' which is a supertype of 'kotlin.io.path.ExperimentalPathApi'.
+//Check your module classpath for missing or conflicting dependencies.
+@file:kotlin.internal.JvmBuiltin
+@file:kotlin.internal.SuppressBytecodeGeneration
+
 package kotlin
 
 /**

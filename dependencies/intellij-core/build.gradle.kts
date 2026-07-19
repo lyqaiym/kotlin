@@ -37,4 +37,6 @@ dependencies {
 //    runtimeOnly("com.jetbrains.intellij.platform:util-progress:$intellijVersion") { isTransitive = false }
 //    runtimeOnly("com.jetbrains.intellij.platform:util-coroutines:$intellijVersion") { isTransitive = false }
 //    runtimeOnly(libs.opentelemetry.api) { isTransitive = false }
+    api(project(":dependencies:intellij-java-psi-api"))
+    api(project(":dependencies:intellij-core-implementation"))
 }

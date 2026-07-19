@@ -558,7 +558,7 @@ fun IrMemberAccessExpression<*>.getTypeSubstitutionMap(irFunction: IrFunction): 
                     extractTypeParameters(irFunction.parentClassOrNull!!)
                 }
             }
-        for ((index, typeParam) in parentTypeParameters.withIndex()) {
+        for ([index, typeParam] in parentTypeParameters.withIndex()) {
             dispatchReceiverTypeArguments[index].typeOrNull?.let {
                 result[typeParam.symbol] = it
             }
@@ -860,7 +860,7 @@ fun IrTypeParametersContainer.copyTypeParameters(
         }
     }
     typeParameters = typeParameters memoryOptimizedPlus newTypeParameters
-    srcTypeParameters.zip(newTypeParameters).forEach { (srcParameter, dstParameter) ->
+    srcTypeParameters.zip(newTypeParameters).forEach { [srcParameter, dstParameter] ->
         dstParameter.copySuperTypesFrom(srcParameter, oldToNewParameterMap)
     }
     return newTypeParameters
@@ -1277,7 +1277,7 @@ private fun IrSimpleFunction.copyAndRenameConflictingTypeParametersFrom(
 
     val zipped = contextParameters.zip(newParameters)
     val parameterMap = zipped.toMap()
-    for ((oldParameter, newParameter) in zipped) {
+    for ([oldParameter, newParameter] in zipped) {
         newParameter.copySuperTypesFrom(oldParameter, parameterMap)
     }
 
@@ -1348,7 +1348,7 @@ fun IrFunction.hasShape(
     if (actualShape.contextParameterCount != contextParameters) return false
     if (actualShape.regularParameterCount != regularParameters) return false
 
-    for ((param, expectedType) in parameters zip parameterTypes) {
+    for ([param, expectedType] in parameters zip parameterTypes) {
         if (expectedType != null && param.type != expectedType) return false
     }
 

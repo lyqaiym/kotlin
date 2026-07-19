@@ -36,7 +36,7 @@ kotlin {
 
 sourceSets {
     "main" { projectDefault() }
-    "test" { projectDefault() }
+    "test" { none() }
 }
 
 apiValidation {

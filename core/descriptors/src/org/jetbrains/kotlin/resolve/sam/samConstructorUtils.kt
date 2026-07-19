@@ -115,7 +115,7 @@ fun recreateAndInitializeTypeParameters(
 
     val typeParametersSubstitutor = createSubstitutorForTypeParameters(interfaceToFunTypeParameters)
 
-    for ((interfaceTypeParameter, funTypeParameter) in interfaceToFunTypeParameters) {
+    for ([interfaceTypeParameter, funTypeParameter] in interfaceToFunTypeParameters) {
         for (upperBound in interfaceTypeParameter.upperBounds) {
             val upperBoundSubstituted =
                 typeParametersSubstitutor.substitute(upperBound, Variance.INVARIANT)

@@ -10,6 +10,7 @@ val kotlinVersion: String by rootProject.extra
 val writeBuildNumber by tasks.registering {
     val versionFile = buildVersionFilePath
     val buildNumber = buildNumber
+    println("writeBuildNumber:buildNumber=${buildNumber}")
     inputs.property("version", buildNumber)
     outputs.file(versionFile)
     doLast {

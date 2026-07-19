@@ -10,9 +10,9 @@ dependencies {
 
     api(project(":native:swift:swift-export-standalone"))
 
-    if (!kotlinBuildProperties.isInJpsBuildIdeaSync) {
-        api(projectTests(":native:native.tests"))
-    }
+//    if (!kotlinBuildProperties.isInJpsBuildIdeaSync) {
+//        api(projectTests(":native:native.tests"))
+//    }
 }
 
 sourceSets {

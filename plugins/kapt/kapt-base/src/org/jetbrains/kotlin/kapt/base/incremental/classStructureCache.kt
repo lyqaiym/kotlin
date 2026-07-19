@@ -138,7 +138,7 @@ class JavaClassCache() : Serializable {
     }
 
     fun getSourceForType(type: String): File {
-        sourceCache.forEach { (fileUri, typeInfo) ->
+        sourceCache.forEach { [fileUri, typeInfo] ->
             if (type in typeInfo.declaredTypes) {
                 return File(fileUri)
             }
@@ -148,7 +148,7 @@ class JavaClassCache() : Serializable {
 
     fun invalidateDataForTypes(impactedTypes: MutableSet<String>) {
         val allSources = mutableSetOf<URI>()
-        sourceCache.forEach { (fileUri, typeInfo) ->
+        sourceCache.forEach { [fileUri, typeInfo] ->
             if (typeInfo.declaredTypes.any { it in impactedTypes }) {
                 allSources.add(fileUri)
             }

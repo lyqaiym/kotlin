@@ -65,6 +65,7 @@ internal object ClassIdCalculator {
      * A best-effort way to get the class id of expression's type without resolve.
      */
     fun inferConstantExpressionClassIdByPsi(expression: KtConstantExpression): ClassId? {
+        @Suppress("DEPRECATION") // KT-78356
         val convertedText: Any? = when (expression.elementType) {
             KtNodeTypes.INTEGER_CONSTANT, KtNodeTypes.FLOAT_CONSTANT -> {
                 if (hasIllegalUnderscore(expression.text, expression.elementType)) return null
@@ -75,6 +76,7 @@ internal object ClassIdCalculator {
             else -> null
         }
 
+        @Suppress("DEPRECATION") // KT-78356
         return when (expression.elementType) {
             KtNodeTypes.INTEGER_CONSTANT -> when {
                 convertedText !is Long -> null

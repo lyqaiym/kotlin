@@ -135,9 +135,9 @@ class VariableFixationFinder(
     private fun Context.variableHasUnprocessedConstraintsInForks(variableConstructor: TypeConstructorMarker): Boolean {
         if (constraintsFromAllForkPoints.isEmpty()) return false
 
-        for ((_, forkPointData) in constraintsFromAllForkPoints) {
+        for ([_, forkPointData] in constraintsFromAllForkPoints) {
             for (constraints in forkPointData) {
-                for ((typeVariableFromConstraint, constraint) in constraints) {
+                for ([typeVariableFromConstraint, constraint] in constraints) {
                     if (typeVariableFromConstraint.freshTypeConstructor() == variableConstructor) return true
                     if (containsTypeVariable(constraint.type, variableConstructor)) return true
                 }

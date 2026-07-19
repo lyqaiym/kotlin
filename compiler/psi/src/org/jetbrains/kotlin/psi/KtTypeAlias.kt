@@ -29,7 +29,9 @@ class KtTypeAlias : KtTypeParameterListOwnerStub<KotlinTypeAliasStub>, KtNamedDe
         findChildByType(KtTokens.TYPE_ALIAS_KEYWORD)
 
     @IfNotParsed
-    fun getTypeReference(): KtTypeReference? = getStubOrPsiChild<KtTypeReference>(KtStubElementTypes.TYPE_REFERENCE)
+    fun getTypeReference(): KtTypeReference? =
+        @Suppress("DEPRECATION") // KT-78356
+        getStubOrPsiChild<KtTypeReference>(KtStubElementTypes.TYPE_REFERENCE)
 
     override fun getClassId(): ClassId? {
         greenStub?.let { return it.getClassId() }

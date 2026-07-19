@@ -37,7 +37,7 @@ class PendingDiagnosticsCollectorWithSuppress(override val rawReporter: RawRepor
         val commitEverything = context == null
         val pendingIterator = pendingDiagnosticsByFilePath.iterator()
         while (pendingIterator.hasNext()) {
-            val (path, pendingList) = pendingIterator.next()
+            val [path, pendingList] = pendingIterator.next()
             val committedList = _diagnosticsByFilePath.getOrPut(path) { mutableListOf() }
             val iterator = pendingList.iterator()
             while (iterator.hasNext()) {

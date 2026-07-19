@@ -233,6 +233,7 @@ fun KtAnnotationsContainer.collectAnnotationEntriesFromStubOrPsi(): List<KtAnnot
 
 private fun StubElement<*>.collectAnnotationEntriesFromStubElement(): List<KtAnnotationEntry> {
     return childrenStubs.flatMap { child ->
+        @Suppress("DEPRECATION") // KT-78356
         when (child.stubType) {
             KtNodeTypes.ANNOTATION_ENTRY -> listOf(child.psi as KtAnnotationEntry)
             KtNodeTypes.ANNOTATION -> (child.psi as KtAnnotation).entries
@@ -507,7 +508,7 @@ val KtDeclaration.containingClassOrObject: KtClassOrObject?
 
 fun KtExpression.getOutermostParenthesizerOrThis(): KtExpression {
     return (parentsWithSelf.zip(parents)).firstOrNull {
-        val (element, parent) = it
+        val [element, parent] = it
         when (parent) {
             is KtParenthesizedExpression -> false
             is KtAnnotatedExpression -> parent.baseExpression != element

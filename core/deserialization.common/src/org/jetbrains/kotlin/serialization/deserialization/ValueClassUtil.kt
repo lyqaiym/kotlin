@@ -22,7 +22,7 @@ fun <T : RigidTypeMarker> ProtoBuf.Class.loadValueClassRepresentation(
     typeOfPublicProperty: (Name) -> T?,
 ): ValueClassRepresentation<T>? {
     if (multiFieldValueClassUnderlyingNameCount > 0) {
-        val (names, types) = loadMultiFieldValueClassRepresentation(nameResolver, typeTable)
+        val [names, types] = loadMultiFieldValueClassRepresentation(nameResolver, typeTable)
         return MultiFieldValueClassRepresentation(names zip types.map(typeDeserializer))
     }
 

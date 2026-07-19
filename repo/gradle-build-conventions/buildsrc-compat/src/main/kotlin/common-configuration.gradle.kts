@@ -110,6 +110,7 @@ fun Project.configureJavaCompile() {
             if (!kotlinBuildProperties.disableWerror) {
                 options.compilerArgs.add("-Werror")
             }
+            println("configureJavaCompile:name=${project.name},args=${options.compilerArgs.joinToString(",") }}")
         }
     }
 }

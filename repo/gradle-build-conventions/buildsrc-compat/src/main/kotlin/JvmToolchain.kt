@@ -58,7 +58,7 @@ fun Project.configureJvmDefaultToolchain() {
 
 fun Project.configureJvmToolchain(jdkVersion: JdkMajorVersion) {
     @Suppress("NAME_SHADOWING")
-    val jdkVersion = chooseJdk_1_8ForJpsBuild(jdkVersion)
+//    val jdkVersion = chooseJdk_1_8ForJpsBuild(jdkVersion)
     // Ensure java only modules also set default toolchain
     configureJavaOnlyToolchain(jdkVersion)
 
@@ -88,9 +88,10 @@ fun Project.configureJavaOnlyToolchain(
     jdkVersion: JdkMajorVersion,
 ) {
     @Suppress("NAME_SHADOWING")
-    val jdkVersion = chooseJdk_1_8ForJpsBuild(jdkVersion)
+//    val jdkVersion = chooseJdk_1_8ForJpsBuild(jdkVersion)
     plugins.withId("java-base") {
         val javaExtension = extensions.getByType<JavaPluginExtension>()
+        println("configureJavaOnlyToolchain:this=${project.name},jdkVersion=${jdkVersion}")
         javaExtension.toolchain {
             setupToolchain(jdkVersion)
         }

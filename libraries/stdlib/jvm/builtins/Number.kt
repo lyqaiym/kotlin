@@ -3,6 +3,11 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
+//PathRecursiveFunctions.kt:342:54 Cannot access 'kotlin.Number' which is a supertype of 'kotlin.Int'.
+//Check your module classpath for missing or conflicting dependencies.
+@file:kotlin.internal.JvmBuiltin
+@file:kotlin.internal.SuppressBytecodeGeneration
+
 package kotlin
 
 /**

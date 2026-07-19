@@ -77,8 +77,23 @@ interface TypeSystemBuiltInsContext {
 /**
  * Context that allow construction of types
  */
-interface TypeSystemTypeFactoryContext: TypeSystemBuiltInsContext {
+interface TypeSystemTypeFactoryContext : TypeSystemContext, TypeSystemBuiltInsContext {
     fun createFlexibleType(lowerBound: RigidTypeMarker, upperBound: RigidTypeMarker): KotlinTypeMarker
+
+    fun createTrivialFlexibleTypeOrSelf(lowerBound: KotlinTypeMarker): KotlinTypeMarker {
+        if (lowerBound.isFlexible()) return lowerBound
+        return createFlexibleType(lowerBound.lowerBoundIfFlexible(), lowerBound.lowerBoundIfFlexible().withNullability(true))
+    }
+
+    fun isTriviallyFlexible(flexibleType: FlexibleTypeMarker): Boolean = false
+
+    fun makeLowerBoundDefinitelyNotNullOrNotNull(flexibleType: FlexibleTypeMarker): KotlinTypeMarker {
+        return createFlexibleType(
+            flexibleType.lowerBound().makeDefinitelyNotNullOrNotNull(),
+            flexibleType.upperBound()
+        )
+    }
+
     fun createSimpleType(
         constructor: TypeConstructorMarker,
         arguments: List<TypeArgumentMarker>,
@@ -229,7 +244,7 @@ interface TypeSystemInferenceExtensionContext : TypeSystemContext, TypeSystemBui
 
     fun TypeConstructorMarker.isFinalClassConstructor(): Boolean
 
-    fun TypeVariableMarker.freshTypeConstructor(): TypeConstructorMarker
+    fun TypeVariableMarker.freshTypeConstructor(): TypeVariableTypeConstructorMarker
 
     fun CapturedTypeMarker.typeConstructorProjection(): TypeArgumentMarker
     fun CapturedTypeMarker.typeParameter(): TypeParameterMarker?
@@ -307,6 +322,25 @@ interface TypeSystemInferenceExtensionContext : TypeSystemContext, TypeSystemBui
         }
 
     /**
+     * This flag handles the LowerConstraint returned for the case Foo(?) <: (T..T?)
+     *
+     * With this flag (K2 +PreciseSimplificationFlexibleLowerConstraint),
+     * we use precise (Foo!!..Foo?) <: T for nullable type and (Foo!!..Foo) <: T for non-null type.
+     *
+     * Without it (K1 or K2 -PreciseSimplificationToFlexibleLowerConstraint), we use Foo <: T for nullable type instead
+     * and it can lead to information loss. E.g. with initial constraints T = Bar, Bar? <: U, U? <: (T..T?)
+     * we infer a lower constraint U <: T and get Bar? <: Bar contradiction.
+     *
+     * Currently (both in K1 and K2), this problem is mitigated with so-called TypePreservingVisibilityWrtHack,
+     * that allows us to use flexible types for not-null explicit type arguments of Java type parameters
+     *
+     * TODO: consider dropping in 2.5 timeframe together with the corresponding feature (KT-84664)
+     */
+//    fun usePreciseSimplificationToFlexibleLowerConstraint(): Boolean
+
+//    fun simplifyFlexibleUpperConstraintWithDnnBoundToNullable(): Boolean
+
+    /**
      * For case Foo <: (T..T?) return LowerConstraint for new constraint LowerConstraint <: T
      * In K1, in case nullable it was just Foo?, so constraint was Foo? <: T
      * But it's not 100% correct because prevent having not-nullable upper constraint on T while initial (Foo? <: (T..T?)) is not violated
@@ -357,6 +391,8 @@ interface TypeSystemInferenceExtensionContext : TypeSystemContext, TypeSystemBui
         EmptyIntersectionTypeChecker.computeEmptyIntersectionEmptiness(this, types)
 
     val isK2: Boolean
+
+    val allowSemiFixationToOtherTypeVariables: Boolean get() = false
 }
 
 

@@ -3,6 +3,9 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
+//Unexpected set of builtin packages
+@file:kotlin.internal.JvmBuiltin
+
 package kotlin.annotation
 
 import kotlin.annotation.AnnotationTarget.*

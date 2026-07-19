@@ -327,4 +327,4 @@ private fun String.testId() = ClassId(StandardClassIds.BASE_TEST_PACKAGE, Name.i
 private fun String.callableId(packageName: FqName) = CallableId(packageName, Name.identifier(this))
 private fun String.callableId(classId: ClassId) = CallableId(classId, Name.identifier(this))
 
-private fun <K, V> Map<K, V>.inverseMap(): Map<V, K> = entries.associate { (k, v) -> v to k }
+private fun <K, V> Map<K, V>.inverseMap(): Map<V, K> = entries.associate { [k, v] -> v to k }

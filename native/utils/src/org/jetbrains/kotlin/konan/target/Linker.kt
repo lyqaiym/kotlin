@@ -78,10 +78,10 @@ class LinkerArguments(
 @Suppress("unused")
 fun LinkerFlags.finalLinkCommands(
     objectFiles: List<ObjectFile>, executable: ExecutableFile,
-    libraries: List<String>, linkerArgs: List<String>,
-    optimize: Boolean, debug: Boolean,
-    kind: LinkerOutputKind, outputDsymBundle: String,
-    mimallocEnabled: Boolean,
+    libraries: List<String>,
+    linkerArgs: List<String>, optimize: Boolean,
+    debug: Boolean, kind: LinkerOutputKind,
+    outputDsymBundle: String, mimallocEnabled: Boolean,
     sanitizer: SanitizerKind? = null,
 ): List<Command> = with(this) {
     LinkerArguments(
@@ -228,19 +228,19 @@ class OhosLinker(targetProperties: OhosConfigurables) : LinkerFlags(targetProper
             +libraries
             +linkerArgs
             +linkerKonanFlags
-            when (sanitizer) {
-                null -> {}
-                SanitizerKind.ADDRESS -> {
-                    +"-lrt"
-                    +provideCompilerRtLibrary("asan")!!
-                    +provideCompilerRtLibrary("asan_cxx")!!
-                }
-                SanitizerKind.THREAD -> {
-                    +"-lrt"
-                    +provideCompilerRtLibrary("tsan")!!
-                    +provideCompilerRtLibrary("tsan_cxx")!!
-                }
-            }
+//            when (sanitizer) {
+//                null -> {}
+//                SanitizerKind.ADDRESS -> {
+//                    +"-lrt"
+//                    +provideCompilerRtLibrary("asan")!!
+//                    +provideCompilerRtLibrary("asan_cxx")!!
+//                }
+//                SanitizerKind.THREAD -> {
+//                    +"-lrt"
+//                    +provideCompilerRtLibrary("tsan")!!
+//                    +provideCompilerRtLibrary("tsan_cxx")!!
+//                }
+//            }
         })
     }
 }
@@ -531,7 +531,9 @@ class MingwLinker(targetProperties: MingwConfigurables)
         }
         val targetSuffix = when (target) {
             KonanTarget.MINGW_X64 -> "x86_64"
-            else -> error("$target is not supported.")
+//            Smart cast to 'KonanTarget' is impossible, because 'target' is a property inherited by class delegation.
+//            This will become an error in language version 2.3
+            else -> error("${target.name} is not supported.")
         }
         val dir = File("$absoluteLlvmHome/lib/clang/").listFiles.firstOrNull()?.absolutePath
         return if (dir != null) "$dir/lib/windows/libclang_rt.$libraryName-$targetSuffix.a" else null

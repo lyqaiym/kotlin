@@ -98,6 +98,7 @@ public class KtNamedFunction extends KtTypeParameterListOwnerStub<KotlinFunction
 
     @Override
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtParameterList getValueParameterList() {
         return getStubOrPsiChild(KtStubElementTypes.VALUE_PARAMETER_LIST);
     }
@@ -261,6 +262,7 @@ public class KtNamedFunction extends KtTypeParameterListOwnerStub<KotlinFunction
     }
 
     @Override
+    @SuppressWarnings("deprecation") // KT-78356
     public KtContractEffectList getContractDescription() {
         return getStubOrPsiChild(KtStubElementTypes.CONTRACT_EFFECT_LIST);
     }

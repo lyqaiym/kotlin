@@ -71,6 +71,7 @@ public class KtTypeParameter extends KtNamedDeclarationStub<KotlinTypeParameterS
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtTypeReference getExtendsBound() {
         return getStubOrPsiChild(KtStubElementTypes.TYPE_REFERENCE);
     }

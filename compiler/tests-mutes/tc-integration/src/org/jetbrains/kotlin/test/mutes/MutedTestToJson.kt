@@ -61,6 +61,6 @@ internal fun transformMutedTestsToJson(flakyTests: List<MutedTest>?, scopeId: St
 
 private fun formatClassnameWithInnerClasses(classname: String): String {
     val classFindRegex = "\\.(?=[A-Z])".toRegex()
-    val (pkg, name) = classname.split(classFindRegex, limit = 2)
+    val [pkg, name] = classname.split(classFindRegex, limit = 2)
     return "$pkg.${name.replace(classFindRegex, "\\$")}"
 }

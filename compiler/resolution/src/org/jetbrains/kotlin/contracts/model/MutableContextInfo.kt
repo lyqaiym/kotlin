@@ -92,7 +92,7 @@ class MutableContextInfo private constructor(
     private fun <D> Map<ESValue, MutableSet<D>>.union(that: Map<ESValue, MutableSet<D>>): MutableMap<ESValue, MutableSet<D>> {
         val result = mutableMapOf<ESValue, MutableSet<D>>()
         result.putAll(this)
-        that.entries.forEach { (thatKey, thatValue) ->
+        that.entries.forEach { [thatKey, thatValue] ->
             val oldValue = result[thatKey] ?: mutableSetOf()
             oldValue.addAll(thatValue)
             result[thatKey] = oldValue

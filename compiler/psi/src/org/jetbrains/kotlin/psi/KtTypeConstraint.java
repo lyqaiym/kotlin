@@ -42,11 +42,13 @@ public class KtTypeConstraint extends KtElementImplStub<KotlinPlaceHolderStub<Kt
     }
 
     @Nullable @IfNotParsed
+    @SuppressWarnings("deprecation") // KT-78356
     public KtSimpleNameExpression getSubjectTypeParameterName() {
         return getStubOrPsiChild(KtStubElementTypes.REFERENCE_EXPRESSION);
     }
 
     @Nullable @IfNotParsed
+    @SuppressWarnings("deprecation") // KT-78356
     public KtTypeReference getBoundTypeReference() {
         return getStubOrPsiChild(KtStubElementTypes.TYPE_REFERENCE);
     }

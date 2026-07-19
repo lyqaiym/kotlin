@@ -25,7 +25,7 @@ class LanguageFeatureMessageRenderer @JvmOverloads constructor(
     private val featureToFlagMap by lazy { buildRuntimeFeatureToFlagMap(this::class.java.classLoader) }
 
     override fun render(obj: Pair<LanguageFeature, LanguageVersionSettings>, renderingContext: RenderingContext): String {
-        val (feature, settings) = obj
+        val [feature, settings] = obj
         val since = feature.sinceVersion
 
         val sb = StringBuilder()
@@ -38,7 +38,7 @@ class LanguageFeatureMessageRenderer @JvmOverloads constructor(
                 when {
                     settings.supportsFeature(feature) && settings.languageVersion < LanguageVersion.KOTLIN_2_0 ->
                         sb.append("not supported in language versions 1.*, please use version 2.0 or later")
-                    feature.kind.testOnly ->
+                    feature.testOnly ->
                         sb.append("unsupported.")
                     since == null ->
                         sb.append("experimental and should be enabled explicitly. This can be done by supplying the compiler argument '$featureFlag', but note that no stability guarantees are provided.")

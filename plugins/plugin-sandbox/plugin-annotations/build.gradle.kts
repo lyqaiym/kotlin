@@ -10,25 +10,25 @@ kotlin {
 
     @Suppress("UNUSED_VARIABLE")
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(kotlinStdlib())
-            }
-        }
-        val jvmMain by getting {
-        }
-
-        val jsMain by getting {
-        }
+//        val commonMain by getting {
+//            dependencies {
+//                implementation(kotlinStdlib())
+//            }
+//        }
+//        val jvmMain by getting {
+//        }
+//
+//        val jsMain by getting {
+//        }
     }
 }
 
 dependencies {
-    implicitDependenciesOnJdkVariantsOfBootstrapStdlib(project)
+//    implicitDependenciesOnJdkVariantsOfBootstrapStdlib(project)
 }
 
 sourceSets {
-    "main" { projectDefault() }
+    "main" { none() }
     "test" { none() }
 }
 

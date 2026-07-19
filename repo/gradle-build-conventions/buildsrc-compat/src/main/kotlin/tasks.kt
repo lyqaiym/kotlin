@@ -397,5 +397,7 @@ fun Project.optInToObsoleteDescriptorBasedAPI() {
 }
 
 fun Project.optInToK1Deprecation() {
+//    Opt-in requirement marker 'org.jetbrains.kotlin.K1Deprecation' is unresolved.
+//    Make sure it's present in the module dependencies.
     optInTo("org.jetbrains.kotlin.K1Deprecation")
 }

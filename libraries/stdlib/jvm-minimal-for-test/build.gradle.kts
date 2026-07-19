@@ -25,43 +25,43 @@ dependencies {
 }
 val stdlibProjectDir = file("$rootDir/libraries/stdlib")
 
-val copyCommonSources by task<Sync> {
-    from(stdlibProjectDir.resolve("src"))
-        .include(
-            "kotlin/Annotation.kt",
-            "kotlin/Any.kt",
-            "kotlin/Array.kt",
-            "kotlin/Arrays.kt",
-            "kotlin/Boolean.kt",
-            "kotlin/Char.kt",
-            "kotlin/CharSequence.kt",
-            "kotlin/Collections.kt",
-            "kotlin/Comparable.kt",
-            "kotlin/Enum.kt",
-            "kotlin/Function.kt",
-            "kotlin/Iterator.kt",
-            "kotlin/Library.kt",
-            "kotlin/Nothing.kt",
-            "kotlin/Number.kt",
-            "kotlin/Primitives.kt",
-            "kotlin/String.kt",
-            "kotlin/Throwable.kt",
-            "kotlin/Unit.kt",
-            "kotlin/util/Standard.kt",
-            "kotlin/annotations/Multiplatform.kt",
-            "kotlin/annotations/WasExperimental.kt",
-            "kotlin/internal/Annotations.kt",
-            "kotlin/internal/AnnotationsBuiltin.kt",
-            "kotlin/contracts/ContractBuilder.kt",
-            "kotlin/contracts/Effect.kt",
-        )
-    from(stdlibProjectDir.resolve("common/src"))
-        .include(
-            "kotlin/ExceptionsH.kt",
-        )
-
-    into(layout.buildDirectory.dir("src/common"))
-}
+//val copyCommonSources by task<Sync> {
+//    from(stdlibProjectDir.resolve("src"))
+//        .include(
+//            "kotlin/Annotation.kt",
+//            "kotlin/Any.kt",
+//            "kotlin/Array.kt",
+//            "kotlin/Arrays.kt",
+//            "kotlin/Boolean.kt",
+//            "kotlin/Char.kt",
+//            "kotlin/CharSequence.kt",
+//            "kotlin/Collections.kt",
+//            "kotlin/Comparable.kt",
+//            "kotlin/Enum.kt",
+//            "kotlin/Function.kt",
+//            "kotlin/Iterator.kt",
+//            "kotlin/Library.kt",
+//            "kotlin/Nothing.kt",
+//            "kotlin/Number.kt",
+//            "kotlin/Primitives.kt",
+//            "kotlin/String.kt",
+//            "kotlin/Throwable.kt",
+//            "kotlin/Unit.kt",
+//            "kotlin/util/Standard.kt",
+//            "kotlin/annotations/Multiplatform.kt",
+//            "kotlin/annotations/WasExperimental.kt",
+//            "kotlin/internal/Annotations.kt",
+//            "kotlin/internal/AnnotationsBuiltin.kt",
+//            "kotlin/contracts/ContractBuilder.kt",
+//            "kotlin/contracts/Effect.kt",
+//        )
+//    from(stdlibProjectDir.resolve("common/src"))
+//        .include(
+//            "kotlin/ExceptionsH.kt",
+//        )
+//
+//    into(layout.buildDirectory.dir("src/common"))
+//}
 
 val copySources by task<Sync> {
     from(stdlibProjectDir.resolve("jvm/runtime"))
@@ -114,43 +114,43 @@ kotlin {
         }
     }
     sourceSets {
-        commonMain {
-            kotlin {
-                srcDir("common-src")
-                srcDir(copyCommonSources)
-            }
-            dependencies {
-                compileOnly(project(":kotlin-stdlib"))
-            }
-        }
-        val jvmMain by getting {
-            kotlin {
-                srcDir("jvm-src")
-                srcDir(copySources)
-            }
-        }
+//        commonMain {
+//            kotlin {
+//                srcDir("common-src")
+//                srcDir(copyCommonSources)
+//            }
+//            dependencies {
+//                compileOnly(project(":kotlin-stdlib"))
+//            }
+//        }
+//        val jvmMain by getting {
+//            kotlin {
+//                srcDir("jvm-src")
+//                srcDir(copySources)
+//            }
+//        }
     }
 }
 
-val jvmJar by tasks.existing(Jar::class) {
-//    dependsOn(builtins)
-    archiveAppendix = null
-//    from(provider { zipTree(builtins.singleFile) }) { include("kotlin/**") }
-    dependsOn(builtinsMetadata)
-    from {
-        includeEmptyDirs = false
-        builtinsMetadata.files.map {
-            zipTree(it).matching { include("**/*.kotlin_builtins") }
-        }
-    }
-}
+//val jvmJar by tasks.existing(Jar::class) {
+////    dependsOn(builtins)
+//    archiveAppendix = null
+////    from(provider { zipTree(builtins.singleFile) }) { include("kotlin/**") }
+//    dependsOn(builtinsMetadata)
+//    from {
+//        includeEmptyDirs = false
+//        builtinsMetadata.files.map {
+//            zipTree(it).matching { include("**/*.kotlin_builtins") }
+//        }
+//    }
+//}
 
 publishing {
-    publications {
-        create<MavenPublication>("internal") {
-            artifact(jvmJar.get())
-        }
-    }
+//    publications {
+//        create<MavenPublication>("internal") {
+//            artifact(jvmJar.get())
+//        }
+//    }
 
     repositories {
         maven(rootProject.layout.buildDirectory.dir("internal/repo"))

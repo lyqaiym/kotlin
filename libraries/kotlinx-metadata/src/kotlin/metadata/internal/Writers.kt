@@ -58,7 +58,7 @@ private fun WriteContext.writeTypeProjection(argument: KmTypeProjection): ProtoB
     if (argument == KmTypeProjection.STAR) {
         t.projection = ProtoBuf.Type.Argument.Projection.STAR
     } else {
-        val (variance, argType) = argument
+        val [variance, argType] = argument
         if (variance == null || argType == null)
             throw InconsistentKotlinMetadataException("Variance and type must be set for non-star type projection")
         if (variance == KmVariance.IN) {

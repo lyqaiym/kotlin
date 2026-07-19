@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.konan.target.Family
 
 buildscript {
     dependencies {
-//        classpath(libs.gson)
+        classpath(libs.gson)
     }
 }
 
@@ -25,8 +25,9 @@ repositories {
 }
 
 dependencies {
-//    implementation(libs.gson)
-//    implementation(libs.kotlinx.coroutines.core)
+    implementation(kotlinStdlib())
+    implementation(libs.gson)
+    implementation(libs.kotlinx.coroutines.core)
     println("dependencies:rootProject.name=${rootProject.name}")
     println("dependencies:isNativeBuildToolsProject=${isNativeBuildToolsProject}")
     println("dependencies:isPerformanceProject=${isPerformanceProject}")

@@ -162,7 +162,7 @@ private fun extractLambdaInfoFromFunctionalType(
         this ?: expectedParameters.getOrNull(index)?.type?.unwrap() ?: expectedType.builtIns.nullableAnyType
 
     // Extracting parameters and receiver type, taking into account the actual lambda definition and expected lambda type
-    val (parameters, receiver) = when {
+    val [parameters, receiver] = when {
         argumentAsFunctionExpression != null -> {
             // lambda has explicit functional type - use types from it if available
             (parametersTypes?.mapIndexed { index, type ->
@@ -186,7 +186,7 @@ private fun extractLambdaInfoFromFunctionalType(
                 type ?: run {
                     expectedParameters.getOrNull(index)?.type?.unwrap()
                 } ?: expectedType.builtIns.nullableAnyType
-            } ?: expectedParameters.map { it.type.unwrap() }) to expectedReceiver?.unwrap()
+            } ?: expectedParameters.map { it.type.unwrap() }) to expectedReceiver.unwrap()
         }
 
         else ->

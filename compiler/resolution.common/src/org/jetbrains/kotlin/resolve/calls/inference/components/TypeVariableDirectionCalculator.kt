@@ -69,7 +69,7 @@ class TypeVariableDirectionCalculator(
 
         directions[variable] = direction
 
-        for ((otherVariable, otherDirection) in getConstraintDependencies(variable, direction)) {
+        for ([otherVariable, otherDirection] in getConstraintDependencies(variable, direction)) {
             enterToNode(otherVariable, otherDirection)
         }
     }

@@ -37,7 +37,7 @@ suspend fun ExternalDependenciesResolver.resolveFromScriptSourceAnnotations(
     annotations: Iterable<ScriptSourceAnnotation<*>>
 ): ResultWithDiagnostics<List<File>> {
     val reports = mutableListOf<ScriptDiagnostic>()
-    annotations.forEach { (annotation, locationWithId) ->
+    annotations.forEach { [annotation, locationWithId] ->
         when (annotation) {
             is Repository -> {
                 val options = SimpleExternalDependenciesResolverOptionsParser(*annotation.options, locationWithId = locationWithId)
@@ -61,7 +61,7 @@ suspend fun ExternalDependenciesResolver.resolveFromScriptSourceAnnotations(
     }
 
     return reports + annotations.filterByAnnotationType<DependsOn>()
-        .flatMapSuccess { (annotation, locationWithId) ->
+        .flatMapSuccess { [annotation, locationWithId] ->
             SimpleExternalDependenciesResolverOptionsParser(
                 *annotation.options,
                 locationWithId = locationWithId

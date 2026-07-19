@@ -52,7 +52,7 @@ abstract class IrDeepCopyBase : IrElementTransformerVoid() {
 
     protected fun <T : IrMemberAccessExpression<*>> T.transformValueArguments(original: T) {
         rawCopyValueArgumentsFrom(original)
-        for ((i, arg) in original.arguments.withIndex()) {
+        for ([i, arg] in original.arguments.withIndex()) {
             arguments[i] = arg?.transform()
         }
     }

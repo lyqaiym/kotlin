@@ -344,7 +344,7 @@ internal open class ScopeBasedTowerLevel protected constructor(
         name: Name,
         extensionReceiver: ReceiverValueWithSmartCastInfo?
     ): Collection<CandidateWithBoundDispatchReceiver> =
-        resolutionScope.getContributedObjectVariablesIncludeDeprecated(name, location).map { (classifier, isDeprecated) ->
+        resolutionScope.getContributedObjectVariablesIncludeDeprecated(name, location).map { [classifier, isDeprecated] ->
             createCandidateDescriptor(
                 classifier,
                 dispatchReceiver = null,
@@ -531,7 +531,7 @@ private fun ResolutionScope.getContributedObjectVariablesIncludeDeprecated(
     name: Name,
     location: LookupLocation
 ): Collection<DescriptorWithDeprecation<VariableDescriptor>> {
-    val (classifier, isOwnerDeprecated) = getContributedClassifierIncludeDeprecated(name, location) ?: return emptyList()
+    val [classifier, isOwnerDeprecated] = getContributedClassifierIncludeDeprecated(name, location) ?: return emptyList()
     val objectDescriptor = getFakeDescriptorForObject(classifier) ?: return emptyList()
     return listOf(DescriptorWithDeprecation(objectDescriptor, isOwnerDeprecated))
 }

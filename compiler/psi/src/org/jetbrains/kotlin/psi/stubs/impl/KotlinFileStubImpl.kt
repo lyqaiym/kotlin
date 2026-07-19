@@ -61,6 +61,7 @@ class KotlinFileStubImpl(
     override fun toString(): String = "PsiJetFileStubImpl[" + "package=" + getPackageFqName().asString() + "]"
 
     override fun findImportsByAlias(alias: String): List<KotlinImportDirectiveStub> {
+        @Suppress("DEPRECATION") // KT-78356
         val importList = childrenStubs.firstOrNull { it.stubType == IMPORT_LIST } ?: return emptyList()
         return importList.childrenStubs.filterIsInstance<KotlinImportDirectiveStub>().filter {
             it.childrenStubs.firstIsInstanceOrNull<KotlinImportAliasStub>()?.getName() == alias

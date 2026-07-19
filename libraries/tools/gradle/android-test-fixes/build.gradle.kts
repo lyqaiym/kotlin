@@ -1,7 +1,7 @@
 import plugins.KotlinBuildPublishingPlugin
 
 plugins {
-    id("gradle-plugin-common-configuration")
+//    id("gradle-plugin-common-configuration")
 }
 
 repositories {
@@ -9,34 +9,34 @@ repositories {
 }
 
 dependencies {
-    commonCompileOnly(gradleKotlinDsl())
-//    No matching variant of com.android.tools.build:gradle-api:8.13.2 was found
-    commonCompileOnly(libs.android.gradle.plugin.gradle.api) {
-        overrideTargetJvmVersion(11)
-        isTransitive = false
-    }
+//    commonCompileOnly(gradleKotlinDsl())
+////    No matching variant of com.android.tools.build:gradle-api:8.13.2 was found
+//    commonCompileOnly(libs.android.gradle.plugin.gradle.api) {
+//        overrideTargetJvmVersion(11)
+//        isTransitive = false
+//    }
 }
 
-gradlePlugin {
-    plugins {
-        create("android-test-fixes") {
-            id = "org.jetbrains.kotlin.test.fixes.android"
-            displayName = "AndroidTestFixes"
-            description = displayName
-            implementationClass = "org.jetbrains.kotlin.gradle.test.fixes.android.AndroidTestFixesPlugin"
-        }
-    }
-}
+//gradlePlugin {
+//    plugins {
+//        create("android-test-fixes") {
+//            id = "org.jetbrains.kotlin.test.fixes.android"
+//            displayName = "AndroidTestFixes"
+//            description = displayName
+//            implementationClass = "org.jetbrains.kotlin.gradle.test.fixes.android.AndroidTestFixesPlugin"
+//        }
+//    }
+//}
 
 // Disable releasing for this plugin
 // It is not intended to be released publicly
-tasks.withType<PublishToMavenRepository>()
-    .configureEach {
-        if (name.endsWith("PublicationTo${KotlinBuildPublishingPlugin.REPOSITORY_NAME}Repository")) {
-            enabled = false
-        }
-    }
-
-tasks.named("publishPlugins") {
-    enabled = false
-}
+//tasks.withType<PublishToMavenRepository>()
+//    .configureEach {
+//        if (name.endsWith("PublicationTo${KotlinBuildPublishingPlugin.REPOSITORY_NAME}Repository")) {
+//            enabled = false
+//        }
+//    }
+//
+//tasks.named("publishPlugins") {
+//    enabled = false
+//}

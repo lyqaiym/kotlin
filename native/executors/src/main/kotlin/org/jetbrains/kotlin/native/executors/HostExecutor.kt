@@ -170,7 +170,7 @@ class HostExecutor : Executor {
             environment().putAll(request.environment)
         }.scoped { process ->
             val streams = ProcessStreams(this, process, request.stdin, request.stdout, request.stderr)
-            val (isTimeout, duration) = measureTimedValue {
+            val [isTimeout, duration] = measureTimedValue {
                 !process.waitFor(request.timeout)
             }
             suspend fun cancel() {

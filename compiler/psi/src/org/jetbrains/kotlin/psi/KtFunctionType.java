@@ -69,6 +69,7 @@ public class KtFunctionType extends KtElementImplStub<KotlinFunctionTypeStub> im
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtParameterList getParameterList() {
         return getStubOrPsiChild(KtStubElementTypes.VALUE_PARAMETER_LIST);
     }
@@ -80,6 +81,7 @@ public class KtFunctionType extends KtElementImplStub<KotlinFunctionTypeStub> im
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtFunctionTypeReceiver getReceiver() {
         return getStubOrPsiChild(KtStubElementTypes.FUNCTION_TYPE_RECEIVER);
     }
@@ -94,6 +96,7 @@ public class KtFunctionType extends KtElementImplStub<KotlinFunctionTypeStub> im
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtContextReceiverList getContextReceiverList() {
         return getStubOrPsiChild(KtStubElementTypes.CONTEXT_RECEIVER_LIST);
     }
@@ -108,6 +111,7 @@ public class KtFunctionType extends KtElementImplStub<KotlinFunctionTypeStub> im
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // KT-78356
     public KtTypeReference getReturnTypeReference() {
         return getStubOrPsiChild(KtStubElementTypes.TYPE_REFERENCE);
     }

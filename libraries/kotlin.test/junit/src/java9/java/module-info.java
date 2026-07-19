@@ -1,7 +1,7 @@
 @SuppressWarnings("requires-transitive-automatic") // junit is an auto-module
 module kotlin.test.junit {
     requires transitive kotlin.stdlib;
-    requires transitive kotlin.test;
+    //requires transitive kotlin.test;
 
     requires transitive junit;
 
