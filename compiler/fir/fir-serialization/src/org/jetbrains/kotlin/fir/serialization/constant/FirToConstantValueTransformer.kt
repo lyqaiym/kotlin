@@ -128,7 +128,7 @@ private fun FirAnnotation.evaluateToAnnotationValue(session: FirSession, scopeSe
         ?: errorWithAttachment("Can't compute constant annotation argument mapping") {
             withFirEntry("annotation", this@evaluateToAnnotationValue)
         }
-    val result = argumentMapping.mapping.mapValuesTo(mutableMapOf()) { (name, _) ->
+    val result = argumentMapping.mapping.mapValuesTo(mutableMapOf()) { [name, _] ->
         mappingFromFrontend[name]?.let {
             val evaluatedValue = (it as? FirEvaluatorResult.Evaluated)?.result
             evaluatedValue?.toConstantValue(session, scopeSession)

@@ -96,9 +96,9 @@ private fun ObjCExportContext.translateToObjCExtensionFacades(file: KtResolvedOb
                 if (expandedSymbol == null) return@groupBy null
                 else getObjCClassOrProtocolName(expandedSymbol).objCName
             }
-        }.mapNotNull { (name, symbols) -> if (name == null) null else name to symbols }
+        }.mapNotNull { [name, symbols] -> if (name == null) null else name to symbols }
 
-    return extensions.mapNotNull { (objCName, extensionSymbols) ->
+    return extensions.mapNotNull { [objCName, extensionSymbols] ->
         val extensionType = extensionSymbols.map { it.receiverParameter?.returnType }.firstNotNullOf { it?.symbol as? KaClassSymbol }
         val translatedMembers = extensionSymbols.flatMap { ext -> translateToObjCExportStub(ext) }
         if (translatedMembers.isEmpty()) return@mapNotNull null

@@ -188,7 +188,7 @@ fun createSubstitutionForScope(
     val capturedOrType = session.typeContext.captureFromArguments(type, CaptureStatus.FROM_EXPRESSION) ?: type
     val capturedTypeArguments = (capturedOrType as ConeClassLikeType).typeArguments
 
-    return typeParameters.withIndex().mapNotNull { (index, typeParameter) ->
+    return typeParameters.withIndex().mapNotNull { [index, typeParameter] ->
         val capturedTypeArgument = capturedTypeArguments.getOrNull(index) ?: return@mapNotNull null
         require(capturedTypeArgument is ConeKotlinType) {
             "There should left no projections after capture conversion, but $capturedTypeArgument found at $index"

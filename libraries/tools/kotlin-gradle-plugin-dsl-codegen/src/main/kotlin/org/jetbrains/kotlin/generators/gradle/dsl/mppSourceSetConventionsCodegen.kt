@@ -5,14 +5,14 @@
 
 package org.jetbrains.kotlin.generators.gradle.dsl
 
-import org.jetbrains.kotlin.generators.arguments.getPrinterToFile
+//import org.jetbrains.kotlin.generators.arguments.getPrinterToFile
 import org.jetbrains.kotlin.utils.Printer
 import java.io.File
 
-fun main() {
-    generateKotlinMultiplatformSourceSetConventionsKt(::getPrinterToFile)
-    generateKotlinMultiplatformSourceSetConventionsImplKt(::getPrinterToFile)
-}
+//fun main() {
+//    generateKotlinMultiplatformSourceSetConventionsKt(::getPrinterToFile)
+//    generateKotlinMultiplatformSourceSetConventionsImplKt(::getPrinterToFile)
+//}
 
 internal fun generateKotlinMultiplatformSourceSetConventionsKt(withPrinterToFile: (targetFile: File, Printer.() -> Unit) -> Unit) {
     val sourceFile = File(kotlinGradlePluginApiSourceRoot)

@@ -184,7 +184,7 @@ class KotlinDeclarationInCompiledFileSearcher {
         }
 
         if (ktTypes.size != psiTypes.size) return false
-        ktTypes.zip(psiTypes).forEach { (ktType, psiType) ->
+        ktTypes.zip(psiTypes).forEach { [ktType, psiType] ->
             if (!areTypesTheSame(ktType, psiType, false)) return false
         }
         return true
@@ -225,7 +225,7 @@ class KotlinDeclarationInCompiledFileSearcher {
         if (parametersCount != ktTypes.size) return false
         memberParameterList.parameters.map { it.type }
             .zip(ktTypes)
-            .forEach { (psiType, ktTypeRef) ->
+            .forEach { [psiType, ktTypeRef] ->
                 if (!areTypesTheSame(ktTypeRef, psiType, (ktTypeRef.parent as? KtParameter)?.isVarArg == true)) return false
             }
         return true

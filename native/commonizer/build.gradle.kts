@@ -28,10 +28,12 @@ dependencies {
     compileOnly(project(":compiler:ir.serialization.common"))
     compileOnly(project(":compiler:frontend"))
     compileOnly(project(":core:compiler.common.native"))
+    implementation(project(":core:deserialization"))
     compileOnly(project(":native:frontend.native"))
     compileOnly(project(":kotlin-util-klib-metadata"))
     compileOnly(intellijCore())
     compileOnly(libs.intellij.fastutil)
+    compileOnly(project(":core:descriptors"))
 
     // This dependency is necessary to keep the right dependency record inside of POM file:
     publishedCompile(project(":kotlin-compiler"))

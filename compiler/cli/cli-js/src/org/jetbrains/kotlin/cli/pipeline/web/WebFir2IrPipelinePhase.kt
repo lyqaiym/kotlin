@@ -36,7 +36,7 @@ object WebFir2IrPipelinePhase : PipelinePhase<WebFrontendPipelineArtifact, JsFir
     postActions = setOf(PerformanceNotifications.TranslationToIrFinished, CheckCompilationErrors.CheckDiagnosticCollector)
 ) {
     override fun executePhase(input: WebFrontendPipelineArtifact): JsFir2IrPipelineArtifact? {
-        val (analyzedOutput, configuration, diagnosticsReporter, moduleStructure) = input
+        val [analyzedOutput, configuration, diagnosticsReporter, moduleStructure] = input
         val fir2IrActualizedResult = transformFirToIr(moduleStructure, analyzedOutput.output, diagnosticsReporter)
         return JsFir2IrPipelineArtifact(
             fir2IrActualizedResult,

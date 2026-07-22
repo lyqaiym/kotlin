@@ -5,6 +5,8 @@
 
 package kotlin.js
 
+import kotlin.internal.UsedFromCompilerGeneratedCode
+
 internal external interface Ctor {
     var `$imask$`: BitMask?
     var `$metadata$`: Metadata
@@ -69,7 +71,7 @@ internal fun isSuspendFunction(obj: dynamic, arity: Int): Boolean {
     return result
 }
 
-private fun isJsArray(obj: Any): Boolean {
+internal fun isJsArray(obj: Any): Boolean {
     return js("Array").isArray(obj).unsafeCast<Boolean>()
 }
 
@@ -92,6 +94,10 @@ internal fun isIntArray(a: dynamic): Boolean = jsInstanceOf(a, js("Int32Array"))
 internal fun isFloatArray(a: dynamic): Boolean = jsInstanceOf(a, js("Float32Array"))
 internal fun isDoubleArray(a: dynamic): Boolean = jsInstanceOf(a, js("Float64Array"))
 internal fun isLongArray(a: dynamic): Boolean = isJsArray(a) && a.`$type$` === "LongArray"
+
+//No function kotlin/js/jsIsFunction found
+@UsedFromCompilerGeneratedCode
+internal fun jsIsFunction(a: dynamic): Boolean = jsTypeOf(a) === "function"
 
 internal fun jsGetPrototypeOf(jsClass: dynamic) = js("Object").getPrototypeOf(jsClass)
 

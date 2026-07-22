@@ -52,7 +52,7 @@ abstract class CompilationOutputs {
             }
         }
 
-        dependencies.forEach { (name, content) ->
+        dependencies.forEach { [name, content] ->
             outputDir.resolve("$name${moduleKind.extension}").writeAsJsFile(content)
         }
 

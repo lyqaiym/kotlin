@@ -236,7 +236,7 @@ class ReifiedTypeInliner<KT : KotlinTypeMarker>(
         asmType: Type,
         safe: Boolean
     ) = rewriteNextTypeInsn(insn, Opcodes.CHECKCAST) { stubCheckcast: AbstractInsnNode ->
-        if (stubCheckcast !is TypeInsnNode) return false
+        if (stubCheckcast !is TypeInsnNode) return@rewriteNextTypeInsn false
 
         val newMethodNode = MethodNode(Opcodes.API_VERSION)
         generateAsCast(InstructionAdapter(newMethodNode), intrinsicsSupport.toKotlinType(type), asmType, safe, unifiedNullChecks)
@@ -251,7 +251,7 @@ class ReifiedTypeInliner<KT : KotlinTypeMarker>(
         // TODO: refine max stack calculation (it's not always as big as +4)
         maxStackSize = max(maxStackSize, 4)
 
-        return true
+        return@rewriteNextTypeInsn true
     }
 
     private fun processIs(
@@ -260,7 +260,7 @@ class ReifiedTypeInliner<KT : KotlinTypeMarker>(
         type: KT,
         asmType: Type
     ) = rewriteNextTypeInsn(insn, Opcodes.INSTANCEOF) { stubInstanceOf: AbstractInsnNode ->
-        if (stubInstanceOf !is TypeInsnNode) return false
+        if (stubInstanceOf !is TypeInsnNode) return@rewriteNextTypeInsn false
 
         val newMethodNode = MethodNode(Opcodes.API_VERSION)
         generateIsCheck(InstructionAdapter(newMethodNode), intrinsicsSupport.toKotlinType(type), asmType)
@@ -270,7 +270,7 @@ class ReifiedTypeInliner<KT : KotlinTypeMarker>(
 
         // TODO: refine max stack calculation (it's not always as big as +2)
         maxStackSize = max(maxStackSize, 2)
-        return true
+        return@rewriteNextTypeInsn true
     }
 
     private fun processTypeOf(
@@ -286,7 +286,10 @@ class ReifiedTypeInliner<KT : KotlinTypeMarker>(
         instructions.remove(stubConstNull)
 
         maxStackSize = max(maxStackSize, newMethodNode.maxStack)
-        return true
+//        Return in function with expression body and without explicit return type.
+//        Use block body '{...}' or add an explicit return type. This will become an error in language version 2.5.
+//        See https://youtrack.jetbrains.com/issue/KTLC-288.
+        return@rewriteNextTypeInsn true
     }
 
     private fun processPlugin(insn: MethodInsnNode, instructions: InsnList, type: KT): Boolean {
@@ -414,7 +417,7 @@ class TypeParameterMappings<KT : KotlinTypeMarker>(
 
     init {
         with(typeSystem) {
-            for ((parameter, type) in typeArguments.entries) {
+            for ([parameter, type] in typeArguments.entries) {
                 val name = parameter.getName().identifier
                 val sw = BothSignatureWriter(BothSignatureWriter.Mode.TYPE)
                 mappingsByName[name] = TypeParameterMapping(
@@ -431,7 +434,7 @@ class TypeParameterMappings<KT : KotlinTypeMarker>(
     fun hasReifiedParameters() = mappingsByName.values.any { it.isReified }
 
     internal inline fun forEach(block: (String, TypeParameterMapping<KT>) -> Unit) =
-        mappingsByName.entries.forEach { (name, mapping) -> block(name, mapping) }
+        mappingsByName.entries.forEach { [name, mapping] -> block(name, mapping) }
 }
 
 class TypeParameterMapping<KT : KotlinTypeMarker>(

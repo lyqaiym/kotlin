@@ -6,6 +6,7 @@ plugins {
 }
 
 dependencies {
+    api(project(":core:language.version-settings"))
     api(project(":compiler:config"))
     api(project(":core:compiler.common.jvm"))
     compileOnly(libs.intellij.asm)

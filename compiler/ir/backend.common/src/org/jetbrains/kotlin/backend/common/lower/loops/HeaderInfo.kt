@@ -144,7 +144,7 @@ class ProgressionHeaderInfo(
                     val constLimitAsULong = progressionType.maxValueAsLong.toULong()
                     lastValueAsULong > (constLimitAsULong - stepValueAsLong.toULong())
                 }
-                else -> error("Unexpected progression direction")
+//                else -> error("Unexpected progression direction")
             }
         } else {
             val lastValueAsLong = last.constLongValue ?: return@lazy true  // If "last" is not a const Number or Char.
@@ -157,7 +157,7 @@ class ProgressionHeaderInfo(
                     val constLimitAsLong = progressionType.maxValueAsLong
                     lastValueAsLong > (constLimitAsLong - stepValueAsLong)
                 }
-                else -> error("Unexpected progression direction")
+//                else -> error("Unexpected progression direction")
             }
         }
     }

@@ -58,7 +58,7 @@ public class KotlinFileBasedDeclarationProvider(public val kotlinFile: KtFile) :
             tasks += Task(startingChunks, kotlinFile)
 
             while (!tasks.isEmpty()) {
-                val (chunks, element) = tasks.removeFirst()
+                val [chunks, element] = tasks.removeFirst()
                 assert(chunks.isNotEmpty())
 
                 if (element !is KtNamedDeclaration || element.nameAsName != chunks[0]) {

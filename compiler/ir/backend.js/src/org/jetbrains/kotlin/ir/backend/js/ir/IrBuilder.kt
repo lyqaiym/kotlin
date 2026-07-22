@@ -42,7 +42,7 @@ object JsIrBuilder {
         ).apply {
             typeArguments?.let {
                 assert(typeArguments.size == this.typeArguments.size)
-                it.withIndex().forEach { (i, t) ->
+                it.withIndex().forEach { [i, t] ->
                     this.typeArguments[i] = t
                 }
             }
@@ -77,7 +77,7 @@ object JsIrBuilder {
         ).apply {
             typeArguments?.let {
                 assert(it.size == this.typeArguments.size)
-                it.withIndex().forEach { (i, t) ->
+                it.withIndex().forEach { [i, t] ->
                     this.typeArguments[i] = t
                 }
             }
@@ -106,14 +106,14 @@ object JsIrBuilder {
         ).apply {
             typeArguments?.let {
                 assert(it.size == this.typeArguments.size)
-                it.withIndex().forEach { (i, t) ->
+                it.withIndex().forEach { [i, t] ->
                     this.typeArguments[i] = t
                 }
             }
 
             constructorTypeArguments?.let {
                 assert(it.size == this.typeArguments.size)
-                it.withIndex().forEach { (i, t) ->
+                it.withIndex().forEach { [i, t] ->
                     this.typeArguments[i] = t
                 }
             }

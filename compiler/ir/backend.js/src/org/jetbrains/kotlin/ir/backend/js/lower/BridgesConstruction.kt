@@ -72,7 +72,7 @@ abstract class BridgesConstruction<T : JsCommonBackendContext>(val context: T) :
     }
 
     private fun generateBridges(function: IrSimpleFunction): List<IrDeclaration>? {
-        val (specialOverride: IrSimpleFunction?, specialOverrideInfo) =
+        val [specialOverride: IrSimpleFunction?, specialOverrideInfo] =
             specialBridgeMethods.findSpecialWithOverride(function) ?: Pair(null, null)
 
         val specialOverrideSignature = specialOverride?.let { FunctionAndSignature(it) }

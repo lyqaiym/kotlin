@@ -10,11 +10,11 @@ kotlin {
 
     @Suppress("UNUSED_VARIABLE")
     sourceSets {
-//        val commonMain by getting {
-//            dependencies {
-//                implementation(kotlinStdlib())
-//            }
-//        }
+        val commonMain by getting {
+            dependencies {
+                implementation(kotlinStdlib())
+            }
+        }
 //        val jvmMain by getting {
 //        }
 //

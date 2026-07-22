@@ -179,7 +179,7 @@ class FirTypeResolverImpl(private val session: FirSession) : FirTypeResolver() {
         topContainer: FirDeclaration?,
         isOperandOfIsOperator: Boolean
     ): ConeKotlinType {
-        val (symbol, substitutor) = when (result) {
+        val [symbol, substitutor] = when (result) {
             is TypeResolutionResult.Resolved -> {
                 result.typeCandidate.symbol to result.typeCandidate.substitutor
             }
@@ -304,7 +304,7 @@ class FirTypeResolverImpl(private val session: FirSession) : FirTypeResolver() {
         //    }
         //}
         val explicitTypeArgumentsNumber = size
-        for ((typeParameterIndex, typeParameter) in symbol.fir.typeParameters.withIndex()) {
+        for ([typeParameterIndex, typeParameter] in symbol.fir.typeParameters.withIndex()) {
             if (typeParameterIndex < explicitTypeArgumentsNumber) {
                 // Ignore explicit type parameters since only outer type parameters are relevant
                 continue

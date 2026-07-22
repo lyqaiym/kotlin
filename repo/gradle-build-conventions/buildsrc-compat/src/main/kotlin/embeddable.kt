@@ -57,7 +57,7 @@ val packagesToExcludeFromDummy =
         "*.txt"
     )
 
-private fun ShadowJar.configureEmbeddableCompilerRelocation(withJavaxInject: Boolean = true) {
+fun ShadowJar.configureEmbeddableCompilerRelocation(withJavaxInject: Boolean = true) {
     relocate("com.google.protobuf", "org.jetbrains.kotlin.protobuf")
     relocate("com.intellij", "$kotlinEmbeddableRootPackage.com.intellij") {
         // These are not real packages, but important string constants which are used by xml-reader.

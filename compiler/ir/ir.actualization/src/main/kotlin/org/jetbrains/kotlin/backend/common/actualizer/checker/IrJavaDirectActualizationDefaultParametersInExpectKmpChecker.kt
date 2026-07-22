@@ -17,7 +17,7 @@ import org.jetbrains.kotlin.name.StandardClassIds
 internal object IrJavaDirectActualizationDefaultParametersInExpectKmpChecker : IrExpectActualChecker {
     override fun check(context: IrExpectActualChecker.Context) = with(context) {
         val expectToActual = expectActualMap.expectToActual
-        for ((expectSymbol, actualSymbol) in expectToActual) {
+        for ([expectSymbol, actualSymbol] in expectToActual) {
             if (actualSymbol !is IrFunctionSymbol) continue
             if (expectSymbol !is IrFunctionSymbol) continue
 

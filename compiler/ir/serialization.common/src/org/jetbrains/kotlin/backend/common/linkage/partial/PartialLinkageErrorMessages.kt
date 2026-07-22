@@ -318,7 +318,7 @@ private fun Appendable.unusableClassifier(
     rendering: CauseRendering,
     printIntermediateCause: Boolean
 ): Appendable {
-    val (rootCause: Unusable.CanBeRootCause, intermediateCause: Unusable.DueToOtherClassifier?) = when (cause) {
+    val [rootCause: Unusable.CanBeRootCause, intermediateCause: Unusable.DueToOtherClassifier?] = when (cause) {
         is Unusable.CanBeRootCause -> cause to null
         is Unusable.DueToOtherClassifier -> cause.rootCause to cause
     }
@@ -485,7 +485,7 @@ private fun StringBuilder.expressionWithUnusableClassifier(
 }
 
 private fun StringBuilder.expression(expression: IrExpression, continuation: (ExpressionKind) -> Appendable): Appendable {
-    val (expressionKind, referencedDeclarationKind) = expression.expression
+    val [expressionKind, referencedDeclarationKind] = expression.expression
 
     // Prefix may be null. But when it's not null, it is always capitalized.
     val hasPrefix = expressionKind.prefix != null

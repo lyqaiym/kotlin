@@ -1600,7 +1600,7 @@ class CallAndReferenceGenerator(
         argumentMapping: Map<FirExpression, FirValueParameter>,
         substitutor: ConeSubstitutor,
     ): List<Pair<FirValueParameter, IrExpression>> =
-        argumentMapping.entries.mapNotNull { (argument, parameter) ->
+        argumentMapping.entries.mapNotNull { [argument, parameter] ->
             if (visitor.isGetClassOfUnresolvedTypeInAnnotation(argument)) null
             else (parameter to convertArgument(argument, parameter, substitutor))
         }

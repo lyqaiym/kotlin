@@ -230,7 +230,7 @@ abstract class AbstractFirDeserializedSymbolProvider(
         return when (val result = extractClassMetadata(classId, parentContext)) {
             is ClassMetadataFindResult.NoMetadata -> FirRegularClassSymbol(classId) to result.classPostProcessor
             is ClassMetadataFindResult.Metadata -> {
-                val (nameResolver, classProto, annotationDeserializer, moduleData, sourceElement, postProcessor) = result
+                val [nameResolver, classProto, annotationDeserializer, moduleData, sourceElement, postProcessor] = result
                 moduleData ?: return null to null
                 val symbol = FirRegularClassSymbol(classId)
                 deserializeClassToSymbol(

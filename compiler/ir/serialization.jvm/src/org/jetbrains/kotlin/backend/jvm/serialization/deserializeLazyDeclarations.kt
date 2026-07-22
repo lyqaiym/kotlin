@@ -222,7 +222,7 @@ private fun buildFakeOverridesForLocalClasses(
 class PrePopulatedDeclarationTable(
     sig2symbol: Map<IdSignature, IrSymbol>
 ) : FakeOverrideDeclarationTable(JvmIrMangler) {
-    private val symbol2Sig = sig2symbol.entries.associate { (x, y) -> y to x }
+    private val symbol2Sig = sig2symbol.entries.associate { [x, y] -> y to x }
 
     override fun tryComputeBackendSpecificSignature(declaration: IrDeclaration): IdSignature? {
         symbol2Sig[declaration.symbol]?.let { return it }

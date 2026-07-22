@@ -46,7 +46,7 @@ class DumpSyntheticAccessors(context: LoweringContext) : ModuleLoweringPass {
                 writer.appendLine("/* MODULE name=${irModule.name.asString()} */")
                 writer.appendLine()
 
-                fileDumps.entries.sortedBy { it.key }.forEach { (fileKey, dumps) ->
+                fileDumps.entries.sortedBy { it.key }.forEach { [fileKey, dumps] ->
                     if (dumps.isNotEmpty()) {
                         writer.appendLine("/* FILE package=${fileKey.packageFqName.ifEmpty { "<root>" }} fileName=${fileKey.fileName} */")
                         writer.appendLine()

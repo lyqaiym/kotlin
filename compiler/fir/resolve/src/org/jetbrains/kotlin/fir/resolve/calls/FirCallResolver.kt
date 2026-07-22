@@ -207,7 +207,7 @@ class FirCallResolver(
         towerResolver.reset()
 
         val result = towerResolver.runResolver(info, resolutionContext, collector)
-        var (reducedCandidates, applicability) = reduceCandidates(result, explicitReceiver, resolutionContext)
+        var [reducedCandidates, applicability] = reduceCandidates(result, explicitReceiver, resolutionContext)
         reducedCandidates = overloadByLambdaReturnTypeResolver.reduceCandidates(qualifiedAccess, reducedCandidates, reducedCandidates)
 
         return ResolutionResult(info, applicability, reducedCandidates)
@@ -467,7 +467,7 @@ class FirCallResolver(
             )
         }
 
-        val (reducedCandidates, applicability) = reduceCandidates(result, callableReferenceAccess.explicitReceiver)
+        val [reducedCandidates, applicability] = reduceCandidates(result, callableReferenceAccess.explicitReceiver)
 
         (callableReferenceAccess.explicitReceiver?.unwrapSmartcastExpression() as? FirResolvedQualifier)?.replaceResolvedToCompanionObject(
             reducedCandidates.isNotEmpty() && reducedCandidates.all { it.isFromCompanionObjectTypeScope }
@@ -702,7 +702,7 @@ class FirCallResolver(
     private fun selectDelegatingConstructorCall(
         call: FirDelegatedConstructorCall, name: Name, result: CandidateCollector, callInfo: CallInfo
     ): FirDelegatedConstructorCall {
-        val (reducedCandidates, applicability) = reduceCandidates(result)
+        val [reducedCandidates, applicability] = reduceCandidates(result)
 
         val nameReference = createResolvedNamedReference(
             call.calleeReference,

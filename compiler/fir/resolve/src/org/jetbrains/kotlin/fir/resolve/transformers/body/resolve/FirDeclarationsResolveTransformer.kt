@@ -600,7 +600,7 @@ open class FirDeclarationsResolveTransformer(
 
             check(!candidateStorage.hasContradiction) { "We only should try fixing variables on successful provideDelegate candidate" }
             // We don't actually fix it, but add an equality constraint as approximation
-            candidateSystem.addEqualityConstraint(returnTypeBasedOnVariable, resultType!!, ProvideDelegateFixationPosition)
+            candidateSystem.addEqualityConstraint(returnTypeBasedOnVariable, resultType, ProvideDelegateFixationPosition)
 
             check(!candidateStorage.hasContradiction) {
                 "Currently, we see no cases when contradiction might happen after adding equality constraint like that." +
@@ -821,7 +821,7 @@ open class FirDeclarationsResolveTransformer(
                     (it as? FirExpression)?.resolvedType
                 } ?:session.builtinTypes.unitType.coneType
                 replSnippet.replaceResultTypeRef(
-                    returnType.toFirResolvedTypeRef(replSnippet.source?.fakeElement(KtFakeSourceElementKind.ImplicitFunctionReturnType))
+                    returnType.toFirResolvedTypeRef(replSnippet.source.fakeElement(KtFakeSourceElementKind.ImplicitFunctionReturnType))
                 )
                 for (resolveExt in session.extensionService.replSnippetResolveExtensions) {
                     resolveExt.updateResolved(replSnippet)

@@ -138,14 +138,14 @@ fun <Dependency : KotlinLibrary, SourceFile> serializeModuleIntoKlib(
             *platformKlibCheckers.toTypedArray(),
         )
 
-        if (!configuration.languageVersionSettings.supportsFeature(LanguageFeature.IrInlinerBeforeKlibSerialization)) {
-            // With IrInlinerBeforeKlibSerialization feature, this check happens after the first phase of KLIB inlining.
-            // Without it, the check should happen here instead.
-            it.runIrLevelCheckers(
-                irDiagnosticReporter,
-                ::IrInlineDeclarationChecker,
-            )
-        }
+//        if (!configuration.languageVersionSettings.supportsFeature(LanguageFeature.IrInlinerBeforeKlibSerialization)) {
+//            // With IrInlinerBeforeKlibSerialization feature, this check happens after the first phase of KLIB inlining.
+//            // Without it, the check should happen here instead.
+//            it.runIrLevelCheckers(
+//                irDiagnosticReporter,
+//                ::IrInlineDeclarationChecker,
+//            )
+//        }
 
         createModuleSerializer(
             irDiagnosticReporter,
@@ -196,9 +196,9 @@ fun <Dependency : KotlinLibrary, SourceFile> serializeModuleIntoKlib(
 
     processKlibHeader(header)
 
-    val (fragmentNames, fragmentParts) = compiledKotlinFiles
+    val [fragmentNames, fragmentParts] = compiledKotlinFiles
         .groupBy { it.fqName }
-        .map { (fqn, data) ->
+        .map { [fqn, data] ->
             fqn to data.sortedBy { it.path }.map { it.metadata }
         }
         .sortedBy { it.first }

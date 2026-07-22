@@ -1181,7 +1181,7 @@ class LightTreeRawFirDeclarationBuilder(
                 modifiers?.convertAnnotationsTo(annotations)
                 typeParameters += constructorTypeParametersFromConstructedClass(classWrapper.classBuilder.typeParameters)
                 valueParameters += firValueParameters.map { it.firValueParameter }
-                val (body, contractDescription) = withForcedLocalContext {
+                val [body, contractDescription] = withForcedLocalContext {
                     convertFunctionBody(block, null, allowLegacyContractDescription = true)
                 }
                 this.body = body

@@ -544,7 +544,7 @@ class BlockDecomposerTransformer(
                     value.isPure(anyVariable = false, symbols = context.symbols) -> value
                     else -> {
                         // TODO: do not wrap if value is pure (const, variable, etc)
-                        val (newArg, tempVar) = mapArgument(value)
+                        val [newArg, tempVar] = mapArgument(value)
                         newStatements += tempVar
                         newArg
                     }

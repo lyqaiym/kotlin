@@ -20,10 +20,10 @@ internal object IrAnnotationMatchingKmpChecker : IrExpectActualChecker {
     override fun check(context: IrExpectActualChecker.Context) = with(context) {
         val languageVersionSettings = diagnosticsReporter.languageVersionSettings
         if (!languageVersionSettings.supportsFeature(LanguageFeature.MultiplatformRestrictions)) {
-            return
+            return@with
         }
 
-        for ((expectSymbol, actualSymbol) in expectActualMap.expectToActual) {
+        for ([expectSymbol, actualSymbol] in expectActualMap.expectToActual) {
             if (expectSymbol is IrTypeParameterSymbol) {
                 continue
             }

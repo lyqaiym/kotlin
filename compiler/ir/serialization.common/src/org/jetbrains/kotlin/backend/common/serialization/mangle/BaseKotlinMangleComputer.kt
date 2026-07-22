@@ -265,9 +265,9 @@ abstract class BaseKotlinMangleComputer<Declaration, Type, TypeParameter, ValueP
     protected fun mangleTypeArguments(tBuilder: StringBuilder, type: Type, declarationSiteSession: Session) =
         with(getTypeSystemContext(declarationSiteSession)) {
             val typeArguments = type.getArguments().zip(type.typeConstructor().getParameters())
-            if (typeArguments.isEmpty()) return
+            if (typeArguments.isEmpty()) return@with
             @Suppress("UNUSED_DESTRUCTURED_PARAMETER_ENTRY")
-            typeArguments.collectForMangler(tBuilder, MangleConstant.TYPE_ARGUMENTS) { (typeArgument, typeParameter) ->
+            typeArguments.collectForMangler(tBuilder, MangleConstant.TYPE_ARGUMENTS) { [typeArgument, typeParameter] ->
                 when {
                     typeArgument.isStarProjection() -> appendSignature(MangleConstant.STAR_MARK)
                     else -> {

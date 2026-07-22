@@ -50,7 +50,7 @@ object CommonWebConfigurationUpdater : ConfigurationUpdater<K2JSCompilerArgument
         input: ArgumentsPipelineArtifact<K2JSCompilerArguments>,
         configuration: CompilerConfiguration,
     ) {
-        val (arguments, services, rootDisposable, _, _) = input
+        val [arguments, services, rootDisposable, _, _] = input
         setupPlatformSpecificArgumentsAndServices(configuration, arguments, services)
         initializeCommonConfiguration(configuration, arguments)
         configuration.jsIncrementalCompilationEnabled = incrementalCompilationIsEnabledForJs(arguments)

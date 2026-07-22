@@ -222,7 +222,7 @@ object FirExpectActualDeclarationChecker : FirBasicDeclarationChecker(MppChecker
         fun hasSingleActualSuspect(
             expectedWithIncompatibility: Pair<FirBasedSymbol<*>, Map<out ExpectActualCheckingCompatibility.Incompatible<FirBasedSymbol<*>>, Collection<FirBasedSymbol<*>>>>,
         ): Boolean {
-            val (expectedMember, incompatibility) = expectedWithIncompatibility
+            val [expectedMember, incompatibility] = expectedWithIncompatibility
             val actualMember = incompatibility.values.singleOrNull()?.singleOrNull()
             @OptIn(SymbolInternals::class)
             return actualMember != null &&
@@ -232,7 +232,7 @@ object FirExpectActualDeclarationChecker : FirBasicDeclarationChecker(MppChecker
         val nonTrivialIncompatibleMembers = checkingCompatibility.incompatibleMembers.filterNot(::hasSingleActualSuspect)
 
         if (nonTrivialIncompatibleMembers.isNotEmpty()) {
-            val (defaultArgsIncompatibleMembers, otherIncompatibleMembers) =
+            val [defaultArgsIncompatibleMembers, otherIncompatibleMembers] =
                 nonTrivialIncompatibleMembers.partition { it.second.contains(ExpectActualCheckingCompatibility.DefaultArgumentsInExpectActualizedByFakeOverride) }
 
             if (defaultArgsIncompatibleMembers.isNotEmpty()) { // report a nicer diagnostic for DefaultArgumentsInExpectActualizedByFakeOverride

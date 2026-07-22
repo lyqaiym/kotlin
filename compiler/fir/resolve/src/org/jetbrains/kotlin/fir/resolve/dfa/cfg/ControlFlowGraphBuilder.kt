@@ -149,14 +149,14 @@ class ControlFlowGraphBuilder {
 
     // ----------------------------------- Utils -----------------------------------
 
-    private inline fun <T, E : T, EnterNode, ExitNode> enterGraph(
+    private inline fun <T : FirElement, E : T?, EnterNode, ExitNode> enterGraph(
         fir: E,
         name: String,
         kind: ControlFlowGraph.Kind,
         nodes: (E) -> Pair<EnterNode, ExitNode>,
     ): EnterNode where EnterNode : CFGNode<T>, EnterNode : GraphEnterNodeMarker, ExitNode : CFGNode<T>, ExitNode : GraphExitNodeMarker {
         val graph = ControlFlowGraph(fir as? FirDeclaration, name, kind).also { graphs.push(it) }
-        val (enterNode, exitNode) = nodes(fir)
+        val [enterNode, exitNode] = nodes(fir)
         graph.enterNode = enterNode
         graph.exitNode = exitNode
         lastNodes.push(enterNode)
@@ -306,8 +306,8 @@ class ControlFlowGraphBuilder {
 
     fun exitAnonymousFunction(anonymousFunction: FirAnonymousFunction): Triple<FunctionExitNode, PostponedLambdaExitNode?, ControlFlowGraph> {
         exitTargetsForReturn.remove(anonymousFunction.symbol)
-        val (exitNode, graph) = exitGraph<FunctionExitNode>()
-        val (splitNode, postponedExitNode) = postponedAnonymousFunctionNodes.remove(anonymousFunction.symbol)!!
+        val [exitNode, graph] = exitGraph<FunctionExitNode>()
+        val [splitNode, postponedExitNode] = postponedAnonymousFunctionNodes.remove(anonymousFunction.symbol)!!
         val invocationKind = anonymousFunction.invocationKind
         if (postponedExitNode == null) {
             // Postponed exit node was needed so we could create lambda->call edges without having the subgraph ready. If it
@@ -369,14 +369,14 @@ class ControlFlowGraphBuilder {
         val nextLevelExits = postponedLambdaExits.topOrNull()?.exits.takeIf { !callCompleted }
         if (nextLevelExits != null) {
             // Call is incomplete, don't pass data flow from lambdas inside it to lambdas in the outer call.
-            for ((exit, kind) in currentLevelExits) {
+            for ([exit, kind] in currentLevelExits) {
                 if (kind.usedInCfa) {
                     addEdge(exit, node, preferredKind = EdgeKind.CfgForward)
                 }
                 nextLevelExits.add(exit to EdgeKind.DfgForward)
             }
         } else {
-            for ((exit, kind) in currentLevelExits) {
+            for ([exit, kind] in currentLevelExits) {
                 // Do not add data flow edges from non-terminating lambdas; there is no "dead data flow only"
                 if (kind.usedInCfa || !exit.isDead) {
                     // Since `node` is a union node, it is dead iff any input is dead. For once, `propagateDeadness`
@@ -415,7 +415,7 @@ class ControlFlowGraphBuilder {
             node.updateDeadStatus()
             nextLevelExits += createMergePostponedLambdaExitsNode(node.fir).also {
                 addEdge(node, it) // copy liveness (deadness?) from `node`
-                for ((exit, kind) in currentLevelExits) {
+                for ([exit, kind] in currentLevelExits) {
                     if (kind.usedInCfa) {
                         addEdge(exit, node, preferredKind = EdgeKind.CfgForward, propagateDeadness = false)
                     }
@@ -423,7 +423,7 @@ class ControlFlowGraphBuilder {
                 }
             } to EdgeKind.DfgForward
         } else {
-            for ((exit, kind) in currentLevelExits) {
+            for ([exit, kind] in currentLevelExits) {
                 // `node` is a merge node for many inputs anyhow so someone will call `updateDeadStatus` on it.
                 addEdge(exit, node, label = PostponedPath, preferredKind = kind, propagateDeadness = false)
             }
@@ -493,7 +493,7 @@ class ControlFlowGraphBuilder {
     }
 
     private fun <E : FirDeclaration> addEdgeIfLocalClassMember(enterNode: CFGNode<E>) {
-        val (source, kind) = enterToLocalClassesMembers.remove(enterNode.fir.symbol) ?: return
+        val [source, kind] = enterToLocalClassesMembers.remove(enterNode.fir.symbol) ?: return
         addEdge(source, enterNode, preferredKind = kind)
     }
 
@@ -624,7 +624,7 @@ class ControlFlowGraphBuilder {
             delegatedLevel + 1
         }
 
-        for ((ctor, graph) in secondaryConstructors) {
+        for ([ctor, graph] in secondaryConstructors) {
             ctor.computeDelegationLevel()
             val delegatesTo = constructorDelegation[ctor]
             val delegatedNodeRange = secondaryConstructors[delegatesTo]?.let {
@@ -649,7 +649,7 @@ class ControlFlowGraphBuilder {
                 //   constructor() : this(x /* before constructor(x) */) { /* after constructor(x) */ }
                 //   constructor(x: ...) {}
                 // }
-                val (delegatedEnter, delegatedExit) = delegatedNodeRange
+                val [delegatedEnter, delegatedExit] = delegatedNodeRange
                 val delegatedConstructorCall = graph.nodes.single { it is DelegatedConstructorCallNode }
                 val followingNodes = delegatedConstructorCall.followingNodes.toList()
                 CFGNode.removeAllOutgoingEdges(delegatedConstructorCall)
@@ -806,7 +806,7 @@ class ControlFlowGraphBuilder {
     fun exitValueParameter(valueParameter: FirValueParameter): Triple<ExitDefaultArgumentsNode, ExitValueParameterNode, ControlFlowGraph>? {
         if (valueParameter.defaultValue == null || valueParameter.valueParameterKind != FirValueParameterKind.Regular) return null
 
-        val (exitNode, graph) = exitGraph<ExitDefaultArgumentsNode>()
+        val [exitNode, graph] = exitGraph<ExitDefaultArgumentsNode>()
         val outerExitNode = createExitValueParameterNode(valueParameter)
         addNewSimpleNode(outerExitNode)
         addEdge(exitNode, outerExitNode, propagateDeadness = false)
@@ -1069,7 +1069,7 @@ class ControlFlowGraphBuilder {
     fun exitLeftBooleanOperatorExpressionArgument(
         booleanOperatorExpression: FirBooleanOperatorExpression,
     ): Pair<CFGNode<FirBooleanOperatorExpression>, CFGNode<FirBooleanOperatorExpression>> {
-        val (leftExitNode, rightEnterNode) = createBooleanOperatorExitLeftOperandNode(booleanOperatorExpression) to createBooleanOperatorEnterRightOperandNode(booleanOperatorExpression)
+        val [leftExitNode, rightEnterNode] = createBooleanOperatorExitLeftOperandNode(booleanOperatorExpression) to createBooleanOperatorEnterRightOperandNode(booleanOperatorExpression)
         addNewSimpleNode(leftExitNode)
         lastNodes.push(leftExitNode) // to create an exit edge later
         val rhsNeverExecuted =
@@ -1265,7 +1265,7 @@ class ControlFlowGraphBuilder {
         val edges = node.followingNodes.map { it to node.edgeTo(it) }
         CFGNode.removeAllOutgoingEdges(node)
         CFGNode.addEdge(node, stub, EdgeKind.DeadForward, propagateDeadness = false)
-        for ((to, edge) in edges) {
+        for ([to, edge] in edges) {
             val kind = if (edge.kind.isBack) EdgeKind.DeadCfgBackward else EdgeKind.DeadForward
             CFGNode.addEdge(stub, to, kind, propagateDeadness = false, label = edge.label)
             to.updateDeadStatus()
@@ -1623,7 +1623,7 @@ class ControlFlowGraphBuilder {
     )
 }
 
-fun FirDeclaration?.isLocalClassOrAnonymousObject() = ((this as? FirRegularClass)?.isLocal == true) || this is FirAnonymousObject
+fun FirDeclaration?.isLocalClassOrAnonymousObject(): Boolean = ((this as? FirRegularClass)?.isLocal == true) || this is FirAnonymousObject
 
 private val FirControlFlowGraphOwner.memberShouldHaveGraph: Boolean
     get() = when (this) {

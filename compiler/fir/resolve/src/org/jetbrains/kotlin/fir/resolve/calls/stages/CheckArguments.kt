@@ -31,7 +31,7 @@ internal object CheckArguments : ResolutionStage() {
         val isInvokeFromExtensionFunctionType = candidate.isInvokeFromExtensionFunctionType
 
         val contextArgumentsOfInvoke = candidate.expectedContextParameterTypesForInvoke?.size ?: 0
-        for ((index, argument) in candidate.arguments.withIndex()) {
+        for ([index, argument] in candidate.arguments.withIndex()) {
             if (index < contextArgumentsOfInvoke) continue
             val parameter = argumentMapping[argument]
             candidate.resolveArgument(

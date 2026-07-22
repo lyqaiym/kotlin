@@ -5,6 +5,7 @@
 
 package kotlin.js
 
+import kotlin.internal.UsedFromCompilerGeneratedCode
 import kotlin.reflect.KProperty
 
 internal fun getPropertyCallableRef(
@@ -54,3 +55,20 @@ private val propertyRefClassMetadataCache: Array<Array<dynamic>> = arrayOf<Array
     arrayOf<dynamic>(metadataObject(), metadataObject())  // 2
 )
 
+//No function kotlin/js/constructCallableReference found
+@UsedFromCompilerGeneratedCode
+internal fun constructCallableReference(
+    callable: dynamic,
+    arity: Int,
+    flags: Int?,
+    signatureId: Any?,
+    name: String?,
+    bounds: Array<Any>?
+): dynamic {
+    callable.callableName = name
+    callable.`$flags` = flags
+    callable.`$arity` = arity
+    callable.`$id` = signatureId
+    callable.`$bound` = bounds
+    return callable
+}

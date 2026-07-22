@@ -195,7 +195,7 @@ abstract class InlineCallableReferenceToLambdaPhase(
                 if (original is IrFunctionReference) {
                     // It is required to copy value arguments if any.
                     // Don't need to copy the dispatch receiver because it was remapped on extension receiver.
-                    original.symbol.owner.parameters.zip(original.arguments).forEach { (parameter, argument) ->
+                    original.symbol.owner.parameters.zip(original.arguments).forEach { [parameter, argument] ->
                         if (parameter.kind == IrParameterKind.Regular || parameter.kind == IrParameterKind.Context) {
                             arguments[parameter.indexInParameters] = argument
                         }

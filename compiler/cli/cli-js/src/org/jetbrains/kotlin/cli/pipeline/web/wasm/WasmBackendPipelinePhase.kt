@@ -145,7 +145,7 @@ object WasmBackendPipelinePhase : WebBackendPipelinePhase<WasmBackendPipelineArt
             loadFunctionInterfacesIntoStdlib = true,
         )
 
-        val (allModules, backendContext, typeScriptFragment) = compileToLoweredIr(
+        val [allModules, backendContext, typeScriptFragment] = compileToLoweredIr(
             irModuleInfo,
             module.mainModule,
             configuration,

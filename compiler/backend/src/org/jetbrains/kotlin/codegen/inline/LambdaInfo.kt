@@ -132,7 +132,7 @@ class DefaultLambda(info: ExtractedDefaultLambda, sourceCompiler: SourceCompiler
                     capturedParamDesc(fieldNode.name, Type.getType(fieldNode.desc), isSuspend = false)
                 }?.toList() ?: emptyList()
         isBoundCallableReference = isReference && capturedVars.isNotEmpty()
-        val (originNode, classSmap) = loadDefaultLambdaBody(classBytes, lambdaClassType, isPropertyReference)
+        val [originNode, classSmap] = loadDefaultLambdaBody(classBytes, lambdaClassType, isPropertyReference)
         node = SMAPAndMethodNode(createNodeWithFakeVariables(originNode), classSmap)
     }
 

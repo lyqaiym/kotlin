@@ -92,20 +92,20 @@ private fun compileIrFile(
     fileContext.testFunctionDeclarator?.apply {
         wasmFileCodegenContext.addTestFunDeclarator(symbol)
     }
-    fileContext.closureCallExports.forEach { (exportSignature, function) ->
+    fileContext.closureCallExports.forEach { [exportSignature, function] ->
         wasmFileCodegenContext.addEquivalentFunction("<1>_$exportSignature", function.symbol)
     }
-    fileContext.kotlinClosureToJsConverters.forEach { (exportSignature, function) ->
+    fileContext.kotlinClosureToJsConverters.forEach { [exportSignature, function] ->
         wasmFileCodegenContext.addEquivalentFunction("<2>_$exportSignature", function.symbol)
     }
-    fileContext.jsClosureCallers.forEach { (exportSignature, function) ->
+    fileContext.jsClosureCallers.forEach { [exportSignature, function] ->
         wasmFileCodegenContext.addEquivalentFunction("<3>_$exportSignature", function.symbol)
     }
-    fileContext.jsToKotlinClosures.forEach { (exportSignature, function) ->
+    fileContext.jsToKotlinClosures.forEach { [exportSignature, function] ->
         wasmFileCodegenContext.addEquivalentFunction("<4>_$exportSignature", function.symbol)
     }
 
-    fileContext.classAssociatedObjects.forEach { (klass, associatedObjects) ->
+    fileContext.classAssociatedObjects.forEach { [klass, associatedObjects] ->
         val associatedObjectsInstanceGetters = associatedObjects.map { (key, obj) ->
             obj.objectGetInstanceFunction?.let {
                 AssociatedObjectBySymbols(key.symbol, it.symbol, false)

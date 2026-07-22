@@ -744,8 +744,12 @@ The corresponding calls' declarations may not be marked with @BuilderInference."
             field = value
         }
 
-    @Argument(value = "-Xallow-any-scripts-in-source-roots", description = "Allow compiling scripts along with regular Kotlin sources.")
-    @Disables(LanguageFeature.SkipStandaloneScriptsInSourceRoots)
+//    @Argument(value = "-Xallow-any-scripts-in-source-roots", description = "Allow compiling scripts along with regular Kotlin sources.")
+//    @Disables(LanguageFeature.SkipStandaloneScriptsInSourceRoots)
+     @Argument(
+         value = "-Xallow-any-scripts-in-source-roots",
+         description = "Allow compiling scripts along with regular Kotlin sources.",
+     )
     var allowAnyScriptsInSourceRoots = false
         set(value) {
             checkFrozen()
@@ -947,7 +951,7 @@ default: 'first-only-warn' in language version 2.2+, 'first-only' in version 2.1
                     )
                     continue
                 }
-                val (name, rawLevel) = split
+                val [name, rawLevel] = split
                 val level = WarningLevel.fromString(rawLevel) ?: run {
                     collector.report(
                         CompilerMessageSeverity.ERROR,
@@ -987,13 +991,13 @@ default: 'first-only-warn' in language version 2.2+, 'first-only' in version 2.1
                 }
             }
 
-            if (progressiveMode) {
-                LanguageFeature.entries.filter { it.enabledInProgressiveMode }.forEach {
-                    // Don't overwrite other settings: users may want to turn off some particular
-                    // breaking change manually instead of turning off whole progressive mode
-                    if (!contains(it)) put(it, LanguageFeature.State.ENABLED)
-                }
-            }
+//            if (progressiveMode) {
+//                LanguageFeature.entries.filter { it.enabledInProgressiveMode }.forEach {
+//                    // Don't overwrite other settings: users may want to turn off some particular
+//                    // breaking change manually instead of turning off whole progressive mode
+//                    if (!contains(it)) put(it, LanguageFeature.State.ENABLED)
+//                }
+//            }
 
             // Internal arguments should go last, because it may be useful to override
             // some feature state via -XX (even if some -X flags were passed)
@@ -1012,9 +1016,9 @@ default: 'first-only-warn' in language version 2.2+, 'first-only' in version 2.1
 
         var standaloneSamConversionFeaturePassedExplicitly = false
         var functionReferenceWithDefaultValueFeaturePassedExplicitly = false
-        for ((feature, state) in internalArguments.filterIsInstance<ManualLanguageFeatureSetting>()) {
+        for ([feature, state] in internalArguments.filterIsInstance<ManualLanguageFeatureSetting>()) {
             put(feature, state)
-            if (state == LanguageFeature.State.ENABLED && feature.forcesPreReleaseBinariesIfEnabled()) {
+            if (state == LanguageFeature.State.ENABLED && feature.forcesPreReleaseBinariesIfEnabled(LanguageVersion.KOTLIN_2_2)) {
                 featuresThatForcePreReleaseBinaries += feature
             }
 
@@ -1118,7 +1122,7 @@ default: 'first-only-warn' in language version 2.2+, 'first-only' in version 2.1
     }
 
     private fun checkOutdatedVersions(language: LanguageVersion, api: ApiVersion, collector: MessageCollector) {
-        val (version, supportedVersion, versionKind) = findOutdatedVersion(language, api) ?: return
+        val [version, supportedVersion, versionKind] = findOutdatedVersion(language, api) ?: return
         when {
             version.isUnsupported -> {
                 collector.report(

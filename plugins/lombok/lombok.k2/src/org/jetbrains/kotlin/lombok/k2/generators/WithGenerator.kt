@@ -54,7 +54,7 @@ class WithGenerator(session: FirSession) : FirDeclarationGenerationExtension(ses
 
     private fun createWith(classSymbol: FirClassSymbol<*>): Map<Name, FirJavaMethod>? {
         val fieldsWithWith = computeFieldsWithWithAnnotation(classSymbol) ?: return null
-        return fieldsWithWith.mapNotNull { (field, withInfo) ->
+        return fieldsWithWith.mapNotNull { [field, withInfo] ->
             val withName = computeWithName(field, withInfo) ?: return@mapNotNull null
             val function = buildJavaMethod {
                 containingClassSymbol = classSymbol

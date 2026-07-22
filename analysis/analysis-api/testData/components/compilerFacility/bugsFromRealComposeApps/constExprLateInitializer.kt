@@ -25,5 +25,5 @@ package home
 import data.PodcastWithExtraInfo
 
 fun preview(featuredPodcast: PodcastWithExtraInfo) {
-    val (podcast, lastEpisodeDate) = featuredPodcast
+    val [podcast, lastEpisodeDate] = featuredPodcast
 }

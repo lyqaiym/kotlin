@@ -41,7 +41,7 @@ object UnusedChecker : AbstractFirPropertyInitializationChecker(MppCheckerKind.C
         data.graph.traverse(RemoveVisibleWrites(ownData))
 
         val variablesWithUnobservedWrites = mutableSetOf<FirPropertySymbol>()
-        for ((statement, scope) in ownData.unreadWrites) {
+        for ([statement, scope] in ownData.unreadWrites) {
             if (statement is FirVariableAssignment) {
                 val variableSymbol = statement.calleeReference?.toResolvedPropertySymbol() ?: continue
                 variablesWithUnobservedWrites.add(variableSymbol)
@@ -56,7 +56,7 @@ object UnusedChecker : AbstractFirPropertyInitializationChecker(MppCheckerKind.C
             }
         }
 
-        for ((symbol, fir) in ownData.variablesWithoutReads) {
+        for ([symbol, fir] in ownData.variablesWithoutReads) {
             if (symbol.ignoreWarnings) continue
             if ((fir.initializer as? FirFunctionCall)?.isIterator == true || fir.isCatchParameter == true) continue
             val error = if (symbol in variablesWithUnobservedWrites) FirErrors.VARIABLE_NEVER_READ else FirErrors.UNUSED_VARIABLE

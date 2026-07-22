@@ -112,7 +112,7 @@ internal class AnnotationsAndParameterCollectorMethodVisitor(
                 baseType to (typeReference.sort in freshlySupportedPositions)
             }
 
-        val (annotationOwner, isFreshlySupportedAnnotation) = when (typeReference.sort) {
+        val [annotationOwner, isFreshlySupportedAnnotation] = when (typeReference.sort) {
             TypeReference.METHOD_RETURN -> getTargetType((member as? BinaryJavaMethod)?.returnType ?: return null)
             TypeReference.METHOD_TYPE_PARAMETER -> member.typeParameters[typeReference.typeParameterIndex] to true
             TypeReference.METHOD_FORMAL_PARAMETER -> getTargetType(member.valueParameters[typeReference.formalParameterIndex].type)
@@ -154,7 +154,7 @@ class BinaryJavaAnnotation private constructor(
             signatureParser: BinaryClassSignatureParser,
             isFreshlySupportedAnnotation: Boolean = false
         ): AnnotationVisitor {
-            val (javaAnnotation, annotationVisitor) =
+            val [javaAnnotation, annotationVisitor] =
                 createAnnotationAndVisitor(desc, context, signatureParser, isFreshlySupportedAnnotation)
             annotationOwner.annotations.add(javaAnnotation)
             return annotationVisitor
@@ -172,7 +172,7 @@ class BinaryJavaAnnotation private constructor(
         }
 
         internal fun computeTargetType(baseType: JavaType, typePath: TypePath) =
-            translatePath(typePath).fold<Pair<Int, Int>, JavaType?>(baseType) { targetType, (typePathKind, typeArgumentIndex) ->
+            translatePath(typePath).fold<Pair<Int, Int>, JavaType?>(baseType) { targetType, [typePathKind, typeArgumentIndex] ->
                 when (typePathKind) {
                     TypePath.TYPE_ARGUMENT -> {
                         require(targetType is JavaClassifierType)
@@ -237,7 +237,7 @@ class BinaryJavaAnnotationVisitor(
     }
 
     override fun visitAnnotation(name: String?, desc: String): AnnotationVisitor {
-        val (annotation, visitor) = BinaryJavaAnnotation.createAnnotationAndVisitor(desc, context, signatureParser)
+        val [annotation, visitor] = BinaryJavaAnnotation.createAnnotationAndVisitor(desc, context, signatureParser)
 
         sink(PlainJavaAnnotationAsAnnotationArgument(name, annotation))
 

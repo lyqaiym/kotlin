@@ -333,7 +333,7 @@ object FirImportsChecker : FirFileChecker(MppCheckerKind.Common) {
         }
 
         return when {
-            symbol?.let(isApplicable) == true -> ImportStatus.Invisible(symbol!!)
+            symbol?.let(isApplicable) == true -> ImportStatus.Invisible(symbol)
             symbol != null -> ImportStatus.CannotBeImported
             else -> ImportStatus.Unresolved
         }

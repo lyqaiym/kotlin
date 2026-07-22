@@ -3,13 +3,15 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-import gradle.commonSourceSetName
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import gradle.GradlePluginVariant
+import gradle.commonSourceSetName
 import gradle.publishGradlePluginsJavadoc
 import org.gradle.api.Action
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.FileCollectionDependency
 import org.gradle.api.artifacts.ModuleDependency
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.artifacts.type.ArtifactTypeDefinition
@@ -19,6 +21,7 @@ import org.gradle.api.attributes.java.TargetJvmVersion
 import org.gradle.api.attributes.plugin.GradlePluginApiVersion
 import org.gradle.api.component.AdhocComponentWithVariants
 import org.gradle.api.file.SourceDirectorySet
+import org.gradle.api.model.ObjectFactory
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.JavaPlugin
@@ -30,10 +33,11 @@ import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.tasks.Jar
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JavaToolchainService
 import org.gradle.kotlin.dsl.*
-import org.gradle.kotlin.dsl.getByType
 import org.gradle.plugin.devel.GradlePluginDevelopmentExtension
 import org.gradle.plugin.devel.PluginDeclaration
 import org.gradle.plugin.devel.plugins.JavaGradlePluginPlugin
@@ -43,14 +47,17 @@ import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.buildtools.api.ExperimentalBuildToolsApi
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinBaseExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinSingleJavaTargetExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilerExecutionStrategy
-import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import plugins.configureDefaultPublishing
 import plugins.configureKotlinPomAttributes
+import java.io.File
 
 /**
  * We have to handle the returned provider lazily, because the publication's artifactId
@@ -107,8 +114,8 @@ fun Project.configureCommonPublicationSettingsForGradle(
                     }
                 }
         }
+        configureDefaultPublishing(signingRequired)
     }
-    configureDefaultPublishing(signingRequired)
 }
 
 /**
@@ -167,16 +174,10 @@ fun Project.createGradleCommonSourceSet(): SourceSet {
         }
 
         // Adding Gradle API to separate configuration, so version will not leak into variants
-//        val commonGradleApiConfiguration = configurations.create("commonGradleApiCompileOnly") {
-////            e: warnings found and -Werror specified
-//            //            isVisible = false
-//            isCanBeConsumed = false
-//            isCanBeResolved = true
-//        }
         val commonGradleApiConfiguration = configurations.dependencyScope("commonGradleApiCompileOnly")
-//        configurations[compileClasspathConfigurationName].extendsFrom(commonGradleApiConfiguration)
+
         configurations.named(compileClasspathConfigurationName) {
-            extendsFrom(commonGradleApiConfiguration)
+            extendsFrom(commonGradleApiConfiguration.get())
             // Overriding current project Gradle version to the version common sources compiled against
             attributes {
                 attribute(
@@ -187,8 +188,6 @@ fun Project.createGradleCommonSourceSet(): SourceSet {
         }
 
         dependencies {
-//            compileOnlyConfigurationName(kotlinStdlib())
-//            "commonGradleApiCompileOnly"(gradleApi())
             compileOnlyConfigurationName("org.jetbrains.kotlin:kotlin-stdlib:${GradlePluginVariant.GRADLE_MIN.bundledKotlinVersion}.0")
             "commonGradleApiCompileOnly"("org.gradle.experimental:gradle-public-api:${GradlePluginVariant.GRADLE_COMMON_COMPILE_API_VERSION}") {
                 capabilities {
@@ -196,11 +195,6 @@ fun Project.createGradleCommonSourceSet(): SourceSet {
                 }
             }
             if (this@createGradleCommonSourceSet.name !in testPlugins) {
-//                compileOnlyConfigurationName(project(":kotlin-gradle-plugin-api")) {
-//                    capabilities {
-//                        requireCapability("org.jetbrains.kotlin:kotlin-gradle-plugin-api-common")
-//                    }
-//                }
                 compileOnlyConfigurationName(project(":kotlin-gradle-plugin-api"))
             }
         }
@@ -234,15 +228,20 @@ fun Project.createGradleCommonSourceSet(): SourceSet {
         this@createGradleCommonSourceSet.extensions.configure<JavaPluginExtension> {
             registerFeature(commonSourceSet.name) {
                 usingSourceSet(commonSourceSet)
+                capability(project.group.toString(), project.name, project.version.toString())
                 disablePublication()
             }
         }
     }
-
-    // Common outputs will also produce '${project.name}.kotlin_module' file, so we need to avoid
-    // files clash
-    tasks.named<KotlinJvmCompile>("compile${commonSourceSet.name.replaceFirstChar { it.uppercase() }}Kotlin") {
+    val kotlinJvmTarget = (extensions.getByName("kotlin") as KotlinSingleJavaTargetExtension).target
+    val compilation = kotlinJvmTarget.compilations.getByName(commonSourceSet.name)
+    tasks.named<KotlinCompile>(compilation.compileKotlinTaskName) {
+        // Common outputs will also produce '${project.name}.kotlin_module' file, so we need to avoid
+        // files clash
         compilerOptions.moduleName.set("${this@createGradleCommonSourceSet.name}_${commonSourceSet.name}")
+        // Workaround for https://youtrack.jetbrains.com/issue/KT-80750
+        compilerOptions.freeCompilerArgs.add("-Xjspecify-annotations=ignore")
+        configureGradleCompatibility()
     }
 
     registerValidatePluginTasks(commonSourceSet)
@@ -362,11 +361,10 @@ fun Project.reconfigureMainSourcesSetForGradlePlugin(
     sourceSets.named(SourceSet.MAIN_SOURCE_SET_NAME) {
         plugins.withType<JavaGradlePluginPlugin>().configureEach {
             // Removing Gradle api default dependency added by 'java-gradle-plugin'
-            configurations[apiConfigurationName].dependencies.remove(dependencies.gradleApi())
+            configurations[compileOnlyApiConfigurationName].dependencies.remove(dependencies.gradleApi())
         }
 
         dependencies {
-//            "compileOnly"(kotlinStdlib())
             "compileOnly"("org.jetbrains.kotlin:kotlin-stdlib:${GradlePluginVariant.GRADLE_MIN.bundledKotlinVersion}.0")
             // Decoupling gradle-api artifact from current project Gradle version. Later would be useful for
             // gradle plugin variants
@@ -419,7 +417,6 @@ fun Project.reconfigureMainSourcesSetForGradlePlugin(
                 configurations.create("${originalConfiguration.name}$FIXED_CONFIGURATION_SUFFIX") {
                     isCanBeResolved = originalConfiguration.isCanBeResolved
                     isCanBeConsumed = originalConfiguration.isCanBeConsumed
-//                    isVisible = originalConfiguration.isVisible
                     setExtendsFrom(originalConfiguration.extendsFrom)
 
                     artifacts {
@@ -481,14 +478,41 @@ fun Project.reconfigureMainSourcesSetForGradlePlugin(
                     }
 
                     // Make original configuration unpublishable and not visible
-//                    Cannot change the allowed usage of configuration ':atomicfu:runtimeElements', as it was locked upon creation to the role: 'Consumable'.
-//                    originalConfiguration.isCanBeConsumed = false
-//                    originalConfiguration.isVisible = false
+                    originalConfiguration.attributes {
+                        attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, objects.named("no-op"))
+                    }
+
+                    @Suppress("DEPRECATION")
+                    if (GradleVersion.current() < GradleVersion.version("9.0.0")) {
+                        originalConfiguration.isVisible = false
+                    }
+
                     javaComponent.withVariantsFromConfiguration(originalConfiguration) {
                         skip()
                     }
                 }
             }
+
+        listOf(
+            compileClasspathConfigurationName,
+            runtimeClasspathConfigurationName,
+        ).forEach {
+            configurations.getByName(it).useDependenciesCompiledForGradle(
+                GradlePluginVariant.GRADLE_MIN,
+                objects,
+            )
+        }
+    }
+
+    val kotlinJvmTarget = (extensions.getByName("kotlin") as KotlinSingleJavaTargetExtension).target
+    val mainCompilation = kotlinJvmTarget.compilations.getByName(KotlinCompilation.MAIN_COMPILATION_NAME)
+    tasks.named<KotlinCompile>(mainCompilation.compileKotlinTaskName) {
+        configureGradleCompatibility()
+
+        // workaround for KT-85412
+        compilerOptions.moduleName.value(
+            project.name.replace(invalidModuleNameCharactersRegex, "_")
+        ).disallowChanges()
     }
 
     // Fix common sources visibility for tests
@@ -498,7 +522,7 @@ fun Project.reconfigureMainSourcesSetForGradlePlugin(
     }
 
     // Allowing to use 'internal' classes/methods from common source code
-    (extensions.getByName("kotlin") as KotlinSingleJavaTargetExtension).target.compilations.run {
+    kotlinJvmTarget.compilations.run {
         getByName(SourceSet.TEST_SOURCE_SET_NAME).associateWith(getByName(commonSourceSet.name))
     }
 }
@@ -506,12 +530,11 @@ fun Project.reconfigureMainSourcesSetForGradlePlugin(
 /**
  * Adding plugin variants: https://docs.gradle.org/current/userguide/implementing_gradle_plugins.html#plugin-with-variants
  */
-fun Project.createGradlePluginVariant(
+private fun Project.createGradlePluginVariant(
     variant: GradlePluginVariant,
     commonSourceSet: SourceSet,
-    isGradlePlugin: Boolean = true,
+    publishShadowedJar: Boolean,
 ): SourceSet {
-    println("createGradlePluginVariant:name=${variant.sourceSetName}")
     val variantSourceSet = sourceSets.create(variant.sourceSetName) {
         excludeGradleCommonDependencies(this)
         wireGradleVariantToCommonGradleVariant(this, commonSourceSet)
@@ -521,9 +544,7 @@ fun Project.createGradlePluginVariant(
         extensions.configure<JavaPluginExtension> {
             registerFeature(variantSourceSet.name) {
                 usingSourceSet(variantSourceSet)
-                if (isGradlePlugin) {
-                    capability(project.group.toString(), project.name, project.version.toString())
-                }
+                capability(project.group.toString(), project.name, project.version.toString())
 
                 if (kotlinBuildProperties.publishGradlePluginsJavadoc) {
                     withJavadocJar()
@@ -560,24 +581,24 @@ fun Project.createGradlePluginVariant(
 
     configurations.configureEach {
         if (this@configureEach.name.startsWith(variantSourceSet.name) && (isCanBeResolved || isCanBeConsumed)) {
-            attributes {
-                attribute(
-                    GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE,
-                    objects.named(variant.minimalSupportedGradleVersion)
-                )
-            }
+            useDependenciesCompiledForGradle(
+                variant,
+                objects,
+            )
         }
     }
 
-    // KT-52138: Make module name the same for all variants, so KSP could access internal methods/properties
-    tasks.named<KotlinJvmCompile>("compile${variantSourceSet.name.replaceFirstChar { it.uppercase() }}Kotlin") {
+    val kotlinJvmTarget = (extensions.getByName("kotlin") as KotlinSingleJavaTargetExtension).target
+    val compilation = kotlinJvmTarget.compilations.getByName(variantSourceSet.name)
+    tasks.named<KotlinCompile>(compilation.compileKotlinTaskName) {
+        // KT-52138: Make module name the same for all variants, so KSP could access internal methods/properties
         compilerOptions.moduleName.set(this@createGradlePluginVariant.name)
+        configureGradleCompatibility()
     }
 
     dependencies {
-//        variantSourceSet.compileOnlyConfigurationName(kotlinStdlib())
+        variantSourceSet.compileOnlyConfigurationName("org.jetbrains.kotlin:kotlin-stdlib:${GradlePluginVariant.GRADLE_MIN.bundledKotlinVersion}.0")
         if (variant == GradlePluginVariant.GRADLE_813) {
-//        :libraries:tools:js-plain-objects:gradle813: Could not find dev.gradleplugins:gradle-api:8.13.
             // Workaround until 'dev.gradleplugins:gradle-api:8.13' will be published
             variantSourceSet.compileOnlyConfigurationName("org.jetbrains.intellij.deps:gradle-api:${variant.gradleApiVersion}")
             variantSourceSet.compileOnlyConfigurationName("javax.inject:javax.inject:1")
@@ -585,15 +606,15 @@ fun Project.createGradlePluginVariant(
             variantSourceSet.compileOnlyConfigurationName("dev.gradleplugins:gradle-api:${variant.gradleApiVersion}")
         }
         if (this@createGradlePluginVariant.name !in testPlugins) {
-            variantSourceSet.apiConfigurationName(project(":kotlin-gradle-plugin-api")) {
-                capabilities {
-                    requireCapability("org.jetbrains.kotlin:kotlin-gradle-plugin-api-${variant.sourceSetName}")
-                }
-            }
+            variantSourceSet.apiConfigurationName(project(":kotlin-gradle-plugin-api"))
         }
     }
 
     registerValidatePluginTasks(variantSourceSet)
+
+    if (publishShadowedJar) {
+        publishShadowedJar(variantSourceSet, commonSourceSet)
+    }
 
     return variantSourceSet
 }
@@ -611,48 +632,71 @@ private fun Project.commonVariantAttributes(): Action<Configuration> = Action<Co
     }
 }
 
-fun Project.configureKotlinCompileTasksGradleCompatibility() {
-//    configureBuildToolsApiVersionForGradleCompatibility()
-    configureBuildToolsApiVersionForGradleCompatibility()
-    tasks.withType<KotlinCompile>().configureEach {
-        compilerOptions {
-//            Language version 1.7 is no longer supported; please, use version 1.8 or greater.
-//            if (!kotlinBuildProperties.isInJpsBuildIdeaSync) {
-//                // check https://docs.gradle.org/current/userguide/compatibility.html#kotlin for Kotlin-Gradle versions matrix
-//                @Suppress("DEPRECATION", "DEPRECATION_ERROR") // we can't use language version greater than 1.8 as our minimal supported Gradle 7.6 embeds Kotlin 1.7.10
-//                languageVersion.set(KotlinVersion.KOTLIN_1_7)
-//                @Suppress("DEPRECATION", "DEPRECATION_ERROR") // we can't use api version greater than 1.7 as our minimal supported Gradle version 7.6 uses kotlin-stdlib 1.7
-//                apiVersion.set(KotlinVersion.KOTLIN_1_7)
-//            }
-            freeCompilerArgs.addAll(
-                listOf(
-                    "-Xskip-prerelease-check",
-                    "-Xsuppress-version-warnings",
-                    // We have to override the default value for `-Xsam-conversions` to `class`
-                    // otherwise the compiler would compile lambdas using invokedynamic,
-                    // such lambdas are not serializable so are not compatible with Gradle configuration cache.
-                    // It doesn't lead to a significant difference in binaries sizes, and previously (before LV 1.5) the `class` value was set by default.
-                    "-Xsam-conversions=class",
-                )
+/**
+ * Configures the JVM compile task to produce binaries compatible with [GradlePluginVariant.GRADLE_MIN].
+ */
+fun KotlinCompile.configureGradleCompatibility() {
+    compilerOptions {
+        // we should keep control of the language version for compatibility with bundled Kotlin compiler for Gradle Kotlin scripts.
+        languageVersion.set(KotlinVersion.fromVersion(GradlePluginVariant.COMPILE_KOTLIN_VERSION))
+        // we should not use stdlib symbols not available in the bundled Kotlin runtime
+        apiVersion.set(KotlinVersion.fromVersion(GradlePluginVariant.COMPILE_KOTLIN_VERSION))
+        freeCompilerArgs.addAll(
+            listOf(
+                "-Xskip-prerelease-check",
+                "-Xsuppress-version-warnings",
+                // We have to override the default value for `-Xsam-conversions` to `class`
+                // otherwise the compiler would compile lambdas using invokedynamic,
+                // such lambdas are not serializable so are not compatible with Gradle configuration cache.
+                // It doesn't lead to a significant difference in binaries sizes, and previously (before LV 1.5) the `class` value was set by default.
+                "-Xsam-conversions=class",
             )
-        }
+        )
     }
-    configureRunViaKotlinBuildToolsApi()
 }
 
-fun Project.configureRunViaKotlinBuildToolsApi() {
-    project.extra["kotlin.compiler.runViaBuildToolsApi"] = true
-    tasks.withType<KotlinCompile>().configureEach {
-        compilerExecutionStrategy.set(KotlinCompilerExecutionStrategy.IN_PROCESS)
+internal val invalidModuleNameCharactersRegex = """[\\/\r\n\t]""".toRegex()
+
+/**
+ * Configures the main JVM compile task in the project to use specific setup for compatibility with [GradlePluginVariant.GRADLE_MIN]
+ * If you need to configure it for specific tasks, please use [configureGradleCompatibility] and [configureBuildToolsApiVersionForGradleCompatibility].
+ */
+fun Project.configureKotlinCompileTasksGradleCompatibility() {
+    println("configureKotlinCompileTasksGradleCompatibility:name=${project.name}")
+    configureBuildToolsApiVersionForGradleCompatibility()
+    tasks.named("compileKotlin", KotlinCompile::class.java) {
+        configureGradleCompatibility()
     }
-//    'gradlePluginsBuildToolsApiClasspath' not found
-//    afterEvaluate {
-//        val gradlePluginsBuildToolsApiClasspath by rootProject.buildscript.configurations
-//        configurations.findByName("kotlinBuildToolsApiClasspath")?.let {
-//            it.dependencies.clear()
-//            dependencies.add(it.name, files(gradlePluginsBuildToolsApiClasspath))
-//        }
-//    }
+
+    // workaround for KT-85412
+    extensions.findByType<KotlinJvmExtension>()?.target?.compilations?.configureEach {
+        compileTaskProvider.configure {
+//            The value for property 'moduleName' cannot be changed any further.
+//            if (this@configureEach.name == KotlinCompilation.MAIN_COMPILATION_NAME) {
+//                (compilerOptions as KotlinJvmCompilerOptions).moduleName.value(
+//                    project.name.replace(invalidModuleNameCharactersRegex, "_")
+//                ).disallowChanges()
+//            } else {
+//                (compilerOptions as KotlinJvmCompilerOptions).moduleName.value(
+//                    "${project.name}_${this@configureEach.name}".replace(invalidModuleNameCharactersRegex, "_")
+//                ).disallowChanges()
+//            }
+        }
+    }
+}
+
+fun Project.applyWorkaroundForKt85412ForTestCompilations() {
+    // workaround for KT-85412
+    // main compilations are handled separately in this file
+    extensions.findByType<KotlinJvmExtension>()?.target?.compilations?.configureEach {
+        if (name.contains("test", ignoreCase = true)) {
+            compileTaskProvider.configure {
+                (compilerOptions as KotlinJvmCompilerOptions).moduleName.value(
+                    "${project.name}_${this@configureEach.name}".replace(invalidModuleNameCharactersRegex, "_")
+                ).disallowChanges()
+            }
+        }
+    }
 }
 
 /**
@@ -662,7 +706,6 @@ fun Project.configureRunViaKotlinBuildToolsApi() {
  */
 @OptIn(ExperimentalBuildToolsApi::class, ExperimentalKotlinGradlePluginApi::class)
 fun Project.configureBuildToolsApiVersionForGradleCompatibility() {
-    println("configureBuildToolsApiVersionForGradleCompatibility")
     if (extra.has("avoidSettingCompilerVersionForBTA") && extra["avoidSettingCompilerVersionForBTA"].toString().toBoolean()) return
     val catalogs = extensions.getByType<VersionCatalogsExtension>()
     val libsCatalog = catalogs.named("libs")
@@ -686,9 +729,10 @@ fun Project.publishShadowedJar(
 ) {
     val jarTask = tasks.named<Jar>(sourceSet.jarTaskName)
 
-    val shadowJarTask = embeddableCompilerDummyForDependenciesRewriting(
-        taskName = "$EMBEDDABLE_COMPILER_TASK_NAME${sourceSet.jarTaskName.replaceFirstChar { it.uppercase() }}"
+    val shadowJarTask = tasks.register<ShadowJar>(
+        "$EMBEDDABLE_COMPILER_TASK_NAME${sourceSet.jarTaskName.replaceFirstChar { it.uppercase() }}"
     ) {
+        destinationDirectory.set(project.layout.buildDirectory.dir("libs"))
         setupPublicJar(
             jarTask.flatMap { it.archiveBaseName },
             jarTask.flatMap { it.archiveClassifier }
@@ -698,13 +742,7 @@ fun Project.publishShadowedJar(
         from(sourceSet.output)
         from(commonSourceSet.output)
 
-        // When Gradle traverses the inputs, reject the shaded compiler JAR,
-        // which leads to the content of that JAR being excluded as well:
-        exclude {
-            // Docstring says `file` never returns null, but it does
-            @Suppress("UNNECESSARY_SAFE_CALL")
-            it.file?.name?.startsWith("kotlin-compiler-embeddable") ?: false
-        }
+        configureEmbeddableCompilerRelocation(withJavaxInject = false)
     }
 
     // Removing artifact produced by Jar task
@@ -790,10 +828,10 @@ fun Project.registerValidatePluginTasks(
         outputFile.set(project.layout.buildDirectory.file("reports/plugin-development/validation-report-${sourceSet.name}.txt"))
         classes.from({ sourceSet.output.classesDirs })
         classpath.from({ sourceSet.compileClasspath })
-
-        val javaPluginExtension = project.extensions.getByType<JavaPluginExtension>()
         val toolchainService = project.extensions.getByType<JavaToolchainService>()
-        launcher.convention(toolchainService.launcherFor(javaPluginExtension.toolchain))
+        launcher.set(toolchainService.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        })
     }
 
     tasks.named(JavaBasePlugin.CHECK_TASK_NAME) {
@@ -828,17 +866,11 @@ fun Project.registerKotlinSourceForVersionRange(
     }
     val sourceDirectoryName = "from_${applicableVariants.first().sourceSetName}_through_${applicableVariants.last().sourceSetName}"
     val sourcesDirectory = project.layout.projectDirectory.dir("src/${sourceDirectoryName}")
-    println("registerKotlinSourceForVersionRange:sourcesDirectory=${sourcesDirectory}")
-    sourceSets.stream().forEach {
-        println("registerKotlinSourceForVersionRange:sourceSets=${it.name}")
-    }
     applicableVariants
         .forEach {
-            println("registerKotlinSourceForVersionRange:name=${it.sourceSetName}")
             val sourceSet = sourceSets.getByName(it.sourceSetName)
-            println("registerKotlinSourceForVersionRange:2")
+            println("registerKotlinSourceForVersionRange:name=${it.sourceSetName},path=${sourcesDirectory}")
             (sourceSet.extensions.getByName("kotlin") as SourceDirectorySet).srcDir(sourcesDirectory)
-            println("registerKotlinSourceForVersionRange:3")
             val kotlinJvmTarget = (extensions.getByName("kotlin") as KotlinSingleJavaTargetExtension).target
             println("registerKotlinSourceForVersionRange:kotlinJvmTarget=${kotlinJvmTarget}")
             val compilation = kotlinJvmTarget.compilations.getByName(sourceSet.name)
@@ -852,14 +884,35 @@ fun Project.registerKotlinSourceForVersionRange(
         }
 }
 
-/**
- * Allows resolving dependency targeting [jdkMajorVersion] in the project using an incompatible JDK version.
- */
-fun ModuleDependency.overrideTargetJvmVersion(jdkMajorVersion: Int) {
-    attributes {
-        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, jdkMajorVersion)
+// See KT-79528 and https://github.com/gradle/gradle/issues/34453
+fun Project.disableCoroutinesStacktraceRecoveryInTestsIfGradleEmbeddedStdlibIsInRuntimeClasspath() {
+    tasks.withType<Test>().configureEach {
+        val isEmbeddedStdlibInRuntimeClasspath = provider {
+            classpath.contains(gradleEmbeddedStdlib())
+        }
+        jvmArgumentProviders.add {
+            if (isEmbeddedStdlibInRuntimeClasspath.get()) {
+                listOf("-Dkotlinx.coroutines.stacktrace.recovery=false")
+            } else {
+                emptyList()
+
+            }
+        }
     }
 }
+
+fun Project.excludeGradleEmbeddedStdlibFromTestTasksRuntimeClasspath() {
+    afterEvaluate {
+        tasks.withType<Test>().configureEach {
+            val embeddedStdlib = gradleEmbeddedStdlib()
+            classpath = classpath.filter {
+                it != embeddedStdlib
+            }
+        }
+    }
+}
+
+private fun Project.gradleEmbeddedStdlib(): File = (dependencies.gradleApi() as FileCollectionDependency).files.single { it.name.startsWith("kotlin-stdlib") }
 
 fun Project.createGradlePluginVariants(
     commonSourceSet: SourceSet,
@@ -878,7 +931,32 @@ fun Project.createGradlePluginVariants(
         createGradlePluginVariant(
             variant = variant,
             commonSourceSet = commonSourceSet,
-            isGradlePlugin = publishShadowedJar,
+            publishShadowedJar = publishShadowedJar,
         )
+    }
+}
+
+fun Configuration.useDependenciesCompiledForGradle(
+    variant: GradlePluginVariant,
+    objects: ObjectFactory,
+) = useDependenciesCompiledForGradle(
+    variant.minimalSupportedGradleVersion,
+    objects,
+)
+
+fun Configuration.useDependenciesCompiledForGradle(
+    version: String,
+    objects: ObjectFactory,
+) = attributes.attribute(
+    GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE,
+    objects.named(version),
+)
+
+/**
+ * Allows resolving dependency targeting [jdkMajorVersion] in the project using an incompatible JDK version.
+ */
+fun ModuleDependency.overrideTargetJvmVersion(jdkMajorVersion: Int) {
+    attributes {
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, jdkMajorVersion)
     }
 }

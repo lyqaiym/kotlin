@@ -111,9 +111,9 @@ class FirSamResolver(
     private fun getFunctionTypeForPossibleSamType(type: ConeClassLikeType): ConeLookupTagBasedType? {
         val firRegularClass = type.lookupTag.toRegularClassSymbol(session)?.fir ?: return null
 
-        val (_, unsubstitutedFunctionType) = resolveFunctionTypeIfSamInterface(firRegularClass) ?: return null
+        val [_, unsubstitutedFunctionType] = resolveFunctionTypeIfSamInterface(firRegularClass) ?: return null
 
-        val functionType = firRegularClass.buildSubstitutorWithUpperBounds(session, type)?.substituteOrNull(unsubstitutedFunctionType)
+        val functionType = firRegularClass.buildSubstitutorWithUpperBounds(session, type).substituteOrNull(unsubstitutedFunctionType)
             ?: unsubstitutedFunctionType
 
         require(functionType is ConeLookupTagBasedType) {
@@ -135,7 +135,7 @@ class FirSamResolver(
 
     fun buildSamConstructorForRegularClass(classSymbol: FirRegularClassSymbol): FirNamedFunctionSymbol? {
         val firRegularClass = classSymbol.fir
-        val (functionSymbol, functionType) = resolveFunctionTypeIfSamInterface(firRegularClass) ?: return null
+        val [functionSymbol, functionType] = resolveFunctionTypeIfSamInterface(firRegularClass) ?: return null
 
         val syntheticFunctionSymbol = classSymbol.createSyntheticConstructorSymbol()
 
@@ -166,7 +166,7 @@ class FirSamResolver(
             session
         )
 
-        for ((newTypeParameter, oldTypeParameter) in newTypeParameters.zip(firRegularClass.typeParameters)) {
+        for ([newTypeParameter, oldTypeParameter] in newTypeParameters.zip(firRegularClass.typeParameters)) {
             val declared = oldTypeParameter.symbol.fir
             newTypeParameter.bounds += declared.symbol.resolvedBounds.map { typeRef ->
                 buildResolvedTypeRef {
@@ -309,7 +309,7 @@ private fun FirTypeParameterRefsOwner.buildSubstitutorWithUpperBounds(session: F
     var containsNonSubstitutedArguments = false
 
     fun createMapping(substitutor: ConeSubstitutor): Map<FirTypeParameterSymbol, ConeKotlinType> {
-        return typeParameters.zip(type.typeArguments).associate { (parameter, projection) ->
+        return typeParameters.zip(type.typeArguments).associate { [parameter, projection] ->
             val typeArgument =
                 projection.type?.let(substitutor::substituteOrSelf)
                 // TODO: Consider using `parameterSymbol.fir.bounds.first().coneType` once sure that it won't fail with exception
@@ -464,7 +464,7 @@ private fun FirRegularClass.findSingleAbstractMethodByNames(
         }
     }
 
-    if (metIncorrectMember || resultMethod == null || resultMethod!!.typeParameters.isNotEmpty()) return null
+    if (metIncorrectMember || resultMethod == null || resultMethod.typeParameters.isNotEmpty()) return null
 
     return resultMethod
 }

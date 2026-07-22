@@ -132,7 +132,7 @@ fun hasNoWritersInClosures(
     writers: Set<AssignedVariablesSearcher.Writer>,
     bindingContext: BindingContext
 ): Boolean {
-    return writers.none { (_, writerDeclaration) ->
+    return writers.none { [_, writerDeclaration] ->
         writerDeclaration != null &&
                 variableContainingDeclaration != writerDeclaration.getDeclarationDescriptorIncludingConstructors(bindingContext)
     }

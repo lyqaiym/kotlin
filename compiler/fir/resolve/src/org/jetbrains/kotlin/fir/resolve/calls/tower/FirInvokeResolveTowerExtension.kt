@@ -465,7 +465,7 @@ private class InvokeFunctionResolveTask(
         // "f" should have an extension function type
         invokeReceiverValue: ExpressionReceiverValue,
     ) {
-        for ((depth, implicitReceiverValue) in towerDataElementsForName.implicitReceivers) {
+        for ([depth, implicitReceiverValue] in towerDataElementsForName.implicitReceivers) {
             val towerGroup =
                 TowerGroup
                     .Implicit(depth)
@@ -480,7 +480,7 @@ private class InvokeFunctionResolveTask(
                 ExplicitReceiverKind.DISPATCH_RECEIVER
             )
         }
-        for ((depth, contextReceiverGroup) in towerDataElementsForName.contextReceiverGroups) {
+        for ([depth, contextReceiverGroup] in towerDataElementsForName.contextReceiverGroups) {
             val towerGroup =
                 TowerGroup
                     .ContextReceiverGroup(depth)

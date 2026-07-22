@@ -163,7 +163,7 @@ private class Fir2IrPipeline(
 
         val dependentIrFragments = fragments.dropLast(1)
         val mainIrFragment = fragments.last()
-        val (irBuiltIns, symbolTable) = createBuiltInsAndSymbolTable(componentsStorage, syntheticIrBuiltinsSymbolsContainer)
+        val [irBuiltIns, symbolTable] = createBuiltInsAndSymbolTable(componentsStorage, syntheticIrBuiltinsSymbolsContainer)
 
         val irTypeSystemContext = typeSystemContextProvider(irBuiltIns)
 
@@ -201,7 +201,7 @@ private class Fir2IrPipeline(
 
         generateSyntheticBodiesOfDataValueMembers()
 
-        val (fakeOverrideStrategy, delegatedMembersGenerationStrategy) = buildFakeOverridesAndPlatformSpecificDeclarations(irActualizer)
+        val [fakeOverrideStrategy, delegatedMembersGenerationStrategy] = buildFakeOverridesAndPlatformSpecificDeclarations(irActualizer)
 
         val expectActualMap = irActualizer?.actualizeCallablesAndMergeModules() ?: IrExpectActualMap()
 
@@ -292,7 +292,7 @@ private class Fir2IrPipeline(
     private fun Fir2IrConversionResult.buildFakeOverridesAndPlatformSpecificDeclarations(
         irActualizer: IrActualizer?
     ): Pair<Fir2IrFakeOverrideStrategy, Fir2IrDelegatedMembersGenerationStrategy> {
-        val (fakeOverrideBuilder, delegatedMembersGenerationStrategy) = createFakeOverrideBuilder(irActualizer)
+        val [fakeOverrideBuilder, delegatedMembersGenerationStrategy] = createFakeOverrideBuilder(irActualizer)
         buildFakeOverrides(fakeOverrideBuilder)
         if (!componentsStorage.configuration.skipBodies) {
             delegatedMembersGenerationStrategy.generateDelegatedBodies()
@@ -375,7 +375,7 @@ private class Fir2IrPipeline(
                 } catch (e: Throwable) {
                     CodegenUtil.reportBackendException(e, "IR fake override builder", file.fileEntry.name) { offset ->
                         file.fileEntry.takeIf { it.supportsDebugInfo }?.let {
-                            val (line, column) = it.getLineAndColumnNumbers(offset)
+                            val [line, column] = it.getLineAndColumnNumbers(offset)
                             line to column
                         }
                     }

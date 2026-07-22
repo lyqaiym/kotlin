@@ -131,7 +131,7 @@ class FirClassSubstitutionScope(
 
         val symbolForOverride = FirFakeOverrideGenerator.createSymbolForSubstitutionOverride(original, newOwnerClassId)
 
-        val (newTypeParameters, newDispatchReceiverType, newReceiverType, newReturnType, newSubstitutor, callableCopySubstitution) =
+        val [newTypeParameters, newDispatchReceiverType, newReceiverType, newReturnType, newSubstitutor, callableCopySubstitution] =
             createSubstitutedData(member, symbolForOverride)
         val newParameterTypes = member.valueParameters.map {
             it.returnTypeRef.coneType.substitute(newSubstitutor)
@@ -190,7 +190,7 @@ class FirClassSubstitutionScope(
         val constructor = original.fir
 
         val symbolForOverride = FirConstructorSymbol(original.callableId)
-        val (newTypeParameters, _, _, newReturnType, newSubstitutor, callableCopySubstitution) =
+        val [newTypeParameters, _, _, newReturnType, newSubstitutor, callableCopySubstitution] =
             createSubstitutedData(constructor, symbolForOverride)
 
         // If constructor has a dispatch receiver, it should be an inner class' constructor.
@@ -239,7 +239,7 @@ class FirClassSubstitutionScope(
 
         val symbolForOverride = FirFakeOverrideGenerator.createSymbolForSubstitutionOverride(original, newOwnerClassId)
 
-        val (newTypeParameters, newDispatchReceiverType, newReceiverType, newReturnType, _, callableCopySubstitutionForTypeUpdater) =
+        val [newTypeParameters, newDispatchReceiverType, newReceiverType, newReturnType, _, callableCopySubstitutionForTypeUpdater] =
             createSubstitutedData(member, symbolForOverride)
 
         val newContextParameterTypes = member.contextParameters.map {
@@ -296,7 +296,7 @@ class FirClassSubstitutionScope(
         val memberOwnerClassLookupTag =
             if (member is FirConstructor) member.returnTypeRef.coneType.classLikeLookupTagIfAny
             else member.dispatchReceiverClassLookupTagOrNull()
-        val (newTypeParameters, substitutor) = FirFakeOverrideGenerator.createNewTypeParametersAndSubstitutor(
+        val [newTypeParameters, substitutor] = FirFakeOverrideGenerator.createNewTypeParametersAndSubstitutor(
             session,
             member as FirTypeParameterRefsOwner,
             symbolForOverride,

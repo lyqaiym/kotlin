@@ -25,7 +25,7 @@ object FirNativeObjCRefinementChecker : FirCallableDeclarationChecker(MppChecker
 
     override fun check(declaration: FirCallableDeclaration, context: CheckerContext, reporter: DiagnosticReporter) {
         if (declaration !is FirSimpleFunction && declaration !is FirProperty) return
-        val (objCAnnotations, swiftAnnotations) = declaration.findRefinedAnnotations(context.session)
+        val [objCAnnotations, swiftAnnotations] = declaration.findRefinedAnnotations(context.session)
         if (objCAnnotations.isNotEmpty() && swiftAnnotations.isNotEmpty()) {
             for (swiftAnnotation in swiftAnnotations) {
                 reporter.reportOn(swiftAnnotation.source, REDUNDANT_SWIFT_REFINEMENT, context)

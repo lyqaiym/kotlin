@@ -289,7 +289,7 @@ class JsIntrinsicTransformers(backendContext: JsIrBackendContext) {
             }
 
             add(intrinsics.suspendOrReturnFunctionSymbol) { call, context ->
-                val (generatorCall, continuation) = translateCallArguments(call, context)
+                val [generatorCall, continuation] = translateCallArguments(call, context)
                 val jsInvokeFunName = context.getNameForStaticFunction(call.symbol.owner)
                 val VOID = context.getNameForField(intrinsics.void.owner.backingField!!)
                 val generatorBindCall = (generatorCall as JsInvocation).let {

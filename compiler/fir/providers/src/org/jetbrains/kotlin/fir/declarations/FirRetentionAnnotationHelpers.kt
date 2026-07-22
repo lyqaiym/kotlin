@@ -25,7 +25,7 @@ fun FirRegularClassSymbol.getRetention(session: FirSession): AnnotationRetention
 }
 
 fun FirAnnotation.getRetention(): AnnotationRetention? {
-    val (enumId, entryName) = findArgumentByName(StandardClassIds.Annotations.ParameterNames.retentionValue)
+    val [enumId, entryName] = findArgumentByName(StandardClassIds.Annotations.ParameterNames.retentionValue)
         ?.extractEnumValueArgumentInfo()
         ?: return null
 

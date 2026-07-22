@@ -96,7 +96,7 @@ sealed class FirValueClassDeclarationChecker(mppKind: MppCheckerKind) : FirRegul
                             primaryConstructor = innerDeclaration
                             primaryConstructorParametersByName = innerDeclaration.valueParameters.associateBy { it.name }
                             primaryConstructorParametersSymbolsSet =
-                                primaryConstructorParametersByName.map { (_, parameter) -> parameter.symbol }.toSet()
+                                primaryConstructorParametersByName.map { [_, parameter] -> parameter.symbol }.toSet()
                         }
 
                         innerDeclaration.body != null && !context.languageVersionSettings.supportsFeature(LanguageFeature.ValueClassesSecondaryConstructorWithBody) -> {
@@ -201,7 +201,7 @@ sealed class FirValueClassDeclarationChecker(mppKind: MppCheckerKind) : FirRegul
             return
         }
 
-        for ((name, primaryConstructorParameter) in primaryConstructorParametersByName) {
+        for ([name, primaryConstructorParameter] in primaryConstructorParametersByName) {
             when {
                 primaryConstructorParameter.isNotFinalReadOnly(primaryConstructorPropertiesByName[name]) ->
                     reporter.reportOn(
@@ -250,7 +250,7 @@ sealed class FirValueClassDeclarationChecker(mppKind: MppCheckerKind) : FirRegul
         }
 
         if (isCustomEqualsSupported) {
-            val (equalsFromAnyOverriding, typedEquals) = run {
+            val [equalsFromAnyOverriding, typedEquals] = run {
                 var equalsFromAnyOverriding: FirSimpleFunction? = null
                 var typedEquals: FirSimpleFunction? = null
                 declaration.declarations.forEach {

@@ -64,7 +64,7 @@ object FirExposedVisibilityDeclarationChecker : FirBasicDeclarationChecker(MppCh
             if (superIsInterface != isInterface) {
                 continue
             }
-            val (restricting, restrictingVisibility, relation) = supertype.findVisibilityExposure(context, classVisibility) ?: continue
+            val [restricting, restrictingVisibility, relation] = supertype.findVisibilityExposure(context, classVisibility) ?: continue
             reporter.reportOn(
                 supertypeRef.source ?: declaration.source,
                 if (isInterface) FirErrors.EXPOSED_SUPER_INTERFACE else FirErrors.EXPOSED_SUPER_CLASS,
@@ -104,12 +104,12 @@ object FirExposedVisibilityDeclarationChecker : FirBasicDeclarationChecker(MppCh
         for (parameter in declaration.typeParameters) {
             for (bound in parameter.symbol.resolvedBounds) {
                 // If there's an exposure due to a private type, let it overtake the exposure due to an internal type.
-                val (symbolWithRelation, diagnostic) =
+                val [symbolWithRelation, diagnostic] =
                     bound.findVisibilityExposure(ignoreInternalExposure = true)?.to(diagnosticForNonInternalBounds)
                         ?: bound.findVisibilityExposure(ignoreInternalExposure = false)?.to(diagnosticForInternalBounds)
                         ?: continue
 
-                val (restricting, restrictingVisibility, relation) = symbolWithRelation
+                val [restricting, restrictingVisibility, relation] = symbolWithRelation
                 reporter.reportOn(
                     bound.source,
                     diagnostic,
@@ -129,7 +129,7 @@ object FirExposedVisibilityDeclarationChecker : FirBasicDeclarationChecker(MppCh
 
         if (typeAliasVisibility == EffectiveVisibility.Local) return
         checkParameterBounds(declaration, typeAliasVisibility, reporter, context)
-        val (restricting, restrictingVisibility, relation) = expandedType?.findVisibilityExposure(context, typeAliasVisibility) ?: return
+        val [restricting, restrictingVisibility, relation] = expandedType?.findVisibilityExposure(context, typeAliasVisibility) ?: return
         reporter.reportOn(
             declaration.source,
             FirErrors.EXPOSED_TYPEALIAS_EXPANDED_TYPE,
@@ -156,7 +156,7 @@ object FirExposedVisibilityDeclarationChecker : FirBasicDeclarationChecker(MppCh
         if (declaration !is FirPropertyAccessor) {
             if (isNonLocal && declaration !is FirConstructor) {
                 declaration.returnTypeRef.coneType
-                    .findVisibilityExposure(context, functionVisibility)?.let { (restricting, restrictingVisibility, relation) ->
+                    .findVisibilityExposure(context, functionVisibility)?.let { [restricting, restrictingVisibility, relation] ->
                         reporter.reportOn(
                             declaration.source,
                             FirErrors.EXPOSED_FUNCTION_RETURN_TYPE,
@@ -194,7 +194,7 @@ object FirExposedVisibilityDeclarationChecker : FirBasicDeclarationChecker(MppCh
             return
         }
         declaration.returnTypeRef.coneType
-            .findVisibilityExposure(context, propertyVisibility)?.let { (restricting, restrictingVisibility, relation) ->
+            .findVisibilityExposure(context, propertyVisibility)?.let { [restricting, restrictingVisibility, relation] ->
                 reporter.reportOn(
                     declaration.source,
                     FirErrors.EXPOSED_PROPERTY_TYPE,
@@ -219,7 +219,7 @@ object FirExposedVisibilityDeclarationChecker : FirBasicDeclarationChecker(MppCh
     ) {
         if (declarationVisibility != EffectiveVisibility.Local) {
             returnTypeRef.coneType
-                .findVisibilityExposure(context, declarationVisibility)?.let { (restricting, restrictingVisibility, relation) ->
+                .findVisibilityExposure(context, declarationVisibility)?.let { [restricting, restrictingVisibility, relation] ->
                     if (valueParameterKind == FirValueParameterKind.LegacyContextReceiver) {
                         reporter.reportOn(
                             source,
@@ -251,7 +251,7 @@ object FirExposedVisibilityDeclarationChecker : FirBasicDeclarationChecker(MppCh
 
         if (propertyVisibility == EffectiveVisibility.Local) return
         property.returnTypeRef.coneType
-            .findVisibilityExposure(context, propertyVisibility)?.let { (restricting, restrictingVisibility, relation) ->
+            .findVisibilityExposure(context, propertyVisibility)?.let { [restricting, restrictingVisibility, relation] ->
                 reporter.reportOn(
                     source,
                     FirErrors.EXPOSED_PROPERTY_TYPE_IN_CONSTRUCTOR,
@@ -276,7 +276,7 @@ object FirExposedVisibilityDeclarationChecker : FirBasicDeclarationChecker(MppCh
         val memberVisibility = memberDeclaration.effectiveVisibility
 
         if (memberVisibility == EffectiveVisibility.Local) return
-        val (restricting, restrictingVisibility, relation) = receiverParameterType.findVisibilityExposure(context, memberVisibility)
+        val [restricting, restrictingVisibility, relation] = receiverParameterType.findVisibilityExposure(context, memberVisibility)
             ?: return
         reporter.reportOn(
             typeRef.source,
@@ -327,7 +327,7 @@ object FirExposedVisibilityDeclarationChecker : FirBasicDeclarationChecker(MppCh
             }
         }
 
-        for ((index, it) in type.typeArguments.withIndex()) {
+        for ([index, it] in type.typeArguments.withIndex()) {
             when (it) {
                 is ConeClassLikeType -> it.findVisibilityExposure(context, base, ignoreInternalExposure, visitedTypes)
                     ?.let { return it }

@@ -102,7 +102,7 @@ private fun checkModifiersCompatibility(
     context: CheckerContext,
 ) {
     val modifiers = modifierList.modifiers
-    for ((secondIndex, secondModifier) in modifiers.withIndex()) {
+    for ([secondIndex, secondModifier] in modifiers.withIndex()) {
         for (firstIndex in 0..<secondIndex) {
             checkCompatibilityType(modifiers[firstIndex], secondModifier, reporter, reportedNodes, owner, context)
         }

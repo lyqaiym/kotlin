@@ -5,6 +5,8 @@
 
 package kotlin.js
 
+import kotlin.internal.UsedFromCompilerGeneratedCode
+
 // Creates IntRange for {Byte, Short, Int}.rangeTo(x: {Byte, Short, Int})
 internal fun numberRangeToNumber(start: dynamic, endInclusive: dynamic) =
     IntRange(start, endInclusive)
@@ -13,3 +15,8 @@ internal fun numberRangeToNumber(start: dynamic, endInclusive: dynamic) =
 // Long.rangeTo(x: *) should be implemented in Long class
 internal fun numberRangeToLong(start: dynamic, endInclusive: dynamic) =
     LongRange(numberToLong(start), endInclusive)
+
+// Create LongRange for Long.rangeTo(x: Long)
+@UsedFromCompilerGeneratedCode
+internal fun longRangeToLong(start: Long, endInclusive: Long) =
+    LongRange(start, endInclusive)

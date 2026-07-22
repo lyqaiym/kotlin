@@ -1476,13 +1476,13 @@ class KaptStubConverter(val kaptContext: KaptContextForStubGeneration, val gener
                 }
             }
             argMapping.isNotEmpty() -> {
-                argMapping.mapNotNull { (parameterName, arg) ->
+                argMapping.mapNotNull { [parameterName, arg] ->
                     if (arg is DefaultValueArgument) return@mapNotNull null
                     convertAnnotationArgumentWithName(containingClass, constantValues[parameterName], arg, parameterName)
                 }
             }
             else -> {
-                constantValues.mapNotNull { (parameterName, arg) ->
+                constantValues.mapNotNull { [parameterName, arg] ->
                     convertAnnotationArgumentWithName(containingClass, arg, null, parameterName)
                 }
             }

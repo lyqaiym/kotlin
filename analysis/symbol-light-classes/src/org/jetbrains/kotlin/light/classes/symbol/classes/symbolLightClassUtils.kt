@@ -134,7 +134,7 @@ internal fun KaSession.createMethods(
     isTopLevel: Boolean = false,
     suppressStatic: Boolean = false,
 ) {
-    val (ctorProperties, regularMembers) = declarations.partition { it is KaPropertySymbol && it.isFromPrimaryConstructor }
+    val [ctorProperties, regularMembers] = declarations.partition { it is KaPropertySymbol && it.isFromPrimaryConstructor }
 
     fun KaSession.handleDeclaration(declaration: KaCallableSymbol) {
         when (declaration) {
@@ -421,7 +421,7 @@ internal fun KaSession.addPropertyBackingFields(
             filter { lightClass.containingClass?.isInterface == true && !it.isJvmField }
         }
 
-    val (ctorProperties, memberProperties) = propertySymbols.partition { it.isFromPrimaryConstructor }
+    val [ctorProperties, memberProperties] = propertySymbols.partition { it.isFromPrimaryConstructor }
     val isStatic = forceIsStaticTo ?: (containerSymbol is KaClassSymbol && containerSymbol.classKind.isObject)
     fun addPropertyBackingField(propertySymbol: KaPropertySymbol) {
         createAndAddField(

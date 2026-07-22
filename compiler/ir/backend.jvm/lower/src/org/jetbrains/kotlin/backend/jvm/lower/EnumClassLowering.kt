@@ -93,7 +93,7 @@ internal class EnumClassLowering(private val context: JvmBackendContext) : Class
 
         fun run() {
             // Lower IrEnumEntry into IrField and IrClass members
-            irClass.declarations.asSequence().filterIsInstance<IrEnumEntry>().withIndex().forEach { (index, enumEntry) ->
+            irClass.declarations.asSequence().filterIsInstance<IrEnumEntry>().withIndex().forEach { [index, enumEntry] ->
                 enumEntryOrdinals[enumEntry] = index
                 enumEntry.correspondingClass?.let { entryClass -> declarationToEnumEntry[entryClass] = enumEntry }
                 declarationToEnumEntry[buildEnumEntryField(enumEntry)] = enumEntry

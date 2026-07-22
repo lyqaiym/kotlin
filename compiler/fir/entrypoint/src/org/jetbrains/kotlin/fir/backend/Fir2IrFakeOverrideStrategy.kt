@@ -154,7 +154,7 @@ class Fir2IrDelegatedMembersGenerationStrategy(
                 }
             }
         }
-        val (delegateTargetFromBaseType, delegateFieldSymbol) = matched.single()
+        val [delegateTargetFromBaseType, delegateFieldSymbol] = matched.single()
 
         if (!fir2IrExtensions.shouldGenerateDelegatedMember(delegateTargetFromBaseType)) return
 
@@ -185,7 +185,7 @@ class Fir2IrDelegatedMembersGenerationStrategy(
 
     fun generateDelegatedBodies() {
         for (delegatedInfo in delegatedInfos) {
-            val (delegatedMember, delegateTargetFromBaseType, delegateField, parent) = delegatedInfo
+            val [delegatedMember, delegateTargetFromBaseType, delegateField, parent] = delegatedInfo
             val classSymbolOfDelegateField = delegateField.type.unwrapTypeParameterType().classOrFail
             when (delegatedMember) {
                 is IrSimpleFunction -> generateDelegatedFunctionBody(
@@ -322,7 +322,7 @@ class Fir2IrDelegatedMembersGenerationStrategy(
         parent: IrClass,
         kind: Kind
     ) {
-        val (delegateTargetFunction, substitutor, delegatingToMethodOfSupertype) = extractDelegatedFunctionBodyInfo(
+        val [delegateTargetFunction, substitutor, delegatingToMethodOfSupertype] = extractDelegatedFunctionBodyInfo(
             classSymbolOfDelegateField,
             delegateTargetFromBaseType,
             parent,

@@ -108,7 +108,7 @@ class EnumClassConstructorLowering(val context: JsCommonBackendContext) : Declar
             returnType = enumConstructor.returnType
         }.apply {
             parent = enumClass
-            additionalParameters.forEach { (name, type) ->
+            additionalParameters.forEach { [name, type] ->
                 valueParameters = valueParameters memoryOptimizedPlus JsIrBuilder.buildValueParameter(this, name, type)
             }
             copyValueAndTypeParametersFrom(enumConstructor)

@@ -137,7 +137,7 @@ object FirAnnotationChecker : FirBasicDeclarationChecker(MppCheckerKind.Common) 
         fun FirPropertyAccessor.hasNoReceivers() = contextParameters.isEmpty() && receiverParameter?.typeRef == null &&
                 propertySymbol.resolvedReceiverTypeRef == null && propertySymbol.resolvedContextParameters.isEmpty()
 
-        val (hint, type) = when (annotation.useSiteTarget) {
+        val [hint, type] = when (annotation.useSiteTarget) {
             FIELD -> "fields" to ((declaration as? FirBackingField)?.returnTypeRef?.coneType ?: return)
             PROPERTY_DELEGATE_FIELD -> "delegate fields" to ((declaration as? FirBackingField)?.propertySymbol?.delegate?.resolvedType
                 ?: return)

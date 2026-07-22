@@ -299,7 +299,7 @@ class PSICallResolver(
     private val List<ResolvedCall<*>>.allIncomplete: Boolean get() = all { it.status == ResolutionStatus.INCOMPLETE_TYPE_INFERENCE }
 
     private fun ResolvedCall<*>.recordEffects(trace: BindingTrace) {
-        val moduleDescriptor = DescriptorUtils.getContainingModule(this.resultingDescriptor?.containingDeclaration ?: return)
+        val moduleDescriptor = DescriptorUtils.getContainingModule(this.resultingDescriptor.containingDeclaration)
         recordLambdasInvocations(trace, moduleDescriptor)
         recordResultInfo(trace, moduleDescriptor)
     }
@@ -837,7 +837,7 @@ class PSICallResolver(
     ): CallableReferenceKotlinCallArgumentImpl {
         checkNoSpread(outerCallContext, valueArgument)
 
-        val (doubleColonLhs, lhsResult) = getLhsResult(context, ktExpression)
+        val [doubleColonLhs, lhsResult] = getLhsResult(context, ktExpression)
         val newDataFlowInfo = (doubleColonLhs as? DoubleColonLHS.Expression)?.dataFlowInfo ?: startDataFlowInfo
         val rhsExpression = ktExpression.callableReference
         val rhsName = rhsExpression.getReferencedNameAsName()

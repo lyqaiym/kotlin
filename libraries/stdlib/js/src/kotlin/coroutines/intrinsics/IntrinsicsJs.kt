@@ -10,6 +10,8 @@ package kotlin.coroutines.intrinsics
 import kotlin.coroutines.*
 import kotlin.coroutines.CoroutineImpl
 import kotlin.internal.InlineOnly
+import kotlin.internal.UsedFromCompilerGeneratedCode
+import kotlin.js.Promise
 
 /**
  * Invoke 'invoke' method of suspend super type
@@ -307,6 +309,24 @@ internal fun <R, T, P> (suspend R.(P) -> T).createCoroutineUninterceptedGenerato
         else invokeSuspendSuperTypeWithReceiverAndParam(receiver, param, it)
     }
 
+//No function kotlin/coroutines/intrinsics/promisify found
+@UsedFromCompilerGeneratedCode
+internal fun <T> promisify(fn: suspend () -> T): Promise<T> =
+    Promise { resolve, reject ->
+        val completion = Continuation(EmptyCoroutineContext) {
+            it.onSuccess(resolve).onFailure(reject)
+        }
+        fn.startCoroutine(completion)
+    }
+
+//No function kotlin/coroutines/intrinsics/await found
+@UsedFromCompilerGeneratedCode
+internal suspend fun <T> await(promise: Promise<T>): T = suspendCoroutine { continuation ->
+    val _ = promise.then(
+        onFulfilled = { result -> continuation.resume(result) },
+        onRejected = { error -> continuation.resumeWithException(error) }
+    )
+}
 
 internal fun suspendOrReturn(generator: (continuation: Continuation<Any?>) -> dynamic, continuation: Continuation<Any?>): Any? {
     val generatorCoroutineImpl = if (continuation.asDynamic().constructor === GeneratorCoroutineImpl::class.js) {

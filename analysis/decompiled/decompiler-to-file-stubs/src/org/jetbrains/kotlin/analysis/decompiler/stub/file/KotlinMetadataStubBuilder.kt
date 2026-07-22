@@ -12,7 +12,7 @@ import com.intellij.psi.impl.compiled.ClassFileStubBuilder
 import com.intellij.psi.stubs.PsiFileStub
 import com.intellij.util.indexing.FileContent
 import org.jetbrains.kotlin.analysis.decompiler.stub.*
-import org.jetbrains.kotlin.builtins.KotlinBuiltIns
+//import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.SourceElement
 import org.jetbrains.kotlin.load.kotlin.JvmPackagePartSource
 import org.jetbrains.kotlin.metadata.ProtoBuf

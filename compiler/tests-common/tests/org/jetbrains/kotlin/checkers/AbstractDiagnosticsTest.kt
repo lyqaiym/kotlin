@@ -175,7 +175,7 @@ abstract class AbstractDiagnosticsTest : BaseDiagnosticsTest() {
             val implementingModules =
                 if (!isCommonModule) emptyList()
                 else modules.entries.filter { (testModule) -> module in testModule?.dependencies.orEmpty() }
-            val implementingModulesBindings = implementingModules.mapNotNull { (testModule, moduleDescriptor) ->
+            val implementingModulesBindings = implementingModules.mapNotNull { [testModule, moduleDescriptor] ->
                 val platform = moduleDescriptor.platform
                 if (platform != null && !platform.isCommon()) platform to moduleBindings[testModule]!!
                 else null

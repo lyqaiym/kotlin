@@ -97,7 +97,7 @@ sealed class FirExtensionShadowedByMemberChecker(kind: MppCheckerKind) : FirCall
             processMembers = { scope.processPropertiesByName(declaration.name, it) },
         )
 
-        val (shadowingInvoke, shadowingProperty) = shadowingSymbols ?: return
+        val [shadowingInvoke, shadowingProperty] = shadowingSymbols ?: return
 
         reporter.reportOn(
             declaration.source,

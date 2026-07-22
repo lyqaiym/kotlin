@@ -129,7 +129,7 @@ abstract class AbstractFunctionReferenceLowering<C: CommonBackendContext>(val co
                 val constructor = clazz.primaryConstructor!!
                 val newExpression = irBuilder.irCallConstructor(constructor.symbol, emptyList()).apply {
                     origin = getConstructorCallOrigin(expression)
-                    for ((index, value) in expression.boundValues.withIndex()) {
+                    for ([index, value] in expression.boundValues.withIndex()) {
                         arguments[index] = value
                     }
                     for (index in expression.boundValues.size until arguments.size) {
@@ -267,10 +267,10 @@ abstract class AbstractFunctionReferenceLowering<C: CommonBackendContext>(val co
             val builder = context.createIrBuilder(symbol)
             body = builder.irBlockBody {
                 val variablesMapping = buildMap {
-                    for ((index, field) in boundFields.withIndex()) {
+                    for ([index, field] in boundFields.withIndex()) {
                         put(invokeFunction.parameters[index], irTemporary(irGetField(irGet(dispatchReceiverParameter!!), field)))
                     }
-                    for ((index, parameter) in nonDispatchParameters.withIndex()) {
+                    for ([index, parameter] in nonDispatchParameters.withIndex()) {
                         val invokeParameter = invokeFunction.parameters[index + boundFields.size]
                         if (parameter.type != invokeParameter.type) {
                             put(invokeParameter, irTemporary(irGet(parameter).implicitCastTo(invokeParameter.type)))

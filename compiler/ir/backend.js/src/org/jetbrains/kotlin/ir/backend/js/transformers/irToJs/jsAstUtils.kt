@@ -136,7 +136,7 @@ fun translateFunction(declaration: IrFunction, name: JsName?, context: JsGenerat
     }
 
     declaration.extensionReceiverParameter?.let { function.addParameter(functionContext.getNameForValueDeclaration(it), it) }
-    functionParams.forEach { (irValueParameter, name) -> function.addParameter(name, irValueParameter) }
+    functionParams.forEach { [irValueParameter, name] -> function.addParameter(name, irValueParameter) }
     check(!declaration.isSuspend) { "All Suspend functions should be lowered" }
 
     return function

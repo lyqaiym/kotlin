@@ -84,7 +84,7 @@ class FirTypeDeserializer(
                 result[proto.id] = symbol
             }
 
-            for ((index, proto) in typeParameterProtos.withIndex()) {
+            for ([index, proto] in typeParameterProtos.withIndex()) {
                 val builder = builders[index]
                 builder.apply {
                     proto.upperBounds(typeTable).mapTo(bounds) {
@@ -156,7 +156,7 @@ class FirTypeDeserializer(
                     upperBound?.classId == StandardClassIds.Any
 
             return if (isDynamic) {
-                flexibleTypeFactory.createDynamicType(proto, lowerBound!!, upperBound!!)
+                flexibleTypeFactory.createDynamicType(proto, lowerBound, upperBound)
             } else {
                 flexibleTypeFactory.createFlexibleType(proto, lowerBound!!, upperBound!!)
             }

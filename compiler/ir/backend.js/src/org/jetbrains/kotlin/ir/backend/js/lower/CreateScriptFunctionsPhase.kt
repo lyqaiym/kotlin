@@ -38,7 +38,7 @@ class CreateScriptFunctionsPhase(val context: CommonBackendContext) : FileLoweri
     }
 
     private fun lower(irScript: IrScript): List<IrDeclaration> {
-        val (startOffset, endOffset) = getFunctionBodyOffsets(irScript)
+        val [startOffset, endOffset] = getFunctionBodyOffsets(irScript)
 
         val initializeStatements = irScript.statements
             .asSequence()
@@ -106,7 +106,7 @@ class CreateScriptFunctionsPhase(val context: CommonBackendContext) : FileLoweri
 
     private fun createFunction(irScript: IrScript, name: String, returnType: IrType): IrSimpleFunction =
         context.irFactory.buildFun {
-            val (startOffset, endOffset) = getFunctionBodyOffsets(irScript)
+            val [startOffset, endOffset] = getFunctionBodyOffsets(irScript)
             this.startOffset = startOffset
             this.endOffset = endOffset
             this.origin = SCRIPT_FUNCTION

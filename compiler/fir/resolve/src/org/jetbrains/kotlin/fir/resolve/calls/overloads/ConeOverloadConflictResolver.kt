@@ -543,7 +543,7 @@ class ConeOverloadConflictResolver(
                     called.contextParameters.mapTo(this) { TypeWithConversion(it.returnTypeRef.coneType.prepareType(session, call)) }
                 }
                 if (call.argumentMappingInitialized) {
-                    call.argumentMapping.mapTo(this) { (argument, parameter) ->
+                    call.argumentMapping.mapTo(this) { [argument, parameter] ->
                         parameter.toTypeWithConversion(argument, session, call)
                     }
                 }

@@ -55,6 +55,8 @@ object ClsClassFinder {
             if (fileContent == null) {
                 ClassFileViewProvider.isInnerClass(file)
             } else {
+//                Boolean' is deprecated. Deprecated in Java.
+                @Suppress("DEPRECATION") // KT-81203
                 ClassFileViewProvider.isInnerClass(file, fileContent)
             }
         } catch (exception: Exception) {

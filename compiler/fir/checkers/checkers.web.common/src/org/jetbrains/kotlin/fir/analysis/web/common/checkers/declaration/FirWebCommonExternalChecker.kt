@@ -183,7 +183,7 @@ abstract class FirWebCommonExternalChecker(private val allowCompanionInInterface
                 }
             }
 
-            for ((superType, delegate) in collectSupertypesWithDelegates()) {
+            for ([superType, delegate] in collectSupertypesWithDelegates()) {
                 when {
                     delegate != null -> {
                         reporter.reportOn(superType.source, FirWebCommonErrors.EXTERNAL_DELEGATION, context)

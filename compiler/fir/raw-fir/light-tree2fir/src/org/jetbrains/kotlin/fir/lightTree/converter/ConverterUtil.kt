@@ -44,7 +44,7 @@ inline fun isClassLocal(classNode: LighterASTNode, getParent: LighterASTNode.() 
             val grandParent = parent?.getParent()
             when {
                 parentTokenType == KT_FILE -> return true
-                parentTokenType == CLASS_BODY && !(grandParent?.tokenType == OBJECT_DECLARATION && grandParent?.getParent()?.tokenType == OBJECT_LITERAL) -> return true
+                parentTokenType == CLASS_BODY && !(grandParent?.tokenType == OBJECT_DECLARATION && grandParent.getParent()?.tokenType == OBJECT_LITERAL) -> return true
                 parentTokenType == BLOCK && grandParent?.tokenType == SCRIPT -> return true
             }
         }
@@ -60,4 +60,4 @@ inline fun isClassLocal(classNode: LighterASTNode, getParent: LighterASTNode.() 
     return false
 }
 
-val FirUserTypeRef.isUnderscored get() = qualifier.lastOrNull()?.name?.asString() == "_"
+val FirUserTypeRef.isUnderscored: Boolean get() = qualifier.lastOrNull()?.name?.asString() == "_"

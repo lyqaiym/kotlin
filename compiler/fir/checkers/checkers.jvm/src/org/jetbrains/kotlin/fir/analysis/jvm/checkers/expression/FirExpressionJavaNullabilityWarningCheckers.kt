@@ -49,7 +49,7 @@ object FirQualifiedAccessJavaNullabilityWarningChecker : FirQualifiedAccessExpre
             FirJvmErrors.RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS
         )
 
-        for ((contextArgument, contextParameter) in expression.contextArguments.zip(symbol.resolvedContextParameters)) {
+        for ([contextArgument, contextParameter] in expression.contextArguments.zip(symbol.resolvedContextParameters)) {
             contextArgument.checkExpressionForEnhancedTypeMismatch(
                 expectedType = substitutor.substituteOrSelf(contextParameter.returnTypeRef.coneType),
                 reporter,
@@ -59,7 +59,7 @@ object FirQualifiedAccessJavaNullabilityWarningChecker : FirQualifiedAccessExpre
         }
 
         if (expression is FirFunctionCall) {
-            expression.resolvedArgumentMapping?.forEach { (argument, parameter) ->
+            expression.resolvedArgumentMapping?.forEach { [argument, parameter] ->
                 argument.checkExpressionForEnhancedTypeMismatch(
                     expectedType = substitutor.substituteOrSelf(parameter.returnTypeRef.coneType),
                     reporter,
@@ -154,7 +154,7 @@ internal fun FirExpression.checkExpressionForEnhancedTypeMismatch(
     if (expectedType == null) return
     val actualType = resolvedType
 
-    val (actualTypeForComparison, expectedTypeForComparison) = getEnhancedTypesForComparison(actualType, expectedType, context)
+    val [actualTypeForComparison, expectedTypeForComparison] = getEnhancedTypesForComparison(actualType, expectedType, context)
         ?: return
 
     if (!actualTypeForComparison.isSubtypeOf(context.session.typeContext, expectedTypeForComparison) &&

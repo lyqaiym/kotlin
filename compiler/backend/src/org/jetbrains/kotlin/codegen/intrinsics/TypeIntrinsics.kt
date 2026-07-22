@@ -69,7 +69,9 @@ object TypeIntrinsics {
                 IntInsnNode(Opcodes.SIPUSH, value)
             }
             else {
-                LdcInsnNode(Integer(value))
+//                This class is not recommended for use in Kotlin. Use 'kotlin.Int' instead.
+//                LdcInsnNode(Integer(value))
+                LdcInsnNode(value)
             }
 
     @JvmStatic fun instanceOf(instanceofInsn: TypeInsnNode, instructions: InsnList, kotlinType: KotlinType, asmType: Type) {

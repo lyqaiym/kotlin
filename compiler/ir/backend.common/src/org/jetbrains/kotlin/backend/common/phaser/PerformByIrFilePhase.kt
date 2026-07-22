@@ -36,7 +36,7 @@ class PerformByIrFilePhase<Context : LoweringContext>(
             } catch (e: Throwable) {
                 CodegenUtil.reportBackendException(e, "IR lowering", irFile.fileEntry.name) { offset ->
                     irFile.fileEntry.takeIf { it.supportsDebugInfo }?.let {
-                        val (line, column) = it.getLineAndColumnNumbers(offset)
+                        val [line, column] = it.getLineAndColumnNumbers(offset)
                         line to column
                     }
                 }

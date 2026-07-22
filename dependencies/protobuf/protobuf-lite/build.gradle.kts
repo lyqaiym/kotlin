@@ -78,7 +78,7 @@ val prepare by tasks.registering {
             for ((name, value) in allFiles) {
                 val className = name.substringAfter("org/jetbrains/kotlin/protobuf/").substringBeforeLast(".class")
                 if (keepClasses.any { className == it || className.startsWith(it + "$") }) {
-                    val (entry, bytes) = value
+                    val [entry, bytes] = value
                     output.putNextEntry(entry)
                     output.write(bytes)
                     output.closeEntry()

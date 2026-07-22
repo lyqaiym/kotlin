@@ -44,7 +44,7 @@ internal fun FirExpectActualMatchingContext.areFirAnnotationsEqual(
     if (args1.size != args2.size) {
         return false
     }
-    return args1.all { (key, value1) ->
+    return args1.all { [key, value1] ->
         val value2 = args2[key]
         value1 is FirEvaluatorResult.Evaluated && value2 is FirEvaluatorResult.Evaluated &&
                 areAnnotationArgumentsEqual(value1.result, value2.result, collectionArgumentsCompatibilityCheckStrategy)

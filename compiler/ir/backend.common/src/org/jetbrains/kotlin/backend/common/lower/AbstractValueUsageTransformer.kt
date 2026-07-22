@@ -88,7 +88,7 @@ abstract class AbstractValueUsageTransformer(
         expression.transformChildrenVoid(this)
 
         with(expression) {
-            val newArguments = arguments.zip(symbol.owner.parameters).map { (argument, parameter) ->
+            val newArguments = arguments.zip(symbol.owner.parameters).map { [argument, parameter] ->
                 argument?.useAsValueArgument(expression, parameter)
             }
             arguments.assignFrom(newArguments)
@@ -269,7 +269,7 @@ abstract class AbstractValueUsageTransformer(
     override fun visitStringConcatenation(expression: IrStringConcatenation): IrExpression {
         expression.transformChildrenVoid()
         if (expression is IrStringConcatenationImpl) {
-            for ((i, arg) in expression.arguments.withIndex()) {
+            for ([i, arg] in expression.arguments.withIndex()) {
                 expression.arguments[i] = arg.useAs(irBuiltIns.anyNType)
             }
         }

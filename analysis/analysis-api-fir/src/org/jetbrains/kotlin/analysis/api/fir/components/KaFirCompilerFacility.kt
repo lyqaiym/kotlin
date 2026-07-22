@@ -437,14 +437,14 @@ internal class KaFirCompilerFacility(
          * Other chunks generally follow the order of file submission.
          */
         fun computeChunks(): Map<KaModule, ChunkToCompile> {
-            val (mainChunks, otherChunks) = submittedChunks.entries.partition { it.key.isMain }
+            val [mainChunks, otherChunks] = submittedChunks.entries.partition { it.key.isMain }
             val result = LinkedHashMap<KaModule, ChunkToCompile>()
 
             /**
              * Create a new multi-file dangling file module, containing copies of [files], with the specified [contextModule].
              */
             fun appendDanglingChunk(spec: ChunkSpec, files: List<KtFile>) {
-                val (codeFragments, ordinaryFiles) = files.partition { it is KtCodeFragment }
+                val [codeFragments, ordinaryFiles] = files.partition { it is KtCodeFragment }
                 val newOrdinaryFiles = ordinaryFiles.map { createFileCopy(it, emptyMap()) }
 
                 val newCodeFragments = if (codeFragments.isNotEmpty()) {
@@ -776,7 +776,7 @@ internal class KaFirCompilerFacility(
             return file?.psi is KtCodeFragment
         }
 
-        val (irCodeFragmentFiles, irOrdinaryFiles) = fir2IrResult.irModuleFragment.files.partition(::isCodeFragmentFile)
+        val [irCodeFragmentFiles, irOrdinaryFiles] = fir2IrResult.irModuleFragment.files.partition(::isCodeFragmentFile)
 
         // Collect original declarations from the context files
         val collectingVisitor = IrDeclarationMappingCollectingVisitor()

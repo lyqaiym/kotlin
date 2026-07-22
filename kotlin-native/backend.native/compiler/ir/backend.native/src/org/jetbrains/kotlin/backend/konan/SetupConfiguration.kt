@@ -514,7 +514,7 @@ fun parseBinaryOptions(
 ): List<BinaryOptionWithValue<*>> {
     val keyValuePairs = parseKeyValuePairs(arguments.binaryOptions, configuration) ?: return emptyList()
 
-    return keyValuePairs.mapNotNull { (key, value) ->
+    return keyValuePairs.mapNotNull { [key, value] ->
         val option = BinaryOptions.getByName(key)
         if (option == null) {
             configuration.report(STRONG_WARNING, "Unknown binary option '$key'")

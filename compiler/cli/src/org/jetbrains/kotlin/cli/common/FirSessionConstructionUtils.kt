@@ -301,7 +301,7 @@ object SessionConstructionUtils {
         createSourceSession: FirSessionProducer<F>,
     ): List<SessionWithSources<F>> {
         val languageVersionSettings = configuration.languageVersionSettings
-        val (scripts, nonScriptFiles) = when (configuration.dontCreateSeparateSessionForScripts) {
+        val [scripts, nonScriptFiles] = when (configuration.dontCreateSeparateSessionForScripts) {
             false -> files.partition(isScript)
             // only in tests mode
             true -> emptyList<F>() to files

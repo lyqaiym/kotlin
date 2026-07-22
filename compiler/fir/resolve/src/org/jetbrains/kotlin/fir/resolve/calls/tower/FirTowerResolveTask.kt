@@ -163,11 +163,11 @@ internal abstract class FirBaseTowerResolveTask(
         onImplicitReceiver: (ImplicitReceiverValue<*>, TowerGroup) -> Unit,
         onContextReceiverGroup: (ContextReceiverGroup, TowerGroup) -> Unit,
     ) {
-        for ((index, localScope) in towerDataElementsForName.reversedFilteredLocalScopes) {
+        for ([index, localScope] in towerDataElementsForName.reversedFilteredLocalScopes) {
             onScope(localScope, null, parentGroup.Local(index))
         }
 
-        for ((depth, lexical) in towerDataElementsForName.nonLocalTowerDataElements.withIndex()) {
+        for ([depth, lexical] in towerDataElementsForName.nonLocalTowerDataElements.withIndex()) {
             val scope = lexical.scope
             if (!lexical.isLocal && scope != null) {
                 onScope(
@@ -185,7 +185,7 @@ internal abstract class FirBaseTowerResolveTask(
             }
         }
 
-        for ((depth, contextReceiverGroup) in towerDataElementsForName.contextReceiverGroups) {
+        for ([depth, contextReceiverGroup] in towerDataElementsForName.contextReceiverGroups) {
             onContextReceiverGroup(contextReceiverGroup, parentGroup.ContextReceiverGroup(depth))
         }
     }
@@ -398,7 +398,7 @@ internal open class FirTowerResolveTask(
         if (info.callKind != CallKind.Function || info.name !in HIDES_MEMBERS_NAME_LIST) return
 
         val importingScopes = components.fileImportsScope.asReversed()
-        for ((index, topLevelScope) in importingScopes.withIndex()) {
+        for ([index, topLevelScope] in importingScopes.withIndex()) {
             processHideMembersLevel(
                 receiverValue, topLevelScope, info, index,
                 explicitReceiverKind, parentGroup

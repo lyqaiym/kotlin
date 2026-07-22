@@ -93,7 +93,7 @@ class WrapInlineDeclarationsWithReifiedTypeParametersLowering(val context: Lower
                                 irBuilder.irCall(owner.symbol).also { call ->
                                     expression.extensionReceiver?.setDeclarationsParent(this@apply)
                                     expression.dispatchReceiver?.setDeclarationsParent(this@apply)
-                                    val (extensionReceiver, forwardedParams) = if (forwardExtensionReceiverAsParam) {
+                                    val [extensionReceiver, forwardedParams] = if (forwardExtensionReceiverAsParam) {
                                         irBuilder.irGet(valueParameters.first()) to valueParameters.subList(1, valueParameters.size)
                                     } else {
                                         expression.extensionReceiver to valueParameters

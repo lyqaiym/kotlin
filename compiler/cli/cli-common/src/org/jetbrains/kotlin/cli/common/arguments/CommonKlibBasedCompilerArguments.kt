@@ -98,9 +98,9 @@ The only observable effect is that a custom ABI version is written to KLIB manif
 
     override fun configureExtraLanguageFeatures(map: HashMap<LanguageFeature, LanguageFeature.State>) {
         super.configureExtraLanguageFeatures(map)
-        if (irInlinerBeforeKlibSerialization) {
-            map[LanguageFeature.IrInlinerBeforeKlibSerialization] = LanguageFeature.State.ENABLED
-        }
+//        if (irInlinerBeforeKlibSerialization) {
+//            map[LanguageFeature.IrInlinerBeforeKlibSerialization] = LanguageFeature.State.ENABLED
+//        }
     }
 }
 

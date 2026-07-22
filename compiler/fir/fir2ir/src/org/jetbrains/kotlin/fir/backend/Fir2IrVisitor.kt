@@ -669,7 +669,7 @@ class Fir2IrVisitor(
     ): IrElement = whileAnalysing(session, safeCallExpression) {
         val explicitReceiverExpression = convertToIrExpression(safeCallExpression.receiver)
 
-        val (receiverVariable, variableSymbol) = conversionScope.createTemporaryVariableForSafeCallConstruction(
+        val [receiverVariable, variableSymbol] = conversionScope.createTemporaryVariableForSafeCallConstruction(
             explicitReceiverExpression
         )
 
@@ -1536,7 +1536,7 @@ class Fir2IrVisitor(
                             val firLoopVarStmt = loopBodyStatements.firstOrNull()
                                 ?: error("Unexpected shape of for loop body: missing body statements")
 
-                            val (destructuredLoopVariables, realStatements) = loopBodyStatements.drop(1).partition {
+                            val [destructuredLoopVariables, realStatements] = loopBodyStatements.drop(1).partition {
                                 it is FirProperty && it.initializer is FirComponentCall
                             }
                             val firExpression = realStatements.singleOrNull() as? FirExpression

@@ -881,7 +881,7 @@ If API Level >= 2.2 -- no-op."""
             result[LanguageFeature.ProhibitUsingNullableTypeParameterAgainstNotNullAnnotated] = LanguageFeature.State.ENABLED
         }
         if (valueClasses) {
-            result[LanguageFeature.ValueClasses] = LanguageFeature.State.ENABLED
+            result[LanguageFeature.JvmInlineMultiFieldValueClasses] = LanguageFeature.State.ENABLED
         }
 
         // If a JVM default mode is enabled via `-jvm-default` or `-Xjvm-default`, also forcibly enable a few flags that fix incomplete

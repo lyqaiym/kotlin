@@ -151,13 +151,13 @@ private class MoveExternalInlineFunctionsWithBodiesOutsideLowering(private val c
                         extensionReceiverOffset = 0
                     }
 
-                    for ((index, parameter) in originalFunction.parameters.withIndex()) {
+                    for ([index, parameter] in originalFunction.parameters.withIndex()) {
                         if (parameter.kind != IrParameterKind.Regular) continue
                         arguments[index + extensionReceiverOffset] = IrGetValueImpl(UNDEFINED_OFFSET, UNDEFINED_OFFSET, parameter.symbol)
                     }
 
                     val typeParameters = originalFunction.typeParameters.ifEmpty { originalFunction.parentAsClass.typeParameters }
-                    for ((index, type) in typeParameters.withIndex()) {
+                    for ([index, type] in typeParameters.withIndex()) {
                         typeArguments[index] = type.defaultType
                     }
                 }
@@ -232,7 +232,7 @@ private class MoveExternalInlineFunctionsWithBodiesOutsideLowering(private val c
 
     private fun createValueParametersObject(valueParameters: Iterable<IrValueParameter>): String {
         val listOfParameters = valueParameters.joinToString(", ") {
-            val (key, value) = it.name.run {
+            val [key, value] = it.name.run {
                 if (identifier.isValidES5Identifier() && identifier !in RESERVED_KEYWORDS) identifier to identifier
                 else {
                     val newName: Name = Name.identifier(sanitizeName(identifier)).apply { it.name = this }

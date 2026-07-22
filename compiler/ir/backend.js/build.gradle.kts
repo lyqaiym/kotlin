@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     api(project(":compiler:cli-base"))
+    implementation(project(":core:descriptors"))
     api(project(":compiler:util"))
     implementation(project(":compiler:frontend"))
 //    api(project(":compiler:backend-common"))
@@ -15,6 +16,7 @@ dependencies {
     api(project(":compiler:ir.serialization.js"))
     api(project(":js:js.ast"))
     api(project(":js:js.sourcemap"))
+    implementation(project(":js:js.frontend"))
     implementation(project(":js:js.translator"))
 
     compileOnly(intellijCore())

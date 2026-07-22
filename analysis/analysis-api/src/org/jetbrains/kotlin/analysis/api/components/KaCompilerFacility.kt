@@ -17,7 +17,7 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.CompilerConfigurationKey
 import org.jetbrains.kotlin.psi.KtCodeFragment
 import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.resolve.jvm.diagnostics.JvmDeclarationOrigin
+//import org.jetbrains.kotlin.resolve.jvm.diagnostics.JvmDeclarationOrigin
 import java.io.File
 
 /**

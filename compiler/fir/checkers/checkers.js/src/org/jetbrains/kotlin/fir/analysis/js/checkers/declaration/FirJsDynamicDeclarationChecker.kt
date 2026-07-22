@@ -21,7 +21,7 @@ object FirJsDynamicDeclarationChecker : FirClassChecker(MppCheckerKind.Common) {
     override fun check(declaration: FirClass, context: CheckerContext, reporter: DiagnosticReporter) {
         val delegatedFields = declaration.delegateFieldsMap ?: return
 
-        for ((_, delegate) in delegatedFields) {
+        for ([_, delegate] in delegatedFields) {
             @OptIn(SymbolInternals::class)
             // Accessing fir here is ok, because it still
             // belongs to the current `declaration: FirClass`,

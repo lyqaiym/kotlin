@@ -293,7 +293,7 @@ abstract class AbstractSymbolTest : AbstractAnalysisApiBasedTest() {
         val restoredPointers = mutableListOf<KaSymbolPointer<*>>()
         try {
             val restored = analyseForTest(analyzeContext ?: ktFile) {
-                pointersWithRendered.mapNotNull { (pointer, expectedRender, shouldBeRendered) ->
+                pointersWithRendered.mapNotNull { [pointer, expectedRender, shouldBeRendered] ->
                     val pointer = pointer ?: error("Symbol pointer for $expectedRender was not created")
                     val restored = restoreSymbol(pointer, disablePsiBasedLogic) ?: error("Symbol $expectedRender was not restored")
                     restoredPointers += pointer

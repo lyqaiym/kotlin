@@ -30,7 +30,7 @@ object WebKlibSerializationPipelinePhase : PipelinePhase<JsFir2IrPipelineArtifac
     postActions = setOf(PerformanceNotifications.BackendFinished)
 ) {
     override fun executePhase(input: JsFir2IrPipelineArtifact): JsSerializedKlibPipelineArtifact? {
-        val (fir2IrResult, firOutput, configuration, diagnosticCollector, moduleStructure) = input
+        val [fir2IrResult, firOutput, configuration, diagnosticCollector, moduleStructure] = input
 
         processIncrementalCompilationRoundIfNeeded(configuration, moduleStructure, firOutput, fir2IrResult)
 

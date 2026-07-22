@@ -235,7 +235,7 @@ internal fun IrElement.toConstantValueOrNull(): ConstantValue<*>? {
             val rawArguments = this.getAllArgumentsWithIr()
             val argumentMapping = rawArguments
                 .filter { it.second != null || it.first.type.isArray() }
-                .associate { (parameter, expression) -> parameter.name to (expression?.toConstantValue() ?: ArrayValue(emptyList())) }
+                .associate { [parameter, expression] -> parameter.name to (expression?.toConstantValue() ?: ArrayValue(emptyList())) }
             AnnotationValue.create(classId, argumentMapping)
         }
         is IrGetEnumValue -> {

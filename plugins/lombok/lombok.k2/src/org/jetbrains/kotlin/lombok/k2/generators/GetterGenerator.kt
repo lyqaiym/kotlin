@@ -58,7 +58,7 @@ class GetterGenerator(session: FirSession) : FirDeclarationGenerationExtension(s
         val fieldsWithGetter = computeFieldsWithGetter(classSymbol) ?: return null
         val globalAccessors = lombokService.getAccessors(classSymbol)
         val explicitlyDeclaredFunctions = declaredScope?.collectAllFunctions()?.associateBy { it.name }.orEmpty()
-        return fieldsWithGetter.mapNotNull { (field, getterInfo) ->
+        return fieldsWithGetter.mapNotNull { [field, getterInfo] ->
             val getterName = computeGetterName(field, getterInfo, globalAccessors) ?: return@mapNotNull null
             if (explicitlyDeclaredFunctions[getterName]?.valueParameterSymbols?.isEmpty() == true) {
                 return@mapNotNull null

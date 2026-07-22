@@ -6,7 +6,11 @@ plugins {
 dependencies {
     api(project(":compiler:util"))
     implementation(project(":compiler:frontend"))
-//    api(project(":compiler:backend-common"))
+    implementation(project(":compiler:resolution"))
+    implementation(project(":compiler:resolution.common"))
+    implementation(project(":core:descriptors"))
+    implementation(project(":core:deserialization"))
+    api(project(":compiler:backend-common"))
     api(project(":compiler:ir.tree"))
     compileOnly(intellijCore())
 }

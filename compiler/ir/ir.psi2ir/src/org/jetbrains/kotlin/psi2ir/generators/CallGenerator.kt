@@ -420,7 +420,7 @@ internal class CallGenerator(statementGenerator: StatementGenerator) : Statement
             generateCallWithArgumentReordering(irCall, startOffset, endOffset, call, irResultType, contextReceivers.size)
         } else {
             val valueArguments = call.getValueArgumentsInParameterOrder()
-            for ((index, valueArgument) in valueArguments.withIndex()) {
+            for ([index, valueArgument] in valueArguments.withIndex()) {
                 irCall.putValueArgument(index + contextReceivers.size, valueArgument)
             }
             irCall
@@ -473,7 +473,7 @@ internal class CallGenerator(statementGenerator: StatementGenerator) : Statement
         val resolvedCall = call.original
         val valueParameters = resolvedCall.resultingDescriptor.valueParameters
         val valueArgumentsToIndex = HashMap<ResolvedValueArgument, Int>()
-        for ((index, valueArgument) in resolvedCall.valueArgumentsByIndex!!.withIndex()) {
+        for ([index, valueArgument] in resolvedCall.valueArgumentsByIndex!!.withIndex()) {
             valueArgumentsToIndex[valueArgument] = index
         }
         for (valueArgument in resolvedCall.valueArguments.values) {

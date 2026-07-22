@@ -256,7 +256,7 @@ class FirCallCompletionResultsWriterTransformer(
         @OptIn(Candidate.UpdatingCandidateInvariants::class)
         updateSubstitutor(
             substitutorByMap(
-                updatedSymbol.typeParameterSymbols.zip(freshVariables).associate { (typeParameter, typeVariable) ->
+                updatedSymbol.typeParameterSymbols.zip(freshVariables).associate { [typeParameter, typeVariable] ->
                     typeParameter to typeVariable.defaultType
                 },
                 session,
@@ -372,7 +372,7 @@ class FirCallCompletionResultsWriterTransformer(
             substitutor = subCandidate.prepareCustomReturnTypeSubstitutorForFunctionCall() ?: finalSubstitutor
         )
         val allArgs = calleeReference.computeAllArguments(originalArgumentList)
-        val (regularMapping, allArgsMapping) = subCandidate.handleVarargsAndReturnResultingArgumentsMapping(allArgs)
+        val [regularMapping, allArgsMapping] = subCandidate.handleVarargsAndReturnResultingArgumentsMapping(allArgs)
         if (calleeReference.isError) {
             result.replaceArgumentList(buildArgumentListForErrorCall(originalArgumentList, allArgsMapping))
         } else {
@@ -380,7 +380,7 @@ class FirCallCompletionResultsWriterTransformer(
             val symbol = subCandidate.symbol
             val functionIsInline =
                 (symbol as? FirNamedFunctionSymbol)?.fir?.isInline == true || symbol.isArrayConstructorWithLambda
-            for ((argument, parameter) in newArgumentList.mapping) {
+            for ([argument, parameter] in newArgumentList.mapping) {
                 val lambda = (argument.unwrapArgument() as? FirAnonymousFunctionExpression)?.anonymousFunction ?: continue
                 lambda.transformInlineStatus(parameter, functionIsInline, session)
             }
@@ -442,7 +442,7 @@ class FirCallCompletionResultsWriterTransformer(
         val baseSubstitutor = finalSubstitutor
         val overridingMap = mutableMapOf<TypeConstructorMarker, ConeKotlinType>()
 
-        for ((index, freshVariable) in freshVariables.withIndex()) {
+        for ([index, freshVariable] in freshVariables.withIndex()) {
             val baseTypeArgument = baseSubstitutor.substituteOrNull(freshVariable.defaultType) ?: continue
             if (baseTypeArgument !is ConeFlexibleType) continue
 
@@ -557,14 +557,14 @@ class FirCallCompletionResultsWriterTransformer(
             var index = 0
             subCandidate.argumentMapping.let {
                 LinkedHashMap<FirExpression, FirValueParameter>(it.size).let { newMapping ->
-                    subCandidate.argumentMapping.mapKeysTo(newMapping) { (_, _) ->
+                    subCandidate.argumentMapping.mapKeysTo(newMapping) { [_, _] ->
                         annotationCall.argumentList.arguments[index++]
                     }
                 }
             }
         }
         val allArgs = calleeReference.computeAllArguments(annotationCall.argumentList, argumentMappingWithArrayOfCalls)
-        val (regularMapping, allArgsMapping) = subCandidate.handleVarargsAndReturnResultingArgumentsMapping(
+        val [regularMapping, allArgsMapping] = subCandidate.handleVarargsAndReturnResultingArgumentsMapping(
             allArgs,
             precomputedArgumentMapping = argumentMappingWithArrayOfCalls
         )
@@ -702,7 +702,7 @@ class FirCallCompletionResultsWriterTransformer(
                 name = calleeReference.name
                 resolvedSymbol = calleeReference.candidateSymbol
                 inferredTypeArguments.addAll(computeTypeArgumentTypes(calleeReference.candidate))
-                mappedArguments = subCandidate.callableReferenceAdaptation?.mappedArguments?.mapValues { (_, argument) ->
+                mappedArguments = subCandidate.callableReferenceAdaptation?.mappedArguments?.mapValues { [_, argument] ->
                     argument.map { it.expression }
                 } ?: emptyMap()
             }
@@ -774,7 +774,7 @@ class FirCallCompletionResultsWriterTransformer(
         val isIntegerOperator = symbol.isWrappedIntegerOperator()
 
         var samConversions: MutableMap<FirElement, FirSamResolver.SamConversionInfo>? = null
-        val arguments = argumentMapping.flatMap { (atom, valueParameter) ->
+        val arguments = argumentMapping.flatMap { [atom, valueParameter] ->
             val argument = atom.expression
             val expectedType = when {
                 isIntegerOperator -> ConeIntegerConstantOperatorTypeImpl(
@@ -818,7 +818,7 @@ class FirCallCompletionResultsWriterTransformer(
 
         val originalArgumentList = delegatedConstructorCall.argumentList
         val allArgs = calleeReference.computeAllArguments(originalArgumentList)
-        val (regularMapping, allArgsMapping) = subCandidate.handleVarargsAndReturnResultingArgumentsMapping(allArgs)
+        val [regularMapping, allArgsMapping] = subCandidate.handleVarargsAndReturnResultingArgumentsMapping(allArgs)
         if (calleeReference.isError) {
             delegatedConstructorCall.replaceArgumentList(buildArgumentListForErrorCall(originalArgumentList, allArgsMapping))
         } else {
@@ -993,7 +993,7 @@ class FirCallCompletionResultsWriterTransformer(
 
         val newData = expectedReturnType?.toExpectedType()
         val result = transformElement(anonymousFunction, newData)
-        for ((expression, _) in returnExpressions) {
+        for ([expression, _] in returnExpressions) {
             expression.transformSingle(this, newData)
         }
 
@@ -1309,7 +1309,7 @@ internal fun FirQualifiedAccessExpression.addNonFatalDiagnostics(candidate: Cand
     for (diagnostic in candidate.diagnostics) {
         when (diagnostic) {
             is CallToDeprecatedOverrideOfHidden -> newNonFatalDiagnostics += ConeCallToDeprecatedOverrideOfHidden
-            else -> null
+//            else -> null
         }
     }
 

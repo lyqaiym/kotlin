@@ -42,7 +42,7 @@ fun FirFunctionCall.replaceLambdaArgumentInvocationKinds(session: FirSession) {
     }
     if (byParameter.isEmpty() && !isInline) return
 
-    for ((argument, parameter) in argumentMapping) {
+    for ([argument, parameter] in argumentMapping) {
         val lambda = argument.expression.unwrapAnonymousFunctionExpression() ?: continue
         lambda.transformInlineStatus(parameter, isInline, session)
         val kind = byParameter[parameter] ?: EventOccurrencesRange.UNKNOWN.takeIf {

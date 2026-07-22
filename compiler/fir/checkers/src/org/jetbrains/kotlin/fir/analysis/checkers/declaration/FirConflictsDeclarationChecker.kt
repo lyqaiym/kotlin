@@ -118,7 +118,7 @@ object FirConflictsDeclarationChecker : FirBasicDeclarationChecker(MppCheckerKin
         declarationConflictingSymbols: Map<FirBasedSymbol<*>, SmartSet<FirBasedSymbol<*>>>,
         container: FirDeclaration,
     ) {
-        declarationConflictingSymbols.forEach { (conflictingDeclaration, symbols) ->
+        declarationConflictingSymbols.forEach { [conflictingDeclaration, symbols] ->
             val typeAliasForConstructorSource =
                 (conflictingDeclaration as? FirConstructorSymbol)?.typeAliasConstructorInfo?.typeAliasSymbol?.source
             val origin = conflictingDeclaration.origin

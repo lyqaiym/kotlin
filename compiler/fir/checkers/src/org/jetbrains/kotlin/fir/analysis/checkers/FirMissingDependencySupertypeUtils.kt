@@ -36,7 +36,7 @@ fun checkMissingDependencySuperTypes(
 
     val missingSuperTypes = context.session.missingDependencyStorage.getMissingSuperTypes(declaration)
     val languageVersionSettings = context.languageVersionSettings
-    for ((superType, origin) in missingSuperTypes) {
+    for ([superType, origin] in missingSuperTypes) {
         val diagnostic =
             when {
                 origin == FirMissingDependencyStorage.SupertypeOrigin.TYPE_ARGUMENT && !languageVersionSettings.supportsFeature(

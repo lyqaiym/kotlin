@@ -165,7 +165,7 @@ internal class SourceSetVisibilityProvider(
                             .keys.first()
                     }
 
-                someVariantByHostSpecificSourceSet.entries.mapNotNull { (sourceSetName, variantName) ->
+                someVariantByHostSpecificSourceSet.entries.mapNotNull { [sourceSetName, variantName] ->
                     val resolvedHostSpecificMetadataConfiguration = platformCompilationsByResolvedVariantName
                         .getValue(variantName)
                         .hostSpecificMetadataConfiguration

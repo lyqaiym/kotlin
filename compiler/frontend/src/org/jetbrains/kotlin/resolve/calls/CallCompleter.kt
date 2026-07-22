@@ -229,7 +229,7 @@ class CallCompleter(
         if (call.isCallableReference() && !TypeUtils.noExpectedType(expectedType) && expectedType.isFunctionOrSuspendFunctionType) {
             updateSystemIfNeeded { builder ->
                 candidateDescriptor.valueParameters.zip(expectedType.getValueParameterTypesFromFunctionType())
-                    .forEach { (parameter, argument) ->
+                    .forEach { [parameter, argument] ->
                         val valueParameterInSystem = builder.typeInSystem(parameter.type)
                         builder.addSubtypeConstraint(
                             valueParameterInSystem,
@@ -357,7 +357,7 @@ class CallCompleter(
             if (!convertedConst) {
                 updatedType =
                         if (resolvedCall.hasInferredReturnType())
-                            resolvedCall.makeNullableTypeIfSafeReceiver(resolvedCall.resultingDescriptor?.returnType, context)
+                            resolvedCall.makeNullableTypeIfSafeReceiver(resolvedCall.resultingDescriptor.returnType, context)
                         else
                             null
             }
@@ -406,7 +406,7 @@ class CallCompleter(
         context: BasicCallResolutionContext
     ): OverloadResolutionResultsImpl<*>? {
         val cachedData = getResolutionResultsCachedData(expression, context) ?: return null
-        val (cachedResolutionResults, cachedContext, tracing) = cachedData
+        val [cachedResolutionResults, cachedContext, tracing] = cachedData
 
         val contextForArgument = cachedContext.replaceBindingTrace(context.trace)
             .replaceExpectedType(context.expectedType).replaceCollectAllCandidates(false).replaceCallPosition(context.callPosition)
@@ -468,7 +468,7 @@ class CallCompleter(
     private fun MutableResolvedCall<*>.updateResultDataFlowInfoUsingEffects(bindingTrace: BindingTrace) {
         if (dataFlowInfoForArguments is MutableDataFlowInfoForArguments.WithoutArgumentsCheck) return
 
-        val moduleDescriptor = DescriptorUtils.getContainingModule(this.resultingDescriptor?.containingDeclaration ?: return)
+        val moduleDescriptor = DescriptorUtils.getContainingModule(this.resultingDescriptor.containingDeclaration)
         val resultDFIfromES = effectSystem.getDataFlowInfoForFinishedCall(this, bindingTrace, moduleDescriptor)
         dataFlowInfoForArguments.updateResultInfo(resultDFIfromES)
 

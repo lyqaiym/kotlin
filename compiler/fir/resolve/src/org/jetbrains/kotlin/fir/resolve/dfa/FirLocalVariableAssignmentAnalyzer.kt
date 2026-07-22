@@ -65,7 +65,7 @@ internal class FirLocalVariableAssignmentAnalyzer {
             // Control-flow-postponed lambdas' assignments should be in `functionScopes.top()`.
             // The reason we can't check them here is that one of the entries may be the lambda
             // that is currently being analyzed, and assignments in it are, in fact, totally fine.
-            lambdas.any { (lambda, dataFlowOnly) -> dataFlowOnly && declaration in lambda.assignedInside }
+            lambdas.any { [lambda, dataFlowOnly] -> dataFlowOnly && declaration in lambda.assignedInside }
         }
     }
 
@@ -105,7 +105,7 @@ internal class FirLocalVariableAssignmentAnalyzer {
         val prohibitInThisScope = scopes.top().second.copy()
         scopes.push(currentInfo to prohibitInThisScope)
         if (!evaluatedInPlace) {
-            for ((outerInfo, prohibitInOuterScope) in scopes.all()) {
+            for ([outerInfo, prohibitInOuterScope] in scopes.all()) {
                 // The callable may be stored and then called later
                 // => any access of the variables it touches is no longer smartcastable ever,
                 // including within the callable itself (can recurse).
@@ -140,10 +140,10 @@ internal class FirLocalVariableAssignmentAnalyzer {
             scopes.push(null to VariableAssignments())
             return emptySet()
         }
-        val (info, prohibitSmartCasts) =
+        val [info, prohibitSmartCasts] =
             enterScope(function.symbol, function is FirAnonymousFunction && function.invocationKind.isInPlace)
         for (concurrentLambdas in postponedLambdas.all()) {
-            for ((otherLambda, dataFlowOnly) in concurrentLambdas) {
+            for ([otherLambda, dataFlowOnly] in concurrentLambdas) {
                 if (!dataFlowOnly && otherLambda != info) {
                     prohibitSmartCasts.merge(otherLambda.assignedInside)
                 }
@@ -163,7 +163,7 @@ internal class FirLocalVariableAssignmentAnalyzer {
 
     fun enterClass(klass: FirClass) {
         if (rootFunction == null) return
-        val (info, prohibitSmartCasts) = enterScope(klass.symbol, klass is FirAnonymousObject)
+        val [info, prohibitSmartCasts] = enterScope(klass.symbol, klass is FirAnonymousObject)
         if (klass is FirAnonymousObject && info != null) {
             // Assignments in initializers and methods invalidate smart casts in other members.
             prohibitSmartCasts.merge(info.assignedInside)
@@ -208,7 +208,7 @@ internal class FirLocalVariableAssignmentAnalyzer {
      */
     fun enterLoop(loop: FirLoop): Set<FirPropertySymbol> {
         if (rootFunction == null) return emptySet()
-        val (info, _) = enterScope(loop, evaluatedInPlace = true)
+        val [info, _] = enterScope(loop, evaluatedInPlace = true)
         return info?.assignedInside?.getAssignedProperties().orEmpty()
     }
 
@@ -217,7 +217,7 @@ internal class FirLocalVariableAssignmentAnalyzer {
      */
     fun exitLoop(): Set<FirPropertySymbol> {
         if (rootFunction == null) return emptySet()
-        val (info, _) = scopes.pop()
+        val [info, _] = scopes.pop()
         return info?.assignedInside?.getAssignedProperties().orEmpty()
     }
 
@@ -341,7 +341,7 @@ internal class FirLocalVariableAssignmentAnalyzer {
                 if (other == null || other.assignments.isEmpty()) return false
 
                 var modified = false
-                for ((property, values) in other.assignments) {
+                for ([property, values] in other.assignments) {
                     modified = modified or assignments.getOrPut(property) { mutableSetOf() }.addAll(values)
                 }
                 return modified
@@ -354,8 +354,8 @@ internal class FirLocalVariableAssignmentAnalyzer {
             fun getAssignedProperties(): Set<FirPropertySymbol> {
                 return assignments.entries
                     // TODO(KT-57563): Operator assignments should be treated just like any other assignment.
-                    .filter { (_, v) -> v.any { !it.operatorAssignment } }
-                    .mapTo(mutableSetOf()) { (k, _) -> k.symbol }
+                    .filter { [_, v] -> v.any { !it.operatorAssignment } }
+                    .mapTo(mutableSetOf()) { [k, _] -> k.symbol }
             }
         }
 
@@ -462,7 +462,7 @@ internal class FirLocalVariableAssignmentAnalyzer {
                     // Delay processing of lambda args because lambda body are evaluated after all arguments have been evaluated.
                     // TODO: this is not entirely correct (the lambda might be nested deep inside an expression), but also this
                     //  entire override should be unnecessary as long as the full CFG builder visits everything in the right order. KT-59691
-                    val (postponedFunctionArgs, normalArgs) = argumentList.arguments.partition { it is FirAnonymousFunctionExpression }
+                    val [postponedFunctionArgs, normalArgs] = argumentList.arguments.partition { it is FirAnonymousFunctionExpression }
                     normalArgs.forEach { it.accept(visitor, data) }
                     postponedFunctionArgs.forEach { it.accept(visitor, data) }
                     calleeReference.accept(visitor, data)

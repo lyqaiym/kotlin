@@ -115,7 +115,7 @@ object FirOptInUsageBaseChecker {
             )
             if (fromSupertype) {
                 if (annotationType.lookupTag.classId == OptInNames.SUBCLASS_OPT_IN_REQUIRED_CLASS_ID) {
-                    val annotationClass = annotation.findArgumentByName(OptInNames.OPT_IN_ANNOTATION_CLASS) ?: continue
+                    val annotationClass = annotation.findArgumentByName(OPT_IN_ANNOTATION_CLASS) ?: continue
                     val classes = annotationClass.extractClassesFromArgument(session)
                     classes.forEach { klass ->
                         result.addIfNotNull(
@@ -158,7 +158,7 @@ object FirOptInUsageBaseChecker {
         fromSetter = false, dispatchReceiverType = null, fromSupertype = true
     )
 
-    fun FirClassLikeSymbol<*>.isExperimentalMarker(session: FirSession) =
+    fun FirClassLikeSymbol<*>.isExperimentalMarker(session: FirSession): Boolean =
         this is FirRegularClassSymbol && getAnnotationByClassId(OptInNames.REQUIRES_OPT_IN_CLASS_ID, session) != null
 
     @OptIn(SymbolInternals::class)
@@ -307,9 +307,9 @@ object FirOptInUsageBaseChecker {
     ) {
         val isSubclassOptInApplicable =
             (context.containingDeclarations.lastOrNull() as? FirClass)?.let { getSubclassOptInApplicabilityAndMessage(it).first } ?: false
-        for ((annotationClassId, severity, message, _, fromSupertype) in experimentalities) {
+        for ([annotationClassId, severity, message, _, fromSupertype] in experimentalities) {
             if (!isExperimentalityAcceptableInContext(annotationClassId, context, fromSupertype)) {
-                val (diagnostic, messageProvider, verb) = when {
+                val [diagnostic, messageProvider, verb] = when {
                     fromSupertype && severity == Experimentality.Severity.WARNING -> Triple(
                         FirErrors.OPT_IN_TO_INHERITANCE,
                         OptInInheritanceDiagnosticMessageProvider(isSubclassOptInApplicable),
@@ -351,11 +351,11 @@ object FirOptInUsageBaseChecker {
         context: CheckerContext,
         reporter: DiagnosticReporter,
     ) {
-        for ((annotationClassId, severity, markerMessage, supertypeName) in experimentalities) {
+        for ([annotationClassId, severity, markerMessage, supertypeName] in experimentalities) {
             if (!symbol.fir.isExperimentalityAcceptable(context.session, annotationClassId, fromSupertype = false) &&
                 !isExperimentalityAcceptableInContext(annotationClassId, context, fromSupertype = false)
             ) {
-                val (diagnostic, verb) = when (severity) {
+                val [diagnostic, verb] = when (severity) {
                     Experimentality.Severity.WARNING -> FirErrors.OPT_IN_OVERRIDE to "should"
                     Experimentality.Severity.ERROR -> FirErrors.OPT_IN_OVERRIDE_ERROR to "must"
                 }
@@ -427,7 +427,7 @@ object FirOptInUsageBaseChecker {
             if (coneType?.lookupTag?.classId != OptInNames.OPT_IN_CLASS_ID) {
                 continue
             }
-            val annotationClasses = annotation.findArgumentByName(OptInNames.OPT_IN_ANNOTATION_CLASS) ?: continue
+            val annotationClasses = annotation.findArgumentByName(OPT_IN_ANNOTATION_CLASS) ?: continue
             if (annotationClasses.extractClassesFromArgument(session).any { it.classId == annotationClassId }) {
                 return true
             }
@@ -444,7 +444,7 @@ object FirOptInUsageBaseChecker {
             if (coneType?.lookupTag?.classId != OptInNames.SUBCLASS_OPT_IN_REQUIRED_CLASS_ID) {
                 continue
             }
-            val annotationClass = annotation.findArgumentByName(OptInNames.OPT_IN_ANNOTATION_CLASS) ?: continue
+            val annotationClass = annotation.findArgumentByName(OPT_IN_ANNOTATION_CLASS) ?: continue
             if (annotationClass.extractClassesFromArgument(session).any { it.classId == annotationClassId }) {
                 return true
             }

@@ -27,7 +27,7 @@ object FirConflictsExpressionChecker : FirBlockChecker(MppCheckerKind.Common) {
     private fun checkForLocalConflictingFunctions(expression: FirBlock, context: CheckerContext, reporter: DiagnosticReporter) {
         val conflictingFunctions = collectConflictingLocalFunctionsFrom(expression, context)
 
-        for ((function, otherFunctionsThatConflictWithIt) in conflictingFunctions) {
+        for ([function, otherFunctionsThatConflictWithIt] in conflictingFunctions) {
             if (otherFunctionsThatConflictWithIt.isEmpty()) {
                 continue
             }

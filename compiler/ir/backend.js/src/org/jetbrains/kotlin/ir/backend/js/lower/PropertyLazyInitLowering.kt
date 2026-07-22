@@ -146,7 +146,7 @@ class PropertyLazyInitLowering(
                 JsIrBuilder.buildBoolean(context.irBuiltIns.booleanType, true)
             )
             add(upGuard)
-            initializers.forEach { (field, expression) ->
+            initializers.forEach { [field, expression] ->
                 add(createIrSetField(field, expression))
             }
             add(JsIrBuilder.buildBlock(irBuiltIns.unitType))

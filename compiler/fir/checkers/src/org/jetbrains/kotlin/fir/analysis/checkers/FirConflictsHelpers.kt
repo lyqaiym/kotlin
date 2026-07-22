@@ -136,7 +136,7 @@ private fun groupTopLevelByName(declarations: List<FirDeclaration>, context: Che
                 val group = groups.getOrPut(declaration.nameOrSpecialName, ::DeclarationBuckets)
                 group.classLikes += declaration.symbol to representation
 
-                declaration.symbol.expandedClassWithConstructorsScope(context)?.let { (expandedClass, scopeWithConstructors) ->
+                declaration.symbol.expandedClassWithConstructorsScope(context)?.let { [expandedClass, scopeWithConstructors] ->
                     if (expandedClass.classKind == ClassKind.OBJECT) {
                         return@let
                     }
@@ -225,7 +225,7 @@ fun FirDeclarationCollector<FirBasedSymbol<*>>.collectClassMembers(klass: FirCla
             return
         }
 
-        it.expandedClassWithConstructorsScope(context)?.let { (expandedClass, scopeWithConstructors) ->
+        it.expandedClassWithConstructorsScope(context)?.let { [expandedClass, scopeWithConstructors] ->
             // Objects have implicit FirPrimaryConstructors
             if (expandedClass.classKind == ClassKind.OBJECT) {
                 return@let
@@ -277,7 +277,7 @@ fun collectConflictingLocalFunctionsFrom(block: FirBlock, context: CheckerContex
             is FirSimpleFunction ->
                 inspector.collect(collectable.symbol, FirRedeclarationPresenter.represent(collectable.symbol), functionDeclarations)
             is FirClassLikeDeclaration -> {
-                collectable.symbol.expandedClassWithConstructorsScope(context)?.let { (_, scopeWithConstructors) ->
+                collectable.symbol.expandedClassWithConstructorsScope(context)?.let { [_, scopeWithConstructors] ->
                     scopeWithConstructors.processDeclaredConstructors {
                         inspector.collect(it, FirRedeclarationPresenter.represent(it, collectable.symbol), functionDeclarations)
                     }
@@ -333,7 +333,7 @@ private fun <D : FirBasedSymbol<*>, S : D> FirDeclarationCollector<D>.collect(
 @Suppress("GrazieInspection")
 fun FirDeclarationCollector<FirBasedSymbol<*>>.collectTopLevel(file: FirFile, packageMemberScope: FirPackageMemberScope) {
 
-    for ((declarationName, group) in groupTopLevelByName(file.declarations, context)) {
+    for ([declarationName, group] in groupTopLevelByName(file.declarations, context)) {
         val groupHasClassLikesOrProperties = group.classLikes.isNotEmpty() || group.properties.isNotEmpty()
         val groupHasSimpleFunctions = group.simpleFunctions.isNotEmpty()
 
@@ -343,7 +343,7 @@ fun FirDeclarationCollector<FirBasedSymbol<*>>.collectTopLevel(file: FirFile, pa
             conflictingPresentation: String? = null,
             conflictingFile: FirFile? = null,
         ) {
-            for ((declaration, declarationPresentation) in declarations) {
+            for ([declaration, declarationPresentation] in declarations) {
                 collectTopLevelConflict(
                     declaration,
                     declarationPresentation,
@@ -370,7 +370,7 @@ fun FirDeclarationCollector<FirBasedSymbol<*>>.collectTopLevel(file: FirFile, pa
                     return
                 }
 
-                conflictingSymbol.expandedClassWithConstructorsScope(context)?.let { (expandedClass, scopeWithConstructors) ->
+                conflictingSymbol.expandedClassWithConstructorsScope(context)?.let { [expandedClass, scopeWithConstructors] ->
                     if (expandedClass.classKind == ClassKind.OBJECT || expandedClass.classKind == ClassKind.ENUM_ENTRY) {
                         return
                     }
@@ -408,7 +408,7 @@ fun FirDeclarationCollector<FirBasedSymbol<*>>.collectTopLevel(file: FirFile, pa
 
             // session.nameConflictsTracker doesn't seem to work for LL API for redeclarations in the same file, for this reason
             // we explicitly check classLikes in the same file, too.
-            for ((classLike, representation) in group.classLikes) {
+            for ([classLike, representation] in group.classLikes) {
                 collectFromClassifierSource(classLike, conflictingPresentation = representation, conflictingFile = file)
             }
         }

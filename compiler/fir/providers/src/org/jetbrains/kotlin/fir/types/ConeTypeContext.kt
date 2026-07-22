@@ -582,7 +582,7 @@ interface ConeTypeContext : TypeSystemContext, TypeSystemOptimizationContext, Ty
         return classId.asSingleFqName().toUnsafe()
     }
 
-    override fun TypeParameterMarker.getName() = (this as ConeTypeParameterLookupTag).name
+    override fun TypeParameterMarker.getName(): Name = (this as ConeTypeParameterLookupTag).name
 
     override fun TypeParameterMarker.isReified(): Boolean {
         require(this is ConeTypeParameterLookupTag)
@@ -608,7 +608,7 @@ interface ConeTypeContext : TypeSystemContext, TypeSystemOptimizationContext, Ty
 
         val substitutor = if (declaration is FirTypeParameterRefsOwner) {
             val substitution =
-                declaration.typeParameters.zip(type.typeArguments).associate { (parameter, argument) ->
+                declaration.typeParameters.zip(type.typeArguments).associate { [parameter, argument] ->
                     parameter.symbol to ((argument as? ConeKotlinTypeProjection)?.type
                         ?: session.builtinTypes.nullableAnyType.coneType)//StandardClassIds.Any(session.firSymbolProvider).constructType(emptyArray(), isNullable = true))
                 }

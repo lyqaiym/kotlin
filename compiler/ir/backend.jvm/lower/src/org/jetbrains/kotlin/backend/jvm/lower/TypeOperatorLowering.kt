@@ -624,9 +624,9 @@ internal class TypeOperatorLowering(private val backendContext: JvmBackendContex
             var syntheticParameterIndex = 0
 
             var argumentStart = 0
-            parameters = (targetFun.parameters zip targetRef.arguments).mapNotNull { (parameter, argument) ->
+            parameters = (targetFun.parameters zip targetRef.arguments).mapNotNull { [parameter, argument] ->
                 if (argument == null) return@mapNotNull null
-                val (newParameterType, newArgument) = when (parameter.kind) {
+                val [newParameterType, newArgument] = when (parameter.kind) {
                     IrParameterKind.DispatchReceiver -> when (targetFun) {
                         is IrSimpleFunction -> {
                             // Fake overrides may have inexact dispatch receiver type.

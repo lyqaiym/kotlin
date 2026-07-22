@@ -8,6 +8,7 @@ plugins {
 dependencies {
     api(project(":compiler:ir.backend.common"))
     implementation(project(":core:descriptors"))
+    implementation(project(":compiler:frontend"))
     implementation(project(":compiler:frontend.java"))
     compileOnly(intellijCore())
     compileOnly(libs.intellij.asm)

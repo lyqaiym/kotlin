@@ -181,9 +181,9 @@ private fun buildDecompiledTextImpl(
             }
 
             val allDescriptors = descriptor.secondaryConstructors + descriptor.defaultType.memberScope.getContributedDescriptors()
-            val (enumEntries, members) = allDescriptors.partition(::isEnumEntry)
+            val [enumEntries, members] = allDescriptors.partition(::isEnumEntry)
 
-            for ((index, enumEntry) in enumEntries.withIndex()) {
+            for ([index, enumEntry] in enumEntries.withIndex()) {
                 newlineExceptFirst()
                 builder.append(subindent)
                 appendDescriptor(enumEntry, subindent, index == enumEntries.lastIndex)

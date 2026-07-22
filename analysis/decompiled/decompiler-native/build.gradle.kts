@@ -15,6 +15,8 @@ sourceSets {
 dependencies {
     implementation(project(":core:deserialization"))
     api(project(":compiler:psi"))
+    implementation(project(":core:descriptors"))
+    implementation(project(":compiler:frontend"))
     implementation(project(":compiler:frontend.java"))
     api(project(":analysis:decompiled:decompiler-to-file-stubs"))
     api(project(":analysis:decompiled:decompiler-to-psi"))

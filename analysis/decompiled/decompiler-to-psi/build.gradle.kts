@@ -5,6 +5,13 @@ plugins {
 
 dependencies {
     implementation(project(":compiler:psi"))
+    implementation(project(":core:deserialization"))
+    implementation(project(":core:deserialization.common"))
+    implementation(project(":core:deserialization.common.jvm"))
+    implementation(project(":core:descriptors"))
+    implementation(project(":core:descriptors.jvm"))
+    implementation(project(":compiler:resolution"))
+    implementation(project(":compiler:frontend"))
     implementation(project(":compiler:frontend.java"))
     implementation(project(":core:compiler.common"))
     implementation(project(":analysis:light-classes-base"))

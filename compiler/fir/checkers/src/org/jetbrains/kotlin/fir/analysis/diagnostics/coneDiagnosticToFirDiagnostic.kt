@@ -292,8 +292,8 @@ private fun mapInapplicableNullableReceiver(
         // For augmented assignment operations (e.g., `a += b`), the source is the entire binary expression (BINARY_EXPRESSION).
         // TODO, KT-59809: No need to check for source.elementType == BINARY_EXPRESSION if we use operator as callee reference source
         //  (see FirExpressionsResolveTransformer.transformAssignmentOperatorStatement)
-        val operationSource = if (source?.elementType == KtNodeTypes.BINARY_EXPRESSION) {
-            source?.getChild(KtNodeTypes.OPERATION_REFERENCE)
+        val operationSource = if (source.elementType == KtNodeTypes.BINARY_EXPRESSION) {
+            source.getChild(KtNodeTypes.OPERATION_REFERENCE)
         } else {
             source
         }
@@ -679,7 +679,7 @@ private fun ConstraintSystemError.toDiagnostic(
     return when (this) {
         is NewConstraintError -> {
             val position = position.from
-            val (argument, reportOn) =
+            val [argument, reportOn] =
                 when (position) {
                     is ConeArgumentConstraintPosition -> position.argument to null
                     is ConeLambdaArgumentConstraintPosition -> position.lambda to null

@@ -38,12 +38,12 @@ internal class RedundantLocalsEliminationMethodTransformer(private val suspensio
 
         // Mark all unused instructions for deletion (except for labels which may be used in debug information)
         val toDelete = mutableSetOf<AbstractInsnNode>()
-        methodNode.instructions.asSequence().zip(frames.asSequence()).mapNotNullTo(toDelete) { (insn, frame) ->
+        methodNode.instructions.asSequence().zip(frames.asSequence()).mapNotNullTo(toDelete) { [insn, frame] ->
             insn.takeIf { frame == null && insn !is LabelNode }
         }
 
         // Mark all spillable "GETSTATIC kotlin/Unit.INSTANCE" instructions for deletion
-        for ((unit, uses) in interpreter.unitUsageInformation) {
+        for ([unit, uses] in interpreter.unitUsageInformation) {
             if (unit !in interpreter.unspillableUnitValues && unit !in suspensionPoints) {
                 toDelete += unit
                 toDelete += uses
@@ -87,7 +87,7 @@ private class UnitSourceInterpreter(private val localVariables: Set<Int>) : Basi
     fun run(internalClassName: String, methodNode: MethodNode): Array<Frame<BasicValue>?> {
         val frames = FastMethodAnalyzer<BasicValue>(internalClassName, methodNode, this).analyze()
         // The ASM analyzer does not visit POP instructions, so we do so here.
-        for ((insn, frame) in methodNode.instructions.asSequence().zip(frames.asSequence())) {
+        for ([insn, frame] in methodNode.instructions.asSequence().zip(frames.asSequence())) {
             if (frame != null && insn.opcode == Opcodes.POP) {
                 val value = frame.top()
                 if (value is UnitValue) {

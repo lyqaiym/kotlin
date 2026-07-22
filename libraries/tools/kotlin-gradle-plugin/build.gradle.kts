@@ -127,16 +127,18 @@ dependencies {
     commonApi(project(":libraries:tools:gradle:fus-statistics-gradle-plugin"))
 
     // Following two dependencies is a workaround for IDEA import to pick-up them correctly
-    commonCompileOnly(project(":kotlin-gradle-plugin-api")) {
-        capabilities {
-            requireCapability("org.jetbrains.kotlin:kotlin-gradle-plugin-api-common")
-        }
-    }
-    commonCompileOnly(project(":kotlin-gradle-plugin-model")) {
-        capabilities {
-            requireCapability("org.jetbrains.kotlin:kotlin-gradle-plugin-model-common")
-        }
-    }
+//    Unable to find a variant of 'project :kotlin-gradle-plugin-api' with the requested capability: 'org.jetbrains.kotlin:kotlin-gradle-plugin-api-common':
+//    - Variant 'apiElements' provides 'org.jetbrains.kotlin:kotlin-gradle-plugin-api:2.4.255-SNAPSHOT'
+//    commonCompileOnly(project(":kotlin-gradle-plugin-api")) {
+//        capabilities {
+//            requireCapability("org.jetbrains.kotlin:kotlin-gradle-plugin-api-common")
+//        }
+//    }
+//    commonCompileOnly(project(":kotlin-gradle-plugin-model")) {
+//        capabilities {
+//            requireCapability("org.jetbrains.kotlin:kotlin-gradle-plugin-model-common")
+//        }
+//    }
 
     for (compilerRuntimeDependency in unpublishedCompilerRuntimeDependencies) {
         commonCompileOnly(project(compilerRuntimeDependency)) { isTransitive = false }

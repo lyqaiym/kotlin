@@ -155,7 +155,7 @@ class JavaClassUseSiteMemberScope(
          */
         val fromSupertypes = supertypeScopeContext.collectIntersectionResultsForCallables(name, FirScope::processPropertiesByName)
 
-        val (fieldsFromSupertype, propertiesFromSupertypes) = fromSupertypes.partition {
+        val [fieldsFromSupertype, propertiesFromSupertypes] = fromSupertypes.partition {
             it is ResultOfIntersection.SingleMember && it.chosenSymbol is FirFieldSymbol
         }
 
@@ -187,7 +187,7 @@ class JavaClassUseSiteMemberScope(
     }
 
     internal fun syntheticPropertyFromOverride(overriddenProperty: ResultOfIntersection<FirPropertySymbol>): FirSyntheticPropertySymbol? {
-        val overrideInClass = overriddenProperty.overriddenMembers.firstNotNullOfOrNull superMember@{ (symbol, baseScope) ->
+        val overrideInClass = overriddenProperty.overriddenMembers.firstNotNullOfOrNull superMember@{ [symbol, baseScope] ->
             // We may call this function at the STATUS phase, which means that using resolved status may lead to cycle
             // So we need to use raw status here
             if (!symbol.isVisibleInClass(klass.symbol, symbol.rawStatus)) return@superMember null
@@ -347,7 +347,7 @@ class JavaClassUseSiteMemberScope(
         // e.g. 'removeAt' or 'toInt'
         val builtinName = SpecialGenericSignatures.getBuiltinFunctionNamesByJvmName(name) ?: return false
         val builtinSpecialFromSuperTypes = supertypeScopeContext.collectMembersGroupedByScope(builtinName, FirScope::processFunctionsByName)
-            .flatMap { (scope, symbols) ->
+            .flatMap { [scope, symbols] ->
                 symbols.filter { it.doesOverrideBuiltinWithDifferentJvmName(scope, session) }
             }
         if (builtinSpecialFromSuperTypes.isEmpty()) return false
@@ -388,9 +388,9 @@ class JavaClassUseSiteMemberScope(
         if (!name.sameAsBuiltinMethodWithErasedValueParameters) return false
         val candidatesToOverride = supertypeScopeContext.collectIntersectionResultsForCallables(name, FirScope::processFunctionsByName)
             .flatMap { it.overriddenMembers }
-            .filterNot { (member, _) ->
+            .filterNot { [member, _] ->
                 member.valueParameterSymbols.all { it.resolvedReturnType.lowerBoundIfFlexible().isAny }
-            }.mapNotNull { (member, scope) ->
+            }.mapNotNull { [member, scope] ->
                 BuiltinMethodsWithSpecialGenericSignature.getOverriddenBuiltinFunctionWithErasedValueParametersInJava(member, scope)
             }
 
@@ -555,7 +555,7 @@ class JavaClassUseSiteMemberScope(
         explicitlyDeclaredFunction: FirNamedFunctionSymbol?,
     ): Boolean {
         // E.g. contains(String) or contains(T)
-        val relevantFunctionFromSupertypes = resultOfIntersection.overriddenMembers.firstOrNull { (member, scope) ->
+        val relevantFunctionFromSupertypes = resultOfIntersection.overriddenMembers.firstOrNull { [member, scope] ->
             BuiltinMethodsWithSpecialGenericSignature.getOverriddenBuiltinFunctionWithErasedValueParametersInJava(member, scope) != null
         }?.member ?: return false
 
@@ -572,7 +572,7 @@ class JavaClassUseSiteMemberScope(
 
         destination += symbolToBeCollected
         directOverriddenFunctions[symbolToBeCollected] = listOf(resultOfIntersection)
-        for ((member, _) in resultOfIntersection.overriddenMembers) {
+        for ([member, _] in resultOfIntersection.overriddenMembers) {
             overrideByBase[member] = symbolToBeCollected
         }
         return true
@@ -613,7 +613,7 @@ class JavaClassUseSiteMemberScope(
             this.valueParameters.clear()
             explicitlyDeclaredFunctionWithErasedValueParameters.fir.valueParameters.zip(
                 relevantFunctionFromSupertypes.fir.valueParameters
-            ).mapTo(this.valueParameters) { (overrideParameter, parameterFromSupertype) ->
+            ).mapTo(this.valueParameters) { [overrideParameter, parameterFromSupertype] ->
                 if (!parameterFromSupertype.returnTypeRef.coneType.lowerBoundIfFlexible().isAny) {
                     allParametersAreAny = false
                 }
@@ -771,7 +771,7 @@ class JavaClassUseSiteMemberScope(
         // Both parts must have name of naturalName
         // Example when both exist: testWeirdCharBuffers, class CharBufferXAllInherited : CharSequence, X
         // interface X in this example contains get(Int): Char
-        val (intersectedOverridingRenamedBuiltin, intersectedOverridingNonBuiltin) =
+        val [intersectedOverridingRenamedBuiltin, intersectedOverridingNonBuiltin] =
             resultOfIntersectionWithNaturalName.overriddenMembers.partition {
                 it.member.getJvmMethodNameIfSpecial(it.baseScope, session) == jvmName
             }
@@ -946,7 +946,7 @@ class JavaClassUseSiteMemberScope(
 
         val currentJvmDescriptor = functionSymbol.fir.computeJvmDescriptor(includeReturnType = false)
 
-        val getterDescriptorMatches = accessorDescriptors.any { (getterJvmDescriptor, _) ->
+        val getterDescriptorMatches = accessorDescriptors.any { [getterJvmDescriptor, _] ->
             val gettersAreSame = currentJvmDescriptor == getterJvmDescriptor && run {
                 val propertyType = this.fir.returnTypeRef.probablyJavaTypeRefToConeType()
                 val functionType = functionSymbol.fir.returnTypeRef.probablyJavaTypeRefToConeType()
@@ -957,13 +957,13 @@ class JavaClassUseSiteMemberScope(
 
         if (getterDescriptorMatches && this.isVal) return true
 
-        val setterDescriptorMatches = accessorDescriptors.any { (_, setterJvmDescriptor) ->
+        val setterDescriptorMatches = accessorDescriptors.any { [_, setterJvmDescriptor] ->
             currentJvmDescriptor == setterJvmDescriptor
         }
 
         if (!setterDescriptorMatches) return false
 
-        val (getterOverride, setterOverride) = when (getterDescriptorMatches) {
+        val [getterOverride, setterOverride] = when (getterDescriptorMatches) {
             true -> functionSymbol to findSetterOverride(this@JavaClassUseSiteMemberScope)
             false -> findGetterOverride(this@JavaClassUseSiteMemberScope) to functionSymbol
         }

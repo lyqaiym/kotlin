@@ -797,7 +797,7 @@ open class FirExpressionsResolveTransformer(transformer: FirAbstractBodyResolveT
             )
         }
         // following `!!` is safe since `operatorIsSuccessful = true` implies `operatorCallReference != null`
-        val operatorReturnTypeMatches = operatorIsSuccessful && operatorReturnTypeMatches(operatorCallReference!!.candidate)
+        val operatorReturnTypeMatches = operatorIsSuccessful && operatorReturnTypeMatches(operatorCallReference.candidate)
 
         val lhsReference = leftArgument.toReference(session)
         val lhsSymbol =
@@ -1851,7 +1851,7 @@ open class FirExpressionsResolveTransformer(transformer: FirAbstractBodyResolveT
             }
             calleeReference = lhsGetCall.calleeReference
             var i = 0
-            val newMapping = (lhsGetCall.argumentList as FirResolvedArgumentList).mapping.mapKeysTo(LinkedHashMap()) { (argument) ->
+            val newMapping = (lhsGetCall.argumentList as FirResolvedArgumentList).mapping.mapKeysTo(LinkedHashMap()) { [argument] ->
                 if (argument is FirVarargArgumentsExpression) {
                     buildVarargArgumentsExpression {
                         val varargSize = argument.arguments.size

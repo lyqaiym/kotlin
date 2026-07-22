@@ -7,10 +7,20 @@
 
 package kotlin.js
 
+import kotlin.internal.UsedFromCompilerGeneratedCode
+import kotlin.js.internal.boxedLong.BoxedLongApi
+import kotlin.js.internal.boxedLong.toStringImpl
+
 @RequiresOptIn(message = "Here be dragons! This is a compiler intrinsic, proceed with care!")
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.FUNCTION)
 internal annotation class JsIntrinsic
+
+@UsedFromCompilerGeneratedCode
+// @JsIntrinsic
+// TODO(KT-84992): Remove the body of the intrinsic and @JsIntrinsic annotation after bootstrap
+internal fun isLongCompiledToBigInt(): Boolean =
+    jsTypeOf(2L) === "bigint"
 
 @JsIntrinsic
 internal fun jsEqeq(a: Any?, b: Any?): Boolean
@@ -230,3 +240,39 @@ internal fun jsIsEs6(): Boolean
 
 @JsIntrinsic
 internal fun <T> jsYield(suspendFunction: () -> T): T
+
+@JsIntrinsic
+@UsedFromCompilerGeneratedCode
+internal fun <T> jsYieldStar(value: T): T
+
+// @JsIntrinsic
+// TODO: after the next bootstrap drop the body of this function, and uncomment the @JsIntrinsic annotation;
+@UsedFromCompilerGeneratedCode
+internal fun jsGenerateInterfaceSymbol(): dynamic =
+    generateInterfaceSymbolById()
+
+@JsIntrinsic
+@UsedFromCompilerGeneratedCode
+internal fun signatureId(signatureString: String): dynamic
+
+@JsIntrinsic
+@UsedFromCompilerGeneratedCode
+internal fun jsMethodReference(dispatchReceiver: Any, rawFunctionRef: dynamic): dynamic
+
+@OptIn(BoxedLongApi::class)
+@UsedFromCompilerGeneratedCode
+internal fun longCopyOfRange(arr: dynamic, fromIndex: dynamic, toIndex: dynamic): LongArray =
+    kotlin.js.internal.boxedLong.longCopyOfRange(arr, fromIndex, toIndex)
+
+/**
+ * Depending on the target ES edition, calls to this function are either replaced with a call
+ * to [kotlin.js.internal.boxedLong.toStringImpl], or to [kotlin.js.internal.longAsBigInt.toStringImpl].
+ *
+ * TODO(KT-70480): Replace call sites with `value.unsafeCast<BigInt>().toString(radix)` when we drop the ES5 target
+ */
+@UsedFromCompilerGeneratedCode
+internal fun jsLongToString(value: Long, radix: Int): String {
+    // TODO(KT-57128): Make bodiless after 2.2.20 branching and mark with @JsIntrinsic
+    @OptIn(BoxedLongApi::class)
+    return value.toStringImpl(radix)
+}

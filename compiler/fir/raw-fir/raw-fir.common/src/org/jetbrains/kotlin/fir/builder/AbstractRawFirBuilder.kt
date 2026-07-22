@@ -1104,7 +1104,7 @@ abstract class AbstractRawFirBuilder<T : Any>(val baseSession: FirSession, val c
 
         private fun generateComponentFunctions() {
             var componentIndex = 1
-            for ((sourceNode, firProperty) in zippedParameters) {
+            for ([sourceNode, firProperty] in zippedParameters) {
                 if (!firProperty.isVal && !firProperty.isVar) continue
                 val name = Name.identifier("component$componentIndex")
                 componentIndex++
@@ -1332,7 +1332,7 @@ fun <TBase, TSource : TBase, TParameter : TBase> FirRegularClassBuilder.createDa
             FirDeclarationStatusImpl(Visibilities.Unknown, Modality.FINAL)
         }
 
-        for ((ktParameter, firProperty) in zippedParameters) {
+        for ([ktParameter, firProperty] in zippedParameters) {
             val propertyName = firProperty.name
             val parameterSource = toFirSource(ktParameter, KtFakeSourceElementKind.DataClassGeneratedMembers)
             val propertyReturnTypeRef = firProperty.returnTypeRef.copyWithNewSourceKind(KtFakeSourceElementKind.DataClassGeneratedMembers)
@@ -1364,12 +1364,12 @@ fun <TBase, TSource : TBase, TParameter : TBase> FirRegularClassBuilder.createDa
  * primary constructor value parameters annotations should go to the
  * [FirValueParameter] first.
  */
-fun List<FirAnnotationCall>.filterConstructorPropertyRelevantAnnotations(isVar: Boolean) = filter {
+fun List<FirAnnotationCall>.filterConstructorPropertyRelevantAnnotations(isVar: Boolean): List<FirAnnotationCall> = filter {
     it.useSiteTarget == null || it.useSiteTarget == AnnotationUseSiteTarget.PROPERTY || it.useSiteTarget == AnnotationUseSiteTarget.ALL
             || !isVar && (it.useSiteTarget == AnnotationUseSiteTarget.SETTER_PARAMETER || it.useSiteTarget == AnnotationUseSiteTarget.PROPERTY_SETTER)
 }
 
-fun List<FirAnnotationCall>.filterStandalonePropertyRelevantAnnotations(isVar: Boolean) = filter {
+fun List<FirAnnotationCall>.filterStandalonePropertyRelevantAnnotations(isVar: Boolean): List<FirAnnotationCall> = filter {
     it.useSiteTarget != AnnotationUseSiteTarget.FIELD && it.useSiteTarget != AnnotationUseSiteTarget.PROPERTY_DELEGATE_FIELD && it.useSiteTarget != AnnotationUseSiteTarget.PROPERTY_GETTER &&
             (!isVar || it.useSiteTarget != AnnotationUseSiteTarget.SETTER_PARAMETER && it.useSiteTarget != AnnotationUseSiteTarget.PROPERTY_SETTER)
 }

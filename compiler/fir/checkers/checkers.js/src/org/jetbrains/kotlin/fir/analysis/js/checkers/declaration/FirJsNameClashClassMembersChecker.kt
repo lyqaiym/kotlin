@@ -61,7 +61,7 @@ sealed class FirJsNameClashClassMembersChecker(mppKind: MppCheckerKind) : FirCla
             val symbolsToProcess = mutableListOf(startMemberWithScope)
             val leaves = mutableSetOf<FirCallableSymbol<*>>()
             while (symbolsToProcess.isNotEmpty()) {
-                val (processingSymbol, scope) = symbolsToProcess.popLast()
+                val [processingSymbol, scope] = symbolsToProcess.popLast()
                 val overriddenMembers = scope.getDirectOverriddenMembersWithBaseScope(processingSymbol)
                 for (overriddenMemberWithScope in overriddenMembers) {
                     if (visitedSymbols.add(overriddenMemberWithScope)) {
@@ -202,7 +202,7 @@ sealed class FirJsNameClashClassMembersChecker(mppKind: MppCheckerKind) : FirCla
 
         val membersGroupedByName = stableNameCollector.jsStableNames.groupBy { it.name }
 
-        for ((name, stableNames) in membersGroupedByName.entries) {
+        for ([name, stableNames] in membersGroupedByName.entries) {
             val fakeOverrideStableNames = stableNames.filterFakeOverrideNames(declaration, context)
 
             val nonFakeOverrideClashes = stableNames.collectNonFakeOverrideClashes { it in fakeOverrideStableNames }
@@ -214,7 +214,7 @@ sealed class FirJsNameClashClassMembersChecker(mppKind: MppCheckerKind) : FirCla
                 reporter.reportOn(source, FirJsErrors.JS_NAME_CLASH, name, clashedWith, context)
             }
 
-            fakeOverrideStableNames.findFirstFakeOverrideClash(stableNameCollector)?.let { (fakeOverrideSymbol, clashedWith) ->
+            fakeOverrideStableNames.findFirstFakeOverrideClash(stableNameCollector)?.let { [fakeOverrideSymbol, clashedWith] ->
                 reporter.reportOn(declaration.source, FirJsErrors.JS_FAKE_NAME_CLASH, name, fakeOverrideSymbol, clashedWith, context)
             }
         }

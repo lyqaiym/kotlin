@@ -245,7 +245,7 @@ class DispatchReceiverMemberScopeTowerLevel(
         candidatesWithSmartcast: Map<T, MemberFromSmartcastScope<T>>,
     ) {
         for (scopeWithSmartcast in candidatesWithSmartcast.values) {
-            val (candidate, scope) = scopeWithSmartcast.memberWithBaseScope
+            val [candidate, scope] = scopeWithSmartcast.memberWithBaseScope
 
             if (candidate.hasConsistentExtensionReceiver(givenExtensionReceiverOptions)) {
                 val dispatchReceiverToUse = scopeWithSmartcast.dispatchReceiverToUse

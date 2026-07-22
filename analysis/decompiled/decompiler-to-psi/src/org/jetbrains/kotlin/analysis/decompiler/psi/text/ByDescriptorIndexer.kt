@@ -136,7 +136,7 @@ object ByDescriptorIndexer {
         if (declaration.valueParameters.size != original.valueParameters.size) {
             return false
         }
-        declaration.valueParameters.zip(original.valueParameters).forEach { (ktParam, paramDesc) ->
+        declaration.valueParameters.zip(original.valueParameters).forEach { [ktParam, paramDesc] ->
             val isVarargs = ktParam.isVarArg
             if (isVarargs != (paramDesc.varargElementType != null)) {
                 return false
@@ -204,4 +204,5 @@ private fun getQualifiedName(userType: KtUserType): String? {
 }
 
 fun KtElementImplStub<*>.getAllModifierLists(): Array<out KtDeclarationModifierList> =
+    @Suppress("DEPRECATION") // KT-78356
     getStubOrPsiChildren(KtStubElementTypes.MODIFIER_LIST, KtStubElementTypes.MODIFIER_LIST.arrayFactory)

@@ -446,7 +446,7 @@ class IrModuleToJsTransformer(
             }
         }
 
-        staticContext.classModels.entries.forEach { (symbol, model) ->
+        staticContext.classModels.entries.forEach { [symbol, model] ->
             result.classes[nameGenerator.getNameForClass(symbol.owner)] =
                 JsIrIcClassModel(model.superClasses.memoryOptimizedMap { staticContext.getNameForClass(it.owner) }).also {
                     it.preDeclarationBlock.statements += model.preDeclarationBlock.statements
@@ -510,7 +510,7 @@ class IrModuleToJsTransformer(
         definitions: Set<IrDeclaration>,
         nameGenerator: JsNameLinkingNamer
     ) {
-        nameGenerator.nameMap.entries.forEach { (declaration, name) ->
+        nameGenerator.nameMap.entries.forEach { [declaration, name] ->
             definitions.computeTag(declaration)?.let { tag ->
                 nameBindings[tag] = name
                 if (isBuiltInClass(declaration) || checkIsFunctionInterface(declaration.symbol.signature)) {
@@ -524,7 +524,7 @@ class IrModuleToJsTransformer(
         definitions: Set<IrDeclaration>,
         nameGenerator: JsNameLinkingNamer
     ) {
-        nameGenerator.imports.entries.forEach { (declaration, importExpression) ->
+        nameGenerator.imports.entries.forEach { [declaration, importExpression] ->
             val tag = definitions.computeTag(declaration)
                 ?: irError("No tag for imported declaration") {
                     withIrEntry("declaration", declaration)

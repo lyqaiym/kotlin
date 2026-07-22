@@ -353,7 +353,7 @@ class CoroutineTransformerMethodVisitor(
         metadata.visit(COROUTINES_METADATA_SOURCE_FILE_JVM_NAME, sourceFile)
         metadata.visit(COROUTINES_METADATA_LINE_NUMBERS_JVM_NAME, lines.toIntArray())
 
-        val debugIndexToLabel = spilledToLocalMapping.withIndex().flatMap { (labelIndex, list) ->
+        val debugIndexToLabel = spilledToLocalMapping.withIndex().flatMap { [labelIndex, list] ->
             list.map { labelIndex }
         }
         val variablesMapping = spilledToLocalMapping.flatten()
@@ -598,7 +598,7 @@ class CoroutineTransformerMethodVisitor(
 
         val maxVarsCountByType = mutableMapOf<Type, Int>()
         var initialSpilledVariablesCount = 0
-        for ((type, count) in initialVarsCountByType) {
+        for ([type, count] in initialVarsCountByType) {
             if (type == AsmTypes.OBJECT_TYPE) {
                 initialSpilledVariablesCount = count
             }
@@ -628,14 +628,14 @@ class CoroutineTransformerMethodVisitor(
                 methodNode, frames, livenessFrames, suspensionCallBeginIndex, varsCountByType
             )
 
-            val (referencesToSpill, primitivesToSpill) = variablesToSpill.partition { variable ->
+            val [referencesToSpill, primitivesToSpill] = variablesToSpill.partition { variable ->
                 variable.normalizedType == AsmTypes.OBJECT_TYPE
             }
 
             referencesToSpillBySuspensionPointIndex += referencesToSpill
             primitivesToSpillBySuspensionPointIndex += primitivesToSpill
 
-            for ((type, index) in varsCountByType) {
+            for ([type, index] in varsCountByType) {
                 maxVarsCountByType[type] = max(maxVarsCountByType[type] ?: 0, index)
             }
         }
@@ -661,7 +661,7 @@ class CoroutineTransformerMethodVisitor(
             }
 
             // Then, we cleanup invisible dead variables
-            val (currentSpilledCount, predSpilledCount) = referencesToCleanBySuspensionPointIndex[suspensionPointIndex]
+            val [currentSpilledCount, predSpilledCount] = referencesToCleanBySuspensionPointIndex[suspensionPointIndex]
             if (predSpilledCount > currentSpilledCount) {
                 for (fieldIndex in currentSpilledCount until predSpilledCount) {
                     cleanUpField(methodNode, suspension, fieldIndex)
@@ -674,7 +674,7 @@ class CoroutineTransformerMethodVisitor(
         }
 
         for (entry in maxVarsCountByType) {
-            val (type, maxIndex) = entry
+            val [type, maxIndex] = entry
             for (index in (initialVarsCountByType[type]?.plus(1) ?: 0)..maxIndex) {
                 classBuilderForCoroutineState.newField(
                     JvmDeclarationOrigin.NO_ORIGIN, AsmUtil.NO_FLAG_PACKAGE_PRIVATE,
@@ -1283,7 +1283,7 @@ private fun InstructionAdapter.generateContinuationConstructorCall(
             methodNode.access,
             needDispatchReceiver, internalNameForDispatchReceiver ?: containingClassInternalName
         )
-    for ((type, index) in parameterTypesAndIndices) {
+    for ([type, index] in parameterTypesAndIndices) {
         load(index, type)
     }
 
@@ -1411,13 +1411,13 @@ fun MethodNode.nodeTextWithVisibleVariables(): String {
         }
         return String(res) + "|"
     }
-    return instructions.withIndex().joinToString("\n") { (i, insn) -> "${visibleVariables(i)}${insn.insnText}" }
+    return instructions.withIndex().joinToString("\n") { [i, insn] -> "${visibleVariables(i)}${insn.insnText}" }
 }
 
 // Handy debugging routine
 @Suppress("unused")
 private fun MethodNode.nodeTextWithLiveness(liveness: List<VariableLivenessFrame>): String =
-    liveness.zip(this.instructions.asSequence().toList()).joinToString("\n") { (a, b) -> "$a|${b.insnText}" }
+    liveness.zip(this.instructions.asSequence().toList()).joinToString("\n") { [a, b] -> "$a|${b.insnText}" }
 
 /*
  * Before ApiVersion 2.2.

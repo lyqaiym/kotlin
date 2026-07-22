@@ -66,9 +66,9 @@ internal fun HashMap<LanguageFeature, LanguageFeature.State>.configureCommonLang
         put(LanguageFeature.MultiDollarInterpolation, LanguageFeature.State.ENABLED)
     }
 
-    if (arguments.allowAnyScriptsInSourceRoots) {
-        put(LanguageFeature.SkipStandaloneScriptsInSourceRoots, LanguageFeature.State.DISABLED)
-    }
+//    if (arguments.allowAnyScriptsInSourceRoots) {
+//        put(LanguageFeature.SkipStandaloneScriptsInSourceRoots, LanguageFeature.State.DISABLED)
+//    }
 
     if (arguments.whenGuards) {
         put(LanguageFeature.WhenGuards, LanguageFeature.State.ENABLED)

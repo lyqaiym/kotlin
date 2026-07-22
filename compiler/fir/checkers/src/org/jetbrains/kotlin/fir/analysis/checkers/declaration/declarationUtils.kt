@@ -126,7 +126,7 @@ fun FirClassSymbol<*>.primaryConstructorSymbol(session: FirSession): FirConstruc
 
 fun FirTypeRef.needsMultiFieldValueClassFlattening(session: FirSession): Boolean = coneType.needsMultiFieldValueClassFlattening(session)
 
-fun ConeKotlinType.needsMultiFieldValueClassFlattening(session: FirSession) = with(session.typeContext) {
+fun ConeKotlinType.needsMultiFieldValueClassFlattening(session: FirSession): Boolean = with(session.typeContext) {
     typeConstructor().isMultiFieldValueClass() && !fullyExpandedType(session).isMarkedNullable
 }
 
@@ -155,8 +155,8 @@ private fun checkValueParameterNamesWith(
     reportAction: (FirValueParameterSymbol, FirValueParameterSymbol, Int) -> Unit,
 ) {
     val valueParameterPairs = symbols.zip(otherSymbols)
-    for ((index, valueParameterPair) in valueParameterPairs.withIndex()) {
-        val (currentValueParameter, otherValueParameter) = valueParameterPair
+    for ([index, valueParameterPair] in valueParameterPairs.withIndex()) {
+        val [currentValueParameter, otherValueParameter] = valueParameterPair
         if (currentValueParameter.fir.valueParameterKind == FirValueParameterKind.LegacyContextReceiver) continue
         if (otherValueParameter.fir.valueParameterKind == FirValueParameterKind.LegacyContextReceiver) continue
         if (currentValueParameter.name != otherValueParameter.name) {

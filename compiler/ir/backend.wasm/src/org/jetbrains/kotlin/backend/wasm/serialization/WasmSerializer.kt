@@ -404,7 +404,7 @@ class WasmSerializer(outputStream: OutputStream) {
 
     private fun <K, V> serializeMap(map: Map<K, V>, serializeKeyFunc: (K) -> Unit, serializeValueFunc: (V) -> Unit) {
         b.writeUInt32(map.size.toUInt())
-        map.forEach { (key, value) ->
+        map.forEach { [key, value] ->
             serializeKeyFunc(key)
             serializeValueFunc(value)
         }

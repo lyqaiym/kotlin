@@ -47,7 +47,7 @@ fun <T> AbstractRawFirBuilder<*>.addDestructuringVariables(
     if (tmpVariable) {
         destination += container
     }
-    for ((index, entry) in entries.withIndex()) {
+    for ([index, entry] in entries.withIndex()) {
         destination += buildDestructuringVariable(
             moduleData,
             c,

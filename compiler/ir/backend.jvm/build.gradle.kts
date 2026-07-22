@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":core:descriptors"))
     api(project(":compiler:backend"))
     api(project(":compiler:ir.tree"))
     api(project(":compiler:ir.backend.common"))

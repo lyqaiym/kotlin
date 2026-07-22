@@ -8,16 +8,16 @@
 package org.jetbrains.kotlin.generators.gradle.dsl
 
 import org.gradle.api.Action
-import org.jetbrains.kotlin.generators.arguments.getPrinterToFile
+//import org.jetbrains.kotlin.generators.arguments.getPrinterToFile
 import org.jetbrains.kotlin.gradle.DeprecatedTargetPresetApi
 import org.jetbrains.kotlin.gradle.InternalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinTargetsContainerWithPresets
 import org.jetbrains.kotlin.utils.Printer
 import java.io.File
 
-fun main() {
-    generateKotlinTargetContainerWithPresetFunctionsInterface(::getPrinterToFile)
-}
+//fun main() {
+//    generateKotlinTargetContainerWithPresetFunctionsInterface(::getPrinterToFile)
+//}
 
 private val parentInterface = KotlinTargetsContainerWithPresets::class
 

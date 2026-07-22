@@ -89,7 +89,7 @@ object FirExpressionEvaluator {
             return null
         }
 
-        return argumentMapping.mapValues { (_, expression) -> expression.evaluate(session) }
+        return argumentMapping.mapValues { [_, expression] -> expression.evaluate(session) }
     }
 
     @PrivateConstantEvaluatorAPI
@@ -384,7 +384,7 @@ object FirExpressionEvaluator {
             val mapping = annotation.argumentMapping.mapping
             if (mapping.isEmpty()) return annotation.wrap()
             val evaluatedMapping = mutableMapOf<Name, FirExpression>()
-            for ((name, expression) in mapping) {
+            for ([name, expression] in mapping) {
                 when (val evaluatedExpression = evaluate(expression)) {
                     is Evaluated -> evaluatedMapping[name] = evaluatedExpression.result as FirExpression
                     else -> return evaluatedExpression

@@ -238,7 +238,7 @@ class CacheUpdater(
             val removedFilesMetadata = hashMapOf<KotlinLibraryFile, Map<KotlinSourceFile, KotlinSourceFileMetadata>>()
 
             fun collectDirtyFiles(lib: KotlinLibraryFile, cache: IncrementalCache): MutableMap<KotlinSourceFile, KotlinSourceFileMetadata> {
-                val (addedFiles, removedFiles, modifiedFiles, nonModifiedFiles) = cache.collectModifiedFiles()
+                val [addedFiles, removedFiles, modifiedFiles, nonModifiedFiles] = cache.collectModifiedFiles()
 
                 val fileStats by lazy(LazyThreadSafetyMode.NONE) { dirtyFileStats.getOrPutFiles(lib) }
                 addedFiles.forEach { fileStats.addDirtFileStat(it, DirtyFileState.ADDED_FILE) }
@@ -579,7 +579,7 @@ class CacheUpdater(
             mainModule: IrModuleFragment,
             dirtyFiles: Map<KotlinLibraryFile, Set<KotlinSourceFile>>
         ) {
-            val (stdlibFile, _) = findStdlib(mainModule, loadedIr.loadedFragments)
+            val [stdlibFile, _] = findStdlib(mainModule, loadedIr.loadedFragments)
             val stdlibDirtyFiles = dirtyFiles[stdlibFile] ?: return
 
             val stdlibSymbolProviders = loadedIr.getSignatureProvidersForLib(stdlibFile)
@@ -809,7 +809,7 @@ class CacheUpdater(
     )
 
     private fun loadIrAndMakeIrFragmentGenerators(): FragmentGenerators {
-        val (incrementalCachesArtifacts, loadedIr, dirtyFiles, irCompiler) = loadIrForDirtyFilesAndInitCompiler()
+        val [incrementalCachesArtifacts, loadedIr, dirtyFiles, irCompiler] = loadIrForDirtyFilesAndInitCompiler()
 
         val moduleNames = loadedIr.loadedFragments.entries.associate { it.key to it.value.name.asString() }
 
@@ -823,7 +823,7 @@ class CacheUpdater(
     ): KotlinSourceFileMap<IrICProgramFragments> = stopwatch.measure("Processing IR - generating program fragments") {
         val rebuiltFragments = KotlinSourceFileMutableMap<IrICProgramFragments>()
         while (generators.isNotEmpty()) {
-            val (libFile, srcFile, fragmentGenerator) = generators.removeFirst()
+            val [libFile, srcFile, fragmentGenerator] = generators.removeFirst()
             rebuiltFragments[libFile, srcFile] = fragmentGenerator()
         }
         rebuiltFragments
@@ -845,7 +845,7 @@ class CacheUpdater(
         stopwatch.clear()
         dirtyFileStats.clear()
 
-        val (incrementalCachesArtifacts, moduleNames, generators) = loadIrAndMakeIrFragmentGenerators()
+        val [incrementalCachesArtifacts, moduleNames, generators] = loadIrAndMakeIrFragmentGenerators()
 
         val rebuiltFragments = generateIrFragments(generators)
 

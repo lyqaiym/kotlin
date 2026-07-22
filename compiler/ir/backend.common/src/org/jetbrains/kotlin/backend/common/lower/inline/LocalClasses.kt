@@ -118,7 +118,7 @@ class LocalClassesInInlineLambdasLowering(val context: LoweringContext) : BodyLo
                                 return
                             }
 
-                            expression.arguments.zip(callee.parameters).forEach { (argument, parameter) ->
+                            expression.arguments.zip(callee.parameters).forEach { [argument, parameter] ->
                                 // Skip adapted function references and inline lambdas - they will be inlined later.
                                 val shouldSkip = argument != null && (argument.isAdaptedFunctionReference() || argument.isInlineLambdaBlock())
                                 if (parameter.isInlineParameter() && shouldSkip)

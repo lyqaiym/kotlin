@@ -12,7 +12,7 @@ dependencies {
 //        // also it may bring a lot of unrelated dependencies
 //        isTransitive = false
 //    }
-//    implementation(project(":core:util.runtime"))
+    implementation(project(":core:util.runtime"))
 //    testImplementation(platform(libs.junit.bom))
 //    testImplementation(projectTests(":compiler:tests-common"))
 //    testImplementation(kotlin("test"))
@@ -36,13 +36,13 @@ val generateAbstractBinaryContainer by generator(
     setKGPSourceRootPaths()
 }
 
-val generateAbstractKotlinArtifactsExtensionImplementation by generator(
-    "org.jetbrains.kotlin.generators.gradle.dsl.KotlinArtifactsDSLCodegenKt",
-    sourceSets["main"]
-) {
-    group = generateGroupName
-    setKGPSourceRootPaths()
-}
+//val generateAbstractKotlinArtifactsExtensionImplementation by generator(
+//    "org.jetbrains.kotlin.generators.gradle.dsl.KotlinArtifactsDSLCodegenKt",
+//    sourceSets["main"]
+//) {
+//    group = generateGroupName
+//    setKGPSourceRootPaths()
+//}
 
 val generateMppSourceSetConventions by generator(
     "org.jetbrains.kotlin.generators.gradle.dsl.MppSourceSetConventionsCodegenKt",

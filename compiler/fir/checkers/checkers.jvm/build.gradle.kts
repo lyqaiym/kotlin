@@ -12,9 +12,9 @@ dependencies {
      * We can't remove this dependency until we use
      *   diagnostics framework from FE 1.0
      */
+    implementation(project(":core:descriptors"))
     implementation(project(":compiler:frontend"))
     implementation(project(":compiler:psi"))
-
     compileOnly(intellijCore())
 }
 

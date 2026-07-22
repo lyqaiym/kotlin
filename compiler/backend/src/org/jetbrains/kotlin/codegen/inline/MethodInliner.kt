@@ -194,7 +194,7 @@ class MethodInliner(
                     )
 
                     val transformResult = transformer.doTransform(nodeRemapper)
-                    transformResult.getChangedTypes().forEach { (oldType, newType) ->
+                    transformResult.getChangedTypes().forEach { [oldType, newType] ->
                         // KT-65503 For all changed types, if oldType is a lambda or an anonymous object,
                         // and the newType is a name for an inline call,
                         // it should be added to the remapper to ensure correct inline conversion of nested anonymous objects or lambdas.
@@ -477,7 +477,7 @@ class MethodInliner(
         val oldArgumentTypes = if (reorderIrLambdaParameters) {
             // In IR lambdas, captured variables come before real parameters, but after the extension receiver.
             // Move them to the end of the descriptor instead.
-            Type.getArgumentTypes(inliningContext.lambdaInfo!!.invokeMethod.descriptor)
+            Type.getArgumentTypes(inliningContext.lambdaInfo.invokeMethod.descriptor)
         } else {
             Type.getArgumentTypes(node.desc)
         }
@@ -794,7 +794,7 @@ class MethodInliner(
 
         val localReturnsNormalizer = LocalReturnsNormalizer()
 
-        for ((index, insnNode) in node.instructions.toArray().withIndex()) {
+        for ([index, insnNode] in node.instructions.toArray().withIndex()) {
             val frame = frames[index] ?: continue
             // Don't care about dead code, it will be eliminated
 

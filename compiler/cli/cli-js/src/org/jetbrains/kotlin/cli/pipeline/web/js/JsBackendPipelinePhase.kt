@@ -74,11 +74,11 @@ object JsBackendPipelinePhase : WebBackendPipelinePhase<JsBackendPipelineArtifac
             caches = jsArtifacts,
             relativeRequirePath = true
         )
-        val (outputs, rebuiltModules) = jsExecutableProducer.buildExecutable(granularity, outJsProgram = false)
+        val [outputs, rebuiltModules] = jsExecutableProducer.buildExecutable(granularity, outJsProgram = false)
         outputs.writeAll(outputDir, outputName, tsStrategy, moduleName, moduleKind)
 
         messageCollector.report(INFO, "Executable production duration (IC): ${System.currentTimeMillis() - beforeIc2Js}ms")
-        for ((event, duration) in jsExecutableProducer.getStopwatchLaps()) {
+        for ([event, duration] in jsExecutableProducer.getStopwatchLaps()) {
             messageCollector.report(INFO, "  $event: ${(duration / 1e6).toInt()}ms")
         }
 

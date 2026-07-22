@@ -15,6 +15,7 @@ dependencies {
     compileOnly(project(":core:deserialization.common.jvm")) // needed for CompilationException
 
     implementation(project(":kotlinx-serialization-compiler-plugin.common"))
+    implementation(project(":core:descriptors"))
 
     compileOnly(intellijCore())
 }

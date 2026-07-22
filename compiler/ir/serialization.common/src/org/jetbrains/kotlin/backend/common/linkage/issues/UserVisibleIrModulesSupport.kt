@@ -134,11 +134,11 @@ open class UserVisibleIrModulesSupport(externalDependenciesLoader: ExternalDepen
         modulesFromDeserializers(
             deserializers = deserializers,
             excludedModuleIds = setOf(sourceCodeModuleId)
-        ).forEach { (moduleId, module) ->
+        ).forEach { [moduleId, module] ->
             val externalDependencyModule = findMatchingExternalDependencyModule(moduleId)
             if (externalDependencyModule != null) {
                 // Just add missing dependencies to the same module in [mergedModules].
-                module.requestedVersionsByIncomingDependencies.forEach { (incomingDependencyId, requestedVersion) ->
+                module.requestedVersionsByIncomingDependencies.forEach { [incomingDependencyId, requestedVersion] ->
                     val adjustedIncomingDependencyId = findMatchingExternalDependencyModule(incomingDependencyId)?.id
                         ?: incomingDependencyId
                     if (adjustedIncomingDependencyId !in externalDependencyModule.requestedVersionsByIncomingDependencies) {
@@ -152,7 +152,7 @@ open class UserVisibleIrModulesSupport(externalDependenciesLoader: ExternalDepen
                     module.selectedVersion = originModuleVersion
 
                     val incomingDependencyIdsToStampRequestedVersion = module.requestedVersionsByIncomingDependencies
-                        .mapNotNull { (incomingDependencyId, requestedVersion) ->
+                        .mapNotNull { [incomingDependencyId, requestedVersion] ->
                             if (requestedVersion.isEmpty()) incomingDependencyId else null
                         }
                     incomingDependencyIdsToStampRequestedVersion.forEach { incomingDependencyId ->
@@ -167,11 +167,11 @@ open class UserVisibleIrModulesSupport(externalDependenciesLoader: ExternalDepen
                 }
 
                 // Patch incoming dependencies.
-                module.requestedVersionsByIncomingDependencies.mapNotNull { (incomingDependencyId, requestedVersion) ->
+                module.requestedVersionsByIncomingDependencies.mapNotNull { [incomingDependencyId, requestedVersion] ->
                     val adjustedIncomingDependencyId = findMatchingExternalDependencyModule(incomingDependencyId)?.id
                         ?: return@mapNotNull null
                     Triple(incomingDependencyId, adjustedIncomingDependencyId, requestedVersion)
-                }.forEach { (incomingDependencyId, adjustedIncomingDependencyId, requestedVersion) ->
+                }.forEach { [incomingDependencyId, adjustedIncomingDependencyId, requestedVersion] ->
                     module.requestedVersionsByIncomingDependencies.remove(incomingDependencyId)
                     module.requestedVersionsByIncomingDependencies[adjustedIncomingDependencyId] = requestedVersion
                 }
@@ -189,7 +189,7 @@ open class UserVisibleIrModulesSupport(externalDependenciesLoader: ExternalDepen
     )
 
     private fun Map<ResolvedDependencyId, ModuleWithUninitializedDependencies>.stampDependenciesWithRequestedVersionEqualToSelectedVersion(): Map<ResolvedDependencyId, ResolvedDependency> {
-        return mapValues { (moduleId, moduleWithUninitializedDependencies) ->
+        return mapValues { [moduleId, moduleWithUninitializedDependencies] ->
             val (module, outgoingDependencyIds) = moduleWithUninitializedDependencies
             outgoingDependencyIds.forEach { outgoingDependencyId ->
                 val dependencyModule = getValue(outgoingDependencyId).module

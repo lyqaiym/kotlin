@@ -5,13 +5,13 @@
 
 package org.jetbrains.kotlin.generators.gradle.dsl
 
-import org.jetbrains.kotlin.generators.arguments.getPrinterToFile
+//import org.jetbrains.kotlin.generators.arguments.getPrinterToFile
 import org.jetbrains.kotlin.utils.Printer
 import java.io.File
 
-fun main() {
-    generateAbstractKotlinNativeBinaryContainer(::getPrinterToFile)
-}
+//fun main() {
+//    generateAbstractKotlinNativeBinaryContainer(::getPrinterToFile)
+//}
 
 internal data class BinaryType(
     val description: String,

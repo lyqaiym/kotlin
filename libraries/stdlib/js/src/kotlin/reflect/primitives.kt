@@ -6,6 +6,8 @@
 package kotlin.reflect.js.internal
 
 import kotlin.js.JsClass
+import kotlin.internal.UsedFromCompilerGeneratedCode
+import kotlin.js.internal.BigInt
 
 @JsName("PrimitiveClasses")
 internal object PrimitiveClasses {
@@ -29,6 +31,9 @@ internal object PrimitiveClasses {
 
     @JsName("intClass")
     val intClass = PrimitiveKClassImpl(js("Number").unsafeCast<JsClass<Int>>(), "Int", { it is Int })
+
+    @JsName("longClass")
+    val longClass = PrimitiveKClassImpl(js("Number").unsafeCast<JsClass<Long>>(), "Long", { it is Long })
 
     @JsName("floatClass")
     val floatClass = PrimitiveKClassImpl(js("Number").unsafeCast<JsClass<Float>>(), "Float", { it is Float })
@@ -59,6 +64,13 @@ internal object PrimitiveClasses {
 
     @JsName("intArrayClass")
     val intArrayClass = PrimitiveKClassImpl(js("Int32Array").unsafeCast<JsClass<IntArray>>(), "IntArray", { it is IntArray })
+
+    @JsName("bigIntClass")
+    val bigintClass = PrimitiveKClassImpl(
+        (if (jsTypeOf(BigInt) == "undefined") VOID else BigInt).unsafeCast<JsClass<BigInt>>(),
+        "BigInt",
+        { jsTypeOf(it) === "bigint" }
+    )
 
     @JsName("longArrayClass")
     val longArrayClass = PrimitiveKClassImpl(js("Array").unsafeCast<JsClass<LongArray>>(), "LongArray", { it is LongArray })

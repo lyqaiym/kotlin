@@ -1259,7 +1259,7 @@ private class ElementsToShortenCollector(
 
         val nameToImport = shorteningContext.convertToImportableName(calledSymbol)
 
-        val (matchedCallables, otherCallables) = availableCallables.partition { it.symbol.callableId == calledSymbol.callableId }
+        val [matchedCallables, otherCallables] = availableCallables.partition { it.symbol.callableId == calledSymbol.callableId }
 
         val importKindFromOption = ImportKind.fromShortenOption(option)
         val importKind = matchedCallables.minOfOrNull { it.importKind } ?: importKindFromOption ?: return null

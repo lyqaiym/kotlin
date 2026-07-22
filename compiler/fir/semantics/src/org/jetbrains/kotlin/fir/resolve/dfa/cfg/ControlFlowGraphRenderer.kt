@@ -62,7 +62,7 @@ private class ControlFlowGraphRenderer(
 
     private fun Printer.renderNodes(nodes: Map<CFGNode<*>, Int>) {
         var color = RED
-        for ((node, index) in nodes) {
+        for ([node, index] in nodes) {
             if (node is EnterNodeMarker) {
                 enterCluster(color)
                 color = BLUE
@@ -122,8 +122,8 @@ private class ControlFlowGraphRenderer(
         ).ifEmpty { null }?.joinToString(prefix = "[", separator = " ", postfix = "]")
 
     private fun Printer.renderEdges(nodes: Map<CFGNode<*>, Int>) {
-        for ((node, index) in nodes) {
-            for ((style, group) in node.followingNodes.groupBy { node.edgeTo(it).style }.entries.sortedBy { it.key }) {
+        for ([node, index] in nodes) {
+            for ([style, group] in node.followingNodes.groupBy { node.edgeTo(it).style }.entries.sortedBy { it.key }) {
                 val mappedGroup = group.map {
                     nodes.getValue(it)
                 }.sorted()
@@ -155,7 +155,7 @@ private class ControlFlowGraphRenderer(
 
     private fun PersistentFlow.renderHtmlLike(): String {
         return buildString {
-            for ((variable, variableName) in allVariablesForDebug.map { it to it.renderHtmlLike() }.sortedBy { it.second }) {
+            for ([variable, variableName] in allVariablesForDebug.map { it to it.renderHtmlLike() }.sortedBy { it.second }) {
                 append("<BR/>")
                 append("<B>").append(variableName).append("</B>")
                 if (variable is RealVariable) {

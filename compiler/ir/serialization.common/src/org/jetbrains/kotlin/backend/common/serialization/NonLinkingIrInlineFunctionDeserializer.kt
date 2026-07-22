@@ -291,11 +291,11 @@ private fun collectExternalTypeAndValueParameterSymbolsToRemap(
 
         check(originalSymbolsAtSameLevel.matches(deserializedSymbolsAtSameLevel), ::generateErrorMessage)
 
-        (originalSymbolsAtSameLevel.typeParameterSymbols zip deserializedSymbolsAtSameLevel.typeParameterSymbols).forEach { (originalSymbol, deserializedSymbol) ->
+        (originalSymbolsAtSameLevel.typeParameterSymbols zip deserializedSymbolsAtSameLevel.typeParameterSymbols).forEach { [originalSymbol, deserializedSymbol] ->
             typeParameterSymbolsForRemapping[deserializedSymbol] = originalSymbol
         }
 
-        (originalSymbolsAtSameLevel.valueParameterSymbols zip deserializedSymbolsAtSameLevel.valueParameterSymbols).forEach { (originalSymbol, deserializedSymbol) ->
+        (originalSymbolsAtSameLevel.valueParameterSymbols zip deserializedSymbolsAtSameLevel.valueParameterSymbols).forEach { [originalSymbol, deserializedSymbol] ->
             valueParameterSymbolsForRemapping[deserializedSymbol] = originalSymbol
         }
     }

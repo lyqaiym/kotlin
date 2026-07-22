@@ -149,7 +149,7 @@ fun getAllFilesForRunner(
 
     if (modulesToArtifact.values.any { it is BinaryArtifacts.Js.JsIrArtifact }) {
         // JS IR
-        val (module, compilerResult) = modulesToArtifact.entries.mapNotNull { (m, c) -> (c as? BinaryArtifacts.Js.JsIrArtifact)?.let { m to c.compilerResult } }
+        val [module, compilerResult] = modulesToArtifact.entries.mapNotNull { [m, c] -> (c as? BinaryArtifacts.Js.JsIrArtifact)?.let { m to c.compilerResult } }
             .single()
         val result = mutableMapOf<TranslationMode, List<String>>()
 

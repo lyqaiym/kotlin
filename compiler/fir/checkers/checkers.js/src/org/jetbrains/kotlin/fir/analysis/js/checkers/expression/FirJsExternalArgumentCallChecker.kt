@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.name.JsStandardClassIds.Annotations.JsExternalArgume
 object FirJsExternalArgumentCallChecker : FirCallChecker(MppCheckerKind.Common) {
     override fun check(expression: FirCall, context: CheckerContext, reporter: DiagnosticReporter) {
         val arguments = expression.resolvedArgumentMapping ?: return
-        for ((argument, parameter) in arguments) {
+        for ([argument, parameter] in arguments) {
             if (parameter.hasAnnotation(JsExternalArgument, context.session)) {
                 val unwrappedArg = argument.unwrapArgument()
                 val type = unwrappedArg.resolvedType

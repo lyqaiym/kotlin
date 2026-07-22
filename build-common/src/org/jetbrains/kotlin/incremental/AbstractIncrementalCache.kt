@@ -127,7 +127,7 @@ abstract class AbstractIncrementalCache<ClassName>(
      * The `srcFile` argument may be `null` (e.g., if we are processing .class files in jars where source files are not available).
      */
     protected fun addToClassStorage(classProtoData: ClassProtoData, srcFile: File?, useCompilerMapsOnly: Boolean = false) {
-        val (proto, nameResolver) = classProtoData
+        val [proto, nameResolver] = classProtoData
 
         val supertypes = proto.supertypes(TypeTable(proto.typeTable))
         val parents = supertypes.map { nameResolver.getClassId(it.className).asSingleFqName() }
@@ -242,14 +242,14 @@ abstract class AbstractIncrementalCache<ClassName>(
         }
 
         val actualToExpect = hashMapOf<File, MutableSet<File>>()
-        for ((expect, actuals) in expectActualTracker.expectToActualMap) {
+        for ([expect, actuals] in expectActualTracker.expectToActualMap) {
             for (actual in actuals) {
                 actualToExpect.getOrPut(actual) { hashSetOf() }.add(expect)
             }
             complementaryFilesMap[expect] = actuals.union(complementaryFilesMap[expect].orEmpty())
         }
 
-        for ((actual, expects) in actualToExpect) {
+        for ([actual, expects] in actualToExpect) {
             complementaryFilesMap[actual] = expects.union(complementaryFilesMap[actual].orEmpty())
         }
     }

@@ -281,7 +281,7 @@ class Fir2IrClassifierStorage(
     // ------------------------------------ local classes ------------------------------------
 
     private fun createAndCacheLocalIrClassOnTheFly(klass: FirClass): IrClass {
-        val (irClass, firClassOrLocalParent, irClassOrLocalParent) = classifiersGenerator.createLocalIrClassOnTheFly(
+        val [irClass, firClassOrLocalParent, irClassOrLocalParent] = classifiersGenerator.createLocalIrClassOnTheFly(
             klass,
             processMembersOfClassesOnTheFlyImmediately
         )

@@ -58,7 +58,7 @@ class LexicalChainedScope private constructor(
 
         // Slow-path: try to find the same classifier, but without deprecation
         for (scope in memberScopes) {
-            val (descriptor, isDeprecated) = scope.getContributedClassifierIncludeDeprecated(name, location) ?: continue
+            val [descriptor, isDeprecated] = scope.getContributedClassifierIncludeDeprecated(name, location) ?: continue
             if (descriptor == firstClassifier && !isDeprecated) return DescriptorWithDeprecation.createNonDeprecated(descriptor)
         }
 

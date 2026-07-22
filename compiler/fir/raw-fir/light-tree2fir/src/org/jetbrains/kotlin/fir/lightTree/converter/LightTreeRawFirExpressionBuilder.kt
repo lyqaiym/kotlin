@@ -241,7 +241,7 @@ class LightTreeRawFirExpressionBuilder(
                     val kind = runIf(destructuringStatements.isNotEmpty()) {
                         KtFakeSourceElementKind.LambdaDestructuringBlock
                     }
-                    val bodyBlock = declarationBuilder.convertBlockExpressionWithoutBuilding(block!!, kind).apply {
+                    val bodyBlock = declarationBuilder.convertBlockExpressionWithoutBuilding(block, kind).apply {
                         if (statements.isEmpty()) {
                             statements.add(
                                 buildReturnExpression {
@@ -297,7 +297,7 @@ class LightTreeRawFirExpressionBuilder(
             var node = input.pop()
             when (node?.tokenType) {
                 BINARY_EXPRESSION -> {
-                    val (leftNode, opNode, rightNode) = extractBinaryExpression(node)
+                    val [leftNode, opNode, rightNode] = extractBinaryExpression(node)
 
                     if (opNode.asText.getOperationSymbol() != PLUS) {
                         return null
@@ -362,7 +362,7 @@ class LightTreeRawFirExpressionBuilder(
     }
 
     private fun convertBinaryExpressionFallback(binaryExpression: LighterASTNode): FirStatement {
-        val (leftArgNode, opNode, rightArgNode) = extractBinaryExpression(binaryExpression)
+        val [leftArgNode, opNode, rightArgNode] = extractBinaryExpression(binaryExpression)
         val operationReferenceSource = opNode.toFirSourceElement()
         val operationTokenName = opNode.asText
         val operationToken = operationTokenName.getOperationSymbol()
@@ -481,7 +481,7 @@ class LightTreeRawFirExpressionBuilder(
                 LABEL_QUALIFIER -> {
                     val name = it.asText.dropLast(1)
                     labelSource = it.getChildNodesByType(LABEL).single().toFirSourceElement()
-                    context.addNewLabel(buildLabel(name, labelSource!!))
+                    context.addNewLabel(buildLabel(name, labelSource))
                     forbiddenLabelKind = getForbiddenLabelKind(name, isRepetitiveLabel)
                 }
                 BLOCK -> firExpression = declarationBuilder.convertBlock(it)
@@ -746,7 +746,7 @@ class LightTreeRawFirExpressionBuilder(
 
         val source = callSuffix.toFirSourceElement()
 
-        val (calleeReference, receiverForInvoke) = when {
+        val [calleeReference, receiverForInvoke] = when {
             name != null -> CalleeAndReceiver(
                 buildSimpleNamedReference {
                     this.source = callSuffix.getFirstChildExpressionUnwrapped()?.toFirSourceElement() ?: source
@@ -769,7 +769,7 @@ class LightTreeRawFirExpressionBuilder(
                         this.source = source
                         this.name = OperatorNameConventions.INVOKE
                     },
-                    additionalArgument!!,
+                    additionalArgument,
                 )
             }
 
@@ -951,12 +951,12 @@ class LightTreeRawFirExpressionBuilder(
             when (it.tokenType) {
                 WHEN_CONDITION_EXPRESSION -> conditions += convertWhenConditionExpression(it, whenRefWithSubject.takeIf { hasSubject })
                 WHEN_CONDITION_IN_RANGE -> {
-                    val (condition, shouldBind) = convertWhenConditionInRange(it, whenRefWithSubject, hasSubject)
+                    val [condition, shouldBind] = convertWhenConditionInRange(it, whenRefWithSubject, hasSubject)
                     conditions += condition
                     shouldBindSubject = shouldBindSubject || shouldBind
                 }
                 WHEN_CONDITION_IS_PATTERN -> {
-                    val (condition, shouldBind) = convertWhenConditionIsPattern(it, whenRefWithSubject, hasSubject)
+                    val [condition, shouldBind] = convertWhenConditionIsPattern(it, whenRefWithSubject, hasSubject)
                     conditions += condition
                     shouldBindSubject = shouldBindSubject || shouldBind
                 }
@@ -1379,7 +1379,7 @@ class LightTreeRawFirExpressionBuilder(
             source = tryExpression.toFirSourceElement()
             this.tryBlock = tryBlock
             this.finallyBlock = finallyBlock
-            for ((parameter, block, clauseSource) in catchClauses) {
+            for ([parameter, block, clauseSource] in catchClauses) {
                 if (parameter == null) continue
                 catches += buildCatch {
                     this.parameter = buildProperty {

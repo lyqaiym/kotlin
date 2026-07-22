@@ -41,7 +41,7 @@ internal object CreateFreshTypeVariableSubstitutorStage : ResolutionStage() {
             return
         }
         val csBuilder = candidate.system.getBuilder()
-        val (substitutor, freshVariables) =
+        val [substitutor, freshVariables] =
             createToFreshVariableSubstitutorAndAddInitialConstraints(declaration, csBuilder, context.session)
         candidate.initializeSubstitutorAndVariables(substitutor, freshVariables)
 

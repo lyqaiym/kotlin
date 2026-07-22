@@ -4,6 +4,8 @@
  */
 package kotlin.js
 
+import kotlin.internal.UsedFromCompilerGeneratedCode
+
 // There was a problem with per-module compilation (KT-55758) when the top-level state (globalInterfaceId) was reinitialized during stdlib module initialization
 // As a result we miss already incremented globalInterfaceId and had the same interfaceIds in two different modules
 // So, to keep the state consistent it was moved into the variable without initializer and function
@@ -17,6 +19,12 @@ private fun generateInterfaceId(): Int {
     globalInterfaceId = globalInterfaceId.unsafeCast<Int>() + 1
     return globalInterfaceId.unsafeCast<Int>()
 }
+
+@UsedFromCompilerGeneratedCode
+internal fun generateInterfaceSymbolById(): String {
+    return "#__interface_${generateInterfaceId()}"
+}
+
 
 @Suppress("MUST_BE_INITIALIZED")
 private var globalAssociatedObjectId: dynamic

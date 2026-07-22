@@ -14,6 +14,7 @@ dependencies {
         overrideTargetJvmVersion(11)
         isTransitive = false
     }
+//    commonCompileOnly(project(":plugins:compose-compiler-plugin:group-mapping"))
 }
 
 gradlePlugin {

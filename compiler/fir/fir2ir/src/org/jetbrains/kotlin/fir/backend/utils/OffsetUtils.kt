@@ -58,7 +58,7 @@ internal fun <T : IrElement> FirPropertyAccessor?.convertWithOffsets(
     runIf(source?.kind == KtFakeSourceElementKind.DefaultAccessor) {
         val property = this.propertySymbol.fir
         if (property.isLocal) return@runIf
-        val (startOffset, endOffset) = property.computeOffsetsWithoutInitializer() ?: return@runIf
+        val [startOffset, endOffset] = property.computeOffsetsWithoutInitializer() ?: return@runIf
         return f(startOffset, endOffset)
     }
     return source.convertWithOffsets(f)

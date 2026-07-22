@@ -209,7 +209,7 @@ internal class JsIrLinkerLoader(
 
         val mainLibraryFile = KotlinLibraryFile(mainLibrary)
         val mainFragment = irModules[mainLibraryFile] ?: notFoundIcError("main module fragment", mainLibraryFile)
-        val (_, stdlibFragment) = findStdlib(mainFragment, irModules)
+        val [_, stdlibFragment] = findStdlib(mainFragment, irModules)
         linkerContext.loadFunctionInterfacesIntoStdlib(stdlibFragment)
 
         linkerContext.linker.init(null)

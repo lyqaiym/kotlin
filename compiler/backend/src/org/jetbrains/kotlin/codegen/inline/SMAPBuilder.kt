@@ -23,7 +23,7 @@ object SMAPBuilder {
 
         val debugMappings = linkedMapOf<Pair<String, String>, FileMapping>()
         for (fileMapping in fileMappings) {
-            for ((_, dest, range, callSite) in fileMapping.lineMappings) {
+            for ([_, dest, range, callSite] in fileMapping.lineMappings) {
                 callSite?.let { (line, file, path) ->
                     debugMappings.getOrPut(file to path) { FileMapping(file, path) }.mapNewInterval(line, dest, range)
                 }

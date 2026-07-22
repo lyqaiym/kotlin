@@ -231,7 +231,7 @@ class JsPerFileCache(private val moduleArtifacts: List<JsModuleArtifact>) : JsMu
 
 
         val importWithEffectIn = ifTrue { readString() }
-        val (definitions, nameBindings, optionalCrossModuleImports) = fetchJsIrModuleHeaderNames()
+        val [definitions, nameBindings, optionalCrossModuleImports] = fetchJsIrModuleHeaderNames()
 
         it.jsIrHeader = JsIrModuleHeader(
             moduleName = moduleName,
@@ -304,7 +304,7 @@ class JsPerFileCache(private val moduleArtifacts: List<JsModuleArtifact>) : JsMu
 
     private fun CodedOutputStream.writeTestFunctions(cachedTestFunctionsWithTheirPackage: CachedTestFunctionsWithTheirPackage) {
         writeInt32NoTag(cachedTestFunctionsWithTheirPackage.size)
-        cachedTestFunctionsWithTheirPackage.forEach { (key, value) ->
+        cachedTestFunctionsWithTheirPackage.forEach { [key, value] ->
             writeStringNoTag(key)
             writeInt32NoTag(value.size)
             value.forEach(::writeStringNoTag)

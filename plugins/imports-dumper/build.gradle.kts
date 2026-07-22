@@ -10,7 +10,10 @@ val kotlinxSerializationVersion = "0.14.0"
 
 dependencies {
     implementation(project(":compiler:frontend.java"))
+    implementation(project(":compiler:container"))
+    implementation(project(":compiler:frontend"))
     implementation(project(":compiler:plugin-api"))
+    implementation(project(":core:descriptors"))
     compileOnly("org.jetbrains.kotlinx", "kotlinx-serialization-runtime", kotlinxSerializationVersion) { isTransitive = false }
 
     compileOnly(intellijCore())

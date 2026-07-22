@@ -225,7 +225,7 @@ private class ActualDeclarationsCollector(private val expectTopLevelDeclarations
         for (classSymbol in expectTopLevelDeclarations.classes.values) {
             collectExtraActualClasses(extraActualDeclarationExtractor, classSymbol.owner)
         }
-        for ((callableId, callableSymbols) in expectTopLevelDeclarations.callables) {
+        for ([callableId, callableSymbols] in expectTopLevelDeclarations.callables) {
             val expectTopLevelCallables = callableSymbols.mapNotNull {
                 when (val owner = it.owner) {
                     is IrProperty -> owner
@@ -394,7 +394,7 @@ private class ExpectActualLinkCollector {
             containingActualClassSymbol: RegularClassSymbolMarker?
         ) {
             require(expectSymbol is IrSymbol)
-            for ((incompatibility, actualMemberSymbols) in actualSymbolsByIncompatibility) {
+            for ([incompatibility, actualMemberSymbols] in actualSymbolsByIncompatibility) {
                 for (actualSymbol in actualMemberSymbols) {
                     require(actualSymbol is IrSymbol)
                     diagnosticsReporter.reportExpectActualIncompatibility(expectSymbol, actualSymbol, incompatibility)
@@ -412,7 +412,7 @@ private class ExpectActualLinkCollector {
             if (actualSymbolsByIncompatibility.isEmpty() && !expectSymbol.owner.containsOptionalExpectation()) {
                 diagnosticsReporter.reportMissingActual(expectSymbol)
             }
-            for ((incompatibility, actualMemberSymbols) in actualSymbolsByIncompatibility) {
+            for ([incompatibility, actualMemberSymbols] in actualSymbolsByIncompatibility) {
                 for (actualSymbol in actualMemberSymbols) {
                     require(actualSymbol is IrSymbol)
                     diagnosticsReporter.reportExpectActualMismatch(expectSymbol, actualSymbol, incompatibility)

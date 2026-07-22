@@ -1499,8 +1499,8 @@ private fun BlockOrBody.makeBodyWithAddedVariables(context: JvmBackendContext, v
     extractVariablesSettersToOuterPossibleBlock(variables)
     val nearestBlocks = findNearestBlocksForVariables(variables, this)
     val containingVariables: Map<BlockOrBody, List<IrVariable>> = nearestBlocks.entries
-        .mapNotNull { (k, v) -> if (v != null) k to v else null }
-        .groupBy({ (_, v) -> v }, { (k, _) -> k })
+        .mapNotNull { [k, v] -> if (v != null) k to v else null }
+        .groupBy({ [_, v] -> v }, { (k, _) -> k })
     return element.transform(object : IrElementTransformerVoid() {
         private fun getFirstInnerStatement(statement: IrStatement): IrStatement? =
             if (statement is IrStatementContainer) statement.statements.first().let(::getFirstInnerStatement) else statement
@@ -1528,8 +1528,8 @@ private fun BlockOrBody.makeBodyWithAddedVariables(context: JvmBackendContext, v
             require(variables.all { it.initializer == null }) { "Variables must have no initializer" }
             val variableFirstUsage = variables.associateWith { v -> container.statements.firstOrNull { it.containsUsagesOf(setOf(v)) } }
             val variableDeclarationPerStatement = variableFirstUsage.entries
-                .mapNotNull { (variable, firstUsage) -> if (firstUsage == null) null else firstUsage to variable }
-                .groupBy({ (k, _) -> k }, { (_, v) -> v })
+                .mapNotNull { [variable, firstUsage] -> if (firstUsage == null) null else firstUsage to variable }
+                .groupBy({ [k, _] -> k }, { (_, v) -> v })
             if (variableDeclarationPerStatement.isEmpty()) return
             val newStatements = buildList {
                 for (statement in container.statements) {

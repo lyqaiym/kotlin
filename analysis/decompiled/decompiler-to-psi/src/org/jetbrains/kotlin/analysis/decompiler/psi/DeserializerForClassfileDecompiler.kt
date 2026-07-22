@@ -81,7 +81,7 @@ class DeserializerForClassfileDecompiler(
             LOG.error("Could not read annotation data for $facadeFqName from ${binaryClassForPackageClass?.classId}")
             return emptyList()
         }
-        val (nameResolver, packageProto) = JvmProtoBufUtil.readPackageDataFrom(annotationData, strings)
+        val [nameResolver, packageProto] = JvmProtoBufUtil.readPackageDataFrom(annotationData, strings)
         val dummyPackageFragment = createDummyPackageFragment(header.packageName?.let(::FqName) ?: facadeFqName.parent())
         val membersScope = DeserializedPackageMemberScope(
             dummyPackageFragment,

@@ -32,7 +32,7 @@ object FirJvmSynchronizedByValueClassOrPrimitiveChecker : FirFunctionCallChecker
     ) {
         val function = expression.calleeReference.toResolvedCallableSymbol() ?: return
         if (function.callableId != synchronizedCallableId) return
-        for ((argument, parameter) in expression.resolvedArgumentMapping?.entries ?: return) {
+        for ([argument, parameter] in expression.resolvedArgumentMapping?.entries ?: return) {
             if (parameter.name != lockParameterName) continue
             val type = argument.resolvedType
             if (type.isPrimitive || type.isValueClass(context.session)) {

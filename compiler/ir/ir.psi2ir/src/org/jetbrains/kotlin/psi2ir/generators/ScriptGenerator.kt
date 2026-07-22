@@ -166,7 +166,7 @@ internal class ScriptGenerator(declarationGenerator: DeclarationGenerator) : Dec
                 irProperty.origin = IrDeclarationOrigin.SCRIPT_PROVIDED_PROPERTY
                 irScript.statements += irProperty
                 valueParameter to irProperty.symbol
-            }.unzip().let { (params, props) ->
+            }.unzip().let { [params, props] ->
                 irScript.providedProperties = props
                 irScript.providedPropertiesParameters = params
             }
@@ -245,7 +245,7 @@ internal class ScriptGenerator(declarationGenerator: DeclarationGenerator) : Dec
 
                         val callGenerator = CallGenerator(statementGenerator)
 
-                        for ((index, ktEntry) in d.entries.withIndex()) {
+                        for ([index, ktEntry] in d.entries.withIndex()) {
                             val componentResolvedCall = getOrFail(BindingContext.COMPONENT_RESOLVED_CALL, ktEntry)
 
                             val componentSubstitutedCall = statementGenerator.pregenerateCall(componentResolvedCall)

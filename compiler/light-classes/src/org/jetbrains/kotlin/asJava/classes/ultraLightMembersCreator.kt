@@ -390,7 +390,8 @@ internal class UltraLightMembersCreator(
             val propertyAnnotated = when (type) {
                 MethodType.GETTER -> (annotated as? PropertyDescriptor)?.getter
                 MethodType.SETTER -> (annotated as? PropertyDescriptor)?.setter
-                else -> throw NotImplementedError()
+//                'when' is exhaustive so 'else' is redundant here.
+//                else -> throw NotImplementedError()
             }
 
             return propertyAnnotated?.let(DescriptorUtils::getJvmName)

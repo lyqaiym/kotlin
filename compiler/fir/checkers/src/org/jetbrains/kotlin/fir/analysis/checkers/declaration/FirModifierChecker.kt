@@ -75,7 +75,7 @@ object FirModifierChecker : FirBasicDeclarationChecker(MppCheckerKind.Common) {
         }
 
         val modifiers = list.modifiers
-        for ((secondIndex, secondModifier) in modifiers.withIndex()) {
+        for ([secondIndex, secondModifier] in modifiers.withIndex()) {
             for (firstIndex in 0 until secondIndex) {
                 checkCompatibilityType(modifiers[firstIndex], secondModifier, reporter, reportedNodes, owner, context)
             }

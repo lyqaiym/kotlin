@@ -145,6 +145,8 @@ internal abstract class SymbolLightClassForClassLike<SType : KaClassSymbol> prot
     override fun toString() = "${this::class.java.simpleName}:${classOrObjectDeclaration?.getDebugText()}"
 
     override fun getUseScope(): SearchScope = classOrObjectDeclaration?.useScope ?: GlobalSearchScope.projectScope(project)
+    @Deprecated("Deprecated stub API")
+    @Suppress("DEPRECATION") // KT-78356
     override fun getElementType(): IStubElementType<out StubElement<*>, *>? = classOrObjectDeclaration?.elementType
     override fun getStub(): KotlinClassOrObjectStub<out KtClassOrObject>? = classOrObjectDeclaration?.stub
 

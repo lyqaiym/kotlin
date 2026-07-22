@@ -80,7 +80,7 @@ internal inline fun getMethodNode(classData: ByteArray, classType: Type, crossin
                 throw AssertionError("Can't find proper '$name' method for inline: ambiguity between '${existing.name + existing.desc}' and '${name + desc}'")
             }
             node = MethodNode(Opcodes.API_VERSION, access, name, desc, signature, exceptions)
-            return node!!
+            return node
         }
     }, ClassReader.SKIP_FRAMES or if (GENERATE_SMAP) 0 else ClassReader.SKIP_DEBUG)
 
@@ -272,10 +272,10 @@ fun AbstractInsnNode?.insnText(insnList: InsnList): String {
             "$insnOpcodeText ${label.labelText()}"
         is LookupSwitchInsnNode ->
             "$insnOpcodeText " +
-                    this.keys.zip(this.labels).joinToString(prefix = "[", postfix = "]") { (key, label) -> "$key:${label.labelText()}" }
+                    this.keys.zip(this.labels).joinToString(prefix = "[", postfix = "]") { [key, label] -> "$key:${label.labelText()}" }
         is TableSwitchInsnNode ->
             "$insnOpcodeText " +
-                    (min..max).zip(this.labels).joinToString(prefix = "[", postfix = "]") { (key, label) -> "$key:${label.labelText()}" }
+                    (min..max).zip(this.labels).joinToString(prefix = "[", postfix = "]") { [key, label] -> "$key:${label.labelText()}" }
         else ->
             insnText
     }
@@ -294,7 +294,7 @@ fun MethodNode.dumpBody(): String {
         pw.println("  TRYCATCHBLOCK start:${tcb.start.labelRef()} end:${tcb.end.labelRef()} handler:${tcb.handler.labelRef()}")
     }
 
-    for ((i, insn) in this.instructions.toArray().withIndex()) {
+    for ([i, insn] in this.instructions.toArray().withIndex()) {
         when (insn.nodeType) {
             AbstractInsnNode.INSN ->
                 pw.println("$i\t${Printer.OPCODES[insn.opcode]}")

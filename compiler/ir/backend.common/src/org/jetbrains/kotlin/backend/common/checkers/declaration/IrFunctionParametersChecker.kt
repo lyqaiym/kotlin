@@ -14,14 +14,14 @@ internal object IrFunctionParametersChecker : IrFunctionChecker {
         declaration: IrFunction,
         context: CheckerContext,
     ) {
-        for ((i, param) in declaration.valueParameters.withIndex()) {
+        for ([i, param] in declaration.valueParameters.withIndex()) {
             if (param.indexInOldValueParameters != i) {
                 context.error(declaration, "Inconsistent index (old API) of value parameter ${param.indexInOldValueParameters} != $i")
             }
         }
 
         var lastKind: IrParameterKind? = null
-        for ((i, param) in declaration.parameters.withIndex()) {
+        for ([i, param] in declaration.parameters.withIndex()) {
             if (param.indexInParameters != i) {
                 context.error(declaration, "Inconsistent index (new API) of value parameter ${param.indexInParameters} != $i")
             }
@@ -47,7 +47,7 @@ internal object IrFunctionParametersChecker : IrFunctionChecker {
             lastKind = kind
         }
 
-        for ((i, param) in declaration.typeParameters.withIndex()) {
+        for ([i, param] in declaration.typeParameters.withIndex()) {
             if (param.index != i) {
                 context.error(declaration, "Inconsistent index of type parameter ${param.index} != $i")
             }

@@ -118,7 +118,7 @@ internal class IdSignatureHashCalculator(private val icHasher: ICHasher) {
         val newDependsStack = transitiveDepends.toMutableList()
 
         while (newDependsStack.isNotEmpty()) {
-            val (usedInlineFunctions, usedConstants) = newDependsStack.removeLast().inlineDepends
+            val [usedInlineFunctions, usedConstants] = newDependsStack.removeLast().inlineDepends
             for (inlineFunction in usedInlineFunctions) {
                 if (transitiveDepends.add(inlineFunction)) {
                     newDependsStack += inlineFunction

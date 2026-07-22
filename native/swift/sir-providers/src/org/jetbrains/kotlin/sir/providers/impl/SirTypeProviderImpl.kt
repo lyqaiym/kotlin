@@ -104,7 +104,7 @@ public class SirTypeProviderImpl(
                         }
 
                         kaType.isClassType(StandardClassIds.Map) -> {
-                            val (keyType, valueType) = kaType.typeArguments.map { buildSirType(it.type!!, ctx) }
+                            val [keyType, valueType] = kaType.typeArguments.map { buildSirType(it.type!!, ctx) }
                             SirDictionaryType(keyType, valueType)
                         }
 

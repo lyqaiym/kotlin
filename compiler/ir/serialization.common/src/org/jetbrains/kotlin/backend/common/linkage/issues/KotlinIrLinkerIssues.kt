@@ -355,7 +355,7 @@ private fun findPotentiallyConflictingOutgoingDependencies(
     val outgoingDependenciesIndex: MutableMap<ResolvedDependencyId, MutableList<OutgoingDependency>> = hashMapOf()
 
     allModules.values.forEach { module ->
-        module.requestedVersionsByIncomingDependencies.forEach { (incomingDependencyId, requestedVersion) ->
+        module.requestedVersionsByIncomingDependencies.forEach { [incomingDependencyId, requestedVersion] ->
             outgoingDependenciesIndex.getOrPut(incomingDependencyId) { mutableListOf() } += OutgoingDependency(
                 id = module.id,
                 requestedVersion = requestedVersion,
@@ -449,7 +449,7 @@ private fun findPotentiallyConflictingIncomingDependencies(
     fun recurse(moduleId: ResolvedDependencyId, aboveConflictingDependency: Boolean) {
         val module = allModules.findMatchingModule(moduleId)
 
-        module.requestedVersionsByIncomingDependencies.forEach { (incomingDependencyId, requestedVersion) ->
+        module.requestedVersionsByIncomingDependencies.forEach { [incomingDependencyId, requestedVersion] ->
             if (incomingDependencyId == sourceCodeModuleId) return@forEach
 
             val dependencyState: DependencyState = when {
@@ -563,7 +563,7 @@ private data class DependencyState(val conflictReason: PotentialConflictReason? 
 
 private fun Map<ResolvedDependencyId, MutableSet<DependencyState>>.describeDependencyStates(
     getDescription: (PotentialConflictReason) -> PotentialConflictDescription
-): Map<ResolvedDependencyId, PotentialConflictDescription> = mapNotNull { (dependencyId, dependencyStates) ->
+): Map<ResolvedDependencyId, PotentialConflictDescription> = mapNotNull { [dependencyId, dependencyStates] ->
     val mostSignificantConflictReasons = dependencyStates.mapNotNull { it.conflictReason }.mostSignificantConflictReasons
 
     when {
@@ -594,7 +594,7 @@ private fun StringBuilder.appendPotentiallyConflictingDependencies(
     append("\n\n$header")
 
     val paddingSize = (potentiallyConflictingDependencies.size + 1).toString().length
-    potentiallyConflictingDependencies.toSortedMap(moduleIdComparator).entries.forEachIndexed { index, (moduleId, potentialConflictReason) ->
+    potentiallyConflictingDependencies.toSortedMap(moduleIdComparator).entries.forEachIndexed { index, [moduleId, potentialConflictReason] ->
         val padding = (index + 1).toString().padStart(paddingSize, ' ')
         val moduleIdWithVersion = allModules.getValue(moduleId).moduleIdWithVersion
         append("\n$padding. \"$moduleIdWithVersion\" ($potentialConflictReason)")

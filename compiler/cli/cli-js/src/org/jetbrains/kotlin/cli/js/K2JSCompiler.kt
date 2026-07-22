@@ -267,7 +267,7 @@ class K2JSCompiler : CLICompiler<K2JSCompilerArguments>() {
             val moduleSourceFiles = (sourceModule.mainModule as MainModule.SourceFiles).files
             val icData = environmentForJS.configuration.incrementalDataProvider?.getSerializedData(moduleSourceFiles) ?: emptyList()
 
-            val (moduleFragment, irPluginContext) = generateIrForKlibSerialization(
+            val [moduleFragment, irPluginContext] = generateIrForKlibSerialization(
                 environmentForJS.project,
                 moduleSourceFiles,
                 environmentForJS.configuration,
@@ -343,7 +343,7 @@ fun loadPluginsForTests(configuration: CompilerConfiguration, parentDisposable: 
     var pluginClasspath: Iterable<String> = emptyList()
     val kotlinPaths = PathUtil.kotlinPathsForCompiler
     val libPath = kotlinPaths.libPath.takeIf { it.exists() && it.isDirectory } ?: File(".")
-    val (jars, _) =
+    val [jars, _] =
         PathUtil.KOTLIN_SCRIPTING_PLUGIN_CLASSPATH_JARS.map { File(libPath, it) }.partition { it.exists() }
     pluginClasspath = jars.map { it.canonicalPath } + pluginClasspath
 

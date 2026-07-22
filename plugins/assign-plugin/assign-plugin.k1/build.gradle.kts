@@ -8,6 +8,8 @@ plugins {
 dependencies {
     implementation(project(":kotlin-assignment-compiler-plugin.common"))
 
+    compileOnly(project(":core:descriptors"))
+    compileOnly(project(":compiler:resolution"))
     compileOnly(project(":compiler:frontend"))
     compileOnly(project(":compiler:frontend.java"))
     compileOnly(intellijCore())

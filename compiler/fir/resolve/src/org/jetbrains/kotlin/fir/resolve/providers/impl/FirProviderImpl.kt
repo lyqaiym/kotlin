@@ -289,7 +289,7 @@ class FirProviderImpl(val session: FirSession, val kotlinScopeProvider: FirKotli
             var hasTitle = false
             val unionKeys = a.keys + b.keys
 
-            for ((key, aValue, bValue) in unionKeys.map { Triple(it, a[it], b[it]) }) {
+            for ([key, aValue, bValue] in unionKeys.map { Triple(it, a[it], b[it]) }) {
                 if (!equal(aValue, bValue)) {
                     if (!hasTitle) {
                         failures += title
@@ -303,7 +303,7 @@ class FirProviderImpl(val session: FirSession, val kotlinScopeProvider: FirKotli
         fun <K, V> checkMMapDiff(title: String, a: Map<K, List<V>>, b: Map<K, List<V>>) {
             var hasTitle = false
             val unionKeys = a.keys + b.keys
-            for ((key, aValue, bValue) in unionKeys.map { Triple(it, a[it], b[it]) }) {
+            for ([key, aValue, bValue] in unionKeys.map { Triple(it, a[it], b[it]) }) {
                 if (aValue == null || bValue == null) {
                     if (!hasTitle) {
                         failures += title

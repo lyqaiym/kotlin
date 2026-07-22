@@ -128,11 +128,11 @@ object FirNotImplementedOverrideChecker : FirClassChecker(MppCheckerKind.Platfor
             )
         }
         if (!canHaveAbstractDeclarations) {
-            val (fromInterfaceOrEnum, notFromInterfaceOrEnum) = notImplementedSymbols.partition {
+            val [fromInterfaceOrEnum, notFromInterfaceOrEnum] = notImplementedSymbols.partition {
                 it.unwrapFakeOverrides().isFromInterfaceOrEnum(context)
             }
             val containingDeclaration = context.containingDeclarations.lastOrNull()
-            val (fromInitializerOfEnumEntry, notFromInitializerOfEnumEntry) = fromInterfaceOrEnum.partition {
+            val [fromInitializerOfEnumEntry, notFromInitializerOfEnumEntry] = fromInterfaceOrEnum.partition {
                 declaration.isInitializerOfEnumEntry(containingDeclaration)
             }
 
@@ -174,7 +174,7 @@ object FirNotImplementedOverrideChecker : FirClassChecker(MppCheckerKind.Platfor
             reporter.reportOn(source, MANY_IMPL_MEMBER_NOT_IMPLEMENTED, classSymbol, it, context)
         }
 
-        delegationOverrideOfFinal.forEach { (delegated, final) ->
+        delegationOverrideOfFinal.forEach { [delegated, final] ->
             reporter.reportOn(
                 source,
                 OVERRIDING_FINAL_MEMBER_BY_DELEGATION,
@@ -184,7 +184,7 @@ object FirNotImplementedOverrideChecker : FirClassChecker(MppCheckerKind.Platfor
             )
         }
 
-        delegationOverrideOfOpen.forEach { (delegated, open) ->
+        delegationOverrideOfOpen.forEach { [delegated, open] ->
             reporter.reportOn(
                 source,
                 DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE,
@@ -196,7 +196,7 @@ object FirNotImplementedOverrideChecker : FirClassChecker(MppCheckerKind.Platfor
 
         if (manyImplementationsDelegationSymbols.isEmpty()) {
             notImplementedIntersectionSymbols.forEach { notImplementedIntersectionSymbol ->
-                val (abstractIntersections, implIntersections) =
+                val [abstractIntersections, implIntersections] =
                     (notImplementedIntersectionSymbol as FirIntersectionCallableSymbol).intersections.partition {
                         it.modality == Modality.ABSTRACT
                     }

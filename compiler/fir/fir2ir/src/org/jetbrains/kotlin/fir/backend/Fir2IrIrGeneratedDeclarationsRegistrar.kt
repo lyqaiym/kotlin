@@ -64,7 +64,7 @@ class Fir2IrIrGeneratedDeclarationsRegistrar(private val components: Fir2IrCompo
         annotations.forEach {
             require(it.symbol.owner.constructedClass.isAnnotationClass) { "${it.render()} is not an annotation constructor call" }
         }
-        val (firDeclaration, kind) = findFirDeclaration(declaration)
+        val [firDeclaration, kind] = findFirDeclaration(declaration)
 
         when (kind) {
             null -> annotationsStorage.getOrPut(firDeclaration) { mutableListOf() } += annotations
@@ -479,7 +479,7 @@ class Fir2IrIrGeneratedDeclarationsRegistrar(private val components: Fir2IrCompo
                     -> return emptyList()
                 else -> {}
             }
-            val (keyDeclaration, kind) = when (declaration) {
+            val [keyDeclaration, kind] = when (declaration) {
                 is FirValueParameter -> declaration.containingDeclarationSymbol.fir to ChildDeclarationKind.ValueParameter(declaration.name)
                 is FirTypeParameter -> declaration.containingDeclarationSymbol.fir to ChildDeclarationKind.TypeParameter(declaration.name)
                 else -> declaration to null

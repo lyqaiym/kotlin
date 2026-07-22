@@ -508,7 +508,7 @@ private class IrValidationContextImpl(
                 }
                 appendLine(message)
                 append(element.render())
-                for ((i, parent) in parentChain.asReversed().withIndex()) {
+                for ([i, parent] in parentChain.asReversed().withIndex()) {
                     appendLine()
                     append("  ".repeat(i + 1))
                     append("inside ")

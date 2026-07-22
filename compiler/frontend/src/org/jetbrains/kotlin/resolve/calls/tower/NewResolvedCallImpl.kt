@@ -73,7 +73,7 @@ class NewResolvedCallImpl<D : CallableDescriptor>(
 
     override fun updateContextReceiverTypes(newTypes: List<KotlinType>) {
         if (contextReceivers.size != newTypes.size) return
-        contextReceivers = contextReceivers.zip(newTypes).map { (receiver, type) -> receiver.replaceType(type) }
+        contextReceivers = contextReceivers.zip(newTypes).map { [receiver, type] -> receiver.replaceType(type) }
     }
 
     override fun getStatus(): ResolutionStatus = getResultApplicability(diagnostics).toResolutionStatus()
@@ -168,7 +168,7 @@ class NewResolvedCallImpl<D : CallableDescriptor>(
         if (arguments.isEmpty()) return null
 
         val expectedTypeForConvertedArguments = hashMapOf<ValueArgument, UnwrappedType>()
-        for ((argument, convertedType) in arguments) {
+        for ([argument, convertedType] in arguments) {
             val typeWithFreshVariables = resolvedCallAtom.freshVariablesSubstitutor.safeSubstitute(convertedType)
             val expectedType = substitutor?.safeSubstitute(typeWithFreshVariables) ?: typeWithFreshVariables
             expectedTypeForConvertedArguments[argument.psiCallArgument.valueArgument] = expectedType
@@ -182,7 +182,7 @@ class NewResolvedCallImpl<D : CallableDescriptor>(
 
         val expectedTypeForConvertedArguments = hashMapOf<KtExpression, IntegerValueTypeConstant>()
 
-        for ((argument, convertedConstant) in resolvedCallAtom.argumentsWithConstantConversion) {
+        for ([argument, convertedConstant] in resolvedCallAtom.argumentsWithConstantConversion) {
             val expression = argument.psiExpression ?: continue
             expectedTypeForConvertedArguments[expression] = convertedConstant
         }

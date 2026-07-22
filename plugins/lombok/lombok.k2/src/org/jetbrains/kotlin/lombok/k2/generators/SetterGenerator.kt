@@ -65,7 +65,7 @@ class SetterGenerator(session: FirSession) : FirDeclarationGenerationExtension(s
         val fieldsWithSetter = computeFieldsWithSetters(classSymbol) ?: return null
         val globalAccessors = lombokService.getAccessors(classSymbol)
         val explicitlyDeclaredFunctions = declaredScope?.collectAllFunctions()?.associateBy { it.name }.orEmpty()
-        return fieldsWithSetter.mapNotNull { (field, setterInfo) ->
+        return fieldsWithSetter.mapNotNull { [field, setterInfo] ->
             val accessors = lombokService.getAccessorsIfAnnotated(field.symbol) ?: globalAccessors
             val setterName = computeSetterName(field, setterInfo, accessors) ?: return@mapNotNull null
             val existing = explicitlyDeclaredFunctions[setterName]

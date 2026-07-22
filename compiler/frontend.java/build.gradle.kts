@@ -5,7 +5,13 @@ plugins {
 
 dependencies {
     implementation(project(":core:descriptors"))
+    implementation(project(":core:deserialization"))
+    implementation(project(":core:descriptors"))
     implementation(project(":core:descriptors.jvm"))
+    implementation(project(":core:descriptors"))
+    implementation(project(":core:descriptors.jvm"))
+    implementation(project(":compiler:container"))
+    implementation(project(":compiler:resolution"))
     api(project(":compiler:util"))
     api(project(":compiler:config.jvm"))
     api("javax.annotation:jsr250-api:1.0")

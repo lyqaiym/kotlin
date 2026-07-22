@@ -6,6 +6,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":core:descriptors"))
     implementation(project(":core:descriptors.jvm"))
     implementation(project(":compiler:frontend"))
     implementation(project(":compiler:frontend.java"))
@@ -13,7 +14,7 @@ dependencies {
     implementation(project(":analysis:analysis-internal-utils"))
     implementation(project(":analysis:kt-references"))
     implementation(project(":compiler:light-classes"))
-
+    implementation(project(":compiler:resolution"))
     implementation(project(":compiler:backend"))
     implementation(project(":compiler:backend-common"))
     implementation(project(":compiler:backend.common.jvm"))

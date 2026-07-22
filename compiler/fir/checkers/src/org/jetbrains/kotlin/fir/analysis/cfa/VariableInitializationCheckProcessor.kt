@@ -119,10 +119,10 @@ abstract class VariableInitializationCheckProcessor {
             }
         }
 
-        for ((path, data) in getValue(node)) {
+        for ([path, data] in getValue(node)) {
             if (path == CapturedByValue) continue // CaptureByValue path does not contain enough information for captured initialization checks.
 
-            for ((symbol, range) in data) {
+            for ([symbol, range] in data) {
                 if (!symbol.isVal || !range.canBeRevisited() || symbol !in properties) continue
                 // This can be something like `f({ x = 1 }, { x = 2 })` where `f` calls both lambdas in-place.
                 // At each assignment it was only considered in isolation, but now that we're merging their control flows,

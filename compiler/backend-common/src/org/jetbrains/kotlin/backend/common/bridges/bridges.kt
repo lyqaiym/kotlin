@@ -75,7 +75,7 @@ fun <Function : FunctionHandle, Signature> generateBridges(
 
     val method = signature(implementation)
     bridgesToGenerate.remove(method)
-    return bridgesToGenerate.entries.map { (overriddenSignature, _) -> Bridge(overriddenSignature, method) }.toSet()
+    return bridgesToGenerate.entries.map { [overriddenSignature, _] -> Bridge(overriddenSignature, method) }.toSet()
 }
 
 fun <Function : FunctionHandle> findAllReachableDeclarations(function: Function): MutableSet<Function> {

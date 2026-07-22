@@ -456,7 +456,7 @@ private fun bridgeNominalType(type: SirNominalType): Bridge {
         SirSwiftModule.array -> Bridge.AsNSArray(type, bridgeAsNSCollectionElement(type.typeArguments.single()))
         SirSwiftModule.set -> Bridge.AsNSSet(type, bridgeAsNSCollectionElement(type.typeArguments.single()))
         SirSwiftModule.dictionary -> {
-            val (key, value) = type.typeArguments
+            val [key, value] = type.typeArguments
             Bridge.AsNSDictionary(
                 type,
                 bridgeAsNSCollectionElement(key),

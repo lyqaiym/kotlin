@@ -218,7 +218,7 @@ private class AnalyzedModules(
             parentDisposable: Disposable
         ): AnalyzedModules = with(sourceModuleRoots) {
             // phase 1: provide the modules that are the dependencies for "original" and "commonized" modules
-            val (dependencyModules: Map<CommonizerTarget, List<ModuleDescriptor>>, dependencies: AnalyzedModuleDependencies) =
+            val [dependencyModules: Map<CommonizerTarget, List<ModuleDescriptor>>, dependencies: AnalyzedModuleDependencies] =
                 createDependencyModules(sharedTarget, dependencyRoots, parentDisposable)
 
             // phase 2: build "original" and "commonized" modules
@@ -272,7 +272,7 @@ private class AnalyzedModules(
             }
 
             // then, all platform modules
-            moduleRoots.filterKeys { it != sharedTarget }.forEach { (leafTarget, moduleRoot) ->
+            moduleRoots.filterKeys { it != sharedTarget }.forEach { [leafTarget, moduleRoot] ->
                 result[leafTarget] =
                     createModule(sharedTarget, leafTarget, moduleRoot, dependenciesForOthers, parentDisposable, isDependencyModule)
             }
@@ -428,7 +428,7 @@ private object PatchingTestDescriptorVisitor : DeclarationDescriptorVisitorEmpty
 
     private fun visitCallableMemberDescriptor(callableDescriptor: CallableMemberDescriptor) {
         val comment = callableDescriptor.findPsi()?.text?.lineSequence()?.firstOrNull()?.takeIf { it.startsWith("//") } ?: return
-        val (key, value) = comment.substringAfter("//").split('=', limit = 2).takeIf { it.size == 2 }?.map { it.trim() } ?: return
+        val [key, value] = comment.substringAfter("//").split('=', limit = 2).takeIf { it.size == 2 }?.map { it.trim() } ?: return
 
         when (key) {
             "hasStableParameterNames" -> {

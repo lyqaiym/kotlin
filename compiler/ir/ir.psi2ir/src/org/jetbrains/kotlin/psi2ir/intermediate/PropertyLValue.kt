@@ -162,7 +162,7 @@ internal class AccessorPropertyLValue(
                 putTypeArguments()
                 dispatchReceiver = dispatchReceiverValue?.load()
                 extensionReceiver = extensionReceiverValue?.load()
-                for ((i, contextReceiverValue) in contextReceiverValues.withIndex()) {
+                for ([i, contextReceiverValue] in contextReceiverValues.withIndex()) {
                     putValueArgument(i, contextReceiverValue.load())
                 }
             }
@@ -192,7 +192,7 @@ internal class AccessorPropertyLValue(
                 putTypeArguments()
                 dispatchReceiver = dispatchReceiverValue?.load()
                 extensionReceiver = extensionReceiverValue?.load()
-                for ((i, contextReceiverValue) in contextReceiverValues.withIndex()) {
+                for ([i, contextReceiverValue] in contextReceiverValues.withIndex()) {
                     putValueArgument(i, contextReceiverValue.load())
                 }
                 putValueArgument(contextReceiverValues.size, irExpression)

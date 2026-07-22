@@ -126,8 +126,8 @@ open class UpgradeCallableReferences(
 
         private fun hasVarargConversion(wrapper: IrSimpleFunction, target: IrSimpleFunction): Boolean {
             return target.parameters.zip(wrapper.parameters)
-                .takeWhile { (original, _) -> original.defaultValue == null }
-                .any { (original, adapted) ->
+                .takeWhile { [original, _] -> original.defaultValue == null }
+                .any { [original, adapted] ->
                     // if original is (vararg x: T) than adapted can be either (Array<T> or T). conversion happened only in later case.
                     original.isVararg && original.type.arrayDepth() == adapted.type.arrayDepth() + 1
                 }
@@ -141,7 +141,7 @@ open class UpgradeCallableReferences(
         private fun IrBlock.parseAdaptedBlock() : AdaptedBlock? {
             if (origin !in blockReferenceOrigins) return null
             if (statements.size != 2) return null
-            val (function, reference) = statements
+            val [function, reference] = statements
             if (function !is IrSimpleFunction) return null
             return when (reference) {
                 is IrFunctionReference -> AdaptedBlock(function, reference, reference.type)
@@ -156,12 +156,12 @@ open class UpgradeCallableReferences(
 
         override fun visitBlock(expression: IrBlock, data: IrDeclarationParent): IrExpression {
             if (!upgradeFunctionReferencesAndLambdas) return super.visitBlock(expression, data)
-            val (function, reference, samType) = expression.parseAdaptedBlock() ?: return super.visitBlock(expression, data)
+            val [function, reference, samType] = expression.parseAdaptedBlock() ?: return super.visitBlock(expression, data)
             function.transformChildren(this, function)
             reference.transformChildren(this, data)
             val isRestrictedSuspension = function.isRestrictedSuspensionFunction()
             function.flattenParameters()
-            val (boundParameters, unboundParameters) = function.parameters.partition { reference.arguments[it.indexInParameters] != null }
+            val [boundParameters, unboundParameters] = function.parameters.partition { reference.arguments[it.indexInParameters] != null }
             function.parameters = boundParameters + unboundParameters
             val reflectionTarget = reference.reflectionTarget.takeUnless { expression.origin.isLambda }
             return IrRichFunctionReferenceImpl(
@@ -362,11 +362,11 @@ open class UpgradeCallableReferences(
                     typeArguments = (0 until cleanedTypeArgumentCount).map { typeArguments[it] ?: context.irBuiltIns.anyNType },
                 ).apply {
                     val bound = captured.map { it.first }.toSet()
-                    val (boundParameters, unboundParameters) = referencedFunction.parameters.partition { it in bound }
+                    val [boundParameters, unboundParameters] = referencedFunction.parameters.partition { it in bound }
                     require(boundParameters.size + unboundParameters.size == parameters.size) {
                         "Wrong number of parameters in wrapper: expected: ${boundParameters.size} bound and ${unboundParameters.size} unbound, but ${parameters.size} found"
                     }
-                    for ((originalParameter, localParameter) in (boundParameters + unboundParameters).zip(parameters)) {
+                    for ([originalParameter, localParameter] in (boundParameters + unboundParameters).zip(parameters)) {
                         arguments[originalParameter.indexInParameters] = irGet(localParameter)
                     }
                 }

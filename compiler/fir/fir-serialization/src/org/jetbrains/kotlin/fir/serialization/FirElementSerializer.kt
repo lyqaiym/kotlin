@@ -308,11 +308,11 @@ class FirElementSerializer private constructor(
             }
             is MultiFieldValueClassRepresentation -> {
                 val namesToTypes = representation.underlyingPropertyNamesToTypes
-                builder.addAllMultiFieldValueClassUnderlyingName(namesToTypes.map { (name, _) -> getSimpleNameIndex(name) })
+                builder.addAllMultiFieldValueClassUnderlyingName(namesToTypes.map { [name, _] -> getSimpleNameIndex(name) })
                 if (useTypeTable()) {
-                    builder.addAllMultiFieldValueClassUnderlyingTypeId(namesToTypes.map { (_, kotlinType) -> typeId(kotlinType) })
+                    builder.addAllMultiFieldValueClassUnderlyingTypeId(namesToTypes.map { [_, kotlinType] -> typeId(kotlinType) })
                 } else {
-                    builder.addAllMultiFieldValueClassUnderlyingType(namesToTypes.map { (_, kotlinType) -> typeProto(kotlinType).build() })
+                    builder.addAllMultiFieldValueClassUnderlyingType(namesToTypes.map { [_, kotlinType] -> typeProto(kotlinType).build() })
                 }
             }
             null -> {}
@@ -506,7 +506,7 @@ class FirElementSerializer private constructor(
         val scope = session.nestedClassifierScope(classSymbol.fir) ?: return emptyList()
         return buildList {
             val indexByDeclaration = classSymbol.fir.declarations.filterIsInstance<FirClassLikeDeclaration>().mapToIndex()
-            val (declared, nonDeclared) = scope.getClassifierNames()
+            val [declared, nonDeclared] = scope.getClassifierNames()
                 .mapNotNull { scope.getSingleClassifier(it)?.fir as FirClassLikeDeclaration? }
                 .partition { it in indexByDeclaration }
             declared.sortedBy { indexByDeclaration.getValue(it) }.mapTo(this) { it.symbol }
@@ -555,7 +555,7 @@ class FirElementSerializer private constructor(
             }
         }
         val indexByDeclaration = declarations.filterIsInstance<T>().mapToIndex()
-        val (declared, nonDeclared) = foundInScope
+        val [declared, nonDeclared] = foundInScope
             .sortedBy { indexByDeclaration[it] ?: Int.MAX_VALUE }
             .partition { it in indexByDeclaration }
         return declared + nonDeclared.sortedWith(FirCallableDeclarationComparator)
@@ -635,7 +635,7 @@ class FirElementSerializer private constructor(
             val nonSourceAnnotations = setter.nonSourceAnnotations(session)
             if (Flags.IS_NOT_DEFAULT.get(accessorFlags)) {
                 val setterLocal = local.createChildSerializer(setter)
-                for ((index, valueParameterDescriptor) in setter.valueParameters.withIndex()) {
+                for ([index, valueParameterDescriptor] in setter.valueParameters.withIndex()) {
                     val annotations = nonSourceAnnotations.filter { it.useSiteTarget == AnnotationUseSiteTarget.SETTER_PARAMETER }
                     builder.setSetterValueParameter(setterLocal.valueParameterProto(valueParameterDescriptor, index, setter, annotations))
                 }
@@ -788,7 +788,7 @@ class FirElementSerializer private constructor(
             }
         }
 
-        for ((index, valueParameter) in function.valueParameters.withIndex()) {
+        for ([index, valueParameter] in function.valueParameters.withIndex()) {
             builder.addValueParameter(local.valueParameterProto(valueParameter, index, function))
         }
 
@@ -902,7 +902,7 @@ class FirElementSerializer private constructor(
             builder.flags = flags
         }
 
-        for ((index, valueParameter) in constructor.valueParameters.withIndex()) {
+        for ([index, valueParameter] in constructor.valueParameters.withIndex()) {
             builder.addValueParameter(local.valueParameterProto(valueParameter, index, constructor))
         }
 
@@ -1589,7 +1589,7 @@ class FirElementSerializer private constructor(
         declaration: FirDeclaration,
         addCompilerPluginData: B.(ProtoBuf.CompilerPluginData.Builder) -> B
     ) {
-        extension.additionalMetadataProvider?.findMetadataExtensionsFor(declaration)?.forEach { (pluginId, data) ->
+        extension.additionalMetadataProvider?.findMetadataExtensionsFor(declaration)?.forEach { [pluginId, data] ->
             val pluginData = ProtoBuf.CompilerPluginData.newBuilder().apply {
                 this.pluginId = stringTable.getStringIndex(pluginId)
                 this.data = ByteString.copyFrom(data)

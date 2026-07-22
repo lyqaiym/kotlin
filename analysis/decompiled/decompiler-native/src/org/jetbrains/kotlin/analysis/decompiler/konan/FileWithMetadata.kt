@@ -31,7 +31,7 @@ sealed class FileWithMetadata {
     companion object {
         fun forPackageFragment(packageFragment: VirtualFile): FileWithMetadata? {
             val klibMetadataLoadingCache = KlibLoadingMetadataCache.getInstance()
-            val (fragment, version) = klibMetadataLoadingCache.getCachedPackageFragmentWithVersion(packageFragment)
+            val [fragment, version] = klibMetadataLoadingCache.getCachedPackageFragmentWithVersion(packageFragment)
             if (fragment == null || version == null) return null
             if (!version.isCompatibleWithCurrentCompilerVersion()) {
                 return Incompatible(version)

@@ -67,7 +67,7 @@ object FirMissingDependencyClassChecker : FirQualifiedAccessExpressionChecker(Mp
         }
         if (expression is FirFunctionCall) {
             val argumentList = expression.argumentList as? FirResolvedArgumentList
-            argumentList?.mapping?.forEach { (_, parameter) ->
+            argumentList?.mapping?.forEach { [_, parameter] ->
                 val type = parameter.returnTypeRef.coneType
                 considerType(type, missingTypes, context)
                 type.forEachType {

@@ -59,7 +59,7 @@ class DeprecationAnnotationInfoPerUseSiteStorageBuilder {
     }
 
     fun add(other: DeprecationAnnotationInfoPerUseSiteStorage) {
-        other.storage.forEach { (useSite, info) ->
+        other.storage.forEach { [useSite, info] ->
             add(useSite, info)
         }
     }
@@ -153,7 +153,7 @@ fun getDeprecationsAnnotationInfoByUseSiteFromAccessors(
     setterAnnotations: List<FirAnnotation>? = setter?.annotations,
 ): DeprecationAnnotationInfoPerUseSiteStorage = buildDeprecationAnnotationInfoPerUseSiteStorage {
     val setterDeprecations = setter?.extractDeprecationInfoPerUseSite(session, customAnnotations = setterAnnotations)
-    setterDeprecations?.storage?.forEach { (useSite, infos) ->
+    setterDeprecations?.storage?.forEach { [useSite, infos] ->
         if (useSite == null) {
             add(AnnotationUseSiteTarget.PROPERTY_SETTER, infos)
         } else {
@@ -162,7 +162,7 @@ fun getDeprecationsAnnotationInfoByUseSiteFromAccessors(
     }
 
     val getterDeprecations = getter?.extractDeprecationInfoPerUseSite(session, customAnnotations = getterAnnotations)
-    getterDeprecations?.storage?.forEach { (useSite, infos) ->
+    getterDeprecations?.storage?.forEach { [useSite, infos] ->
         if (useSite == null) {
             add(AnnotationUseSiteTarget.PROPERTY_GETTER, infos)
         } else {
@@ -257,7 +257,7 @@ private fun List<FirAnnotation>.extractDeprecationAnnotationInfoPerUseSite(
     // See the commit message for an example.
 
     val annotations = session.annotationPlatformSupport.deprecationAnnotationsWithOverridesPropagation
-        .flatMap { (classId, shouldPropagateToOverrides) ->
+        .flatMap { [classId, shouldPropagateToOverrides] ->
             this.filter {
                 it.unexpandedClassId == classId
             }.map {
@@ -266,7 +266,7 @@ private fun List<FirAnnotation>.extractDeprecationAnnotationInfoPerUseSite(
         }
 
     return buildDeprecationAnnotationInfoPerUseSiteStorage {
-        for ((deprecated, shouldPropagateToOverrides) in annotations) {
+        for ([deprecated, shouldPropagateToOverrides] in annotations) {
             if (deprecated.unexpandedClassId == StandardClassIds.Annotations.SinceKotlin) {
                 val sinceKotlinSingleArgument = deprecated.findArgumentByName(ParameterNames.sinceKotlinVersion)
                 val apiVersion = ((sinceKotlinSingleArgument as? FirLiteralExpression)?.value as? String)

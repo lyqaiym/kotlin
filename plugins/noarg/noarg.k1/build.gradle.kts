@@ -6,6 +6,7 @@ plugins {
 }
 
 dependencies {
+    compileOnly(project(":core:descriptors"))
     compileOnly(project(":compiler:frontend"))
     compileOnly(project(":compiler:frontend.java"))
     compileOnly(intellijCore())

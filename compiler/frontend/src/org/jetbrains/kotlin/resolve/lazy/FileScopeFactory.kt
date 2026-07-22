@@ -193,7 +193,7 @@ class FileScopeFactory(
         }
 
         fun createImportingScope(): LazyImportScope {
-            val (defaultExplicitImportResolver, defaultAllUnderImportResolver, defaultLowPriorityImportResolver) =
+            val [defaultExplicitImportResolver, defaultAllUnderImportResolver, defaultLowPriorityImportResolver] =
                     createDefaultImportResolversForFile()
 
             val dummyContainerDescriptor = DummyContainerDescriptor(file, packageFragment)

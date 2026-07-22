@@ -372,7 +372,7 @@ internal class BodyGenerator(
         irBlockBody: IrBlockBody
     ) {
         val thisAsReceiverParameter = classDescriptor.thisAsReceiverParameter
-        for ((index, receiverDescriptor) in classDescriptor.contextReceivers.withIndex()) {
+        for ([index, receiverDescriptor] in classDescriptor.contextReceivers.withIndex()) {
             val irValueParameter = irConstructor.valueParameters[index]
             irBlockBody.statements.add(
                 IrSetFieldImpl(

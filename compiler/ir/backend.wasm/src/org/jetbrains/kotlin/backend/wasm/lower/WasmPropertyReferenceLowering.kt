@@ -196,7 +196,7 @@ internal class WasmPropertyReferenceLowering(val context: WasmBackendContext) : 
             val returnType = expression.getter?.owner?.returnType ?: expression.field!!.owner.type
 
             val getterCallableReference = expression.getter?.owner?.let { getter ->
-                getter.parameters.zip(temporaries).forEach { (parameter, argument) ->
+                getter.parameters.zip(temporaries).forEach { [parameter, argument] ->
                     if (argument == null) {
                         receiverTypes.add(parameter.type)
                     }

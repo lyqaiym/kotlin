@@ -282,7 +282,7 @@ internal class KaFirExpressionTypeProvider(
     }
 
     private fun getExpectedTypeOfFunctionParameter(expression: PsiElement): KaType? {
-        val (ktCallElement, argumentExpression) = expression.getFunctionCallAsWithThisAsParameter() ?: return null
+        val [ktCallElement, argumentExpression] = expression.getFunctionCallAsWithThisAsParameter() ?: return null
         val firCall = ktCallElement.getOrBuildFir(firResolveSession)?.unwrapSafeCall() as? FirCall ?: return null
 
         val callee = (firCall.toReference(firResolveSession.useSiteFirSession) as? FirResolvedNamedReference)?.resolvedSymbol
@@ -294,8 +294,8 @@ internal class KaFirExpressionTypeProvider(
         }
 
         val argumentsToParameters = firCall.argumentsToSubstitutedValueParameters(substituteWithErrorTypes = false) ?: return null
-        val (firParameterForExpression, substitutedType) =
-            argumentsToParameters.entries.firstOrNull { (arg, _) ->
+        val [firParameterForExpression, substitutedType] =
+            argumentsToParameters.entries.firstOrNull { [arg, _] ->
                 when (arg) {
                     // TODO: better to utilize. See `createArgumentMapping` in [KtFirCallResolver]
                     is FirNamedArgumentExpression, is FirSpreadArgumentExpression ->

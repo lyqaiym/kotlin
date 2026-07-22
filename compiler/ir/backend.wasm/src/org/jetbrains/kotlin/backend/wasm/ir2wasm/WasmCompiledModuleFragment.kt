@@ -391,7 +391,7 @@ class WasmCompiledModuleFragment(
                     buildConstI32(klassId, serviceCodeLocation)
                     buildInstr(WasmOp.I32_EQ, serviceCodeLocation)
                     buildIf("Class matches")
-                    associatedObjectsInstanceGetters.forEach { (obj, getter, isExternal) ->
+                    associatedObjectsInstanceGetters.forEach { [obj, getter, isExternal] ->
                         val keyId = typeIds[obj]!!
                         buildGetLocal(WasmLocal(1, "keyId", WasmI32, true), serviceCodeLocation)
                         buildConstI32(keyId, serviceCodeLocation)
@@ -458,7 +458,7 @@ class WasmCompiledModuleFragment(
 
     private fun addCompileTimePerClassData(data: MutableList<WasmData>, typeIds: Map<IdSignature, Int>) {
         wasmCompiledFileFragments.forEach { fragment ->
-            fragment.typeInfo.forEach { (referenceKey, typeInfo) ->
+            fragment.typeInfo.forEach { [referenceKey, typeInfo] ->
                 val instructions = mutableListOf<WasmInstr>()
                 WasmExpressionBuilder(instructions).buildConstI32(
                     typeIds.getValue(referenceKey),
@@ -513,7 +513,7 @@ class WasmCompiledModuleFragment(
         }
         // Rebind symbol to canonical
         wasmCompiledFileFragments.forEach { fragment ->
-            fragment.functionTypes.unbound.forEach { (_, wasmSymbol) ->
+            fragment.functionTypes.unbound.forEach { [_, wasmSymbol] ->
                 wasmSymbol.bind(canonicalFunctionTypes.getValue(wasmSymbol.owner))
             }
         }
@@ -525,7 +525,7 @@ class WasmCompiledModuleFragment(
         var currentDataSectionAddress = 0
 
         wasmCompiledFileFragments.forEach { fragment ->
-            fragment.typeInfo.forEach { (referenceKey, dataElement) ->
+            fragment.typeInfo.forEach { [referenceKey, dataElement] ->
                 typeIds[referenceKey] = currentDataSectionAddress
                 currentDataSectionAddress += dataElement.sizeInBytes
             }
@@ -537,7 +537,7 @@ class WasmCompiledModuleFragment(
 
         var interfaceId = 0
         wasmCompiledFileFragments.forEach { fragment ->
-            fragment.interfaceIds.unbound.forEach { (signature, symbol) ->
+            fragment.interfaceIds.unbound.forEach { [signature, symbol] ->
                 val id = typeIds.getOrPut(signature) { interfaceId-- }
                 symbol.bind(id)
             }
@@ -591,7 +591,7 @@ class WasmCompiledModuleFragment(
 
     private fun bindConstantArrayDataSegmentIds(data: MutableList<WasmData>) {
         wasmCompiledFileFragments.forEach { fragment ->
-            fragment.constantArrayDataSegmentId.unbound.forEach { (constantArraySegment, symbol) ->
+            fragment.constantArrayDataSegmentId.unbound.forEach { [constantArraySegment, symbol] ->
                 symbol.bind(data.size)
                 val integerSize = when (constantArraySegment.second) {
                     WasmI8 -> BYTE_SIZE_BYTES
@@ -659,7 +659,7 @@ fun <IrSymbolType, WasmDeclarationType : Any, WasmSymbolType : WasmSymbol<WasmDe
     unbound: Map<IrSymbolType, WasmSymbolType>,
     defined: Map<IrSymbolType, WasmDeclarationType>
 ) {
-    unbound.forEach { (irSymbol, wasmSymbol) ->
+    unbound.forEach { [irSymbol, wasmSymbol] ->
         if (irSymbol !in defined)
             compilationException("Can't link symbol ${irSymbolDebugDump(irSymbol)}", type = null)
         if (!wasmSymbol.isBound()) {

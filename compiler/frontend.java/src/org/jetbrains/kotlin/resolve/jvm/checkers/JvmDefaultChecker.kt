@@ -54,8 +54,8 @@ class JvmDefaultChecker(project: Project) : DeclarationChecker {
         getNonPrivateTraitMembersForDelegation(
             descriptor,
             returnImplNotDelegate = true
-        ).filter { (_, actualImplementation) -> actualImplementation.isCompiledToJvmDefaultWithProperMode(jvmDefaultMode) }
-            .forEach { (inheritedMember, actualImplementation) ->
+        ).filter { [_, actualImplementation] -> actualImplementation.isCompiledToJvmDefaultWithProperMode(jvmDefaultMode) }
+            .forEach { [inheritedMember, actualImplementation] ->
                 if (actualImplementation is FunctionDescriptor && inheritedMember is FunctionDescriptor) {
                     checkSpecializationInCompatibilityMode(
                         inheritedMember, actualImplementation, context, declaration, performSpecializationCheck,

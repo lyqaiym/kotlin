@@ -44,7 +44,7 @@ inline fun KtSourceElement.forEachChildOfType(
     depth: Int,
     reverse: Boolean = false,
     processChild: (KtSourceElement) -> Unit,
-) = when (this) {
+): Unit = when (this) {
     is KtPsiSourceElement -> psi.forEachChildOfType(types, depth, reverse) {
         processChild(it.toKtPsiSourceElement())
     }
@@ -61,7 +61,7 @@ inline fun PsiElement.forEachChildOfType(
     depth: Int,
     reverse: Boolean = false,
     processChild: (PsiElement) -> Unit,
-) = forEachChildOfType(
+): Unit = forEachChildOfType(
     this, types, depth, reverse,
     getElementType = { it.node.elementType },
     getChildren = { it.allChildren.toList() },
@@ -77,7 +77,7 @@ inline fun LighterASTNode.forEachChildOfType(
     reverse: Boolean = false,
     treeStructure: FlyweightCapableTreeStructure<LighterASTNode>,
     processChild: (LighterASTNode) -> Unit,
-) = forEachChildOfType(
+): Unit = forEachChildOfType(
     this, types, depth, reverse,
     getElementType = { it.tokenType },
     getChildren = { it.getChildren(treeStructure) },
@@ -96,7 +96,7 @@ inline fun <T> forEachChildOfType(
     val stack = mutableListOf(root to 0)
 
     while (stack.isNotEmpty()) {
-        val (element, currentDepth) = stack.popLast()
+        val [element, currentDepth] = stack.popLast()
 
         if (currentDepth != 0 && getElementType(element) in types) {
             processChild(element)

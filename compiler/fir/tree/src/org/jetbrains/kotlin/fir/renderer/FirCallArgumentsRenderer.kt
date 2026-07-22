@@ -28,8 +28,8 @@ open class FirCallArgumentsRenderer {
     }
 
     private fun Map<Name, FirElement>.renderSeparated() {
-        for ((index, element) in this.entries.withIndex()) {
-            val (name, argument) = element
+        for ([index, element] in this.entries.withIndex()) {
+            val [name, argument] = element
             if (index > 0) {
                 printer.print(", ")
             }

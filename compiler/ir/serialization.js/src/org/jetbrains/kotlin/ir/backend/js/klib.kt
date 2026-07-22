@@ -709,7 +709,7 @@ fun <SourceFile> shouldGoToNextIcRound(
 }
 
 private fun Map<IrModuleFragment, KotlinLibrary>.getUniqueNameForEachFragment(): Map<IrModuleFragment, String> {
-    return this.entries.mapNotNull { (moduleFragment, klib) ->
+    return this.entries.mapNotNull { [moduleFragment, klib] ->
         klib.jsOutputName?.let { moduleFragment to it }
     }.toMap()
 }

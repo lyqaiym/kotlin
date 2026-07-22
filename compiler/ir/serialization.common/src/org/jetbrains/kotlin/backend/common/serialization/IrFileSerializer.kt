@@ -1307,8 +1307,8 @@ open class IrFileSerializer(
 
     private fun serializeMultiFieldValueClassRepresentation(representation: MultiFieldValueClassRepresentation<IrSimpleType>): ProtoIrMultiFieldValueClassRepresentation =
         ProtoIrMultiFieldValueClassRepresentation.newBuilder().apply {
-            addAllUnderlyingPropertyName(representation.underlyingPropertyNamesToTypes.map { (name, _) -> serializeName(name) })
-            addAllUnderlyingPropertyType(representation.underlyingPropertyNamesToTypes.map { (_, irType) -> serializeIrType(irType) })
+            addAllUnderlyingPropertyName(representation.underlyingPropertyNamesToTypes.map { [name, _] -> serializeName(name) })
+            addAllUnderlyingPropertyType(representation.underlyingPropertyNamesToTypes.map { [_, irType] -> serializeIrType(irType) })
         }.build()
 
     private fun serializeIrTypeAlias(typeAlias: IrTypeAlias): ProtoTypeAlias {

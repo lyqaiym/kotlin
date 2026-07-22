@@ -522,7 +522,7 @@ private val ConeKotlinType.isKindOfNothing
     get() = lowerBoundIfFlexible().let { it.isNothing || it.isNullableNothing }
 
 fun BodyResolveComponents.transformExpressionUsingSmartcastInfo(expression: FirExpression): FirExpression {
-    val (stability, typesFromSmartCast) = dataFlowAnalyzer.getTypeUsingSmartcastInfo(expression) ?: return expression
+    val [stability, typesFromSmartCast] = dataFlowAnalyzer.getTypeUsingSmartcastInfo(expression) ?: return expression
 
     val originalTypeWithAliases = expression.resolvedType
     val originalType = originalTypeWithAliases.fullyExpandedType(session)

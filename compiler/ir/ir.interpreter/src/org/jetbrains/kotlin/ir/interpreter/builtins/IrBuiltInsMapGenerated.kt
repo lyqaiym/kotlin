@@ -3,7 +3,7 @@
  * Use of this source code is governed by the Apache 2.0 license that can be found in the license/LICENSE.txt file.
  */
 
-@file:Suppress("DEPRECATION", "DEPRECATION_ERROR", "UNCHECKED_CAST")
+@file:Suppress("DEPRECATION", "DEPRECATION_ERROR", "UNCHECKED_CAST", "REDUNDANT_CALL_OF_CONVERSION_METHOD")
 
 package org.jetbrains.kotlin.ir.interpreter.builtins
 
@@ -38,7 +38,7 @@ internal fun interpretUnaryFunction(name: String, type: String, a: Any?): Any? {
             "kotlin.Float" -> return (a as Float).toString()
             "kotlin.Long" -> return (a as Long).toString()
             "kotlin.Double" -> return (a as Double).toString()
-            "kotlin.String" -> return (a as String).toString()
+            "kotlin.String" -> return (a as String)
             "kotlin.Any" -> return (a as Any).toString()
             "kotlin.Any?" -> return a?.toString() ?: "null"
             "kotlin.Unit" -> return Unit.toString()
@@ -72,7 +72,7 @@ internal fun interpretUnaryFunction(name: String, type: String, a: Any?): Any? {
             "kotlin.Number" -> return (a as Number).toByte()
         }
         "toChar" -> when (type) {
-            "kotlin.Char" -> return (a as Char).toChar()
+            "kotlin.Char" -> return (a as Char)
             "kotlin.Byte" -> return (a as Byte).toChar()
             "kotlin.Short" -> return (a as Short).toChar()
             "kotlin.Int" -> return (a as Int).toChar()
@@ -88,7 +88,7 @@ internal fun interpretUnaryFunction(name: String, type: String, a: Any?): Any? {
             "kotlin.Int" -> return (a as Int).toDouble()
             "kotlin.Float" -> return (a as Float).toDouble()
             "kotlin.Long" -> return (a as Long).toDouble()
-            "kotlin.Double" -> return (a as Double).toDouble()
+            "kotlin.Double" -> return (a as Double)
             "kotlin.Number" -> return (a as Number).toDouble()
         }
         "toFloat" -> when (type) {

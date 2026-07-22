@@ -73,7 +73,7 @@ object ValueClassDeclarationChecker : DeclarationChecker {
             return
         }
 
-        if (context.languageVersionSettings.supportsFeature(LanguageFeature.ValueClasses)) {
+        if (context.languageVersionSettings.supportsFeature(LanguageFeature.JvmInlineMultiFieldValueClasses)) {
             if (primaryConstructor.valueParameters.isEmpty()) {
                 (primaryConstructor.valueParameterList ?: declaration).let {
                     trace.report(Errors.VALUE_CLASS_EMPTY_CONSTRUCTOR.on(it))
@@ -90,7 +90,7 @@ object ValueClassDeclarationChecker : DeclarationChecker {
         var baseParametersOk = true
         val baseParameterTypes = descriptor.defaultType.substitutedUnderlyingTypes()
 
-        for ((baseParameter, baseParameterType) in primaryConstructor.valueParameters zip baseParameterTypes) {
+        for ([baseParameter, baseParameterType] in primaryConstructor.valueParameters zip baseParameterTypes) {
             if (!isParameterAcceptableForInlineClass(baseParameter)) {
                 trace.report(Errors.VALUE_CLASS_CONSTRUCTOR_NOT_FINAL_READ_ONLY_PARAMETER.on(baseParameter))
                 baseParametersOk = false

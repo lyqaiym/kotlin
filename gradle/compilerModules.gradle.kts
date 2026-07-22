@@ -30,6 +30,7 @@ val commonCompilerModules = descriptorsCompilerModules + arrayOf(
     ":core:compiler.common.wasm",
     ":core:compiler.common.web",
     ":core:util.runtime",
+    ":core:language.version-settings",
     ":compiler:frontend.common.jvm",
     ":kotlin-util-io",
     ":kotlin-util-klib",

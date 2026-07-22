@@ -276,7 +276,7 @@ class JsIrBackendContext(
         if (jsFunction != null) return jsFunction
 
         parseJsFromAnnotation(originalSymbol.owner, JsStandardClassIds.Annotations.JsOutlinedFunction)
-            ?.let { (annotation, parsedJsFunction) ->
+            ?.let { [annotation, parsedJsFunction] ->
                 val sourceMap = (annotation.arguments[1] as? IrConst)?.value as? String
                 val parsedSourceMap = sourceMap?.let { parseSourceMap(it, originalSymbol.owner.fileOrNull, annotation) }
                 if (parsedSourceMap != null) {
@@ -288,7 +288,7 @@ class JsIrBackendContext(
             }
 
         parseJsFromAnnotation(originalSymbol.owner, JsStandardClassIds.Annotations.JsFun)
-            ?.let { (_, parsedJsFunction) ->
+            ?.let { [_, parsedJsFunction] ->
                 outlinedJsCodeFunctions[originalSymbol] = parsedJsFunction
                 return parsedJsFunction
             }

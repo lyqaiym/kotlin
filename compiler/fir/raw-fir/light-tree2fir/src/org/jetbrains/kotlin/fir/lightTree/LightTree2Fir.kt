@@ -76,7 +76,7 @@ class LightTree2Fir(
 
     fun buildFirFile(file: File): FirFile {
         val sourceFile = KtIoFileSourceFile(file)
-        val (code, linesMapping) = with(file.inputStream().reader(Charsets.UTF_8)) {
+        val [code, linesMapping] = with(file.inputStream().reader(Charsets.UTF_8)) {
             this.readSourceFileWithMapping()
         }
         return buildFirFile(code, sourceFile, linesMapping)
