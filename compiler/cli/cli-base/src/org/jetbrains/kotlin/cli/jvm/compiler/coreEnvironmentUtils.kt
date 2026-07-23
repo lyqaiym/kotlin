@@ -53,7 +53,7 @@ fun List<KotlinSourceRoot>.forAllFiles(
         }
     }
 
-    for ((sourceRootPath, isCommon, hmppModuleName) in this) {
+    for ([sourceRootPath, isCommon, hmppModuleName] in this) {
         val sourceRoot = File(sourceRootPath)
         val vFile = localFileSystem.findFileByPath(sourceRoot.normalize().path)
         if (vFile == null) {

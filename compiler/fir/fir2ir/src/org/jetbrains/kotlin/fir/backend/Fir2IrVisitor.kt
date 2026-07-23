@@ -1676,7 +1676,7 @@ class Fir2IrVisitor(
     override fun visitTypeOperatorCall(typeOperatorCall: FirTypeOperatorCall, data: Any?): IrElement {
         return typeOperatorCall.convertWithOffsets { startOffset, endOffset ->
             val irTypeOperand = typeOperatorCall.conversionTypeRef.toIrType(c)
-            val (irType, irTypeOperator) = when (typeOperatorCall.operation) {
+            val [irType, irTypeOperator] = when (typeOperatorCall.operation) {
                 FirOperation.IS -> builtins.booleanType to IrTypeOperator.INSTANCEOF
                 FirOperation.NOT_IS -> builtins.booleanType to IrTypeOperator.NOT_INSTANCEOF
                 FirOperation.AS -> irTypeOperand to IrTypeOperator.CAST

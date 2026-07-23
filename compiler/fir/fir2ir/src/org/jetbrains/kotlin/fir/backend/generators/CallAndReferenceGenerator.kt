@@ -242,7 +242,7 @@ class CallAndReferenceGenerator(
         val calleeReference = calleeReference as? FirResolvedNamedReference ?: return null
         val fir = calleeReference.resolvedSymbol.fir
         if (this is FirFunctionCall && fir is FirSimpleFunction && fir.origin == FirDeclarationOrigin.SamConstructor) {
-            val (_, _, substitutor) = extractArgumentsMapping(this)
+            val [_, _, substitutor] = extractArgumentsMapping(this)
             val irArgument = convertArgument(argument, fir.valueParameters.first(), substitutor)
             return convertWithOffsets { startOffset, endOffset ->
                 IrTypeOperatorCallImpl(
@@ -440,7 +440,7 @@ class CallAndReferenceGenerator(
 
                         if (noArguments || qualifiedAccess !is FirCall) return@apply
 
-                        val (valueParameters, argumentMapping, substitutor) = extractArgumentsMapping(qualifiedAccess)
+                        val [valueParameters, argumentMapping, substitutor] = extractArgumentsMapping(qualifiedAccess)
                         if (valueParameters == null || argumentMapping == null || !visitor.annotationMode && argumentMapping.isEmpty()) return@apply
 
                         val dynamicCallVarargArgument = argumentMapping.keys.firstOrNull() as? FirVarargArgumentsExpression
@@ -1151,7 +1151,7 @@ class CallAndReferenceGenerator(
                         elements.forEachIndexed { i, irVarargElement ->
                             if (irVarargElement !is IrExpression) return@forEachIndexed
                             val argumentClassifier = argument.arguments[i].resolvedType.toIrType().classifierOrNull ?: return@forEachIndexed
-                            val (targetFirFun, targetIrFun) = conversionFunctions[argumentClassifier] ?: return@forEachIndexed
+                            val [targetFirFun, targetIrFun] = conversionFunctions[argumentClassifier] ?: return@forEachIndexed
                             elements[i] = irVarargElement.applyToElement(argument.arguments[i], targetFirFun, targetIrFun)
                         }
                     }
@@ -1166,7 +1166,7 @@ class CallAndReferenceGenerator(
                     )
                     val sourceTypeClassifier = argument.resolvedType.toIrType().classifierOrNull ?: return this
 
-                    val (firConversionFunction, irConversionFunction) = conversionFunctions[sourceTypeClassifier] ?: return this
+                    val [firConversionFunction, irConversionFunction] = conversionFunctions[sourceTypeClassifier] ?: return this
 
                     this.applyToElement(argument, firConversionFunction, irConversionFunction)
                 }
@@ -1297,7 +1297,7 @@ class CallAndReferenceGenerator(
         }
 
         return buildList {
-            for ((index, typeArgument) in typeAliasSymbol.resolvedExpandedTypeRef.coneType.typeArguments.withIndex()) {
+            for ([index, typeArgument] in typeAliasSymbol.resolvedExpandedTypeRef.coneType.typeArguments.withIndex()) {
                 if (ignoredTypeArguments.contains(typeArgument)) continue
 
                 val typeProjection = parametersSubstitutor.substituteArgument(typeArgument, index) ?: typeArgument
@@ -1316,7 +1316,7 @@ class CallAndReferenceGenerator(
 
         val argumentsCount = typeArguments?.size ?: return this
         if (argumentsCount <= this.typeArguments.size) {
-            for ((index, argumentType) in typeArguments.withIndex()) {
+            for ([index, argumentType] in typeArguments.withIndex()) {
                 val typeParameter = typeParameters?.get(index)
                 val argumentIrType = if (typeParameter?.isReified == true) {
                     argumentType.approximateDeclarationType(
@@ -1495,7 +1495,7 @@ class CallAndReferenceGenerator(
                 val argumentsCount = call.arguments.size
                 if (declarationSiteSymbol != null && argumentsCount <= declarationSiteSymbol.valueParametersSize()) {
                     apply {
-                        val (valueParameters, argumentMapping, substitutor) = extractArgumentsMapping(call)
+                        val [valueParameters, argumentMapping, substitutor] = extractArgumentsMapping(call)
                         if (argumentMapping != null && (visitor.annotationMode || argumentMapping.isNotEmpty()) && valueParameters != null) {
                             return applyArgumentsWithReorderingIfNeeded(
                                 argumentMapping, valueParameters, substitutor, receiverInfo, contextArgumentCount, call,
@@ -1542,13 +1542,13 @@ class CallAndReferenceGenerator(
         val converted = convertArguments(argumentMapping, substitutor)
         // If none of the parameters have side effects, the evaluation order doesn't matter anyway.
         // For annotations, this is always true, since arguments have to be compile-time constants.
-        if (!visitor.annotationMode && !converted.all { (_, irArgument) -> irArgument.hasNoSideEffects() } &&
+        if (!visitor.annotationMode && !converted.all { [_, irArgument] -> irArgument.hasNoSideEffects() } &&
             needArgumentReordering(argumentMapping.values, valueParameters)
         ) {
             return IrBlockImpl(startOffset, endOffset, type, IrStatementOrigin.ARGUMENTS_REORDERING_FOR_CALL).apply {
                 fun IrExpression.freeze(nameHint: String): IrExpression {
                     if (isUnchanging()) return this
-                    val (variable, symbol) = conversionScope.createTemporaryVariable(this, nameHint)
+                    val [variable, symbol] = conversionScope.createTemporaryVariable(this, nameHint)
                     statements.add(variable)
                     return IrGetValueImpl(startOffset, endOffset, symbol, null)
                 }
@@ -1563,19 +1563,19 @@ class CallAndReferenceGenerator(
                 }
 
                 val valueArgumentOffset = receiverInfo.valueArgumentOffset(contextArgumentCount)
-                for ((parameter, irArgument) in converted) {
+                for ([parameter, irArgument] in converted) {
                     arguments[valueArgumentOffset + valueParameters.indexOf(parameter)] = irArgument.freeze(parameter.name.asString())
                 }
                 statements.add(this@applyArgumentsWithReorderingIfNeeded)
             }
         } else {
             val valueArgumentOffset = receiverInfo.valueArgumentOffset(contextArgumentCount)
-            for ((parameter, irArgument) in converted) {
+            for ([parameter, irArgument] in converted) {
                 arguments[valueArgumentOffset + valueParameters.indexOf(parameter)] = irArgument
             }
             if (visitor.annotationMode) {
                 val function = call.toReference(session)?.toResolvedCallableSymbol()?.fir as? FirFunction
-                for ((index, parameter) in valueParameters.withIndex()) {
+                for ([index, parameter] in valueParameters.withIndex()) {
                     if (parameter.isVararg && !argumentMapping.containsValue(parameter)) {
                         val value = if (function?.itOrExpectHasDefaultParameterValue(index) == true) {
                             null

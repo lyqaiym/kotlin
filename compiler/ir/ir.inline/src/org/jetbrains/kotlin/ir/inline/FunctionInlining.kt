@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.backend.common.ir.isInlineLambdaBlock
 import org.jetbrains.kotlin.backend.common.lower.at
 import org.jetbrains.kotlin.backend.common.lower.createIrBuilder
 import org.jetbrains.kotlin.backend.common.phaser.PhaseDescription
-import org.jetbrains.kotlin.contracts.parsing.ContractsDslNames
+import org.jetbrains.kotlin.resolve.ContractsDslNames
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
@@ -273,7 +273,7 @@ private class CallInlining(
                     it.type = expression.type
                     val arguments = boundArguments.map { it.deepCopyWithSymbols() } +
                             expression.getAllArgumentsWithIr().map { it.second }.drop(1) // dropping dispatch receiver - it's lambda itself
-                    for ((index, argument) in arguments.withIndex()) {
+                    for ([index, argument] in arguments.withIndex()) {
                         it.arguments[index] = argument
                     }
                 }
@@ -395,7 +395,7 @@ private class CallInlining(
                         else -> {
                             val elements = mutableListOf<IrVarargElement>()
                             while (unboundIndex < valueParameters.size) {
-                                val (param, value) = valueParameters[unboundIndex++]
+                                val [param, value] = valueParameters[unboundIndex++]
                                 val substitutedParamType = param.type.substitute(superTypeArgumentsMap)
                                 if (substitutedParamType == parameter.varargElementType!!)
                                     elements += value
@@ -536,7 +536,7 @@ private class CallInlining(
         val parameterToArgument = mutableListOf<ParameterToArgument>()
 
         val parametersWithDefaultToArgument = mutableListOf<ParameterToArgument>()
-        for ((parameter, argument) in callee.parameters.zip(callSite.arguments)) {
+        for ([parameter, argument] in callee.parameters.zip(callSite.arguments)) {
             when {
                 argument != null -> {
                     parameterToArgument += ParameterToArgument(

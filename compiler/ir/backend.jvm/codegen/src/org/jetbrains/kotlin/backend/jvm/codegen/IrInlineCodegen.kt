@@ -101,7 +101,7 @@ class IrInlineCodegen(
             val lambdaInfo = IrExpressionLambdaImpl(codegen, inlineLambda)
             rememberClosure(parameterType, irValueParameter.indexInOldValueParameters, lambdaInfo)
             lambdaInfo.generateLambdaBody(sourceCompiler)
-            lambdaInfo.reference.getArgumentsWithIr().forEachIndexed { index, (_, ir) ->
+            lambdaInfo.reference.getArgumentsWithIr().forEachIndexed { index, [_, ir] ->
                 val param = lambdaInfo.capturedVars[index]
                 val onStack = codegen.genOrGetLocal(ir, param.type, ir.type, BlockInfo(), eraseType = false)
                 putCapturedToLocalVal(onStack, param, ir.type.toIrBasedKotlinType())
@@ -202,7 +202,7 @@ class IrExpressionLambdaImpl(
         val capturedParameters = reference.getArgumentsWithIr()
         val captureStart = if (isExtensionLambda) 1 else 0 // extension receiver comes before captures
         val captureEnd = captureStart + capturedParameters.size
-        capturedVars = capturedParameters.mapIndexed { index, (parameter, _) ->
+        capturedVars = capturedParameters.mapIndexed { index, [parameter, _] ->
             val isSuspend = parameter.isInlineParameter() && parameter.type.isSuspendFunction()
             capturedParamDesc(parameter.name.asString(), asmMethod.argumentTypes[captureStart + index], isSuspend)
         }

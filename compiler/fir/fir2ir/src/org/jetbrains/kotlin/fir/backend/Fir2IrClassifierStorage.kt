@@ -84,7 +84,7 @@ class Fir2IrClassifierStorage(
 
     // Note: declareTypeParameters should be called before!
     internal fun preCacheTypeParameters(owner: FirTypeParameterRefsOwner) {
-        for ((index, typeParameter) in owner.typeParameters.withIndex()) {
+        for ([index, typeParameter] in owner.typeParameters.withIndex()) {
             val original = typeParameter.symbol.fir
             getCachedIrTypeParameter(original)
                 ?: createAndCacheIrTypeParameter(original, index)
@@ -253,7 +253,7 @@ class Fir2IrClassifierStorage(
         if (klass !is FirRegularClass || klass.contextParameters.isEmpty()) return emptyList()
 
         return fieldsForContextReceivers.getOrPut(irClass) {
-            klass.contextParameters.withIndex().map { (index, contextReceiver) ->
+            klass.contextParameters.withIndex().map { [index, contextReceiver] ->
                 IrFactoryImpl.createField(
                     startOffset = UNDEFINED_OFFSET,
                     endOffset = UNDEFINED_OFFSET,
@@ -297,7 +297,7 @@ class Fir2IrClassifierStorage(
         // After the call of this function, members of local classes may be processed immediately
         // Before the call it's not possible, because f/o binding for regular classes isn't done yet
         processMembersOfClassesOnTheFlyImmediately = true
-        for ((klass, irClass) in localClassesCreatedOnTheFly) {
+        for ([klass, irClass] in localClassesCreatedOnTheFly) {
             conversionScope.withContainingFirClass(klass) {
                 classifiersGenerator.processClassHeader(klass, irClass)
                 converter.processClassMembers(klass, irClass)

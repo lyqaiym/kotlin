@@ -135,7 +135,7 @@ class Fir2IrIrGeneratedDeclarationsRegistrar(private val components: Fir2IrCompo
             updateFunctionCommon(firFunction, irFunction)
 
             with(firFunction) {
-                for ((firParameter, irParameter) in typeParameters.zip(irFunction.typeParameters)) {
+                for ([firParameter, irParameter] in typeParameters.zip(irFunction.typeParameters)) {
                     val newBounds = irParameter.superTypes.map { it.toConeType().toFirResolvedTypeRef() }
                     firParameter.replaceBounds(newBounds)
                     firParameter.replaceAnnotations(irParameter.convertAnnotations())
@@ -425,7 +425,7 @@ class Fir2IrIrGeneratedDeclarationsRegistrar(private val components: Fir2IrCompo
                 .constructClassType()
                 .toFirResolvedTypeRef()
             argumentMapping = buildAnnotationArgumentMapping {
-                for ((i, argument) in this@toFirAnnotation.arguments.withIndex()) {
+                for ([i, argument] in this@toFirAnnotation.arguments.withIndex()) {
                     if (argument == null) continue
                     val argName = this@toFirAnnotation.symbol.owner.parameters[i].name
                     this.mapping[argName] = argument.toFirExpression()

@@ -304,7 +304,7 @@ fun getIrModuleInfoForSourceFiles(
             true
         )
 
-    val (moduleFragment, _) = psi2IrContext.generateModuleFragmentWithPlugins(project, files, irLinker, messageCollector)
+    val [moduleFragment, _] = psi2IrContext.generateModuleFragmentWithPlugins(project, files, irLinker, messageCollector)
 
     if (configuration.getBoolean(JSConfigurationKeys.FAKE_OVERRIDE_VALIDATOR)) {
         val fakeOverrideChecker = FakeOverrideChecker(JsManglerIr, JsManglerDesc)

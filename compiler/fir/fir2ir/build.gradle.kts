@@ -18,7 +18,7 @@ dependencies {
     compileOnly(project(":compiler:ir.serialization.common"))
     compileOnly(project(":compiler:fir:fir-serialization"))
     compileOnly(project(":compiler:fir:fir-deserialization"))
-
+    implementation(project(":compiler:frontend"))
     compileOnly(intellijCore())
 
     testCompileOnly(kotlinTest("junit"))

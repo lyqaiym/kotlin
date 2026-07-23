@@ -6,8 +6,18 @@ plugins {
 
 dependencies {
     api(project(":compiler:cli-common"))
+    implementation(project(":compiler:resolution"))
     api(project(":compiler:resolution.common"))
+    api(project(":compiler:resolution.common.jvm"))
+    implementation(project(":compiler:frontend"))
     implementation(project(":compiler:frontend:cfg"))
+    implementation(project(":compiler:frontend.java"))
+    implementation(project(":compiler:serialization"))
+    implementation(project(":compiler:resolution"))
+    implementation(project(":compiler:container"))
+    implementation(project(":core:descriptors"))
+    implementation(project(":core:descriptors.jvm"))
+    implementation(project(":core:deserialization"))
     api(project(":compiler:backend.jvm"))
     api(project(":compiler:light-classes"))
     implementation(project(":compiler:javac-wrapper"))
@@ -17,6 +27,7 @@ dependencies {
     compileOnly(intellijCore())
     compileOnly(libs.intellij.fastutil)
     compileOnly(libs.intellij.asm)
+    compileOnly(libs.guava)
     runtimeOnly(libs.kotlinx.coroutines.core)
 }
 

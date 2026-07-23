@@ -396,7 +396,7 @@ class MemoizedMultiFieldValueClassReplacements(
             ?: sourceFunction.parameters.map { RegularMapping(it) }
         verifyStructureCompatibility(targetStructure, sourceStructure)
         return buildMap {
-            for ((targetParameterStructure, sourceParameterStructure) in targetStructure zip sourceStructure) {
+            for ([targetParameterStructure, sourceParameterStructure] in targetStructure zip sourceStructure) {
                 when (targetParameterStructure) {
                     is RegularMapping -> when (sourceParameterStructure) {
                         is RegularMapping -> put(
@@ -426,7 +426,7 @@ class MemoizedMultiFieldValueClassReplacements(
                             val argument = getArgument(sourceParameterStructure.valueParameter, targetParameterStructure.boxedType)
                                 ?: error("Expected an argument for $sourceParameterStructure")
                             if (sourceParameterStructure.valueParameter.type.isNothing()) {
-                                for ((index, parameter) in targetParameterStructure.parameters.withIndex()) {
+                                for ([index, parameter] in targetParameterStructure.parameters.withIndex()) {
                                     put(parameter, irComposite(origin = FLATTENED_NOTHING_DEFAULT_VALUE) {
                                         if (index == 0) +argument
                                         +parameter.type.defaultValue(
@@ -444,13 +444,13 @@ class MemoizedMultiFieldValueClassReplacements(
                                 val arguments = instance.makeFlattenedGetterExpressions(
                                     this, sourceFunction.parents.firstIsInstance<IrClass>(), registerPossibleExtraBoxCreation = {}
                                 )
-                                for ((targetParameter, expression) in targetParameterStructure.parameters zip arguments) {
+                                for ([targetParameter, expression] in targetParameterStructure.parameters zip arguments) {
                                     put(targetParameter, expression)
                                 }
                             }
                         }
                         is MultiFieldValueClassMapping -> {
-                            for ((sourceParameter, targetParameter) in sourceParameterStructure.parameters zip targetParameterStructure.parameters) {
+                            for ([sourceParameter, targetParameter] in sourceParameterStructure.parameters zip targetParameterStructure.parameters) {
                                 put(targetParameter, getArgument(sourceParameter, targetParameter.type))
                             }
                         }
@@ -464,7 +464,7 @@ class MemoizedMultiFieldValueClassReplacements(
         targetStructure: List<RemappedParameter>,
         sourceStructure: List<RemappedParameter>
     ) {
-        for ((targetParameterStructure, sourceParameterStructure) in targetStructure zip sourceStructure) {
+        for ([targetParameterStructure, sourceParameterStructure] in targetStructure zip sourceStructure) {
             if (targetParameterStructure is MultiFieldValueClassMapping && sourceParameterStructure is MultiFieldValueClassMapping) {
                 require(targetParameterStructure.rootMfvcNode.mfvc.classId == sourceParameterStructure.rootMfvcNode.mfvc.classId) {
                     "Incompatible parameter structures:\n$targetParameterStructure inside $targetStructure\n$sourceParameterStructure inside $sourceStructure"

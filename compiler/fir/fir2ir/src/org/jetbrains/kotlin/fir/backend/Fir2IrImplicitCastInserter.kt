@@ -157,7 +157,7 @@ class Fir2IrImplicitCastInserter(private val c: Fir2IrComponents) : Fir2IrCompon
             this,
             tryExpression.tryBlock, tryExpression.tryBlock.resolvedType, tryExpression.resolvedType
         )
-        for ((irCatch, firCatch) in irTry.catches.zip(tryExpression.catches)) {
+        for ([irCatch, firCatch] in irTry.catches.zip(tryExpression.catches)) {
             irCatch.result = irCatch.result.prepareExpressionForGivenExpectedType(
                 this,
                 firCatch.block, firCatch.block.resolvedType, tryExpression.resolvedType

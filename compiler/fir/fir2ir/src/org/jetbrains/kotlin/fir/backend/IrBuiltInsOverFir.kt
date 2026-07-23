@@ -227,7 +227,7 @@ class IrBuiltInsOverFir(
 
     override val primitiveArraysToPrimitiveTypes: Map<IrClassSymbol, PrimitiveType> get() = fir2irBuiltins.primitiveArraysToPrimitiveTypes
     override val primitiveTypesToPrimitiveArrays: Map<PrimitiveType, IrClassSymbol>
-        get() = primitiveArraysToPrimitiveTypes.map { (k, v) -> v to k }.toMap()
+        get() = primitiveArraysToPrimitiveTypes.map { [k, v] -> v to k }.toMap()
 
     override val primitiveArrayElementTypes: Map<IrClassSymbol, IrType?> get() = fir2irBuiltins.primitiveArrayElementTypes
     override val primitiveArrayForType: Map<IrType?, IrClassSymbol> get() = fir2irBuiltins.primitiveArrayForType
@@ -606,7 +606,7 @@ class IrBuiltInsOverFir(
             containerSource = null,
             isFakeOverride = false,
         ).also { fn ->
-            valueParameterTypes.forEachIndexed { index, (pName, irType) ->
+            valueParameterTypes.forEachIndexed { index, [pName, irType] ->
                 fn.addValueParameter(Name.identifier(pName.ifBlank { "arg$index" }), irType, origin)
             }
             fn.typeParameters = typeParameters

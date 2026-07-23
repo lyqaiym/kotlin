@@ -37,7 +37,7 @@ class Fir2IrLazyPropertyForPureField(
 
         val baseFieldsWithDispatchReceiverTag =
             lazyFakeOverrideGenerator.computeFakeOverrideKeys(containingClass, field.fir.symbol)
-        baseFieldsWithDispatchReceiverTag.map { (symbol, dispatchReceiverLookupTag) ->
+        baseFieldsWithDispatchReceiverTag.map { [symbol, dispatchReceiverLookupTag] ->
             declarationStorage.getIrSymbolForField(symbol, dispatchReceiverLookupTag) as IrPropertySymbol
         }
     }

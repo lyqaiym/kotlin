@@ -33,7 +33,7 @@ class ConstValueProviderImpl(
         if (firExpression is FirVarargArgumentsExpression) return null
 
         val fileName = firFile.packageFqName.child(Name.identifier(firFile.name)).asString()
-        val (start, end) = firExpression.getCorrespondingIrOffset() ?: return null
+        val [start, end] = firExpression.getCorrespondingIrOffset() ?: return null
         return evaluatedConstTracker.load(start, end, fileName)
     }
 

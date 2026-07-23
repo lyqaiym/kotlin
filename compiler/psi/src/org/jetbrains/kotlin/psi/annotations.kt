@@ -14,3 +14,24 @@ package org.jetbrains.kotlin.psi
  */
 @RequiresOptIn
 annotation class KtPsiInconsistencyHandling
+
+/**
+ * Marks an API as an implementation detail of the Kotlin PSI API.
+ * Such APIs are not intended to be used outside the implementation of the PSI API and have no compatibility guarantees.
+ */
+@RequiresOptIn("Internal API which should not be used outside the Kotlin PSI API implementation modules as it does not have any compatibility guarantees")
+annotation class KtImplementationDetail
+
+/**
+ * Marks an API as experimental. The API is intended for user consumption, but it's not stable and might change at any moment, or even be
+ * removed, without a deprecation cycle.
+ */
+@Target(
+    AnnotationTarget.CLASS,
+    AnnotationTarget.PROPERTY,
+    AnnotationTarget.CONSTRUCTOR,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.TYPEALIAS,
+)
+@RequiresOptIn("Experimental API with no compatibility guarantees")
+annotation class KtExperimentalApi

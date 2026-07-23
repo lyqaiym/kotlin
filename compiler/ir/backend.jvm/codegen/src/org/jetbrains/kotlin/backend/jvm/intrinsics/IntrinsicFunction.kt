@@ -43,7 +43,7 @@ abstract class IntrinsicFunction(
         var offset = 0
         expression.dispatchReceiver?.let { genArg(it, codegen, offset++, data) }
         expression.extensionReceiver?.let { genArg(it, codegen, offset++, data) }
-        for ((i, valueParameter) in expression.symbol.owner.valueParameters.withIndex()) {
+        for ([i, valueParameter] in expression.symbol.owner.valueParameters.withIndex()) {
             val argument = expression.getValueArgument(i)
             when {
                 argument != null ->

@@ -5,6 +5,8 @@
 
 package org.jetbrains.kotlin.analysis.api.standalone.base.declarations
 
+import org.jetbrains.kotlin.name.CallableId
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.*
@@ -13,11 +15,16 @@ internal class KotlinStandaloneDeclarationIndex {
     internal val facadeFileMap: MutableMap<FqName, MutableSet<KtFile>> = mutableMapOf()
     internal val multiFileClassPartMap: MutableMap<FqName, MutableSet<KtFile>> = mutableMapOf()
     internal val scriptMap: MutableMap<FqName, MutableSet<KtScript>> = mutableMapOf()
+    val classesByClassId: Map<ClassId, Set<KtClassOrObject>> = mutableMapOf()
+    val typeAliasesByClassId: Map<ClassId, Set<KtTypeAlias>> = mutableMapOf()
     internal val classMap: MutableMap<FqName, MutableSet<KtClassOrObject>> = mutableMapOf()
     internal val typeAliasMap: MutableMap<FqName, MutableSet<KtTypeAlias>> = mutableMapOf()
     internal val topLevelFunctionMap: MutableMap<FqName, MutableSet<KtNamedFunction>> = mutableMapOf()
+    val topLevelFunctionsByCallableId: Map<CallableId, Set<KtNamedFunction>> = mutableMapOf()
+    val topLevelPropertiesByCallableId: Map<CallableId, Set<KtProperty>> = mutableMapOf()
     internal val topLevelPropertyMap: MutableMap<FqName, MutableSet<KtProperty>> = mutableMapOf()
-
+    val classLikeDeclarationsByPackage: Map<FqName, Set<KtClassLikeDeclaration>> = mutableMapOf()
+    val topLevelCallablesByPackage: Map<FqName, Set<KtCallableDeclaration>> = mutableMapOf()
     /**
      * Allows quickly finding [KtClassOrObject]s which have a given simple name as a supertype. The map may contain local classes as well.
      */

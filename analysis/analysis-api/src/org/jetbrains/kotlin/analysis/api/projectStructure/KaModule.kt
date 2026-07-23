@@ -342,6 +342,7 @@ public val KaDanglingFileModule.isStable: Boolean
  * another project.
  */
 @KaPlatformInterface
+@SubclassOptInRequired(KaPlatformInterface::class)
 public interface KaNotUnderContentRootModule : KaModule {
     /**
      * A human-readable module name.

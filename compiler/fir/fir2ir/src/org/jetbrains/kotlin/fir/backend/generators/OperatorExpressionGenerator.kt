@@ -68,7 +68,7 @@ internal class OperatorExpressionGenerator(
         }
 
         fun fallbackToRealCall(): IrExpression {
-            val (symbol, origin) = getSymbolAndOriginForComparison(operation, builtins.intType.classifierOrFail)
+            val [symbol, origin] = getSymbolAndOriginForComparison(operation, builtins.intType.classifierOrFail)
             val irCompareToCall = comparisonExpression.compareToCall.accept(visitor, null) as IrCall
             irCompareToCall.origin = origin
             return IrCallImplWithShape(
@@ -96,7 +96,7 @@ internal class OperatorExpressionGenerator(
         val comparisonType = comparisonInfo.comparisonType
 
         val comparisonIrType = typeConverter.classIdToTypeMap[comparisonType.lookupTag.classId] ?: return fallbackToRealCall()
-        val (symbol, origin) = getSymbolAndOriginForComparison(operation, comparisonIrType.classifierOrFail)
+        val [symbol, origin] = getSymbolAndOriginForComparison(operation, comparisonIrType.classifierOrFail)
 
         return IrCallImplWithShape(
             startOffset = startOffset,
@@ -334,7 +334,7 @@ internal class OperatorExpressionGenerator(
             it.dispatchReceiver = irExpression
         }
         return if (operandType.isMarkedNullable) {
-            val (receiverVariable, receiverVariableSymbol) =
+            val [receiverVariable, receiverVariableSymbol] =
                 conversionScope.createTemporaryVariableForSafeCallConstruction(irExpression)
 
             unsafeIrCall.dispatchReceiver = IrGetValueImpl(irExpression.startOffset, irExpression.endOffset, receiverVariableSymbol)

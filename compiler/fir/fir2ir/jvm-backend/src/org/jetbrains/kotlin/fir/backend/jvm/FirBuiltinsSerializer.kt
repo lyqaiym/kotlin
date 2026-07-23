@@ -62,7 +62,7 @@ class FirBuiltInsSerializer(val session: FirSession, val scopeSession: ScopeSess
                 .getClassLikeSymbolByClassId(StandardClassIds.Cloneable)!!.fir as FirRegularClass
 
         return contentPerPackage.map { packageWithContent ->
-            val (packageFqName, content) = packageWithContent
+            val [packageFqName, content] = packageWithContent
             val serializer = PackageSerializer(packageFqName, content.classes, content.members, session, scopeSession)
             Pair(packageFqName, serializer.serialize())
         }.toList()
@@ -123,7 +123,7 @@ class FirBuiltInsSerializer(val session: FirSession, val scopeSession: ScopeSess
         }
 
         private fun serializeStringTable() {
-            val (strings, qualifiedNames) = extension.stringTable.buildProto()
+            val [strings, qualifiedNames] = extension.stringTable.buildProto()
             proto.strings = strings
             proto.qualifiedNames = qualifiedNames
         }

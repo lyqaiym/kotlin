@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     compileOnly(project(":core:descriptors"))
+    implementation(project(":core:descriptors.jvm"))
     compileOnly(project(":compiler:backend.common.jvm"))
     compileOnly(project(":compiler:fir:cones"))
     compileOnly(project(":compiler:fir:resolve"))
@@ -19,6 +20,8 @@ dependencies {
     compileOnly(project(":compiler:backend.jvm"))
     api(project(":compiler:ir.serialization.common"))
     compileOnly(project(":compiler:ir.actualization"))
+    implementation(project(":compiler:frontend"))
+    implementation(project(":compiler:serialization"))
 
     compileOnly(intellijCore())
     compileOnly(libs.intellij.asm)

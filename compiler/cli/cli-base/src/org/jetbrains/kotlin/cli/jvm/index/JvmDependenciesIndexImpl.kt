@@ -88,7 +88,7 @@ class JvmDependenciesIndexImpl(
         lock.withLock {
             // TODO: KT-58327 probably should be changed to thread local to fix fast-path
             // make a decision based on information saved from last class search
-            val cachedClasses = lastClassSearch?.let { (cachedRequest, cachedResult) ->
+            val cachedClasses = lastClassSearch?.let { [cachedRequest, cachedResult] ->
                 if (cachedRequest.classId != classId) return@let null
 
                 when (cachedResult) {

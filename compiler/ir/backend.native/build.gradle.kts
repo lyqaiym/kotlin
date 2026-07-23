@@ -9,6 +9,7 @@ dependencies {
     implementation(project(":compiler:ir.tree"))
     implementation(project(":core:compiler.common.native"))
     implementation(project(":native:kotlin-native-utils"))
+    implementation(project(":core:descriptors"))
     api(project(":native:base"))
 }
 
