@@ -40,7 +40,7 @@ class GenerateJvmDefaultCompatibilityBridges(private val context: JvmBackendCont
 
     private fun replaceWithDefaultCompatibilityBridgeIfNeeded(declaration: IrDeclaration): IrDeclaration? {
         if (declaration !is IrSimpleFunction) return null
-        val (newFunction, superFunction) = context.cachedDeclarations.getClassFakeOverrideReplacement(declaration)
+        val [newFunction, superFunction] = context.cachedDeclarations.getClassFakeOverrideReplacement(declaration)
                 as? ClassFakeOverrideReplacement.DefaultCompatibilityBridge ?: return null
         newFunction.generateBridgeBody(declaration, superFunction)
         return newFunction
@@ -55,10 +55,10 @@ class GenerateJvmDefaultCompatibilityBridges(private val context: JvmBackendCont
 
                     dispatchReceiver = irGet(dispatchReceiverParameter!!)
                     extensionReceiverParameter?.let { extensionReceiver = irGet(it) }
-                    for ((index, parameter) in typeParameters.withIndex()) {
+                    for ([index, parameter] in typeParameters.withIndex()) {
                         typeArguments[index] = parameter.defaultType
                     }
-                    for ((index, parameter) in valueParameters.withIndex()) {
+                    for ([index, parameter] in valueParameters.withIndex()) {
                         putValueArgument(index, irGet(parameter))
                     }
                 }

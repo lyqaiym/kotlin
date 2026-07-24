@@ -278,13 +278,13 @@ class ExportModelToTsDeclarations {
 
     private fun ExportedRegularClass.generateTypeScriptString(indent: String, prefix: String, esModules: Boolean): String {
         val keyword = if (isInterface) "interface" else "class"
-        val (interfaceCompanions, allNestedClasses) = nestedClasses.partition { isInterface && it.ir.isCompanion }
+        val [interfaceCompanions, allNestedClasses] = nestedClasses.partition { isInterface && it.ir.isCompanion }
         val superInterfacesKeyword = if (isInterface) "extends" else "implements"
 
         val superClassClause = superClasses.toExtendsClause(indent)
         val superInterfacesClause = superInterfaces.toImplementsClause(superInterfacesKeyword, indent)
 
-        val (memberObjects, nestedDeclarations) = allNestedClasses.partition { it.couldBeProperty() }
+        val [memberObjects, nestedDeclarations] = allNestedClasses.partition { it.couldBeProperty() }
 
         val members = members.map {
             if (!ir.isInner || it !is ExportedFunction || !it.isStatic) {
@@ -295,7 +295,7 @@ class ExportModelToTsDeclarations {
             }
         } + memberObjects
 
-        val (innerClasses, nonInnerClasses) = nestedDeclarations.partition { it.ir.isInner }
+        val [innerClasses, nonInnerClasses] = nestedDeclarations.partition { it.ir.isInner }
         val innerClassesProperties = innerClasses.map { it.toReadonlyProperty() }
         val membersString = (members + innerClassesProperties)
             .joinToString("") { it.toTypeScript("$indent    ") + "\n" }
@@ -371,7 +371,7 @@ class ExportModelToTsDeclarations {
     }
 
     private fun List<ExportedType>.toImplementsClause(superInterfacesKeyword: String, indent: String): String {
-        val (exportedInterfaces, nonExportedInterfaces) = partition { it !is ExportedType.ImplicitlyExportedType }
+        val [exportedInterfaces, nonExportedInterfaces] = partition { it !is ExportedType.ImplicitlyExportedType }
         val listOfNonExportedInterfaces = nonExportedInterfaces.joinToString(", ") {
             (it as ExportedType.ImplicitlyExportedType).type.toTypeScript(indent, true)
         }
@@ -448,7 +448,7 @@ class ExportModelToTsDeclarations {
         is ExportedType.Array -> "Array<${elementType.toTypeScript(indent, isInCommentContext)}>"
         is ExportedType.Function -> "(" + parameterTypes
             .withIndex()
-            .joinToString(", ") { (index, type) ->
+            .joinToString(", ") { [index, type] ->
                 "p$index: ${type.toTypeScript(indent, isInCommentContext)}"
             } + ") => " + returnType.toTypeScript(indent, isInCommentContext)
 

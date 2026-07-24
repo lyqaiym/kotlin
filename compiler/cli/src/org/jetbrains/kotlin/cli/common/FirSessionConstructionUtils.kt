@@ -463,7 +463,7 @@ object SessionConstructionUtils {
     ): List<SessionWithSources<F>> {
         val moduleDataForHmppModule = LinkedHashMap<HmppCliModule, FirModuleData>()
 
-        for ((index, module) in hmppModuleStructure.modules.withIndex()) {
+        for ([index, module] in hmppModuleStructure.modules.withIndex()) {
             val dependencies = hmppModuleStructure.dependenciesMap[module]
                 ?.map { moduleDataForHmppModule.getValue(it) }
                 .orEmpty()

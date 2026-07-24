@@ -45,6 +45,7 @@ object JpsKotlinFacetConfigurationSerializer : JpsFacetConfigurationSerializer<J
         return JpsKotlinFacetModuleExtension(deserializeFacetSettings(facetConfigurationElement))
     }
 
+    @Deprecated("Deprecated by IJ platform, don't use it")
     override fun saveExtension(
         extension: JpsKotlinFacetModuleExtension?,
         facetConfigurationTag: Element,
@@ -70,6 +71,7 @@ abstract class BaseJpsCompilerSettingsSerializer<in T : Any>(
         onLoad(project, settings)
     }
 
+    @Deprecated("Deprecated by IJ platform, don't use it")
     override fun saveExtension(project: JpsProject, componentTag: Element) {
     }
 }

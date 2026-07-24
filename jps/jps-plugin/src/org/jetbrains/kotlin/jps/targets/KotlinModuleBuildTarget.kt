@@ -67,7 +67,7 @@ abstract class KotlinModuleBuildTarget<BuildMetaInfoType : BuildMetaInfo> intern
 
     @Suppress("LeakingThis")
     val localCacheVersionManager = localCacheVersionManager(
-        kotlinContext.dataPaths.getTargetDataRoot(jpsModuleBuildTarget).toPath(),
+        kotlinContext.dataPaths.getTargetDataRootDir(jpsModuleBuildTarget),
         isIncrementalCompilationEnabled
     )
 

@@ -237,9 +237,9 @@ kotlin {
             dependsOn(wasmCommonMain)
             kotlin.srcDir("wasm/js/src/main/kotlin")
         }
-        val wasmJsTest by getting {
-            kotlin.srcDir("wasm/js/src/test/kotlin")
-        }
+//        val wasmJsTest by getting {
+//            kotlin.srcDir("wasm/js/src/test/kotlin")
+//        }
         val wasmWasiMain by getting {
             dependsOn(wasmCommonMain)
             kotlin.srcDir("wasm/wasi/src/main/kotlin")

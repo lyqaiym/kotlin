@@ -300,7 +300,7 @@ internal class ScriptsToClassesLowering(val context: IrPluginContext, val symbol
                         ).also { it.parent = irScript }
                     },
                 )
-                implicitReceiversFieldsWithParameters.forEach {(_, param) ->
+                implicitReceiversFieldsWithParameters.forEach {[_, param] ->
                     add(param)
                 }
                 addAll(irScript.providedPropertiesParameters)
@@ -428,13 +428,13 @@ private fun IrBuilderWithScope.makeScriptClassConstructorBody(
     if (earlierScriptField != null) {
         +irSetField(irGet(irScriptClass.thisReceiver!!), earlierScriptField, irGet(irScript.earlierScriptsParameter!!))
     }
-    explicitParametersWithFields.forEach { (parameter, field) ->
+    explicitParametersWithFields.forEach { [parameter, field] ->
         +irSetField(
             irGet(irScriptClass.thisReceiver!!),
             field, irGet(parameter.type, explicitParameters.find { it.name == parameter.name }!!.symbol)
         )
     }
-    implicitReceiversFieldsWithParameters.forEach { (field, correspondingParameter) ->
+    implicitReceiversFieldsWithParameters.forEach { [field, correspondingParameter] ->
         +irSetField(
             irGet(irScriptClass.thisReceiver!!),
             field,

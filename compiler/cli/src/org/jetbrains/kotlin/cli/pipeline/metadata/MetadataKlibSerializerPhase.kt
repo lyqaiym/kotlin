@@ -26,7 +26,7 @@ object MetadataKlibSerializerPhase : PipelinePhase<MetadataFrontendPipelineArtif
     postActions = setOf(PerformanceNotifications.BackendFinished, CheckCompilationErrors.CheckDiagnosticCollector)
 ) {
     override fun executePhase(input: MetadataFrontendPipelineArtifact): MetadataSerializationArtifact? {
-        val (firResult, configuration, _, _) = input
+        val [firResult, configuration, _, _] = input
         val metadataVersion = input.metadataVersion
         val destDir = configuration.metadataDestinationDirectory!!
 
@@ -64,7 +64,7 @@ object MetadataKlibSerializerPhase : PipelinePhase<MetadataFrontendPipelineArtif
         val fragmentNames = mutableListOf<String>()
         val fragmentParts = mutableListOf<List<ByteArray>>()
 
-        for ((fqName, fragment) in fragments.entries.sortedBy { it.key }) {
+        for ([fqName, fragment] in fragments.entries.sortedBy { it.key }) {
             fragmentNames += fqName
             fragmentParts += fragment
             header.addPackageFragmentName(fqName)

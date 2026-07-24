@@ -53,7 +53,7 @@ abstract class JsMultiArtifactCache<T : JsMultiArtifactCache.CacheInfo> {
     protected fun CodedOutputStream.commitJsIrModuleHeaderNames(jsIrHeader: JsIrModuleHeader) {
         val names = mutableMapOf<String, Pair<Int, String?>>()
 
-        for ((tag, name) in jsIrHeader.nameBindings) {
+        for ([tag, name] in jsIrHeader.nameBindings) {
             names[tag] = NameType.NAME_BINDINGS.typeMask to name
         }
         for (tag in jsIrHeader.optionalCrossModuleImports) {
@@ -67,7 +67,7 @@ abstract class JsMultiArtifactCache<T : JsMultiArtifactCache.CacheInfo> {
 
         writeInt32NoTag(names.size)
 
-        for ((tag, maskAndName) in names) {
+        for ([tag, maskAndName] in names) {
             writeStringNoTag(tag)
             writeInt32NoTag(maskAndName.first)
             if (maskAndName.second != null) {

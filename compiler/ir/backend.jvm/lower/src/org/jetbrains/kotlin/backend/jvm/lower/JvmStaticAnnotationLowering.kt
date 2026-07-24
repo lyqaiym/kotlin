@@ -145,7 +145,7 @@ private class CompanionObjectJvmStaticTransformer(val context: JvmBackendContext
         super.visitClass(declaration).also {
             declaration.companionObject()?.declarations?.transformInPlace {
                 if (it is IrSimpleFunction && it.isJvmStaticDeclaration() && it.needsStaticProxy()) {
-                    val (static, companionFun) = context.cachedDeclarations.getStaticAndCompanionDeclaration(it)
+                    val [static, companionFun] = context.cachedDeclarations.getStaticAndCompanionDeclaration(it)
                     declaration.declarations.add(static)
                     companionFun
                 } else it
@@ -159,7 +159,7 @@ private class CompanionObjectJvmStaticTransformer(val context: JvmBackendContext
         val callee = expression.symbol.owner
         return when {
             shouldReplaceWithStaticCall(callee) -> {
-                val (staticProxy, _) = context.cachedDeclarations.getStaticAndCompanionDeclaration(callee)
+                val [staticProxy, _] = context.cachedDeclarations.getStaticAndCompanionDeclaration(callee)
                 expression.makeStatic(context.irBuiltIns, staticProxy)
             }
             callee.symbol == context.symbols.indyLambdaMetafactoryIntrinsic -> {
@@ -167,7 +167,7 @@ private class CompanionObjectJvmStaticTransformer(val context: JvmBackendContext
                     ?: throw AssertionError("'implMethodReference' is expected to be 'IrFunctionReference': ${expression.dump()}")
                 val implFun = implFunRef.symbol.owner
                 if (implFunRef.dispatchReceiver != null && implFun is IrSimpleFunction && shouldReplaceWithStaticCall(implFun)) {
-                    val (staticProxy, _) = context.cachedDeclarations.getStaticAndCompanionDeclaration(implFun)
+                    val [staticProxy, _] = context.cachedDeclarations.getStaticAndCompanionDeclaration(implFun)
                     expression.arguments[1] = IrFunctionReferenceImpl(
                         implFunRef.startOffset, implFunRef.endOffset, implFunRef.type,
                         staticProxy.symbol,

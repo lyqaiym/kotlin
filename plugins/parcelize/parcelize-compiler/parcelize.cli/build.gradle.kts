@@ -11,6 +11,9 @@ dependencies {
     api(project(":plugins:parcelize:parcelize-compiler:parcelize.k2"))
     api(project(":plugins:parcelize:parcelize-compiler:parcelize.backend"))
 
+    implementation(project(":compiler:container"))
+    implementation(project(":compiler:frontend"))
+    implementation(project(":core:descriptors"))
     compileOnly(project(":compiler:plugin-api"))
     compileOnly(project(":compiler:fir:entrypoint"))
     compileOnly(project(":compiler:backend"))

@@ -231,7 +231,7 @@ private class ReplRunChecker(testServices: TestServices) : JvmBinaryArtifactHand
             eval.invoke(snippet)
         }
 
-        for ((fieldName, expectedValue) in expected) {
+        for ([fieldName, expectedValue] in expected) {
             if (expectedValue == "<missing>") {
                 try {
                     snippetClass.getDeclaredField(fieldName)
@@ -314,7 +314,7 @@ private class ReplRunViaApiChecker(
                 }
                 val snippetClass = evaluationResult.scriptClass!!.java
                 val snippet = evaluationResult.scriptInstance
-                for ((fieldName, expectedValue) in expected) {
+                for ([fieldName, expectedValue] in expected) {
                     if (expectedValue == "<missing>") {
                         try {
                             snippetClass.getDeclaredField(fieldName)

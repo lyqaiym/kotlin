@@ -803,7 +803,7 @@ class ComposableFunctionBodyTransformer(
 
         val defaultScope = transformDefaults(scope)
 
-        var (transformed, returnVar) = body.asBodyAndResultVar()
+        var [transformed, returnVar] = body.asBodyAndResultVar()
 
         val emitTraceMarkers = traceEventMarkersEnabled && !scope.function.isInline
 
@@ -957,7 +957,7 @@ class ComposableFunctionBodyTransformer(
 
         scope.dirty = dirty
 
-        val (nonReturningBody, returnVar) = body.asBodyAndResultVar(declaration)
+        val [nonReturningBody, returnVar] = body.asBodyAndResultVar(declaration)
 
         val emitTraceMarkers = traceEventMarkersEnabled && !scope.isInlinedLambda
 
@@ -1117,7 +1117,7 @@ class ComposableFunctionBodyTransformer(
 
         scope.dirty = dirty
 
-        val (nonReturningBody, returnVar) = body.asBodyAndResultVar()
+        val [nonReturningBody, returnVar] = body.asBodyAndResultVar()
 
         val end = {
             irEndRestartGroupAndUpdateScope(
@@ -3463,7 +3463,7 @@ class ComposableFunctionBodyTransformer(
         if (blockArg !is IrFunctionExpression)
             error("Expected function expression but was ${blockArg?.let { it::class }}")
 
-        val (block, resultVar) = blockArg.function.body!!.asBodyAndResultVar()
+        val [block, resultVar] = blockArg.function.body!!.asBodyAndResultVar()
 
         var transformed: IrExpression = block
 
@@ -3838,7 +3838,7 @@ class ComposableFunctionBodyTransformer(
             expression.branches.fastForEachIndexed { index, it ->
                 if (it is IrElseBranch) {
                     hasElseBranch = true
-                    val (resultScope, result) = it.result.transformWithScope(Scope.BranchScope())
+                    val [resultScope, result] = it.result.transformWithScope(Scope.BranchScope())
 
                     condScopes.add(Scope.BranchScope())
                     resultScopes.add(resultScope)
@@ -3855,10 +3855,10 @@ class ComposableFunctionBodyTransformer(
                         )
                     )
                 } else {
-                    val (condScope, condition) = it
+                    val [condScope, condition] = it
                         .condition
                         .transformWithScope(Scope.BranchScope())
-                    val (resultScope, result) = it
+                    val [resultScope, result] = it
                         .result
                         .transformWithScope(Scope.BranchScope())
 

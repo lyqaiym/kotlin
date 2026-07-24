@@ -70,6 +70,7 @@ open class IncrementalFirJvmCompilerRunner(
     icFeatures,
 ) {
 
+    @OptIn(CompilerConfiguration.Internals::class)
     override fun runCompiler(
         sourcesToCompile: List<File>,
         args: K2JVMCompilerArguments,
@@ -195,7 +196,7 @@ open class IncrementalFirJvmCompilerRunner(
 
             fun firIncrementalCycle(): FirResult? {
                 while (true) {
-                    val dirtySourcesByModuleName = sourcesByModuleName.mapValues { (_, sources) ->
+                    val dirtySourcesByModuleName = sourcesByModuleName.mapValues { [_, sources] ->
                         sources.filterTo(mutableSetOf()) { dirtySources.any { df -> df.path == it.path } }
                     }
                     val groupedSources = GroupedKtSources(
@@ -256,7 +257,7 @@ open class IncrementalFirJvmCompilerRunner(
 
             val extensions = JvmFir2IrExtensions(configuration, JvmIrDeserializerImpl())
             val irGenerationExtensions = projectEnvironment.project.let { IrGenerationExtension.getInstances(it) }
-            val (irModuleFragment, components, pluginContext, irActualizedResult, _, symbolTable) = cycleResult.convertToIrAndActualizeForJvm(
+            val [irModuleFragment, components, pluginContext, irActualizedResult, _, symbolTable] = cycleResult.convertToIrAndActualizeForJvm(
                 extensions, configuration, compilerEnvironment.diagnosticsReporter, irGenerationExtensions,
             )
 

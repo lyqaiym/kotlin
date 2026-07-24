@@ -129,8 +129,8 @@ internal object ClasspathChangesComputer {
         previousClassSnapshots: List<AccessibleClassSnapshot>,
         metrics: BuildMetricsReporter<GradleBuildTime, GradleBuildPerformanceMetric>
     ): ProgramSymbolSet {
-        val (currentKotlinClassSnapshots, currentJavaClassSnapshots) = currentClassSnapshots.partition { it is KotlinClassSnapshot }
-        val (previousKotlinClassSnapshots, previousJavaClassSnapshots) = previousClassSnapshots.partition { it is KotlinClassSnapshot }
+        val [currentKotlinClassSnapshots, currentJavaClassSnapshots] = currentClassSnapshots.partition { it is KotlinClassSnapshot }
+        val [previousKotlinClassSnapshots, previousJavaClassSnapshots] = previousClassSnapshots.partition { it is KotlinClassSnapshot }
 
         @Suppress("UNCHECKED_CAST")
         val kotlinClassChanges = metrics.measure(GradleBuildTime.COMPUTE_KOTLIN_CLASS_CHANGES) {
@@ -155,9 +155,9 @@ internal object ClasspathChangesComputer {
         currentClassSnapshots: List<KotlinClassSnapshot>,
         previousClassSnapshots: List<KotlinClassSnapshot>
     ): ProgramSymbolSet {
-        val (coarseGrainedCurrentClassSnapshots, fineGrainedCurrentClassSnapshots) =
+        val [coarseGrainedCurrentClassSnapshots, fineGrainedCurrentClassSnapshots] =
             currentClassSnapshots.partition { it.classMemberLevelSnapshot == null }
-        val (coarseGrainedPreviousClassSnapshots, fineGrainedPreviousClassSnapshots) =
+        val [coarseGrainedPreviousClassSnapshots, fineGrainedPreviousClassSnapshots] =
             previousClassSnapshots.partition { it.classMemberLevelSnapshot == null }
 
         return computeCoarseGrainedKotlinClassChanges(coarseGrainedCurrentClassSnapshots, coarseGrainedPreviousClassSnapshots) +
@@ -283,7 +283,7 @@ internal object ClasspathChangesComputer {
         val changedProgramSymbols = dirtyLookupSymbols.toProgramSymbolSet(allClasses)
 
         // Check whether there is any info in this DirtyData that has not yet been converted to `changedProgramSymbols`
-        val (changedLookupSymbols, changedFqNames) = changedProgramSymbols.toChangesEither().let {
+        val [changedLookupSymbols, changedFqNames] = changedProgramSymbols.toChangesEither().let {
             it.lookupSymbols.toSet() to it.fqNames.toSet()
         }
         val unmatchedLookupSymbols = this.dirtyLookupSymbols.toMutableSet().also {
@@ -393,7 +393,7 @@ private object ImpactedSymbolsComputer {
             }
 
             // Package members are currently not impacted, so we just copy the original set over
-            changes.packageMembers.forEach { (packageFqName, memberNames) ->
+            changes.packageMembers.forEach { [packageFqName, memberNames] ->
                 addPackageMembers(packageFqName, memberNames)
             }
         }.getResult()

@@ -77,7 +77,7 @@ abstract class AbstractFirOldFrontendLightClassesTest : BaseDiagnosticsTest() {
         //For BuiltIns, registered in sessionProvider automatically
         val allProjectScope = GlobalSearchScope.allScope(project)
 
-        val configToSession = modules.mapValues { (config, info) ->
+        val configToSession = modules.mapValues { [config, info] ->
             val moduleFiles = groupedByModule.getValue(config)
             val scope = TopDownAnalyzerFacadeForJVM.newModuleSearchScope(
                 project,

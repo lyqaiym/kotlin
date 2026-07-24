@@ -889,7 +889,7 @@ private class ContextCollectorVisitor(
         }
     }
 
-    @ContextCollectorDsl
+//    @ContextCollectorDsl
     private fun Processor.processSignatureAnnotations(declaration: FirDeclaration) {
         for (annotation in declaration.annotations) {
             onActive {
@@ -907,7 +907,7 @@ private class ContextCollectorVisitor(
     private class Processor(private val delegate: FirVisitorVoid) {
         private val elementsToSkip = HashSet<FirElement>()
 
-        @ContextCollectorDsl
+//        @ContextCollectorDsl
         fun process(element: FirElement?) {
             if (element != null) {
                 element.accept(delegate)
@@ -915,7 +915,7 @@ private class ContextCollectorVisitor(
             }
         }
 
-        @ContextCollectorDsl
+//        @ContextCollectorDsl
         fun processList(elements: Collection<FirElement>) {
             for (element in elements) {
                 process(element)
@@ -923,7 +923,10 @@ private class ContextCollectorVisitor(
             }
         }
 
-        @ContextCollectorDsl
+//        Applying DSL marker annotation 'ContextCollectorDsl' to target 'member function' has no effect.
+//        DSL marker annotations must only be applied to types.
+//        See https://youtrack.jetbrains.com/issue/KT-81567 for further information.
+//        @ContextCollectorDsl
         fun processChildren(element: FirElement) {
             val visitor = FilteringVisitor(delegate, elementsToSkip)
             element.acceptChildren(visitor)

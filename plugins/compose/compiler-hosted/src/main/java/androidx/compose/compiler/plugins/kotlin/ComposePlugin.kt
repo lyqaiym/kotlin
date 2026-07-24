@@ -59,7 +59,7 @@ object ComposeConfiguration {
         CompilerConfigurationKey<Boolean>(
             "Enabled optimization to remove groups around non-skipping functions"
         )
-    val SUPPRESS_KOTLIN_VERSION_COMPATIBILITY_CHECK = CompilerConfigurationKey<String?>(
+    val SUPPRESS_KOTLIN_VERSION_COMPATIBILITY_CHECK = CompilerConfigurationKey<String>(
         "Deprecated. Version of Kotlin for which version compatibility check should be suppressed"
     )
     val DECOYS_ENABLED_KEY =
@@ -406,7 +406,7 @@ enum class FeatureFlag(val featureName: String, val default: Boolean) {
 
     companion object {
         fun fromString(featureName: String): Pair<FeatureFlag?, Boolean> {
-            val (featureToSearch, enabled) = when {
+            val [featureToSearch, enabled] = when {
                 featureName.startsWith("+") -> featureName.substring(1) to true
                 featureName.startsWith("-") -> featureName.substring(1) to false
                 else -> featureName to true
@@ -456,7 +456,7 @@ class FeatureFlags(featureConfiguration: List<String> = emptyList()) {
 
     private fun processConfigurationList(featuresNames: List<String>) {
         for (featureName in featuresNames) {
-            val (feature, enabled) = FeatureFlag.fromString(featureName)
+            val [feature, enabled] = FeatureFlag.fromString(featureName)
             if (feature != null) {
                 if (enabled) enableFeature(feature) else disableFeature(feature)
             }
@@ -546,7 +546,7 @@ fun validateFeatureFlag(
     configuration: CompilerConfiguration,
     value: String,
 ) {
-    val (feature, _) = FeatureFlag.fromString(value)
+    val [feature, _] = FeatureFlag.fromString(value)
     if (feature == null) {
         configuration.messageCollector.report(
             CompilerMessageSeverity.WARNING,

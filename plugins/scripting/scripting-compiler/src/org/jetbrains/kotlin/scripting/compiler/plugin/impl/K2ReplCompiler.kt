@@ -209,7 +209,7 @@ class ReplModuleDataProvider(baseLibraryPaths: List<Path>) : ModuleDataProvider(
     override fun getModuleData(path: Path?): FirModuleData? {
         val normalizedPath = path?.normalize() ?: return null
         pathToModuleData[normalizedPath]?.let { return it }
-        for ((libPath, moduleData) in pathToModuleData) {
+        for ([libPath, moduleData] in pathToModuleData) {
             if (normalizedPath.startsWith(libPath)) return moduleData
         }
         return null
@@ -262,7 +262,7 @@ private fun compileImpl(
 
     // configuration refinement with the additional sources collection
     val allSourceFiles = mutableListOf(snippetKtFile)
-    val (classpath, newSources, sourceDependencies) =
+    val [classpath, newSources, sourceDependencies] =
         collectScriptsCompilationDependencies(
             compilerConfiguration,
             project,
@@ -299,7 +299,7 @@ private fun compileImpl(
         )
     }
 
-    val (libModuleData, newClassPath) = state.moduleDataProvider.addNewLibraryModuleDataIfNeeded(classpath.map(File::toPath))
+    val [libModuleData, newClassPath] = state.moduleDataProvider.addNewLibraryModuleDataIfNeeded(classpath.map(File::toPath))
 
     if (newClassPath.isNotEmpty()) {
         state.compilerContext.environment.updateClasspath(newClassPath.map { JvmClasspathRoot(it.toFile()) })
@@ -338,7 +338,7 @@ private fun compileImpl(
     )
     val rawFir = session.buildFirFromKtFiles(allSourceFiles)
 
-    val (scopeSession, fir) = session.runResolution(rawFir)
+    val [scopeSession, fir] = session.runResolution(rawFir)
     // checkers
     session.runCheckers(scopeSession, fir, diagnosticsReporter, MppCheckerKind.Common)
     session.runCheckers(scopeSession, fir, diagnosticsReporter, MppCheckerKind.Platform)

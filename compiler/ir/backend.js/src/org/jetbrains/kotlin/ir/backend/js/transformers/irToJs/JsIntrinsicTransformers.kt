@@ -172,7 +172,7 @@ class JsIntrinsicTransformers(backendContext: JsIrBackendContext) {
                 JsInvocation(JsNameRef(Namer.SLICE_FUNCTION, translateCallArguments(call, context).single()))
             }
 
-            for ((type, prefix) in intrinsics.primitiveToTypedArrayMap) {
+            for ([type, prefix] in intrinsics.primitiveToTypedArrayMap) {
                 add(intrinsics.primitiveToSizeConstructor[type]!!) { call, context ->
                     JsNew(JsNameRef("${prefix}Array"), translateCallArguments(call, context))
                 }

@@ -121,7 +121,7 @@ fun MessageCollector.reportArgumentParseProblems(arguments: CommonToolArguments)
     for ((key, value) in errors.duplicateArguments) {
         report(CompilerMessageSeverity.STRONG_WARNING, "Argument $key is passed multiple times. Only the last value will be used: $value")
     }
-    for ((deprecatedName, newName) in errors.deprecatedArguments) {
+    for ([deprecatedName, newName] in errors.deprecatedArguments) {
         report(CompilerMessageSeverity.STRONG_WARNING, "Argument $deprecatedName is deprecated. Please use $newName instead")
     }
     for (argfileError in errors.argfileErrors) {
@@ -130,7 +130,7 @@ fun MessageCollector.reportArgumentParseProblems(arguments: CommonToolArguments)
 
     reportUnsafeInternalArgumentsIfAny(arguments)
 
-    for ((severity, internalArgumentsProblem) in errors.internalArgumentsParsingProblems) {
+    for ([severity, internalArgumentsProblem] in errors.internalArgumentsParsingProblems) {
         report(severity, internalArgumentsProblem)
     }
 }
@@ -138,7 +138,7 @@ fun MessageCollector.reportArgumentParseProblems(arguments: CommonToolArguments)
 private fun MessageCollector.reportUnsafeInternalArgumentsIfAny(arguments: CommonToolArguments) {
     val unsafeArguments = arguments.internalArguments.filterNot {
         // -XXLanguage which turns on BUG_FIX considered safe
-        it is ManualLanguageFeatureSetting && it.languageFeature.kind == LanguageFeature.Kind.BUG_FIX && it.state == LanguageFeature.State.ENABLED
+        it is ManualLanguageFeatureSetting  && it.state == LanguageFeature.State.ENABLED
     }
 
     if (unsafeArguments.isNotEmpty()) {
@@ -209,7 +209,7 @@ private fun CompilerConfiguration.buildHmppModuleStructure(arguments: CommonComp
         }
     }
 
-    var modules = sourcesByFragmentName.map { (fragmentName, sources) -> HmppCliModule(fragmentName, sources) }
+    var modules = sourcesByFragmentName.map { [fragmentName, sources] -> HmppCliModule(fragmentName, sources) }
 
     var wasError = false
     // check sources mapping

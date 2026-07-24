@@ -50,7 +50,7 @@ fun compile(
     filesToLower: Set<String>? = null,
     granularity: JsGenerationGranularity = JsGenerationGranularity.WHOLE_PROGRAM,
 ): LoweredIr {
-    val (moduleFragment: IrModuleFragment, dependencyModules, irBuiltIns, symbolTable, deserializer, moduleToName) =
+    val [moduleFragment: IrModuleFragment, dependencyModules, irBuiltIns, symbolTable, deserializer, moduleToName] =
         loadIr(depsDescriptors, irFactory, filesToLower, loadFunctionInterfacesIntoStdlib = true)
 
     return compileIr(

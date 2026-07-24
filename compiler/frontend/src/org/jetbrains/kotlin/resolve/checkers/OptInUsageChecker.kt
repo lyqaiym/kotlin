@@ -174,7 +174,7 @@ class OptInUsageChecker : CallChecker {
             trace: BindingTrace,
             diagnostics: OptInReporterMultiplexer
         ) {
-            for ((annotationFqName, severity, message, subclassesOnly) in descriptions) {
+            for ([annotationFqName, severity, message, subclassesOnly] in descriptions) {
                 if (!element.isOptInAllowed(annotationFqName, languageVersionSettings, trace.bindingContext, subclassesOnly)) {
                     val diagnostic = when (severity) {
                         OptInDescription.Severity.WARNING -> diagnostics.warning(subclassesOnly)

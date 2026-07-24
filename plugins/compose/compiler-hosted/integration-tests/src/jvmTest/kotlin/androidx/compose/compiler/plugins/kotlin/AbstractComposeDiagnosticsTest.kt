@@ -69,7 +69,7 @@ abstract class AbstractComposeDiagnosticsTest(useFir: Boolean) : AbstractCompile
             )
 
             buildString {
-                for ((i, c) in clearText.withIndex()) {
+                for ([i, c] in clearText.withIndex()) {
                     endOffsetsToGroups[i]?.let { groups ->
                         repeat(groups.size) { append("<!>") }
                     }

@@ -60,7 +60,7 @@ class InputsCache(
             }
         }
 
-        for ((source, outputs) in sourceToOutput.entrySet()) {
+        for ([source, outputs] in sourceToOutput.entrySet()) {
             sourceToOutputMap[source] = outputs.toSet()
         }
     }

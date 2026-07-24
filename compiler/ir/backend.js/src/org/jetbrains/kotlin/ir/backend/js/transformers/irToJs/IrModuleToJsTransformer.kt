@@ -429,8 +429,8 @@ class IrModuleToJsTransformer(
             if (generateRegionComments || generateFilePaths) {
                 val originalPath = fileExports.file.path
                 val path = pathPrefixMap.entries
-                    .find { (k, _) -> originalPath.startsWith(k) }
-                    ?.let { (k, v) -> v + originalPath.substring(k.length) }
+                    .find { [k, _] -> originalPath.startsWith(k) }
+                    ?.let { [k, v] -> v + originalPath.substring(k.length) }
                     ?: originalPath
 
                 startComment += "file: $path"
@@ -599,7 +599,7 @@ private fun generateMultiWrappedModuleBody(
     // TODO: It makes sense to invent something better, because this logic can be easily broken
     val moduleToRef = program.asCrossModuleDependencies(moduleKind, relativeRequirePath).toMutableList()
 
-    val mainModule = moduleToRef.removeLast().let { (main, mainRef) ->
+    val mainModule = moduleToRef.removeLast().let { [main, mainRef] ->
         generateSingleWrappedModuleBody(
             mainModuleName,
             moduleKind,
@@ -613,7 +613,7 @@ private fun generateMultiWrappedModuleBody(
 
     mainModule.dependencies = buildList(moduleToRef.size) {
         while (moduleToRef.isNotEmpty()) {
-            moduleToRef.removeFirst().let { (module, moduleRef) ->
+            moduleToRef.removeFirst().let { [module, moduleRef] ->
                 val moduleName = module.externalModuleName
                 val moduleCompilationOutput = generateSingleWrappedModuleBody(
                     moduleName,

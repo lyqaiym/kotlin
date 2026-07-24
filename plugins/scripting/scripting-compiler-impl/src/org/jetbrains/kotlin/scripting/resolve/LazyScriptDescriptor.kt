@@ -277,7 +277,7 @@ class LazyScriptDescriptor(
                     name.toValidJvmIdentifier() to
                             it.defaultType.makeNullableAsSpecified(type.isNullable).replaceArgumentsWithStarProjections()
                 }
-            }.map { (name, type) ->
+            }.map { [name, type] ->
                 ScriptProvidedPropertyDescriptor(
                     Name.identifier(name),
                     type,

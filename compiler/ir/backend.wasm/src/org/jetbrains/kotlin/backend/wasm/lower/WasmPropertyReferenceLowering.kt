@@ -247,7 +247,7 @@ internal class WasmPropertyReferenceLowering(val context: WasmBackendContext) : 
                 }
             }
 
-            val (symbol, constructorTypeArguments) = getKPropertyImplConstructor(
+            val [symbol, constructorTypeArguments] = getKPropertyImplConstructor(
                 receiverTypes = receiverTypes,
                 returnType = returnType,
                 isLocal = false,
@@ -276,7 +276,7 @@ internal class WasmPropertyReferenceLowering(val context: WasmBackendContext) : 
         irBuilder: IrBuilderWithScope
     ): IrExpression {
         irBuilder.run {
-            val (symbol, constructorTypeArguments) = getKPropertyImplConstructor(
+            val [symbol, constructorTypeArguments] = getKPropertyImplConstructor(
                 receiverTypes = emptyList(),
                 returnType = propertyType,
                 isLocal = true,

@@ -206,7 +206,7 @@ sealed class FirJsNameClashClassMembersChecker(mppKind: MppCheckerKind) : FirCla
             val fakeOverrideStableNames = stableNames.filterFakeOverrideNames(declaration, context)
 
             val nonFakeOverrideClashes = stableNames.collectNonFakeOverrideClashes { it in fakeOverrideStableNames }
-            for ((symbol, clashedWith) in nonFakeOverrideClashes) {
+            for ([symbol, clashedWith] in nonFakeOverrideClashes) {
                 val source = when (symbol) {
                     is FirCallableSymbol<*> -> symbol.unwrapFakeOverridesOrDelegated().source
                     else -> symbol.source

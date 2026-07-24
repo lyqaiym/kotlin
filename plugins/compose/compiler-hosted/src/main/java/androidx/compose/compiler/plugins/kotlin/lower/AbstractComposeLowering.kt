@@ -207,7 +207,7 @@ abstract class AbstractComposeLowering(
                     // So we can't unbox the value
                     return this
                 }
-                val fieldGetter = klass.getPropertyGetter(primaryValueParameter!!.name.identifier)
+                val fieldGetter = klass.getPropertyGetter(primaryValueParameter.name.identifier)
                     ?: error("Expected a getter")
                 return irCall(
                     symbol = fieldGetter,
@@ -1134,7 +1134,7 @@ abstract class AbstractComposeLowering(
 
     private fun IrMemberAccessExpression<*>.areAllArgumentsStatic(): Boolean {
         // getArguments includes the receivers!
-        return getArgumentsWithIr().all { (_, argExpression) ->
+        return getArgumentsWithIr().all { [_, argExpression] ->
             when (argExpression) {
                 // In a vacuum, we can't assume varargs are static because they're backed by
                 // arrays. Arrays aren't stable types due to their implicit mutability and
@@ -1251,7 +1251,7 @@ abstract class AbstractComposeLowering(
             startOffset,
             endOffset,
             returnType,
-            symbol as IrSimpleFunctionSymbol,
+            symbol,
             symbol.owner.typeParameters.size
         ).apply {
             extensionReceiver = currentComposer
@@ -1709,7 +1709,7 @@ internal inline fun <reified T : IrElement> T.copyWithNewTypeParams(
 ): T {
     val typeParamsAwareSymbolRemapper = object : DeepCopySymbolRemapper() {
         init {
-            for ((orig, new) in source.typeParameters.zip(target.typeParameters)) {
+            for ([orig, new] in source.typeParameters.zip(target.typeParameters)) {
                 typeParameters[orig.symbol] = new.symbol
             }
         }

@@ -46,7 +46,7 @@ fun FirSession.doUnify(
                 }
             }
         }
-        for ((key, value) in intersectionResult) {
+        for ([key, value] in intersectionResult) {
             result[key] = value
         }
         return true

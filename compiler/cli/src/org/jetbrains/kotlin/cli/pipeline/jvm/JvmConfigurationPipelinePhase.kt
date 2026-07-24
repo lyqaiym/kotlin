@@ -53,7 +53,7 @@ object JvmConfigurationUpdater : ConfigurationUpdater<K2JVMCompilerArguments>() 
         input: ArgumentsPipelineArtifact<K2JVMCompilerArguments>,
         configuration: CompilerConfiguration,
     ) {
-        val (arguments, services, _, _, _) = input
+        val [arguments, services, _, _, _] = input
         val messageCollector = configuration.messageCollector
         messageCollector.report(LOGGING, "Configuring the compilation environment")
 

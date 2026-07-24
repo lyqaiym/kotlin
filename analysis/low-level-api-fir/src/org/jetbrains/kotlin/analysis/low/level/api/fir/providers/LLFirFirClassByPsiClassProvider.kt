@@ -48,7 +48,7 @@ import org.jetbrains.kotlin.utils.exceptions.checkWithAttachment
  */
 class LLFirFirClassByPsiClassProvider(private val session: LLFirSession) : FirSessionComponent {
     private val conflictsPsiClassToFirClassCache =
-        session.firCachesFactory.createCache<PsiClass, FirRegularClassSymbol, ConflictsPsiClassToFirClassCacheContext> { psiClass, (javaFacade, parent) ->
+        session.firCachesFactory.createCache<PsiClass, FirRegularClassSymbol, ConflictsPsiClassToFirClassCacheContext> { psiClass, [javaFacade, parent] ->
             val classId = psiClass.classIdOrThrowError()
             val symbol = FirRegularClassSymbol(classId)
             val javaClass = JavaClassImpl(psiClass)

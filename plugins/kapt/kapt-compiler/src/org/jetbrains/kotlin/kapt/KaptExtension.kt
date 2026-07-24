@@ -202,7 +202,7 @@ abstract class AbstractKaptExtension(
         val javaSourceFiles = options.collectJavaSourceFiles(kaptContext.sourcesToReprocess)
         logger.info { "Java source files: " + javaSourceFiles.joinToString { it.normalize().absolutePath } }
 
-        val (annotationProcessingTime) = measureTimeMillis {
+        val [annotationProcessingTime] = measureTimeMillis {
             kaptContext.doAnnotationProcessing(javaSourceFiles, processors.processors)
         }
 
@@ -212,7 +212,7 @@ abstract class AbstractKaptExtension(
             MemoryLeakDetector.add(processors.classLoader)
 
             val isParanoid = options.detectMemoryLeaks == DetectMemoryLeaksMode.PARANOID
-            val (leakDetectionTime, leaks) = measureTimeMillis { MemoryLeakDetector.process(isParanoid) }
+            val [leakDetectionTime, leaks] = measureTimeMillis { MemoryLeakDetector.process(isParanoid) }
             logger.info { "Leak detection took $leakDetectionTime ms" }
 
             for (leak in leaks) {
@@ -244,7 +244,7 @@ abstract class AbstractKaptExtension(
 
         val generationState = GenerationState(project, module, configuration, builderFactory, targetId = targetId)
 
-        val (classFilesCompilationTime) = measureTimeMillis {
+        val [classFilesCompilationTime] = measureTimeMillis {
             JvmIrCodegenFactory(configuration).convertAndGenerate(files, generationState, bindingContext)
         }
 
@@ -260,7 +260,7 @@ abstract class AbstractKaptExtension(
     private fun generateKotlinSourceStubs(kaptContext: KaptContextForStubGeneration) {
         val converter = KaptStubConverter(kaptContext, generateNonExistentClass = true)
 
-        val (stubGenerationTime, kaptStubs) = measureTimeMillis {
+        val [stubGenerationTime, kaptStubs] = measureTimeMillis {
             converter.convert()
         }
 

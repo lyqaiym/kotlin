@@ -143,7 +143,7 @@ abstract class AbstractBuilderGenerator<T : AbstractBuilder>(session: FirSession
         val containingClassName = containingClassSymbol.classId.shortClassName
         val className = classSymbol.classId.shortClassName.asString()
 
-        for ((builder, declaration) in builderWithDeclarations) {
+        for ([builder, declaration] in builderWithDeclarations) {
             val containingClassBuilderName = builder.getBuilderClassShortName(containingClassName)
             // Make sure the current class is really a builder of the containing parent
             if (className != containingClassBuilderName) continue
@@ -168,7 +168,7 @@ abstract class AbstractBuilderGenerator<T : AbstractBuilder>(session: FirSession
         builderWithDeclarations: List<BuilderWithDeclaration<T>>,
         entitySymbol: FirClassSymbol<*>
     ) {
-        for ((builder, _) in builderWithDeclarations) {
+        for ([builder, _] in builderWithDeclarations) {
             val entityClassId = entitySymbol.classId
             val builderClassName = builder.getBuilderClassShortName(entityClassId.shortClassName)
             val builderClassId = entityClassId.createNestedClassId(Name.identifier(builderClassName))
@@ -212,7 +212,7 @@ abstract class AbstractBuilderGenerator<T : AbstractBuilder>(session: FirSession
         val builderWithDeclarations = builderWithDeclarationsCache.getValue(classSymbol) ?: return null
         val builderClasses = mutableMapOf<Name, FirJavaClass>()
 
-        for ((builder, builderDeclaration) in builderWithDeclarations) {
+        for ([builder, builderDeclaration] in builderWithDeclarations) {
             val builderName = Name.identifier(builder.getBuilderClassShortName(classSymbol.name))
             val builderClassId = entityClass.classId.createNestedClassId(builderName)
 

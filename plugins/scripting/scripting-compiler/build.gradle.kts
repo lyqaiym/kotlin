@@ -27,6 +27,12 @@ dependencies {
     api(commonDependency("org.jline", "jline"))
     compileOnly(intellijCore())
 
+    compileOnly(project(":core:descriptors"))
+    compileOnly(project(":core:descriptors.jvm"))
+    compileOnly(project(":core:deserialization"))
+    compileOnly(project(":compiler:container"))
+    compileOnly(project(":compiler:ir.psi2ir"))
+    compileOnly(project(":compiler:resolution"))
     implementation(project(":kotlin-power-assert-compiler-plugin")) // TODO: KT-74787
 
     testApi(project(":compiler:frontend"))

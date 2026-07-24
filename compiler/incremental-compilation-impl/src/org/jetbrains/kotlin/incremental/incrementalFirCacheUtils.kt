@@ -114,7 +114,7 @@ internal fun collectNewDirtySources(
                     val metadata = FirMetadataSource.Class(klass)
                     withMetadataSerializer(metadata, data) { serializer ->
                         klass.acceptChildren(this, data)
-                        serializer.serialize(metadata, FirMetadataSource.File(file))?.let { (classProto, nameTable) ->
+                        serializer.serialize(metadata, FirMetadataSource.File(file))?.let { [classProto, nameTable] ->
                             caches.platformCache.saveFrontendClassToCache(
                                 klass.classId,
                                 classProto as ProtoBuf.Class,
@@ -133,7 +133,7 @@ internal fun collectNewDirtySources(
         visitFirFiles(output)
     }
 
-    val (dirtyLookupSymbols, dirtyClassFqNames, forceRecompile) =
+    val [dirtyLookupSymbols, dirtyClassFqNames, forceRecompile] =
         changesCollector.getChangedAndImpactedSymbols(listOf(caches.platformCache), reporter)
 
     val forceToRecompileFiles = mapClassesFqNamesToFiles(listOf(caches.platformCache), forceRecompile, reporter)

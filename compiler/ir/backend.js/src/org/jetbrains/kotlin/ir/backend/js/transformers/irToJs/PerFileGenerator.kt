@@ -55,7 +55,7 @@ interface PerFileGenerator<Module, File, Artifact> {
                         hasModuleLevelEffect = true
                     }
 
-                    generatedArtifact.takeTestEnvironmentOwnership()?.let { (testFunction, suiteFunction) ->
+                    generatedArtifact.takeTestEnvironmentOwnership()?.let { [testFunction, suiteFunction] ->
                         testFunctions.putToMultiMap(generatedArtifact.packageFqn, testFunction)
                         suiteFunctionTag = suiteFunction
                     }

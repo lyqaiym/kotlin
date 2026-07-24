@@ -391,7 +391,7 @@ internal class UltraLightMembersCreator(
                 MethodType.GETTER -> (annotated as? PropertyDescriptor)?.getter
                 MethodType.SETTER -> (annotated as? PropertyDescriptor)?.setter
 //                'when' is exhaustive so 'else' is redundant here.
-//                else -> throw NotImplementedError()
+                else -> throw NotImplementedError()
             }
 
             return propertyAnnotated?.let(DescriptorUtils::getJvmName)

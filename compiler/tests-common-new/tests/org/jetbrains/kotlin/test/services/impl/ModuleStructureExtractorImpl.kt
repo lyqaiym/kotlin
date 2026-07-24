@@ -123,7 +123,7 @@ class ModuleStructureExtractorImpl(
         }
 
         private fun sortModules(modules: List<TestModule>): List<TestModule> {
-            val moduleByName = modules.groupBy { it.name }.mapValues { (name, modules) ->
+            val moduleByName = modules.groupBy { it.name }.mapValues { [name, modules] ->
                 modules.singleOrNull() ?: error("Duplicated modules with name $name")
             }
             return DFS.topologicalOrder(modules) { module ->

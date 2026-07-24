@@ -280,7 +280,7 @@ private inline fun CheckerContext.visitCurrentScope(
     visitFunction: (FirFunction) -> Unit = {},
     visitTryExpression: (FirTryExpression, FirElement) -> Unit = { _, _ -> },
 ) {
-    for ((elementIndex, element) in containingElements.withIndex().reversed()) {
+    for ([elementIndex, element] in containingElements.withIndex().reversed()) {
         when (element) {
             is FirAnonymousFunction -> {
                 if (element.inlineStatus == InlineStatus.Inline) {

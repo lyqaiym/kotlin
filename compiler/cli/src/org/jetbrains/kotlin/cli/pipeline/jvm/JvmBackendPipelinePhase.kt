@@ -37,7 +37,7 @@ object JvmBackendPipelinePhase : PipelinePhase<JvmFir2IrPipelineArtifact, JvmBin
     }
 
     fun executePhase(input: JvmFir2IrPipelineArtifact, ignoreErrors: Boolean): JvmBinaryPipelineArtifact? {
-        (val fir2IrResult = result, val configuration, val environment, val allSourceFiles = sourceFiles, val mainClassFqName) = input
+        (val fir2IrResult = result, val configuration, val environment,val diagnosticCollector, val allSourceFiles = sourceFiles, val mainClassFqName) = input
         val moduleDescriptor = fir2IrResult.irModuleFragment.descriptor
         val project = environment.project
         val classResolver = FirJvmBackendClassResolver(fir2IrResult.components)

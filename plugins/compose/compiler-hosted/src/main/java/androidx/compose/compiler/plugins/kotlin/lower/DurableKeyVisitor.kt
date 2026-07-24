@@ -27,7 +27,7 @@ class PathPartInfo(val key: String) {
         var node = this@PathPartInfo
         if (node == ROOT) {
             append("<ROOT>")
-            return
+            return@with
         }
         while (node != ROOT) {
             append(pathSeparator)

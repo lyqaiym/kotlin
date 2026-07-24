@@ -72,7 +72,7 @@ fun createIsolatedCompilationContext(
 ): SharedScriptCompilationContext {
     val ignoredOptionsReportingState = IgnoredOptionsReportingState()
 
-    val (initialScriptCompilationConfiguration, kotlinCompilerConfiguration) =
+    val [initialScriptCompilationConfiguration, kotlinCompilerConfiguration] =
         createInitialConfigurations(
             baseScriptCompilationConfiguration,
             hostConfiguration,
@@ -229,6 +229,7 @@ fun makeScriptCompilerArguments(compilerOptions: List<String>): K2JVMCompilerArg
 private fun ScriptCompilationConfiguration.withUpdatesFromCompilerConfiguration(kotlinCompilerConfiguration: CompilerConfiguration) =
     withUpdatedClasspath(kotlinCompilerConfiguration.jvmClasspathRoots)
 
+@OptIn(CompilerConfiguration.Internals::class)
 private fun createInitialCompilerConfiguration(
     scriptCompilationConfiguration: ScriptCompilationConfiguration,
     hostConfiguration: ScriptingHostConfiguration,
@@ -337,7 +338,7 @@ internal fun collectRefinedSourcesAndUpdateEnvironment(
     messageCollector: ScriptDiagnosticsMessageCollector
 ): Pair<List<KtFile>, List<ScriptsCompilationDependencies.SourceDependencies>> {
     val sourceFiles = arrayListOf(mainKtFile)
-    val (classpath, newSources, sourceDependencies) =
+    val [classpath, newSources, sourceDependencies] =
         collectScriptsCompilationDependencies(
             context.environment.configuration,
             context.environment.project,

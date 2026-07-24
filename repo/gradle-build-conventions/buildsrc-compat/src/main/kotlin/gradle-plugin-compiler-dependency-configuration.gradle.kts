@@ -35,6 +35,7 @@ val kotlinApiVersionForProjectsDependingOnStableStdlib: String by rootProject.ex
 limitLanguageAndApiVersions(KotlinVersion.KOTLIN_2_2)
 
 internal fun Project.limitLanguageAndApiVersions(version: KotlinVersion) {
+    println("limitLanguageAndApiVersions:name=${this.name},version=${version}")
     val projectsDependingOnStableStdlib: Array<String> by rootProject.extra
     val kotlinApiVersionForProjectsDependingOnStableStdlib: String by rootProject.extra
 

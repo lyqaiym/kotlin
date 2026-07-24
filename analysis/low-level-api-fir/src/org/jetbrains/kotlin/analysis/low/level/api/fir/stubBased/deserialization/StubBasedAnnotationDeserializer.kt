@@ -35,6 +35,7 @@ class StubBasedAnnotationDeserializer(
     private val session: FirSession,
 ) {
     companion object {
+        @Suppress("DEPRECATION")
         fun getAnnotationClassId(ktAnnotation: KtAnnotationEntry): ClassId {
             val userType = ktAnnotation.getStubOrPsiChild(KtStubElementTypes.CONSTRUCTOR_CALLEE)
                 ?.getStubOrPsiChild(KtStubElementTypes.TYPE_REFERENCE)
@@ -93,7 +94,7 @@ class StubBasedAnnotationDeserializer(
                 coneType = classId.toLookupTag().constructClassType()
             }
             this.argumentMapping = buildAnnotationArgumentMapping {
-                valueArguments?.forEach { (name, constantValue) ->
+                valueArguments?.forEach { [name, constantValue] ->
                     mapping[name] = resolveValue(ktAnnotation, constantValue)
                 }
             }
@@ -164,7 +165,7 @@ class StubBasedAnnotationDeserializer(
         if (values.isNotEmpty()) {
             val firstValue = values.first()
 
-            for ((index, value) in values.withIndex()) {
+            for ([index, value] in values.withIndex()) {
                 if (index > 0 && value.javaClass != firstValue.javaClass) {
                     return null
                 }

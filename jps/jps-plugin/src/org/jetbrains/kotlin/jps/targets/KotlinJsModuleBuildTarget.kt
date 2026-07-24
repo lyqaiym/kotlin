@@ -58,6 +58,7 @@ class KotlinJsModuleBuildTarget(kotlinContext: KotlinCompileContext, jpsModuleBu
     override val buildMetaInfo: JsBuildMetaInfo
         get() = JsBuildMetaInfo()
 
+    @Suppress("DEPRECATION")
     val isFirstBuild: Boolean
         get() {
             val targetDataRoot = jpsGlobalContext.projectDescriptor.dataManager.dataPaths.getTargetDataRoot(jpsModuleBuildTarget)

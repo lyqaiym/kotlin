@@ -75,7 +75,7 @@ abstract class KotlinScriptDefinitionAdapterFromNewAPIBase : KotlinScriptDefinit
 
     override val providedProperties: List<Pair<String, KType>> by lazy(LazyThreadSafetyMode.PUBLICATION) {
         scriptCompilationConfiguration[ScriptCompilationConfiguration.providedProperties]
-            ?.map { (k, v) -> k to getScriptingClass(v).starProjectedType.withNullability(v.isNullable) }.orEmpty()
+            ?.map { [k, v] -> k to getScriptingClass(v).starProjectedType.withNullability(v.isNullable) }.orEmpty()
     }
 
     @Deprecated("temporary workaround for missing functionality, will be replaced by the new API soon")

@@ -209,7 +209,7 @@ fun translateCall(
     }
 
     expression.superQualifierSymbol?.let { superQualifier ->
-        val (target: IrSimpleFunction, klass: IrClass) = if (superQualifier.owner.isInterface) {
+        val [target: IrSimpleFunction, klass: IrClass] = if (superQualifier.owner.isInterface) {
             val impl = function.resolveFakeOverrideOrFail()
             Pair(impl, impl.parentAsClass)
         } else {
@@ -598,7 +598,7 @@ inline fun IrElement.getSourceLocation(fileEntry: IrFileEntry, offsetSelector: I
     if (startOffset == UNDEFINED_OFFSET || endOffset == UNDEFINED_OFFSET) return null
     val path = fileEntry.name
     val offset = offsetSelector()
-    val (startLine, startColumn) = fileEntry.getLineAndColumnNumbers(offset)
+    val [startLine, startColumn] = fileEntry.getLineAndColumnNumbers(offset)
     return JsLocation(path, startLine, startColumn)
 }
 

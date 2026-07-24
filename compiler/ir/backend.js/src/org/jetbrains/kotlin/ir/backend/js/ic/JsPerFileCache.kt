@@ -386,7 +386,7 @@ class JsPerFileCache(private val moduleArtifacts: List<JsModuleArtifact>) : JsMu
     private fun JsIrModuleHeader.areNameBindingsChanged(other: JsIrModuleHeader): Boolean {
         if (nameBindings.size != other.nameBindings.size) return true
 
-        for ((name, tag) in nameBindings) {
+        for ([name, tag] in nameBindings) {
             val otherTag = other.nameBindings[name] ?: return true
             if (tag != otherTag) return true
         }
@@ -414,7 +414,7 @@ class JsPerFileCache(private val moduleArtifacts: List<JsModuleArtifact>) : JsMu
     }
 
     override fun commitCompiledJsCode(cacheInfo: CachedFileInfo, compilationOutputs: CompilationOutputsBuilt) =
-        cacheInfo.cachedFiles?.let { (jsCodeFile, jsMapFile, tsDeclarationsFile) ->
+        cacheInfo.cachedFiles?.let { [jsCodeFile, jsMapFile, tsDeclarationsFile] ->
             tsDeclarationsFile?.writeIfNotNull(compilationOutputs.tsDefinitions?.raw)
             compilationOutputs.writeJsCodeIntoModuleCache(jsCodeFile, jsMapFile)
         } ?: compilationOutputs
@@ -475,7 +475,7 @@ class JsPerFileCache(private val moduleArtifacts: List<JsModuleArtifact>) : JsMu
     }
 
     override fun loadRequiredJsIrModules(crossModuleReferences: Map<JsIrModuleHeader, CrossModuleReferences>) {
-        for ((header, references) in crossModuleReferences) {
+        for ([header, references] in crossModuleReferences) {
             val cachedInfo = headerToCachedInfo[header] ?: notFoundIcError("artifact for module ${header.moduleName}")
 
             val actualCrossModuleHash = references.crossModuleReferencesHashForIC()

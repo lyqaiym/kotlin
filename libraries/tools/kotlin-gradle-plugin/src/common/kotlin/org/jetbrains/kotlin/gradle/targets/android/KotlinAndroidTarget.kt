@@ -275,7 +275,7 @@ abstract class KotlinAndroidTarget @Inject constructor(
         val usageContexts = listOf(
             apiElementsConfigurationName to KotlinUsageContext.MavenScope.COMPILE,
             runtimeElementsConfigurationName to KotlinUsageContext.MavenScope.RUNTIME,
-        ).mapTo(mutableSetOf()) { (dependencyConfigurationName, mavenScope) ->
+        ).mapTo(mutableSetOf()) { [dependencyConfigurationName, mavenScope] ->
             val configuration = project.configurations.getByName(dependencyConfigurationName)
             DefaultKotlinUsageContext(
                 compilation,

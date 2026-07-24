@@ -179,7 +179,7 @@ internal class JsIrLinkerLoader(
 
         val moduleDescriptorToKotlinLibrary = dependencyGraph.keys.associateBy { klib -> getModuleDescriptor(klib) }
         return moduleDescriptorToKotlinLibrary
-            .onEach { (key, _) -> key.setDependencies(moduleDescriptorToKotlinLibrary.keys.toList()) }
+            .onEach { [key, _] -> key.setDependencies(moduleDescriptorToKotlinLibrary.keys.toList()) }
             .map<ModuleDescriptorImpl, KotlinLibrary, Pair<ModuleDescriptor, KotlinLibrary>> { it.key to it.value }
             .toMap()
     }
@@ -191,7 +191,7 @@ internal class JsIrLinkerLoader(
         val loadedModules = loadModules()
         val linkerContext = createLinker(loadedModules)
 
-        val irModules = loadedModules.entries.associate { (descriptor, module) ->
+        val irModules = loadedModules.entries.associate { [descriptor, module] ->
             val libraryFile = KotlinLibraryFile(module)
             val modifiedStrategy = when {
                 loadAllIr -> DeserializationStrategy.ALL
@@ -215,7 +215,7 @@ internal class JsIrLinkerLoader(
         linkerContext.linker.init(null)
 
         if (!loadAllIr) {
-            for ((loadingLibFile, loadingSrcFiles) in modifiedFiles) {
+            for ([loadingLibFile, loadingSrcFiles] in modifiedFiles) {
                 val loadingIrModule = irModules[loadingLibFile] ?: notFoundIcError("loading fragment", loadingLibFile)
                 val moduleDeserializer = linkerContext.linker.moduleDeserializer(loadingIrModule.descriptor)
                 for (loadingSrcFileSignatures in loadingSrcFiles.values) {

@@ -581,7 +581,7 @@ internal class BridgeLowering(val context: JvmBackendContext) : ClassLoweringPas
     ) = irCastIfNeeded(irBlock {
         +irReturn(irCall(target, origin = IrStatementOrigin.BRIDGE_DELEGATION, superQualifierSymbol = superQualifierSymbol).apply {
             if (getStructure(target) == null && getStructure(bridge) == null) {
-                for ((param, targetParam) in bridge.parameters.zip(target.parameters)) {
+                for ([param, targetParam] in bridge.parameters.zip(target.parameters)) {
                     val argument = irGet(param).let { argument ->
                         if (param == bridge.dispatchReceiverParameter) argument else irCastIfNeeded(argument, targetParam.type.upperBound)
                     }
@@ -612,7 +612,7 @@ internal class BridgeLowering(val context: JvmBackendContext) : ClassLoweringPas
                 if (sourceParameter == bridge.dispatchReceiverParameter) irGet(sourceParameter)
                 else irCastIfNeeded(irGet(sourceParameter), targetParameterType)
             }
-        for ((parameter, argument) in parameters2arguments) {
+        for ([parameter, argument] in parameters2arguments) {
             if (argument != null) {
                 irCall.arguments[parameter] = argument
             }

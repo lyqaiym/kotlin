@@ -174,7 +174,7 @@ internal abstract class LLFirAbstractSessionFactory(protected val project: Proje
         }
     }
 
-    @OptIn(ExperimentalCompilerApi::class)
+    @OptIn(ExperimentalCompilerApi::class, CompilerConfiguration.Internals::class)
     private fun registerScriptExtensions(session: LLFirSession, file: KtFile) {
         FirSessionConfigurator(session).apply {
             val hostConfiguration = ScriptingHostConfiguration(defaultJvmScriptingHostConfiguration) {}
@@ -606,7 +606,8 @@ internal abstract class LLFirAbstractSessionFactory(protected val project: Proje
 
             override fun supportsFeature(feature: LanguageFeature): Boolean {
                 return when (getFeatureSupport(feature)) {
-                    LanguageFeature.State.ENABLED, LanguageFeature.State.ENABLED_WITH_WARNING -> true
+//                    LanguageFeature.State.ENABLED, LanguageFeature.State.ENABLED_WITH_WARNING -> true
+                    LanguageFeature.State.ENABLED -> true
                     else -> false
                 }
             }

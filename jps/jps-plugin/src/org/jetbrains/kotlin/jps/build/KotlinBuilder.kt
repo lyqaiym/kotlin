@@ -462,7 +462,7 @@ class KotlinBuilder : ModuleLevelBuilder(BuilderCategory.SOURCE_PROCESSOR) {
             kotlinDirtyFilesHolder.allRemovedFilesFiles
         )
 
-        cleanJsOutputs(context, kotlinChunk, incrementalCaches, kotlinDirtyFilesHolder)
+//        cleanJsOutputs(context, kotlinChunk, incrementalCaches, kotlinDirtyFilesHolder)
 
 
 
@@ -502,7 +502,7 @@ class KotlinBuilder : ModuleLevelBuilder(BuilderCategory.SOURCE_PROCESSOR) {
         if (!isKotlinBuilderInDumbMode) markDirtyComplementaryMultifileClasses(generatedFiles, kotlinContext, incrementalCaches, fsOperations)
 
         val kotlinTargets = kotlinContext.targetsBinding
-        for ((target, outputItems) in generatedFiles) {
+        for ([target, outputItems] in generatedFiles) {
             val kotlinTarget = kotlinTargets[target] ?: error("Could not find Kotlin target for JPS target $target")
             kotlinTarget.registerOutputItems(outputConsumer, outputItems)
         }
@@ -541,7 +541,7 @@ class KotlinBuilder : ModuleLevelBuilder(BuilderCategory.SOURCE_PROCESSOR) {
 
             val changesCollector = ChangesCollector()
 
-            for ((target, files) in generatedFiles) {
+            for ([target, files] in generatedFiles) {
                 val kotlinModuleBuilderTarget = kotlinContext.targetsBinding[target]!!
                 kotlinModuleBuilderTarget.updateCaches(
                     kotlinDirtyFilesHolder,
@@ -569,42 +569,42 @@ class KotlinBuilder : ModuleLevelBuilder(BuilderCategory.SOURCE_PROCESSOR) {
         return OK
     }
 
-    private fun cleanJsOutputs(
-        context: CompileContext,
-        kotlinChunk: KotlinChunk,
-        incrementalCaches: Map<KotlinModuleBuildTarget<*>, JpsIncrementalCache>,
-        kotlinDirtyFilesHolder: KotlinDirtySourceFilesHolder
-    ) {
-        for (target in kotlinChunk.targets) {
-            val cache = incrementalCaches[target] ?: continue
-
-            if (cache is IncrementalJsCache) {
-                val filesToDelete = mutableListOf<File>()
-                val dirtyFiles = kotlinDirtyFilesHolder.getDirtyFiles(target.jpsModuleBuildTarget).keys
-                val removedFiles = kotlinDirtyFilesHolder.getRemovedFiles(target.jpsModuleBuildTarget)
-
-                for (file: File in dirtyFiles + removedFiles) {
-                    filesToDelete.addAll(cache.getOutputsBySource(file).filter { it !in filesToDelete })
-                }
-
-                if (filesToDelete.isNotEmpty()) {
-                    val deletedForThisSource = mutableSetOf<String>()
-                    val parentDirs = mutableSetOf<File>()
-
-                    for (kjsmFile in filesToDelete) {
-                        BuildOperations.deleteRecursively(kjsmFile.path, deletedForThisSource, parentDirs)
-                    }
-
-                    FSOperations.pruneEmptyDirs(context, parentDirs)
-
-                    val logger = context.loggingManager.projectBuilderLogger
-                    if (logger.isEnabled && deletedForThisSource.isNotEmpty()) {
-                        logger.logDeletedFiles(deletedForThisSource)
-                    }
-                }
-            }
-        }
-    }
+//    private fun cleanJsOutputs(
+//        context: CompileContext,
+//        kotlinChunk: KotlinChunk,
+//        incrementalCaches: Map<KotlinModuleBuildTarget<*>, JpsIncrementalCache>,
+//        kotlinDirtyFilesHolder: KotlinDirtySourceFilesHolder
+//    ) {
+//        for (target in kotlinChunk.targets) {
+//            val cache = incrementalCaches[target] ?: continue
+//
+//            if (cache is IncrementalJsCache) {
+//                val filesToDelete = mutableListOf<File>()
+//                val dirtyFiles = kotlinDirtyFilesHolder.getDirtyFiles(target.jpsModuleBuildTarget).keys
+//                val removedFiles = kotlinDirtyFilesHolder.getRemovedFiles(target.jpsModuleBuildTarget)
+//
+//                for (file: File in dirtyFiles + removedFiles) {
+//                    filesToDelete.addAll(cache.getOutputsBySource(file).filter { it !in filesToDelete })
+//                }
+//
+//                if (filesToDelete.isNotEmpty()) {
+//                    val deletedForThisSource = mutableSetOf<String>()
+//                    val parentDirs = mutableSetOf<File>()
+//
+//                    for (kjsmFile in filesToDelete) {
+//                        BuildOperations.deleteRecursively(kjsmFile.path, deletedForThisSource, parentDirs)
+//                    }
+//
+//                    FSOperations.pruneEmptyDirs(context, parentDirs)
+//
+//                    val logger = context.loggingManager.projectBuilderLogger
+//                    if (logger.isEnabled && deletedForThisSource.isNotEmpty()) {
+//                        logger.logDeletedFiles(deletedForThisSource)
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     // todo(1.2.80): got rid of ModuleChunk (replace with KotlinChunk)
     // todo(1.2.80): introduce KotlinRoundCompileContext, move dirtyFilesHolder, fsOperations, environment to it
@@ -763,7 +763,7 @@ class KotlinBuilder : ModuleLevelBuilder(BuilderCategory.SOURCE_PROCESSOR) {
         incrementalCaches: Map<KotlinModuleBuildTarget<*>, JpsIncrementalCache>,
         fsOperations: FSOperationsHelper
     ) {
-        for ((target, files) in generatedFiles) {
+        for ([target, files] in generatedFiles) {
             val kotlinModuleBuilderTarget = kotlinContext.targetsBinding[target] ?: continue
             val cache = incrementalCaches[kotlinModuleBuilderTarget] as? IncrementalJvmCache ?: continue
             val generated = files.filterIsInstance<GeneratedJvmClass>()
@@ -825,7 +825,7 @@ private fun ChangesCollector.getDirtyFiles(
     lookupStorageManager: JpsLookupStorageManager
 ): FilesToRecompile {
     val reporter = JpsICReporter()
-    val (dirtyLookupSymbols, dirtyClassFqNames, forceRecompile) = getChangedAndImpactedSymbols(caches, reporter)
+    val [dirtyLookupSymbols, dirtyClassFqNames, forceRecompile] = getChangedAndImpactedSymbols(caches, reporter)
     val dirtyFilesFromLookups = lookupStorageManager.withLookupStorage {
         mapLookupSymbolsToFiles(it, dirtyLookupSymbols, reporter)
     }

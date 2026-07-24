@@ -51,7 +51,7 @@ fun PhaseConfig.list(phases: List<AnyNamedPhase>) {
 }
 
 private fun PhaseConfig.list(phases: List<Pair<Int, AnyNamedPhase>>) {
-    for ((depth, phase) in phases) {
+    for ([depth, phase] in phases) {
         println(buildString {
             append("    ".repeat(depth))
             append(phase.name)

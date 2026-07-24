@@ -48,7 +48,7 @@ class LogStream(name: String) : OutputStream() {
 abstract class KotlinCompileDaemonBase {
     init {
         val logTime: String = SimpleDateFormat("yyyy-MM-dd.HH-mm-ss-SSS").format(Date())
-        val (logPath: String, fileIsGiven: Boolean) =
+        val [logPath: String, fileIsGiven: Boolean] =
             CompilerSystemProperties.COMPILE_DAEMON_LOG_PATH_PROPERTY.value?.trimQuotes()?.let { Pair(it, File(it).isFile) } ?: Pair("%t", false)
         val cfg: String =
             "handlers = java.util.logging.FileHandler\n" +
@@ -144,7 +144,7 @@ abstract class KotlinCompileDaemonBase {
                 }
                 // timer with a daemon thread, meaning it should not prevent JVM to exit normally
                 val timer = Timer(true)
-                val (compilerService, port) = getCompileServiceAndPort(compilerSelector, compilerId, daemonOptions, daemonJVMOptions, timer)
+                val [compilerService, port] = getCompileServiceAndPort(compilerSelector, compilerId, daemonOptions, daemonJVMOptions, timer)
                 compilerService.startDaemonElections()
                 compilerService.registerInitialClient(initialClientInfo)
                 compilerService.configurePeriodicActivities()
@@ -194,7 +194,7 @@ object KotlinCompileDaemon : KotlinCompileDaemonBase() {
         daemonJVMOptions: DaemonJVMOptions,
         timer: Timer
     ) = run {
-        val (registry, port) = findPortAndCreateRegistry(COMPILE_DAEMON_FIND_PORT_ATTEMPTS, COMPILE_DAEMON_PORTS_RANGE_START, COMPILE_DAEMON_PORTS_RANGE_END)
+        val [registry, port] = findPortAndCreateRegistry(COMPILE_DAEMON_FIND_PORT_ATTEMPTS, COMPILE_DAEMON_PORTS_RANGE_START, COMPILE_DAEMON_PORTS_RANGE_END)
         val compilerService = CompileServiceImpl(registry = registry,
                                                  compiler = compilerSelector,
                                                  compilerId = compilerId,

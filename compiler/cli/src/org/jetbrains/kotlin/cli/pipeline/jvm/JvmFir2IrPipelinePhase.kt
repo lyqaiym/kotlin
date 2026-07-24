@@ -20,7 +20,7 @@ object JvmFir2IrPipelinePhase : PipelinePhase<JvmFrontendPipelineArtifact, JvmFi
     postActions = setOf(PerformanceNotifications.TranslationToIrFinished, CheckCompilationErrors.CheckDiagnosticCollector)
 ) {
     override fun executePhase(input: JvmFrontendPipelineArtifact): JvmFir2IrPipelineArtifact? {
-        val (firResult, configuration, environment, diagnosticCollector, sourceFiles) = input
+        val [firResult, configuration, environment, diagnosticCollector, sourceFiles] = input
         val fir2IrExtensions = JvmFir2IrExtensions(configuration, JvmIrDeserializerImpl())
         val irGenerationExtensions = IrGenerationExtension.Companion.getInstances(environment.project)
         val fir2IrAndIrActualizerResult = firResult.convertToIrAndActualizeForJvm(

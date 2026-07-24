@@ -308,7 +308,7 @@ internal class FunctionReferenceLowering(private val context: JvmBackendContext)
 
             targetCall.dispatchReceiver = getTargetCallArgument(reference.dispatchReceiver, targetFun.dispatchReceiverParameter)
             targetCall.extensionReceiver = getTargetCallArgument(reference.extensionReceiver, targetFun.extensionReceiverParameter)
-            for ((valueParameterIndex, valueParameter) in targetFun.valueParameters.withIndex()) {
+            for ([valueParameterIndex, valueParameter] in targetFun.valueParameters.withIndex()) {
                 targetCall.putValueArgument(
                     valueParameterIndex,
                     getTargetCallArgument(
@@ -768,7 +768,7 @@ internal class FunctionReferenceLowering(private val context: JvmBackendContext)
         }
 
         private fun IrSimpleFunction.createFunctionReferenceInvokeMethod(receiver: IrValueDeclaration?) {
-            for ((index, argumentType) in argumentTypes.withIndex()) {
+            for ([index, argumentType] in argumentTypes.withIndex()) {
                 addValueParameter {
                     name = Name.identifier("p$index")
                     type = argumentType

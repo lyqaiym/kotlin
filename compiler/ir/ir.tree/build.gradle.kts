@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm")
     //    id("jps-compatible")
     id("generated-sources")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 dependencies {

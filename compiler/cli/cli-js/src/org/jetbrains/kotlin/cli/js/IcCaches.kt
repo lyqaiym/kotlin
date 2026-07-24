@@ -118,12 +118,12 @@ internal fun prepareIcCaches(
     val artifacts = cacheUpdater.actualizeCaches()
 
     messageCollector.report(INFO, "IC rebuilt overall time: ${System.currentTimeMillis() - start}ms")
-    for ((event, duration) in cacheUpdater.getStopwatchLastLaps()) {
+    for ([event, duration] in cacheUpdater.getStopwatchLastLaps()) {
         messageCollector.report(INFO, "  $event: ${(duration / 1e6).toInt()}ms")
     }
 
     var libIndex = 0
-    for ((libFile, srcFiles) in cacheUpdater.getDirtyFileLastStats()) {
+    for ([libFile, srcFiles] in cacheUpdater.getDirtyFileLastStats()) {
         val singleState = srcFiles.values.firstOrNull()?.singleOrNull()?.let { singleState ->
             singleState.takeIf { srcFiles.values.all { it.singleOrNull() == singleState } }
         }
@@ -137,7 +137,7 @@ internal fun prepareIcCaches(
         }
         messageCollector.report(INFO, "${++libIndex}) module [${File(libFile.path).name}] was $msg")
         var fileIndex = 0
-        for ((srcFile, stat) in showFiles) {
+        for ([srcFile, stat] in showFiles) {
             val filteredStats = stat.filter { it != DirtyFileState.NON_MODIFIED_IR }
             val statStr = filteredStats.takeIf { it.isNotEmpty() }?.joinToString { it.str } ?: continue
             // Use index, because MessageCollector ignores already reported messages

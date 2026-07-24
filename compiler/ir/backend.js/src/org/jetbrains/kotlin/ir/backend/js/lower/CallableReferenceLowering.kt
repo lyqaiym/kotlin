@@ -101,7 +101,7 @@ class CallableReferenceLowering(private val context: JsCommonBackendContext) : B
             expression.transformChildrenVoid(this)
 
             val function = expression.function
-            val (clazz, ctor) = buildLambdaReference(function, expression)
+            val [clazz, ctor] = buildLambdaReference(function, expression)
 
             clazz.parent = container
 
@@ -132,7 +132,7 @@ class CallableReferenceLowering(private val context: JsCommonBackendContext) : B
         override fun visitFunctionReference(expression: IrFunctionReference): IrExpression {
             expression.transformChildrenVoid(this)
 
-            val (clazz, ctor) = buildFunctionReference(expression)
+            val [clazz, ctor] = buildFunctionReference(expression)
 
             clazz.parent = container
 

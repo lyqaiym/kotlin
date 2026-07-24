@@ -14,6 +14,8 @@ dependencies {
     compileOnly(project(":compiler:frontend.java"))
     compileOnly(project(":compiler:cli"))
     compileOnly(project(":kotlin-android-extensions-runtime"))
+    implementation(project(":compiler:container"))
+    implementation(project(":core:descriptors"))
     compileOnly(intellijCore())
 
     embedded(project(":kotlin-android-extensions-runtime")) { isTransitive = false }

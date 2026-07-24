@@ -54,14 +54,18 @@ internal class FirThreadSafeCachesFactory(private val project: Project) : FirCac
             return createCache(createValue)
         }
 
-        val builder = Caffeine<K, V>.newBuilder()
+//        val builder = Caffeine<K, V>.newBuilder()
+//        FirThreadSafeCachesFactory.kt:57:31 Type arguments are not allowed when static member is accessed.
+//        This will become an error in language version 2.5.
+//        See https://youtrack.jetbrains.com/issue/KTLC-390.
+        val builder = Caffeine.newBuilder()
 
         if (expirationAfterAccess != null) {
             builder.expireAfterAccess(expirationAfterAccess.toJavaDuration())
         }
 
         if (maximumSize != null) {
-            builder.maximumSize(maximumSize.toLong())
+            builder.maximumSize(maximumSize)
         }
 
         if (keyStrength == KeyReferenceStrength.WEAK) {

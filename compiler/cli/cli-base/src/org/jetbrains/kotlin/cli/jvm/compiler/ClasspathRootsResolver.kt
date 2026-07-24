@@ -100,7 +100,7 @@ class ClasspathRootsResolver(
 
         val hasOutputDirectoryInClasspath = outputDirectory in jvmClasspathRoots || outputDirectory in jvmModulePathRoots
 
-        for ((root, packagePrefix) in javaSourceRoots) {
+        for ([root, packagePrefix] in javaSourceRoots) {
             val modularRoot = modularSourceRoot(root, hasOutputDirectoryInClasspath)
             if (modularRoot != null) {
                 modules += modularRoot

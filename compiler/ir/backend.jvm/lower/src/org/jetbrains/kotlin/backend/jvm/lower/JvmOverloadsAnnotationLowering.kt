@@ -80,7 +80,7 @@ internal class JvmOverloadsAnnotationLowering(val context: JvmBackendContext) : 
 
         var parametersCopied = 0
         var defaultParametersCopied = 0
-        for ((i, valueParameter) in target.valueParameters.withIndex()) {
+        for ([i, valueParameter] in target.valueParameters.withIndex()) {
             if (valueParameter.defaultValue != null) {
                 if (defaultParametersCopied < numDefaultParametersToExpect) {
                     defaultParametersCopied++

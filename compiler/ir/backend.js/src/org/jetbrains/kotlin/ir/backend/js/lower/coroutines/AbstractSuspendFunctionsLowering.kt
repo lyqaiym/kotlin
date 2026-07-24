@@ -336,7 +336,7 @@ abstract class AbstractSuspendFunctionsLowering<C : JsCommonBackendContext>(val 
 
                     assert(createValueParameters.size - 1 == argumentToPropertiesMap.size)
 
-                    for ((p, f) in createValueParameters.zip(argumentToPropertiesMap.values)) {
+                    for ([p, f] in createValueParameters.zip(argumentToPropertiesMap.values)) {
                         +irSetField(irGet(instanceVal), f, irGet(p))
                     }
 
@@ -571,7 +571,7 @@ fun getSuspendFunctionKind(
     return when {
         numberOfSuspendCalls == 0 -> SuspendFunctionKind.NO_SUSPEND_CALLS
         numberOfSuspendCalls == 1
-                && suspendCallAtEnd -> SuspendFunctionKind.DELEGATING(lastCall!!)
+                && suspendCallAtEnd -> SuspendFunctionKind.DELEGATING(lastCall)
         else -> SuspendFunctionKind.NEEDS_STATE_MACHINE
     }
 }

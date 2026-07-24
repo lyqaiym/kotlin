@@ -56,7 +56,7 @@ internal class JvmInlineClassLowering(context: JvmBackendContext) : JvmValueClas
     private val valueMap = mutableMapOf<IrValueSymbol, IrValueDeclaration>()
 
     override fun addBindingsFor(original: IrFunction, replacement: IrFunction) {
-        for ((param, newParam) in original.parameters.zip(replacement.parameters)) {
+        for ([param, newParam] in original.parameters.zip(replacement.parameters)) {
             valueMap[param.symbol] = newParam
         }
     }
@@ -133,7 +133,7 @@ internal class JvmInlineClassLowering(context: JvmBackendContext) : JvmValueClas
         source.body = context.createIrBuilder(source.symbol, source.startOffset, source.endOffset).run {
             irExprBody(irCall(target).apply {
                 passTypeArgumentsFrom(source)
-                for ((parameter, newParameter) in source.parameters.zip(target.parameters)) {
+                for ([parameter, newParameter] in source.parameters.zip(target.parameters)) {
                     putArgument(newParameter, irGet(parameter))
                 }
             })
@@ -208,7 +208,7 @@ internal class JvmInlineClassLowering(context: JvmBackendContext) : JvmValueClas
     ) {
         copyTypeArgumentsFrom(original)
         val valueParameterMap = originalFunction.parameters.zip(replacement.parameters).toMap()
-        for ((parameter, argument) in originalFunction.parameters zip original.arguments) {
+        for ([parameter, argument] in originalFunction.parameters zip original.arguments) {
             if (argument == null) continue
             val newParameter = valueParameterMap.getValue(parameter)
             putArgument(replacement, newParameter, argument.transform(this@JvmInlineClassLowering, null))

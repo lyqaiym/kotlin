@@ -47,7 +47,7 @@ internal class InheritedDefaultMethodsOnClassesLowering(val context: JvmBackendC
             }
         }
 
-        val (newFunction, superFunction, callee) =
+        val [newFunction, superFunction, callee] =
             context.cachedDeclarations.getClassFakeOverrideReplacement(declaration) as? ClassFakeOverrideReplacement.DefaultImplsRedirection
                 ?: return declaration
         return generateDefaultImplsRedirectionBody(newFunction, superFunction, callee)
@@ -98,7 +98,7 @@ internal class InheritedDefaultMethodsOnClassesLowering(val context: JvmBackendC
                         passTypeArgumentsFrom(irFunction)
                     }
 
-                    for ((parameter, argument) in parameter2arguments) {
+                    for ([parameter, argument] in parameter2arguments) {
                         if (argument != null) {
                             putArgument(parameter, argument)
                         }

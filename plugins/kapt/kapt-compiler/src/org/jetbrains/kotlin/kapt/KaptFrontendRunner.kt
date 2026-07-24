@@ -99,7 +99,7 @@ private fun FrontendContext.compileSourceFilesToAnalyzedFirViaPsi(
             createProviderAndScopeForIncrementalCompilation = { providerAndScopeForIncrementalCompilation }
         )
 
-        val outputs = sessionsWithSources.map { (session, sources) ->
+        val outputs = sessionsWithSources.map { [session, sources] ->
             buildResolveAndCheckFirFromKtFiles(session, sources, diagnosticsReporter)
         }
         outputs.runPlatformCheckers(diagnosticsReporter)

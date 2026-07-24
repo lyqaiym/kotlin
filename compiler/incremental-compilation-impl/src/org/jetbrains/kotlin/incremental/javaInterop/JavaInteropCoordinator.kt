@@ -135,6 +135,7 @@ private class PreciseJavaInteropCoordinator(
 internal sealed class JavaInteropCoordinator(
     messageCollector: MessageCollector,
 ) {
+    @OptIn(CompilerConfiguration.Internals::class)
     protected val compilerConfiguration: CompilerConfiguration by lazy {
         val filterMessageCollector = FilteringMessageCollector(messageCollector) { !it.isError }
         CompilerConfiguration().apply {

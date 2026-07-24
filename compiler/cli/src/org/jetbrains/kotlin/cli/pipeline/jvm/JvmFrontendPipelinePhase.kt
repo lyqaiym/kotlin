@@ -58,7 +58,7 @@ object JvmFrontendPipelinePhase : PipelinePhase<ConfigurationPipelineArtifact, J
     postActions = setOf(PerformanceNotifications.AnalysisFinished, CheckCompilationErrors.CheckDiagnosticCollector)
 ) {
     override fun executePhase(input: ConfigurationPipelineArtifact): JvmFrontendPipelineArtifact? {
-        val (configuration, diagnosticsCollector, rootDisposable) = input
+        val [configuration, diagnosticsCollector, rootDisposable] = input
         val messageCollector = configuration.messageCollector
 
         val perfManager = configuration.perfManager
@@ -71,7 +71,7 @@ object JvmFrontendPipelinePhase : PipelinePhase<ConfigurationPipelineArtifact, J
             return null
         }
 
-        val (environment, sourcesProvider) = createEnvironmentAndSources(
+        val [environment, sourcesProvider] = createEnvironmentAndSources(
             configuration,
             rootDisposable,
             targetDescription,
@@ -166,7 +166,7 @@ object JvmFrontendPipelinePhase : PipelinePhase<ConfigurationPipelineArtifact, J
         )
 
         val countFilesAndLines = if (perfManager == null) null else perfManager::addSourcesStats
-        val outputs = sessionsWithSources.map { (session, sources) ->
+        val outputs = sessionsWithSources.map { [session, sources] ->
             val rawFirFiles = when (configuration.useLightTree) {
                 true -> session.buildFirViaLightTree(sources, diagnosticsCollector, countFilesAndLines)
                 else -> session.buildFirFromKtFiles(sources.asKtFilesList())
@@ -177,7 +177,7 @@ object JvmFrontendPipelinePhase : PipelinePhase<ConfigurationPipelineArtifact, J
 
         val kotlinPackageUsageIsFine = when (configuration.useLightTree) {
             true -> outputs.all { checkKotlinPackageUsageForLightTree(configuration, it.fir) }
-            false -> sessionsWithSources.all { (_, sources) -> checkKotlinPackageUsageForPsi(configuration, sources.asKtFilesList()) }
+            false -> sessionsWithSources.all { [_, sources] -> checkKotlinPackageUsageForPsi(configuration, sources.asKtFilesList()) }
         }
 
         if (!kotlinPackageUsageIsFine) return null

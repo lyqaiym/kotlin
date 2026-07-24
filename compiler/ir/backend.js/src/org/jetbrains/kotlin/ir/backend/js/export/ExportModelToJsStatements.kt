@@ -121,7 +121,7 @@ class ExportModelToJsStatements(
 
             is ExportedObject -> {
                 require(namespace != null || esModules) { "Only namespaced properties are allowed" }
-                val (name, objectClassInitialization) = declaration.getNameAndInitialization()
+                val [name, objectClassInitialization] = declaration.getNameAndInitialization()
                 val newNameSpace = jsElementAccess(Namer.PROTOTYPE_NAME, name.makeRef())
                 val staticsExport =
                     declaration.nestedClasses.flatMap { generateDeclarationExport(it, newNameSpace, esModules, declaration.ir) }
@@ -162,7 +162,7 @@ class ExportModelToJsStatements(
                 if (declaration.isInterface) {
                     return declaration.nestedClasses.flatMap { generateDeclarationExport(it, namespace, esModules, parentClass) }
                 }
-                val (name, classInitialization) = declaration.getNameAndInitialization()
+                val [name, classInitialization] = declaration.getNameAndInitialization()
                 val newNameSpace = when {
                     namespace != null -> jsElementAccess(declaration.name, namespace)
                     esModules -> name.makeRef()
@@ -205,7 +205,7 @@ class ExportModelToJsStatements(
             JsName(name, false),
             JsObjectLiteral(false).apply {
                 getter?.let {
-                    val fieldName = when (irGetter?.origin) {
+                    val fieldName = when (irGetter.origin) {
                         JsLoweredDeclarationOrigin.OBJECT_GET_INSTANCE_FUNCTION -> "getInstance"
                         else -> "get"
                     }

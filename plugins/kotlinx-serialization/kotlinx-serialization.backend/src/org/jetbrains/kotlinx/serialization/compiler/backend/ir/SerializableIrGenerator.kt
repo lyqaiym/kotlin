@@ -327,7 +327,7 @@ class SerializableIrGenerator(
                     // even if they were created without it
                     if (superWriteSelfF.dispatchReceiverParameter != null) {
                         superWriteSelfF = compilerContext.copiedStaticWriteSelf.getOrPut(superWriteSelfF) {
-                            superWriteSelfF!!.deepCopyWithSymbols(initialParent = superClass).also { it.dispatchReceiverParameter = null }
+                            superWriteSelfF.deepCopyWithSymbols(initialParent = superClass).also { it.dispatchReceiverParameter = null }
                         }
                     }
 

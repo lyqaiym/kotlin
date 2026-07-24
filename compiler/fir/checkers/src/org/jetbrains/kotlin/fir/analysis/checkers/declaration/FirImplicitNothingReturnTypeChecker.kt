@@ -34,7 +34,7 @@ object FirImplicitNothingReturnTypeChecker : FirCallableDeclarationChecker(MppCh
                 val factory = when (declaration) {
                     is FirSimpleFunction -> FirErrors.ABBREVIATED_NOTHING_RETURN_TYPE
                     is FirProperty -> FirErrors.ABBREVIATED_NOTHING_PROPERTY_TYPE
-//                    else -> error("Should not be here")
+                    else -> error("Should not be here")
                 }
                 reporter.reportOn(declaration.source, factory, context)
             }
@@ -44,7 +44,7 @@ object FirImplicitNothingReturnTypeChecker : FirCallableDeclarationChecker(MppCh
             val factory = when (declaration) {
                 is FirSimpleFunction -> FirErrors.IMPLICIT_NOTHING_RETURN_TYPE
                 is FirProperty -> FirErrors.IMPLICIT_NOTHING_PROPERTY_TYPE
-//                else -> error("Should not be here")
+                else -> error("Should not be here")
             }
             reporter.reportOn(declaration.source, factory, context)
         }

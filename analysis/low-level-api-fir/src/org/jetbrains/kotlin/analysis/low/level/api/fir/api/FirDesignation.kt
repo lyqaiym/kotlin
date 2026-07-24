@@ -60,7 +60,7 @@ class FirDesignation(
     constructor(target: FirElementWithResolveState) : this(emptyList(), target)
 
     init {
-        for ((index, declaration) in path.withIndex()) {
+        for ([index, declaration] in path.withIndex()) {
             when (declaration) {
                 is FirFile -> requireWithAttachment(
                     index == 0,
@@ -105,7 +105,7 @@ class FirDesignation(
 
 fun ExceptionAttachmentBuilder.withFirDesignationEntry(name: String, designation: FirDesignation) {
     withEntryGroup(name) {
-        for ((index, declaration) in designation.path.withIndex()) {
+        for ([index, declaration] in designation.path.withIndex()) {
             withFirEntry("path$index", declaration)
         }
 

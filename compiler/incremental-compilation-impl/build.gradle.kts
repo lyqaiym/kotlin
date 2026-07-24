@@ -8,6 +8,9 @@ dependencies {
     implementation(project(":core:descriptors"))
     implementation(project(":core:descriptors.jvm"))
     implementation(project(":core:deserialization"))
+    implementation(project(":kotlin-util-klib-metadata"))
+    implementation(libs.intellij.asm)
+    implementation(libs.guava)
     api(project(":compiler:util"))
     implementation(project(":compiler:frontend"))
     implementation(project(":compiler:frontend.java"))
@@ -21,6 +24,7 @@ dependencies {
     api(project(":daemon-common"))
     api(project(":compiler:build-tools:kotlin-build-statistics"))
     api(project(":compiler:build-tools:kotlin-build-tools-api"))
+    implementation(project(":js:js.config"))
     compileOnly(intellijCore())
 
     testImplementation(libs.junit4)

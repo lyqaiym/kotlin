@@ -363,7 +363,7 @@ private class LLFirSupertypeComputationSession : SupertypeComputationSession() {
     override fun reportLoopErrorRefs(classLikeDeclaration: FirClassLikeDeclaration, supertypeRefs: List<FirResolvedTypeRef>) {
         updatedTypesForDeclarationsWithLoop.merge(classLikeDeclaration, supertypeRefs) { oldRefs, newRefs ->
             buildList<FirResolvedTypeRef>(oldRefs.size) {
-                for ((old, new) in oldRefs.zip(newRefs)) {
+                for ([old, new] in oldRefs.zip(newRefs)) {
                     if (old is FirErrorTypeRef) {
                         add(old)
                     } else {

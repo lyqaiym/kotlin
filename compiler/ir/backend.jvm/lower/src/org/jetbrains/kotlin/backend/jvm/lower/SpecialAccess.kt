@@ -468,7 +468,7 @@ internal class SpecialAccessLowering(
             )
         }
 
-        val (fieldLocation, instance) = fieldLocationAndReceiver(call)
+        val [fieldLocation, instance] = fieldLocationAndReceiver(call)
         return generateReflectiveFieldGet(
             fieldLocation,
             realGetter.correspondingPropertySymbol!!.owner.name.asString(),
@@ -492,7 +492,7 @@ internal class SpecialAccessLowering(
             )
         }
 
-        val (fieldLocation, receiver) = fieldLocationAndReceiver(call)
+        val [fieldLocation, receiver] = fieldLocationAndReceiver(call)
         return generateReflectiveFieldSet(
             fieldLocation,
             realSetter.correspondingPropertySymbol!!.owner.name.asString(),

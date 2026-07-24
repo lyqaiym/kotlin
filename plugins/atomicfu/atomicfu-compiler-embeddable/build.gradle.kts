@@ -1,5 +1,6 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 dependencies {

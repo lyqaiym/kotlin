@@ -228,6 +228,6 @@ var CompilerConfiguration.dontSortSourceFiles: Boolean
     get() = getBoolean(CommonConfigurationKeys.DONT_SORT_SOURCE_FILES)
     set(value) { put(CommonConfigurationKeys.DONT_SORT_SOURCE_FILES, value) }
 
-var CompilerConfiguration.perfManager: PerformanceManager?
-    get() = get(CommonConfigurationKeys.PERF_MANAGER)
-    set(value) { put(CommonConfigurationKeys.PERF_MANAGER, requireNotNull(value) { "nullable values are not allowed" }) }
+//var CompilerConfiguration.perfManager: PerformanceManager?
+//    get() = get(CommonConfigurationKeys.PERF_MANAGER)
+//    set(value) { put(CommonConfigurationKeys.PERF_MANAGER, requireNotNull(value) { "nullable values are not allowed" }) }

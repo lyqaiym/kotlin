@@ -165,7 +165,7 @@ class WasmFileCodegenContext(
     fun addClassAssociatedObjects(klass: IrClassSymbol, associatedObjectsGetters: List<AssociatedObjectBySymbols>) {
         val classAssociatedObjects = ClassAssociatedObjects(
             klass.getReferenceKey(),
-            associatedObjectsGetters.map { (obj, getter, isExternal) ->
+            associatedObjectsGetters.map { [obj, getter, isExternal] ->
                 AssociatedObject(obj.getReferenceKey(), getter.getReferenceKey(), isExternal)
             }
         )

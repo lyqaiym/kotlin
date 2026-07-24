@@ -398,8 +398,8 @@ class DeclarationGenerator(
 
         val simpleName = klass.name.asString()
 
-        val (packageNameAddress, packageNamePoolId) = wasmFileCodegenContext.referenceStringLiteralAddressAndId(qualifier)
-        val (simpleNameAddress, simpleNamePoolId) = wasmFileCodegenContext.referenceStringLiteralAddressAndId(simpleName)
+        val [packageNameAddress, packageNamePoolId] = wasmFileCodegenContext.referenceStringLiteralAddressAndId(qualifier)
+        val [simpleNameAddress, simpleNamePoolId] = wasmFileCodegenContext.referenceStringLiteralAddressAndId(simpleName)
 
         val typeInfo = ConstantDataStruct(
             elements = listOf(
@@ -547,7 +547,7 @@ fun generateConstExpression(
         is IrConstKind.Double -> body.buildConstF64(expression.value as Double, location)
         is IrConstKind.String -> {
             val stringValue = expression.value as String
-            val (literalAddress, literalPoolId) = context.referenceStringLiteralAddressAndId(stringValue)
+            val [literalAddress, literalPoolId] = context.referenceStringLiteralAddressAndId(stringValue)
             body.commentGroupStart { "const string: \"$stringValue\"" }
             body.buildConstI32Symbol(literalPoolId, location)
             body.buildConstI32Symbol(literalAddress, location)

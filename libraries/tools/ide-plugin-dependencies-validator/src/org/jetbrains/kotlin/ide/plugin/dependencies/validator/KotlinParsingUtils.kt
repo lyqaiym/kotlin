@@ -39,6 +39,7 @@ private fun Path.parseAsKtFile(project: Project): KtFile {
     return PsiFileFactoryImpl(project).createFileFromText(name, KotlinLanguage.INSTANCE, readText()) as KtFile
 }
 
+@OptIn(CompilerConfiguration.Internals::class)
 private fun createProjectForParsing(): Project {
     return KotlinCoreEnvironment.createForProduction(
         Disposer.newDisposable("Disposable for project of ${ExperimentalOptInUsageInSourceChecker::class.simpleName}"),

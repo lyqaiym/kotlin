@@ -20,6 +20,9 @@ dependencies {
     implementation(project(":compiler:backend.common.jvm"))
     implementation(project(":compiler:backend.jvm"))
     implementation(project(":compiler:backend.jvm.entrypoint"))
+    implementation(project(":compiler:container"))
+    implementation(project(":compiler:ir.psi2ir"))
+    implementation(project(":core:deserialization"))
 
     testApi(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter.api)

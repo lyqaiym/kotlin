@@ -62,7 +62,7 @@ fun IrBuilderWithScope.irDiagramString(
     return irConcat().apply {
         if (prefix != null) addArgument(prefix)
 
-        for ((row, rowSource) in rows.withIndex()) {
+        for ([row, rowSource] in rows.withIndex()) {
             addArgument(
                 irString {
                     appendLine()
@@ -77,7 +77,7 @@ fun IrBuilderWithScope.irDiagramString(
             val lineTemplate = buildString {
                 val indentations = rowValues.mapTo(hashSetOf()) { it.indent }
                 val lastIndent = rowValues.last().indent
-                for ((i, c) in rowSource.withIndex()) {
+                for ([i, c] in rowSource.withIndex()) {
                     when {
                         i in indentations -> {
                             // Add bar at indents for value display.
@@ -117,7 +117,7 @@ fun IrBuilderWithScope.irDiagramString(
 }
 
 private fun String.clearSourcePrefix(offset: Int): String = buildString {
-    for ((i, c) in this@clearSourcePrefix.withIndex()) {
+    for ([i, c] in this@clearSourcePrefix.withIndex()) {
         when {
             i >= offset -> {
                 // Append the remaining characters and exit.

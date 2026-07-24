@@ -79,7 +79,7 @@ private class FirMainClassFinder(
             )
         ) return
 
-        val (parent, grandparent) = parents
+        val [parent, grandparent] = parents
         if (parent is FirRegularClass && parent.classKind != ClassKind.OBJECT) return
 
         groupedMainFunctions.getOrPut(grandparent ?: parent, defaultValue = { mutableListOf() }).add(simpleFunction)

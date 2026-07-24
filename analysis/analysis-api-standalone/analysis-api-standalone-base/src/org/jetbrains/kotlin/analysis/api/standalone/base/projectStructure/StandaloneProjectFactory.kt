@@ -75,6 +75,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 object StandaloneProjectFactory {
+    @OptIn(CompilerConfiguration.Internals::class)
     fun createProjectEnvironment(
         projectDisposable: Disposable,
         applicationEnvironmentMode: KotlinCoreApplicationEnvironmentMode,

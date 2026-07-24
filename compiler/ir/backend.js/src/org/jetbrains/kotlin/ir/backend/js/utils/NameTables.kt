@@ -76,7 +76,7 @@ class NameTable<T>(
 }
 
 fun NameTable<IrDeclaration>.dump(): String =
-    "Names: \n" + names.toList().joinToString("\n") { (declaration, name) ->
+    "Names: \n" + names.toList().joinToString("\n") { [declaration, name] ->
         val decl: FqName? = (declaration as IrDeclarationWithName).fqNameWhenAvailable
         val declRef = decl ?: declaration
         "---  $declRef => $name"

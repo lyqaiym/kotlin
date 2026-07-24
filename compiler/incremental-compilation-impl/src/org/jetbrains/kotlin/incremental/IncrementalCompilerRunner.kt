@@ -491,7 +491,7 @@ abstract class IncrementalCompilerRunner<
 
             val lookupTracker = LookupTrackerImpl(getLookupTrackerDelegate())
             val expectActualTracker = ExpectActualTrackerImpl()
-            val (sourcesToCompile, removedKotlinSources) = dirtySources.partition { it.exists() && allKotlinSources.contains(it) }
+            val [sourcesToCompile, removedKotlinSources] = dirtySources.partition { it.exists() && allKotlinSources.contains(it) }
 
             icContext.fragmentContext?.let {
                 if (it.dirtySetTouchesNonLeafFragments(sourcesToCompile)) {
@@ -516,7 +516,7 @@ abstract class IncrementalCompilerRunner<
                     sourcesToCompile, args, caches, services, messageCollectorAdapter,
                     allKotlinSources, compilationMode is CompilationMode.Incremental
                 )
-            }.let { (ec, compiled) ->
+            }.let { [ec, compiled] ->
                 exitCode = ec
                 compiled
             }
@@ -568,7 +568,7 @@ abstract class IncrementalCompilerRunner<
                 break
             }
 
-            val (dirtyLookupSymbols, dirtyClassFqNames, forceRecompile) = changesCollector.getChangedAndImpactedSymbols(
+            val [dirtyLookupSymbols, dirtyClassFqNames, forceRecompile] = changesCollector.getChangedAndImpactedSymbols(
                 listOf(caches.platformCache),
                 reporter
             )

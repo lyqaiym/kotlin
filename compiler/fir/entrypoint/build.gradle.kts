@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
 //    //    id("jps-compatible")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 dependencies {
@@ -25,11 +26,17 @@ dependencies {
     implementation(project(":compiler:fir:fir-js"))
     implementation(project(":compiler:fir:fir-serialization"))
     implementation(project(":compiler:fir:fir2ir:jvm-backend"))
+    implementation(project(":compiler:frontend"))
     implementation(project(":compiler:ir.backend.common"))
     implementation(project(":compiler:ir.serialization.common"))
     implementation(project(":compiler:ir.serialization.jvm"))
     implementation(project(":compiler:ir.serialization.js"))
     implementation(project(":compiler:ir.tree"))
+    implementation(project(":core:descriptors"))
+    implementation(project(":core:deserialization"))
+    implementation(project(":js:js.frontend"))
+    implementation(project(":kotlin-util-klib-metadata"))
+    implementation(project(":compiler:backend-common"))
 
     compileOnly(intellijCore())
 }
@@ -38,3 +45,5 @@ sourceSets {
     "main" { projectDefault() }
     "test" { none() }
 }
+
+optInToK1Deprecation()

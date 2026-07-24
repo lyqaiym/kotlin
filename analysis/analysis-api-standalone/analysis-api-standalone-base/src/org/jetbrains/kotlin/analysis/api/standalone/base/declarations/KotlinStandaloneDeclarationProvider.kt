@@ -16,7 +16,9 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiManager
 import com.intellij.psi.SingleRootFileViewProvider
 import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.psi.stubs.ObjectStubSerializer
 import com.intellij.psi.stubs.PsiFileStub
+import com.intellij.psi.stubs.Stub
 import com.intellij.psi.stubs.StubElement
 import com.intellij.psi.stubs.StubInputStream
 import com.intellij.psi.stubs.StubOutputStream
@@ -427,6 +429,7 @@ class KotlinStandaloneDeclarationProviderFactory(
             is KotlinFunctionStubImpl -> addToFunctionMap(stub.psi)
             is KotlinPropertyStubImpl -> addToPropertyMap(stub.psi)
             is KotlinPlaceHolderStubImpl -> {
+                @Suppress("DEPRECATION")
                 if (stub.stubType == KtStubElementTypes.CLASS_BODY) {
                     stub.childrenStubs.filterIsInstance<KotlinClassOrObjectStub<*>>().forEach(::indexStub)
                 }
@@ -587,13 +590,15 @@ private fun <T : PsiElement> cloneStubRecursively(
         )
 
         is PsiFileStub -> {
-            val serializer = originalStub.type
+//            Argument type mismatch: actual type is 'PsiFileStub<T (of fun <T : PsiElement> cloneStubRecursively)>', but 'CapturedType(*) & Any' was expected.
+            @Suppress("UNCHECKED_CAST", "DEPRECATION")
+            val serializer = originalStub.type as com.intellij.psi.tree.IStubFileElementType<PsiFileStub<*>>
             serializer.serialize(originalStub, StubOutputStream(buffer, storage))
             serializer.deserialize(StubInputStream(buffer.toInputStream(), storage), copyParentStub)
         }
-
         else -> {
-            val serializer = originalStub.stubType
+            @Suppress("UNCHECKED_CAST", "DEPRECATION")
+            val serializer = originalStub.stubType as com.intellij.psi.stubs.IStubElementType<StubElement<*>, *>
             serializer.serialize(originalStub, StubOutputStream(buffer, storage))
             serializer.deserialize(StubInputStream(buffer.toInputStream(), storage), copyParentStub)
         }

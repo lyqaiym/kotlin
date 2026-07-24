@@ -72,7 +72,7 @@ fun compileToLoweredIr(
     generateTypeScriptFragment: Boolean,
     propertyLazyInitialization: Boolean,
 ): LoweredIrWithExtraArtifacts {
-    val (moduleFragment, dependencyModules, irBuiltIns, symbolTable, irLinker) = irModuleInfo
+    val [moduleFragment, dependencyModules, irBuiltIns, symbolTable, irLinker] = irModuleInfo
 
     val allModules = when (mainModule) {
         is MainModule.SourceFiles -> dependencyModules + listOf(moduleFragment)
@@ -505,7 +505,11 @@ fun generateExports(exports: List<WasmExport<*>>): String {
     val exportNames = exports
         .filterNot { it.name.startsWith(JsInteropFunctionsLowering.CALL_FUNCTION) }
 
-    val (validIdentifiers, notValidIdentifiers) = exportNames.partition { it.name.isValidES5Identifier() }
+//    :compiler:backend.wasm:compileKotlin e: org.jetbrains.kotlin.util.FileAnalysisException: While analysing /Users/linyuqiang/github/kotlin_16/compiler/ir/backend.wasm/src/org/jetbrains/kotlin/backend/wasm/wasmCompiler.kt:531:45:
+//    java.lang.IllegalStateException:
+//    Only type-variable built constraints [CapturedType(out Stub (subtyping): TypeVariable(T)), CapturedType(out Stub (subtyping): TypeVariable(T)), Stub (subtyping): TypeVariable(T)]
+//    found for TypeVariable(T)
+    val [validIdentifiers, notValidIdentifiers] = exportNames.partition { it.name.isValidES5Identifier() }
     val regularlyExportedVariables = validIdentifiers
         .ifNotEmpty {
             """

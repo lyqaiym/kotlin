@@ -121,7 +121,7 @@ internal class LLCombinedKotlinSymbolProvider private constructor(
 
         getCallables(callableId)
             .groupBy { getModule(it) }
-            .forEach { (ktModule, callables) ->
+            .forEach { [ktModule, callables] ->
                 // If `ktModule` cannot be found in the map, `callables` cannot be processed by any of the available providers, because none
                 // of them belong to the correct module. We can skip in that case, because iterating through all providers wouldn't lead to
                 // any results for `callables`.

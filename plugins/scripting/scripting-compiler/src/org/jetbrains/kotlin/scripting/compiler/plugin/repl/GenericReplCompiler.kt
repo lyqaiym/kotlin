@@ -66,7 +66,7 @@ open class GenericReplCompiler(
         state.lock.write {
             val compilerState = state.asState(GenericReplCompilerState::class.java)
 
-            val (psiFile, errorHolder) = run {
+            val [psiFile, errorHolder] = run {
                 if (compilerState.lastLineState == null || compilerState.lastLineState!!.codeLine != codeLine) {
                     val res = checker.check(state, codeLine)
                     when (res) {

@@ -63,7 +63,7 @@ class Merger(
             }
         }
 
-        for ((tag, crossModuleJsImport) in crossModuleReferences.jsImports) {
+        for ([tag, crossModuleJsImport] in crossModuleReferences.jsImports) {
             val importName = nameMap[tag] ?: error("Missing name for declaration '$tag'")
             importStatements.putIfAbsent(tag, crossModuleJsImport.renameImportedSymbolInternalName(importName))
         }
@@ -74,7 +74,7 @@ class Merger(
             val internalModuleName = ReservedJsNames.makeInternalModuleName()
 
             if (isEsModules) {
-                val exportedElements = crossModuleReferences.exports.entries.map { (tag, hash) ->
+                val exportedElements = crossModuleReferences.exports.entries.map { [tag, hash] ->
                     val internalName = nameMap[tag] ?: error("Missing name for declaration '$tag'")
                     JsExport.Element(internalName.makeRef(), JsName(hash, false))
                 }
@@ -144,8 +144,8 @@ class Merger(
     private fun declareAndCallJsExporter(): List<JsStatement> {
         if (isEsModules) {
             val allExportRelatedStatements = fragments.flatMap { it.exports.statements }
-            val (allExportStatements, restStatements) = allExportRelatedStatements.partitionIsInstance<JsStatement, JsExport>()
-            val (currentModuleExportStatements, restExportStatements) = allExportStatements.partition { it.fromModule == null }
+            val [allExportStatements, restStatements] = allExportRelatedStatements.partitionIsInstance<JsStatement, JsExport>()
+            val [currentModuleExportStatements, restExportStatements] = allExportStatements.partition { it.fromModule == null }
             val exportedElements = currentModuleExportStatements.takeIf { it.isNotEmpty() }
                 ?.asSequence()
                 ?.flatMap { (it.subject as JsExport.Subject.Elements).elements }

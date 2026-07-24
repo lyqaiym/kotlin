@@ -3,6 +3,7 @@ description = "Kotlin Power-Assert Compiler Plugin"
 plugins {
     kotlin("jvm")
     //    id("jps-compatible")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 val junit5Classpath by configurations.creating

@@ -509,7 +509,7 @@ class ExportModelGenerator(val context: JsIrBackendContext, val generateNamespac
                             .map { ExportedType.LiteralType.StringLiteralType(it) }
                             .reduceOrNull { acc: ExportedType, s: ExportedType -> ExportedType.UnionType(acc, s) } ?: return null
                         "ordinal" -> enumEntriesToOrdinal
-                            .map { (_, ordinal) -> ExportedType.LiteralType.NumberLiteralType(ordinal) }
+                            .map { [_, ordinal] -> ExportedType.LiteralType.NumberLiteralType(ordinal) }
                             .reduceOrNull { acc: ExportedType, s: ExportedType -> ExportedType.UnionType(acc, s) } ?: return null
                         else -> return null
                     }

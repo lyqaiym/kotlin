@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     implementation(project(":plugins:parcelize:parcelize-compiler:parcelize.common"))
+    implementation(project(":compiler:frontend.common-psi"))
 
     compileOnly(intellijCore())
     compileOnly(project(":compiler:fir:cones"))

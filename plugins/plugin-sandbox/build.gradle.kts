@@ -6,6 +6,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":compiler:frontend.common-psi"))
     compileOnly(project(":compiler:fir:cones"))
     compileOnly(project(":compiler:fir:tree"))
     compileOnly(project(":compiler:fir:resolve"))

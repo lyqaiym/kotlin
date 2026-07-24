@@ -27,7 +27,7 @@ class PrimitiveContainerMemberCallTransformer(private val context: JsIrBackendCo
             add(context.intrinsics.array.getFunction, context.intrinsics.jsArrayGet)
             add(context.intrinsics.array.setFunction, context.intrinsics.jsArraySet)
             add(context.intrinsics.array.iterator, context.intrinsics.jsArrayIteratorFunction)
-            for ((key, elementType) in context.intrinsics.primitiveArrays) {
+            for ([key, elementType] in context.intrinsics.primitiveArrays) {
                 add(key.sizeProperty, context.intrinsics.jsArrayLength)
                 add(key.getFunction, context.intrinsics.jsArrayGet)
                 add(key.setFunction, context.intrinsics.jsArraySet)

@@ -625,7 +625,7 @@ object CheckerTestUtil {
             }
         }
 
-        for ((diagnostic, start, end) in uncheckedDiagnostics) {
+        for ([diagnostic, start, end] in uncheckedDiagnostics) {
             val range = TextRange(start, end)
             diagnosticsGroupedByRanges.put(range, diagnostic)
         }

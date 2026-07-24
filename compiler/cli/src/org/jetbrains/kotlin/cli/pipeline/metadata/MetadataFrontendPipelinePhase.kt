@@ -50,7 +50,7 @@ object MetadataFrontendPipelinePhase : PipelinePhase<ConfigurationPipelineArtifa
     postActions = setOf(PerformanceNotifications.AnalysisFinished, CheckCompilationErrors.CheckDiagnosticCollector)
 ) {
     override fun executePhase(input: ConfigurationPipelineArtifact): MetadataFrontendPipelineArtifact {
-        val (configuration, diagnosticsReporter, rootDisposable) = input
+        val [configuration, diagnosticsReporter, rootDisposable] = input
         val messageCollector = configuration.messageCollector
         val rootModuleName = Name.special("<${configuration.moduleName!!}>")
         val isLightTree = configuration.getBoolean(CommonConfigurationKeys.USE_LIGHT_TREE)

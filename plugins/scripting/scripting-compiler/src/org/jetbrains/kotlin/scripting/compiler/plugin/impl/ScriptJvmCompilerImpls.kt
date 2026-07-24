@@ -141,7 +141,7 @@ private fun compileImpl(
 
     if (messageCollector.hasErrors()) return failure(messageCollector)
 
-    val (sourceFiles, sourceDependencies) = collectRefinedSourcesAndUpdateEnvironment(
+    val [sourceFiles, sourceDependencies] = collectRefinedSourcesAndUpdateEnvironment(
         context,
         mainKtFile,
         initialConfiguration,
@@ -397,7 +397,7 @@ private fun doCompileWithK2(
             }
         }
 
-    val (scopeSession, fir) = session.runResolution(orderedRawFir)
+    val [scopeSession, fir] = session.runResolution(orderedRawFir)
     // checkers
     session.runCheckers(scopeSession, fir, diagnosticsReporter, MppCheckerKind.Common)
     session.runCheckers(scopeSession, fir, diagnosticsReporter, MppCheckerKind.Platform)

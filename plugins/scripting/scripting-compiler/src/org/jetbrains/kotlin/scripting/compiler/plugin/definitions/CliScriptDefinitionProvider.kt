@@ -26,7 +26,7 @@ open class CliScriptDefinitionProvider : LazyScriptDefinitionProvider() {
     fun setScriptDefinitions(newDefinitions: List<ScriptDefinition>) {
         definitionsLock.withLock {
             definitions.clear()
-            val (withoutStdDef, stdDef) = newDefinitions.partition { !it.isDefault }
+            val [withoutStdDef, stdDef] = newDefinitions.partition { !it.isDefault }
             definitions.addAll(withoutStdDef)
             // TODO: consider reporting an error when several default definitions are supplied
             defaultDefinition = stdDef.firstOrNull()

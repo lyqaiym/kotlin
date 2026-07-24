@@ -7,6 +7,7 @@ import org.jetbrains.kotlin.ideaExt.idea
 
 plugins {
     kotlin("jvm")
+    id("gradle-plugin-compiler-dependency-configuration")
     //    id("jps-compatible")
 }
 

@@ -55,7 +55,7 @@ internal fun getClasspathChanges(
             val symbols = HashSet<LookupSymbol>()
             val fqNames = HashSet<FqName>()
 
-            for ((module, abiSnapshot) in abiSnapshots) {
+            for ([module, abiSnapshot] in abiSnapshots) {
                 val actualAbiSnapshot = lastBuildInfo.dependencyToAbiSnapshot[module]
                 if (actualAbiSnapshot == null) {
 
@@ -99,7 +99,7 @@ internal fun getClasspathChanges(
                         ChangesEither.Unknown(BuildAttribute.DEP_CHANGE_HISTORY_CANNOT_BE_READ)
                     }
 
-                val (knownBuilds, newBuilds) = allBuilds.partition { it.ts <= lastBuildTS }
+                val [knownBuilds, newBuilds] = allBuilds.partition { it.ts <= lastBuildTS }
                 if (knownBuilds.isEmpty()) {
                     reporter.info { "No previously known builds for $historyFile" }
                     return ChangesEither.Unknown(BuildAttribute.DEP_CHANGE_HISTORY_NO_KNOWN_BUILDS)

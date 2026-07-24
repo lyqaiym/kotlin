@@ -195,7 +195,7 @@ abstract class AbstractAtomicfuIrBuilder(
         val initializer = oldAtomicField.initializer?.expression
         return if (initializer == null) {
             // replace field initialization in the init block
-            val (initBlock, initExprWithIndex) = oldAtomicField.getInitBlockWithIndexedInitExpr(parentContainer)
+            val [initBlock, initExprWithIndex] = oldAtomicField.getInitBlockWithIndexedInitExpr(parentContainer)
             val atomicFactoryCall = initExprWithIndex.value.value
             val initExprIndex = initExprWithIndex.index
             newFieldBuilder(atomicFactoryCall).also { newField ->

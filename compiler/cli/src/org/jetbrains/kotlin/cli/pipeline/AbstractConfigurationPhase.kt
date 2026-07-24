@@ -41,6 +41,7 @@ abstract class AbstractConfigurationPhase<A : CommonCompilerArguments>(
     postActions: Set<Action<ConfigurationPipelineArtifact, PipelineContext>> = emptySet(),
     val configurationUpdaters: List<ConfigurationUpdater<A>>
 ) : PipelinePhase<ArgumentsPipelineArtifact<A>, ConfigurationPipelineArtifact>(name, preActions, postActions) {
+    @OptIn(CompilerConfiguration.Internals::class)
     override fun executePhase(input: ArgumentsPipelineArtifact<A>): ConfigurationPipelineArtifact? {
         val configuration = CompilerConfiguration()
         configuration.setupCommonConfiguration(input)
@@ -90,7 +91,7 @@ abstract class AbstractConfigurationPhase<A : CommonCompilerArguments>(
         if (!arguments.disableDefaultScriptingPlugin) {
             scriptingPluginOptions += provideCustomScriptingPluginOptions(arguments)
             val explicitScriptingPlugin =
-                extractPluginClasspathAndOptions(pluginConfigurations).any { (_, classpath, _) ->
+                extractPluginClasspathAndOptions(pluginConfigurations).any { [_, classpath, _] ->
                     classpath.any { File(it).name.startsWith(PathUtil.KOTLIN_SCRIPTING_COMPILER_PLUGIN_NAME) }
                 } || pluginClasspaths.any { File(it).name.startsWith(PathUtil.KOTLIN_SCRIPTING_COMPILER_PLUGIN_NAME) }
             val explicitOrLoadedScriptingPlugin = explicitScriptingPlugin ||

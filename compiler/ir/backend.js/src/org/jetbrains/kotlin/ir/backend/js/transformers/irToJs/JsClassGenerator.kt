@@ -540,7 +540,7 @@ class JsClassGenerator(private val irClass: IrClass, val context: JsGenerationCo
             !backendContext.incrementalCacheEnabled -> {
                 JsObjectLiteral(
                     associatedObjects
-                        .map { (key, objectGetInstanceFunction) ->
+                        .map { [key, objectGetInstanceFunction] ->
                             JsPropertyInitializer(JsIntLiteral(key.associatedObjectKey!!), objectGetInstanceFunction)
                         }
                         .toSmartList()
@@ -549,7 +549,7 @@ class JsClassGenerator(private val irClass: IrClass, val context: JsGenerationCo
             es6mode -> {
                 JsObjectLiteral(
                     associatedObjects
-                        .map { (key, objectGetInstanceFunction) ->
+                        .map { [key, objectGetInstanceFunction] ->
                             JsPropertyInitializer(
                                 JsInvocation(
                                     context.staticContext.getNameForStaticFunction(backendContext.intrinsics.getAssociatedObjectId.owner).makeRef(),
@@ -567,7 +567,7 @@ class JsClassGenerator(private val irClass: IrClass, val context: JsGenerationCo
                 JsInvocation(
                     context.staticContext.getNameForStaticFunction(backendContext.intrinsics.makeAssociatedObjectMapES5.owner).makeRef(),
                     JsArrayLiteral(
-                        associatedObjects.flatMap { (key, objectGetInstanceFunction) ->
+                        associatedObjects.flatMap { [key, objectGetInstanceFunction] ->
                             listOf(key.getClassRef(context.staticContext), objectGetInstanceFunction)
                         }.toSmartList()
                     )

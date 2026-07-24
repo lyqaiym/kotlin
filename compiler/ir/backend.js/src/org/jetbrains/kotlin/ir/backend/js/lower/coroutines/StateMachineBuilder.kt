@@ -540,7 +540,7 @@ class StateMachineBuilder(
         )
     }
 
-    private fun <E : IrExpression?> transformArguments(arguments: MutableList<E>) {
+    private inline fun <reified E : IrExpression?> transformArguments(arguments: MutableList<E>) {
         var suspendableCount = arguments.fold(0) { r, n -> if (n != null && n in suspendableNodes) r + 1 else r }
         arguments.replaceAll { arg ->
             if (arg.isPure(false)) arg else {
@@ -555,6 +555,7 @@ class StateMachineBuilder(
                     @Suppress("UNCHECKED_CAST")
                     JsIrBuilder.buildGetValue(irVar.symbol) as E
                 } else {
+//                    Cannot use 'E' as reified type parameter. Use a class instead. This will become an error in language version 2.6.
                     arg.deepCopyWithSymbols(function.owner)
                 }
             }

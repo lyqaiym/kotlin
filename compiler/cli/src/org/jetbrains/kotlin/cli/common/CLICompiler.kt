@@ -84,6 +84,7 @@ abstract class CLICompiler<A : CommonCompilerArguments> {
         return languageVersion.usesK2
     }
 
+    @OptIn(CompilerConfiguration.Internals::class)
     private fun execImpl(messageCollector: MessageCollector, services: Services, arguments: A): ExitCode {
         val shouldRunK2 = shouldRunK2(messageCollector, arguments)
         if (shouldRunK2) {
@@ -222,7 +223,7 @@ abstract class CLICompiler<A : CommonCompilerArguments> {
         if (!arguments.disableDefaultScriptingPlugin) {
             scriptingPluginOptions.addPlatformOptions(arguments)
             val explicitScriptingPlugin =
-                extractPluginClasspathAndOptions(pluginConfigurations).any { (_, classpath, _) ->
+                extractPluginClasspathAndOptions(pluginConfigurations).any { [_, classpath, _] ->
                     classpath.any { File(it).name.startsWith(PathUtil.KOTLIN_SCRIPTING_COMPILER_PLUGIN_NAME) }
                 } || pluginClasspaths.any { File(it).name.startsWith(PathUtil.KOTLIN_SCRIPTING_COMPILER_PLUGIN_NAME) }
             val explicitOrLoadedScriptingPlugin = explicitScriptingPlugin ||

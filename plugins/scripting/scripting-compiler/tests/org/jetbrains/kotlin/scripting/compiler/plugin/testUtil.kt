@@ -146,7 +146,7 @@ fun runAndCheckResults(
 
         fun checkExpectedOutputPatterns(expectedPatterns: List<String>, actualOut: List<String>) {
             assertEquals(expectedPatterns.size, actualOut.size)
-            for ((expectedPattern, actualLine) in expectedPatterns.zip(actualOut)) {
+            for ([expectedPattern, actualLine] in expectedPatterns.zip(actualOut)) {
                 assertTrue(
                     Regex(expectedPattern).matches(actualLine),
                     "line \"$actualLine\" do not match with expected pattern \"$expectedPattern\""
@@ -203,7 +203,7 @@ fun runWithK2JVMCompiler(
             expectedAllOutPatterns.size, outLines.size,
             "Expecting pattern:\n  ${expectedAllOutPatterns.joinToString("\n  ")}\nGot:\n  ${outLines.joinToString("\n  ")}"
         )
-        for ((expectedPattern, actualLine) in expectedAllOutPatterns.zip(outLines)) {
+        for ([expectedPattern, actualLine] in expectedAllOutPatterns.zip(outLines)) {
             assertTrue(
                 Regex(expectedPattern).matches(actualLine),
                 "line \"$actualLine\" do not match with expected pattern \"$expectedPattern\""

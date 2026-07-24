@@ -173,7 +173,7 @@ class JpsCompatiblePluginTasks(
             }
 
             return Element(name).apply {
-                for ((attributeName, value) in attributes) {
+                for ([attributeName, value] in attributes) {
                     setAttribute(attributeName, value)
                 }
 

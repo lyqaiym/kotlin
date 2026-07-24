@@ -13,6 +13,7 @@ dependencies {
     compileOnly(project(":compiler:fir:entrypoint"))
     compileOnly(project(":compiler:cli-common"))
 
+    implementation(project(":compiler:frontend.common-psi"))
     implementation(project(":plugins:js-plain-objects:compiler-plugin:js-plain-objects.common"))
 
     compileOnly(intellijCore())

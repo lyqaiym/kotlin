@@ -119,7 +119,7 @@ class KJvmReplCompilerWithIdeServices(hostConfiguration: ScriptingHostConfigurat
 
         updateResolutionFilterWithHistory(configuration)
 
-        val (_, errorHolder, snippetKtFile) = prepareForAnalyze(
+        val [_, errorHolder, snippetKtFile] = prepareForAnalyze(
             newSnippet,
             messageCollector,
             compilationState,
@@ -131,7 +131,7 @@ class KJvmReplCompilerWithIdeServices(hostConfiguration: ScriptingHostConfigurat
             analyzerEngine.statelessAnalyzeWithImportedScripts(snippetKtFile, emptyList(), state.getNextLineNo() + 1)
         AnalyzerWithCompilerReport.reportDiagnostics(analysisResult.diagnostics, errorHolder, renderDiagnosticName = false)
 
-        val (_, bindingContext, resolutionFacade, moduleDescriptor, resultProperty) = when (analysisResult) {
+        val [_, bindingContext, resolutionFacade, moduleDescriptor, resultProperty] = when (analysisResult) {
             is IdeLikeReplCodeAnalyzer.ReplLineAnalysisResultWithStateless.Stateless -> {
                 analysisResult
             }

@@ -13,6 +13,8 @@ kotlin {
 dependencies {
     compileOnly(commonDependency("org.jetbrains.kotlin:kotlin-reflect")) { isTransitive = false }
 
+    compileOnly(project(":core:language.model"))
+    compileOnly(project(":core:language.targets"))
     compileOnly(project(":compiler:psi"))
     implementation(project(":compiler:backend"))
     compileOnly(project(":core:compiler.common"))

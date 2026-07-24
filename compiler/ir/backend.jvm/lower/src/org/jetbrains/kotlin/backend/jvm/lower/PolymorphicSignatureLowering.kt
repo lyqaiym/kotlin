@@ -137,7 +137,7 @@ internal class PolymorphicSignatureLowering(val context: JvmBackendContext) : Ir
             copyTypeParametersFrom(function)
             dispatchReceiverParameter = function.dispatchReceiverParameter
             extensionReceiverParameter = function.extensionReceiverParameter
-            for ((i, value) in values.withIndex()) {
+            for ([i, value] in values.withIndex()) {
                 addValueParameter("\$$i", value.type, JvmLoweredDeclarationOrigin.POLYMORPHIC_SIGNATURE_INSTANTIATION)
             }
         }

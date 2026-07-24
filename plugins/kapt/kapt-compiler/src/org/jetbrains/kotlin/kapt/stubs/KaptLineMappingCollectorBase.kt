@@ -21,7 +21,7 @@ abstract class KaptLineMappingCollectorBase {
         oos.writeInt(KaptStubLineInformation.METADATA_VERSION)
 
         oos.writeInt(lineInfo.size)
-        for ((fqName, kotlinPosition) in lineInfo) {
+        for ([fqName, kotlinPosition] in lineInfo) {
             oos.writeUTF(fqName)
             oos.writeUTF(kotlinPosition.path)
             oos.writeBoolean(kotlinPosition.isRelativePath)
@@ -29,7 +29,7 @@ abstract class KaptLineMappingCollectorBase {
         }
 
         oos.writeInt(signatureInfo.size)
-        for ((javacSignature, methodDesc) in signatureInfo) {
+        for ([javacSignature, methodDesc] in signatureInfo) {
             oos.writeUTF(javacSignature)
             oos.writeUTF(methodDesc)
         }

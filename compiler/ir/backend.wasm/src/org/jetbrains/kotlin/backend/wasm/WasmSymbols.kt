@@ -200,8 +200,8 @@ class WasmSymbols(
             lessOrEqualFunByOperandType to "le",
             greaterOrEqualFunByOperandType to "ge",
             greaterFunByOperandType to "gt"
-        ).map { (typeToBuiltIn, wasmOp) ->
-            typeToBuiltIn.map { (type, builtin) ->
+        ).map { [typeToBuiltIn, wasmOp] ->
+            typeToBuiltIn.map { [type, builtin] ->
                 val wasmType = wasmPrimitiveTypeName(type)
                 val markSign = if (wasmType == "i32" || wasmType == "i64") "_s" else ""
                 builtin to getInternalFunction("wasm_${wasmType}_$wasmOp$markSign")

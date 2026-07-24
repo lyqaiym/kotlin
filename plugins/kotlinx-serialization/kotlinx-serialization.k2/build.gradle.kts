@@ -15,7 +15,8 @@ dependencies {
     compileOnly(project(":compiler:cli-common"))
 
     implementation(project(":kotlinx-serialization-compiler-plugin.common"))
-
+    implementation(project(":compiler:frontend.common-psi"))
+    implementation(project(":compiler:frontend.java"))
     compileOnly(intellijCore())
 }
 

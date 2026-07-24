@@ -20,6 +20,13 @@ description = "Contains the Kotlin compiler plugin for Compose used in Android S
 
 dependencies {
     implementation(project(":kotlin-stdlib"))
+    compileOnly(project(":compiler:serialization"))
+    compileOnly(project(":compiler:container"))
+    compileOnly(project(":compiler:resolution"))
+    compileOnly(project(":core:descriptors"))
+    compileOnly(project(":core:descriptors.jvm"))
+    compileOnly(project(":js:js.frontend"))
+    compileOnly(project(":kotlin-util-klib-metadata"))
     compileOnly(project(":compiler:frontend"))
     compileOnly(project(":compiler:backend.jvm"))
     compileOnly(project(":compiler:cli-base"))

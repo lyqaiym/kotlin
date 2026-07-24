@@ -118,7 +118,7 @@ internal class ReplSnippetsToClassesLowering(val context: IrPluginContext) : Mod
                         type = irSnippetClass.defaultType
                     }
                 )
-                implicitReceiversFieldsWithParameters.forEach { (_, param) -> add(param) }
+                implicitReceiversFieldsWithParameters.forEach { [_, param] -> add(param) }
             }
             evalFun.body =
                 context.irBuiltIns.createIrBuilder(evalFun.symbol).irBlockBody {

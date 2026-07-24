@@ -8,8 +8,10 @@ plugins {
 dependencies {
     compileOnly(project(":compiler:cli"))
     compileOnly(project(":compiler:incremental-compilation-impl"))
+    implementation(project(":js:js.config"))
     compileOnly(intellijCore())
     compileOnly(libs.intellij.fastutil)
+    compileOnly(libs.guava)
 
     runtimeOnly(commonDependency("org.jetbrains.kotlin:kotlin-reflect")) { isTransitive = false }
 

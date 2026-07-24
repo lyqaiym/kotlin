@@ -17,15 +17,20 @@ dependencies {
     // Use this dependency instead when building apart from the other modules:
     // compile "org.jetbrains.kotlin:kotlin-gradle-plugin-api:$kotlin_version"
 
-    compileOnly RepoDependencies.kotlinStdlib(project)
-    compileOnly project(':compiler')
-    compileOnly project(':compiler:plugin-api')
-    compileOnly project(':compiler:cli-common')
-    compileOnly project(':compiler:cli')
-    
+//    compileOnly RepoDependencies.kotlinStdlib(project)
+//    compileOnly project(':compiler')
+//    libraries/stdlib/build/libs/kotlin-stdlib-2.4.255-SNAPSHOT.jar!/META-INF/kotlin-stdlib-jdk7.kotlin_module Module was compiled with an incompatible version of Kotlin.
+//    The binary version of its metadata is 2.4.0, expected version is 2.2.0.
+//    compileOnly project(':compiler:plugin-api')
+//    compileOnly project(':compiler:cli-common')
+//    compileOnly project(':compiler:cli')
+    String btaBootstrapVersion = libs.versions.kotlin.for.gradle.plugins.compilation.get()
+    compileOnly("org.jetbrains.kotlin:kotlin-compiler-embeddable:$btaBootstrapVersion")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib:$btaBootstrapVersion")
+
     compileOnly gradleApi()
 
-    compileOnly project(':dependencies:intellij-core')
+//    compileOnly project(':dependencies:intellij-core')
 }
 
 GradleCommonKt.configureCommonPublicationSettingsForGradle(project, false, false)

@@ -18,9 +18,14 @@ dependencies {
     compileOnly(project(":kotlin-annotation-processing-cli"))
     compileOnly(project(":kotlin-annotation-processing-base"))
     compileOnly(project(":kotlin-annotation-processing-runtime"))
+    compileOnly(project(":core:descriptors"))
+    compileOnly(project(":core:descriptors.jvm"))
+    compileOnly(project(":compiler:backend.common.jvm"))
     compileOnly(intellijCore())
     compileOnly(toolsJarApi())
     compileOnly(libs.intellij.asm)
+    implementation(project(":compiler:container"))
+    implementation(project(":compiler:resolution"))
 
     testImplementation(intellijCore())
     testRuntimeOnly(intellijResources()) { isTransitive = false }

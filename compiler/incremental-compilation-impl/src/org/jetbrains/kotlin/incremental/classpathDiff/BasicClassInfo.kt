@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.load.kotlin.header.KotlinClassHeader
 import org.jetbrains.kotlin.load.kotlin.header.ReadKotlinClassHeaderAnnotationVisitor
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.resolve.jvm.JvmClassName
+//implementation(libs.intellij.asm)
 import org.jetbrains.org.objectweb.asm.AnnotationVisitor
 import org.jetbrains.org.objectweb.asm.ClassReader
 import org.jetbrains.org.objectweb.asm.ClassReader.SKIP_CODE

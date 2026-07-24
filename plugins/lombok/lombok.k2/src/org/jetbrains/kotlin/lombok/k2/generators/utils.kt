@@ -82,4 +82,4 @@ private fun sameSignature(a: FirFunction, b: FirFunction): Boolean {
             aSize == bSize
 }
 
-internal inline fun <A, B, C> uncurry(crossinline f: (A, B) -> C): (Pair<A, B>) -> C = { (a, b) -> f(a, b) }
+internal inline fun <A, B, C> uncurry(crossinline f: (A, B) -> C): (Pair<A, B>) -> C = { [a, b] -> f(a, b) }

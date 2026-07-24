@@ -111,7 +111,7 @@ class CompilerApiTest : KotlinIntegrationTestBase() {
     fun testHelloAppLocal() {
         val messageCollector = MessageCollectorImpl()
         val jar = tmpdir.absolutePath + File.separator + "hello.jar"
-        val (code, outputs) = compileLocally(
+        val [code, outputs] = compileLocally(
             messageCollector, K2JVMCompilerArguments::includeRuntime.cliArgument, File(getHelloAppBaseDir(), "hello.kt").absolutePath,
             K2JVMCompilerArguments::destination.cliArgument, jar, K2JVMCompilerArguments::reportOutputFiles.cliArgument
         )
@@ -136,7 +136,7 @@ class CompilerApiTest : KotlinIntegrationTestBase() {
             val jar = tmpdir.absolutePath + File.separator + "hello.jar"
 
             try {
-                val (code, outputs) = compileOnDaemon(
+                val [code, outputs] = compileOnDaemon(
                     flagFile,
                     compilerId,
                     daemonJVMOptions,
@@ -160,7 +160,7 @@ class CompilerApiTest : KotlinIntegrationTestBase() {
 
     fun testSimpleScriptLocal() {
         val messageCollector = MessageCollectorImpl()
-        val (code, outputs) = compileLocally(
+        val [code, outputs] = compileLocally(
             messageCollector,
             File(getSimpleScriptBaseDir(), "script.kts").absolutePath,
             K2JVMCompilerArguments::destination.cliArgument,
@@ -186,7 +186,7 @@ class CompilerApiTest : KotlinIntegrationTestBase() {
             val daemonJVMOptions = configureDaemonJVMOptions("D${CompilerSystemProperties.COMPILE_DAEMON_LOG_PATH_PROPERTY.property}=\"${logFile.loggerCompatiblePath}\"",
                                                              inheritMemoryLimits = false, inheritOtherJvmOptions = false, inheritAdditionalProperties = false)
             try {
-                val (code, outputs) = compileOnDaemon(
+                val [code, outputs] = compileOnDaemon(
                     flagFile,
                     compilerId,
                     daemonJVMOptions,

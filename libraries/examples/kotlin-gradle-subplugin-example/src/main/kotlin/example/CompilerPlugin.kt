@@ -16,8 +16,8 @@
 
 package example
 
-import com.intellij.mock.MockProject
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
+//import com.intellij.mock.MockProject
+//import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.compiler.plugin.*
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.CompilerConfigurationKey
@@ -47,12 +47,12 @@ public class ExampleCommandLineProcessor : CommandLineProcessor {
     }
 }
 
-@Suppress("DEPRECATION")
-public class ExampleComponentRegistrar : ComponentRegistrar {
-    public override fun registerProjectComponents(project: MockProject, configuration: CompilerConfiguration) {
-        val exampleValue = configuration.get(ExampleConfigurationKeys.EXAMPLE_KEY)
-        configuration.messageCollector.report(CompilerMessageSeverity.INFO, "Project component registration: $exampleValue")
-    }
-
-    override val supportsK2: Boolean = true
-}
+//@Suppress("DEPRECATION")
+//public class ExampleComponentRegistrar : ComponentRegistrar {
+//    public override fun registerProjectComponents(project: MockProject, configuration: CompilerConfiguration) {
+//        val exampleValue = configuration.get(ExampleConfigurationKeys.EXAMPLE_KEY)
+//        configuration.messageCollector.report(CompilerMessageSeverity.INFO, "Project component registration: $exampleValue")
+//    }
+//
+//    override val supportsK2: Boolean = true
+//}

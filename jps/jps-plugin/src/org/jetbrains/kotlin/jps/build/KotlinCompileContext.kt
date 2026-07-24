@@ -116,6 +116,7 @@ class KotlinCompileContext(val jpsContext: CompileContext) {
             }
         }
 
+        @Suppress("DEPRECATION")
         val lookupsCacheRootPath = dataPaths.getTargetDataRoot(KotlinDataContainerTarget)
         return CompositeLookupsCacheAttributesManager(lookupsCacheRootPath.toPath(), expectedLookupsCacheComponents)
     }
@@ -288,7 +289,7 @@ class KotlinCompileContext(val jpsContext: CompileContext) {
             }
         }
 
-        byKind.forEach { (kind, targets) ->
+        byKind.forEach { [kind, targets] ->
             targets.sortBy { it.module.name }
             val chunkNames = targets.map { it.chunk.presentableShortName }
             val presentableChunksListString = chunkNames.joinToReadableString()

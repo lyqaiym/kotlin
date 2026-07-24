@@ -3,9 +3,14 @@ description = "Kotlin Assignment Compiler Plugin (CLI)"
 plugins {
     kotlin("jvm")
     //    id("jps-compatible")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 dependencies {
+    implementation(project(":core:descriptors"))
+    implementation(project(":compiler:container"))
+    implementation(project(":compiler:frontend"))
+//    implementation(project(":compiler:resolution"))
     api(project(":kotlin-assignment-compiler-plugin.common"))
     api(project(":kotlin-assignment-compiler-plugin.k1"))
     api(project(":kotlin-assignment-compiler-plugin.k2"))

@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
 import org.jetbrains.kotlin.util.PerformanceManager
 import java.io.File
 
+@OptIn(CompilerConfiguration.Internals::class)
 object BuiltInsSerializer {
     fun analyzeAndSerialize(
         destDir: File,

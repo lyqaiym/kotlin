@@ -226,7 +226,7 @@ class WasmCompiledModuleFragment(
         bindUnboundSymbols()
         val canonicalFunctionTypes = bindUnboundFunctionTypes()
 
-        val (typeIds, scratchAddress) = bindTypeIds()
+        val [typeIds, scratchAddress] = bindTypeIds()
         bindScratchMemAddr(scratchAddress)
         createTryGetAssociatedObjectFunction(typeIds)
 
@@ -235,7 +235,7 @@ class WasmCompiledModuleFragment(
         bindConstantArrayDataSegmentIds(data)
         addCompileTimePerClassData(data, typeIds)
 
-        val (definedFunctions, importedFunctions) = partitionDefinedAndImportedFunctions()
+        val [definedFunctions, importedFunctions] = partitionDefinedAndImportedFunctions()
 
         val exports = mutableListOf<WasmExport<*>>()
         wasmCompiledFileFragments.flatMapTo(exports) { it.exports }
@@ -297,14 +297,14 @@ class WasmCompiledModuleFragment(
             it.jsExceptionTagIndex?.bind(jsExceptionTagIndex)
         }
 
-        val (importedTags, definedTags) = tags.partition { it.importPair != null }
+        val [importedTags, definedTags] = tags.partition { it.importPair != null }
         val importsInOrder = importedFunctions + importedTags
 
         val allFunctionTypes = canonicalFunctionTypes.values.toList() + parameterlessNoReturnFunctionType + throwableTagFuncType + jsExceptionTagFuncType
 
         // Partition out function types that can't be recursive that don't need to be put into a
         //  rec group so that they can be matched with function types from other Wasm modules.
-        val (potentiallyRecursiveFunctionTypes, nonRecursiveFunctionTypes) = allFunctionTypes.partition { it.referencesTypeDeclarations() }
+        val [potentiallyRecursiveFunctionTypes, nonRecursiveFunctionTypes] = allFunctionTypes.partition { it.referencesTypeDeclarations() }
         recGroupTypes.addAll(potentiallyRecursiveFunctionTypes)
 
         return WasmTypes(recGroupTypes, nonRecursiveFunctionTypes, importsInOrder, definedTags)
@@ -385,7 +385,7 @@ class WasmCompiledModuleFragment(
         tryGetAssociatedObject.instructions.clear()
         with(WasmExpressionBuilder(tryGetAssociatedObject.instructions)) {
             wasmCompiledFileFragments.forEach { fragment ->
-                for ((klass, associatedObjectsInstanceGetters) in fragment.classAssociatedObjectsInstanceGetters) {
+                for ([klass, associatedObjectsInstanceGetters] in fragment.classAssociatedObjectsInstanceGetters) {
                     val klassId = typeIds[klass] ?: continue // Can be removed by dce so no reflection for this
                     buildGetLocal(WasmLocal(0, "classId", WasmI32, true), serviceCodeLocation)
                     buildConstI32(klassId, serviceCodeLocation)
@@ -558,7 +558,7 @@ class WasmCompiledModuleFragment(
         var stringDataSectionStart = 0
         val stringAddressAndId = mutableMapOf<String, Pair<Int, Int>>()
         wasmCompiledFileFragments.forEach { fragment ->
-            for ((string, literalAddressSymbol) in fragment.stringLiteralAddress.unbound) {
+            for ([string, literalAddressSymbol] in fragment.stringLiteralAddress.unbound) {
                 val currentStringAddress: Int
                 val currentStringId: Int
                 val addressAndId = stringAddressAndId[string]
@@ -623,7 +623,7 @@ class WasmCompiledModuleFragment(
     private fun rebindEquivalentFunctions() {
         val equivalentFunctions = mutableMapOf<String, WasmFunction>()
         wasmCompiledFileFragments.forEach { fragment ->
-            for ((signatureString, idSignature) in fragment.equivalentFunctions) {
+            for ([signatureString, idSignature] in fragment.equivalentFunctions) {
                 val func = equivalentFunctions[signatureString]
                 if (func == null) {
                     // First occurrence of the adapter, register it (if not removed by DCE).

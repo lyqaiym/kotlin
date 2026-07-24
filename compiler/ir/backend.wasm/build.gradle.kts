@@ -20,6 +20,10 @@ dependencies {
 
     implementation(project(":wasm:wasm.frontend"))
     implementation(project(":wasm:wasm.config"))
+    implementation(project(":core:descriptors"))
+    implementation(project(":js:js.frontend"))
+    implementation(project(":js:js.serializer"))
+    implementation(project(":compiler:ir.psi2ir"))
 
     compileOnly(intellijCore())
 }

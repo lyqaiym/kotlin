@@ -91,13 +91,13 @@ private class ModuleInfo(val name: String, outputRoot: File) {
         it.mkdirs()
     }
     val errors: Map<FqName, Int> by lazy {
-        packages.mapValues { (_, packageInfo) -> packageInfo.errors.values.sum() }.withDefault { 0 }
+        packages.mapValues { [_, packageInfo] -> packageInfo.errors.values.sum() }.withDefault { 0 }
     }
     val implicits: Map<FqName, Int> by lazy {
-        packages.mapValues { (_, packageInfo) -> packageInfo.implicits.values.sum() }.withDefault { 0 }
+        packages.mapValues { [_, packageInfo] -> packageInfo.implicits.values.sum() }.withDefault { 0 }
     }
     val unresolved: Map<FqName, Int> by lazy {
-        packages.mapValues { (_, packageInfo) -> packageInfo.unresolved.values.sum() }.withDefault { 0 }
+        packages.mapValues { [_, packageInfo] -> packageInfo.unresolved.values.sum() }.withDefault { 0 }
     }
 }
 
@@ -1261,7 +1261,6 @@ class HtmlFirDump internal constructor(private var linkResolver: FirLinkResolver
                         else -> {
                             ident()
                             callDiagnostic::class.qualifiedName?.let { +it }
-                            Unit
                         }
                     }
                     br

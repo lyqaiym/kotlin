@@ -86,7 +86,7 @@ fun generateIrForKlibSerialization(
 
     sortedDependencies.map { irLinker.deserializeOnlyHeaderModule(getDescriptorByLibrary(it), it) }
 
-    val (moduleFragment, pluginContext) = psi2IrContext.generateModuleFragmentWithPlugins(
+    val [moduleFragment, pluginContext] = psi2IrContext.generateModuleFragmentWithPlugins(
         project,
         files,
         irLinker,

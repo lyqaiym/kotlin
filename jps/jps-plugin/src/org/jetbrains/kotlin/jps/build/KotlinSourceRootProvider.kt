@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.jps.model.sourceSetModules
 import java.io.File
 
 class KotlinSourceRootProvider : AdditionalRootsProviderService<JavaSourceRootDescriptor>(JavaModuleBuildTargetType.ALL_TYPES) {
+    @Suppress("DEPRECATION")
     override fun getAdditionalRoots(
         target: BuildTarget<JavaSourceRootDescriptor>,
         dataPaths: BuildDataPaths,
@@ -104,6 +105,7 @@ private val JpsModuleSourceRootType<*>.isTestsRootType
         else -> null
     }
 
+@Suppress("DEPRECATION")
 class KotlinIncludedModuleSourceRoot(
     root: File,
     target: ModuleBuildTarget,

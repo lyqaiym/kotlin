@@ -312,7 +312,7 @@ class DumpIrTreeVisitor(
         expression.dumpLabeledElementWith(data) {
             dumpTypeArguments(expression)
             val valueParameterNames = expression.getValueParameterNamesForDebug(options)
-            for ((index, value) in expression.arguments.withIndex()) {
+            for ([index, value] in expression.arguments.withIndex()) {
                 value?.accept(this, "ARG ${valueParameterNames[index]}")
             }
         }

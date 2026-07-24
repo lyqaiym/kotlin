@@ -56,7 +56,7 @@ class CreateScriptFunctionsPhase(val context: CommonBackendContext) : FileLoweri
                 initializeStatements.let {
                     if (irScript.resultProperty == null || initializeStatements.lastOrNull()?.first?.correspondingPropertySymbol != irScript.resultProperty) it
                     else it.dropLast(1)
-                }.memoryOptimizedMap { (field, expression) -> createIrSetField(field, expression) }
+                }.memoryOptimizedMap { [field, expression] -> createIrSetField(field, expression) }
             )
         }
 

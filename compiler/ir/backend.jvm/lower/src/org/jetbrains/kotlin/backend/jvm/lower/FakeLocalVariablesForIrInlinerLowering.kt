@@ -216,7 +216,7 @@ private class ScopeNumberVariableProcessor : IrVisitorVoid() {
             return super.visitVariable(declaration)
         }
 
-        val (inlinedBlock, scopeNumber) = inlinedStack.last()
+        val [inlinedBlock, scopeNumber] = inlinedStack.last()
         val newName = declaration.calculateNewName(inlinedBlock)
         declaration.name = Name.identifier(addInlineScopeInfo(newName, scopeNumber))
         super.visitVariable(declaration)

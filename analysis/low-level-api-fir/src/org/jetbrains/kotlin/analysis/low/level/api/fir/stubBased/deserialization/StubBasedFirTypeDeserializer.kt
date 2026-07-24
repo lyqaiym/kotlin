@@ -85,7 +85,7 @@ internal class StubBasedFirTypeDeserializer(
                 }
             }
 
-            for ((index, typeParameter) in typeParameters.withIndex()) {
+            for ([index, typeParameter] in typeParameters.withIndex()) {
                 val builder = builders[index]
                 builder.apply {
                     typeParameter.extendsBound?.let { bounds.add(typeRef(it)) }
@@ -280,7 +280,7 @@ internal class StubBasedFirTypeDeserializer(
     private fun KtFunctionType.isSuspend(): Boolean {
         val parent = parent as? KtElementImplStub<*>
             ?: error("Expected parent of KtTypeElement to have type KtElementImplStub<*>, but actual $parent")
-        val modifiers = parent.getStubOrPsiChildren(KtStubElementTypes.MODIFIER_LIST, KtStubElementTypes.MODIFIER_LIST.arrayFactory)
+        @Suppress("DEPRECATION") val modifiers = parent.getStubOrPsiChildren(KtStubElementTypes.MODIFIER_LIST, KtStubElementTypes.MODIFIER_LIST.arrayFactory)
         return modifiers.any { it.hasSuspendModifier() }
     }
 
@@ -366,6 +366,7 @@ internal fun KtUserType.classId(): ClassId {
     val packageFragments = mutableListOf<String>()
     val classFragments = mutableListOf<String>()
 
+    @Suppress("DEPRECATION")
     fun collectFragments(type: KtUserType) {
         val userType = type.getStubOrPsiChild(KtStubElementTypes.USER_TYPE)
         if (userType != null) {

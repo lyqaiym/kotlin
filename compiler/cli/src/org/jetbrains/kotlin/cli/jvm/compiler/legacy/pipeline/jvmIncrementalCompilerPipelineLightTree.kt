@@ -95,7 +95,7 @@ private fun FrontendContext.compileModuleToAnalyzedFirViaLightTreeIncrementally(
 
         val countFilesAndLines = if (performanceManager == null) null else performanceManager::addSourcesStats
 
-        val outputs = sessionsWithSources.map { (session, sources) ->
+        val outputs = sessionsWithSources.map { [session, sources] ->
             buildResolveAndCheckFirViaLightTree(session, sources, diagnosticsReporter, countFilesAndLines)
         }
         outputs.runPlatformCheckers(diagnosticsReporter)

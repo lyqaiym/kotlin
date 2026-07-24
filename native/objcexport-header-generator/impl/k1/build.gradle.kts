@@ -14,6 +14,9 @@ dependencies {
     implementation(project(":compiler:ir.serialization.native"))
     implementation(project(":core:descriptors"))
     implementation(project(":native:frontend.native"))
+    implementation(project(":compiler:frontend"))
+    implementation(project(":compiler:resolution"))
+    implementation(project(":kotlin-util-klib-metadata"))
 //    testImplementation(projectTests(":native:objcexport-header-generator"))
 }
 

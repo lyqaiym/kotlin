@@ -94,7 +94,7 @@ class JsSuspendFunctionWithGeneratorsLowering(private val context: JsIrBackendCo
             annotations = function.annotations
             body = functionBody.apply {
                 val valueSymbols = function.parameters.zip(parameters)
-                    .associate { (old, new) -> old.symbol to new.symbol }
+                    .associate { [old, new] -> old.symbol to new.symbol }
                 transformChildrenVoid(object : ValueRemapper(valueSymbols) {
                     override fun visitCall(expression: IrCall): IrExpression {
                         val call = super.visitCall(expression)

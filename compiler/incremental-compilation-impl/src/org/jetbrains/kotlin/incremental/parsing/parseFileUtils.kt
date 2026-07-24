@@ -38,6 +38,7 @@ fun classesFqNames(files: Set<File>): Set<String> {
     }
 }
 
+@OptIn(CompilerConfiguration.Internals::class)
 private fun classesFqNames(kotlinFiles: Collection<File>, disposable: Disposable): Set<String> {
     val config = CompilerConfiguration()
     config.put(JVMConfigurationKeys.NO_JDK, true)

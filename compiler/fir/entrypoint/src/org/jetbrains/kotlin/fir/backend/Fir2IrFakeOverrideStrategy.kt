@@ -105,8 +105,8 @@ class Fir2IrDelegatedMembersGenerationStrategy(
      */
     private val delegatedClassesInfo: Map<IrClassSymbol, Map<IrClassSymbol, IrFieldSymbol>> = when (classActualizationInfo) {
         null -> delegatedClassesInfo
-        else -> delegatedClassesInfo.mapValues { (_, map) ->
-            map.mapKeys { (classSymbol, _) ->
+        else -> delegatedClassesInfo.mapValues { [_, map] ->
+            map.mapKeys { [classSymbol, _] ->
                 val classId = classSymbol.owner.classId ?: return@mapKeys classSymbol
                 val actualizedDeclaration = classActualizationInfo.getActualWithoutExpansion(classId)?.owner ?: return@mapKeys classSymbol
                 when (actualizedDeclaration) {
@@ -136,7 +136,7 @@ class Fir2IrDelegatedMembersGenerationStrategy(
         }.let {
             // There might be a diamond of fake-overrides with a single original declaration
             // see `manyImplFromOneJavaInterfaceWithDelegation.kt` test for reference
-            it.applyIf(it.size > 1) { distinctBy { (member, _) -> member.resolveFakeOverride() } }
+            it.applyIf(it.size > 1) { distinctBy { [member, _] -> member.resolveFakeOverride() } }
         }
 
         when (matched.size) {
@@ -145,7 +145,7 @@ class Fir2IrDelegatedMembersGenerationStrategy(
             else -> {
                 errorWithAttachment("Too many suitable delegated supertypes for single delegated declaration") {
                     withEntry("delegated declaration", overridableMember.render())
-                    matched.forEach { (supertypeMember, delegateField) ->
+                    matched.forEach { [supertypeMember, delegateField] ->
                         withEntryGroup("matched delegate") {
                             withEntry("delegate field", delegateField.owner.render())
                             withEntry("supertype member", supertypeMember.render())
@@ -510,7 +510,7 @@ private fun createSupertypeSubstitutor(parentClass: IrClass, type: IrSimpleType)
             runIf(it.key.classOrFail.owner == targetClass) { it.value }
         }?.let { return it }
 
-        for ((superType, substitutor) in superTypeSubstitutors) {
+        for ([superType, substitutor] in superTypeSubstitutors) {
             val otherSubstitutor = find(superType, targetClass) ?: continue
             return IrChainedSubstitutor(substitutor, otherSubstitutor)
         }

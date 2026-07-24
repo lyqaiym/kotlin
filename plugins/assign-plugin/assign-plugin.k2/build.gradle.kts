@@ -3,10 +3,12 @@ description = "Kotlin Assignment Compiler Plugin (K2)"
 plugins {
     kotlin("jvm")
     //    id("jps-compatible")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 dependencies {
     implementation(project(":kotlin-assignment-compiler-plugin.common"))
+    implementation(project(":compiler:frontend.common-psi"))
 
     compileOnly(project(":compiler:fir:cones"))
     compileOnly(project(":compiler:fir:tree"))

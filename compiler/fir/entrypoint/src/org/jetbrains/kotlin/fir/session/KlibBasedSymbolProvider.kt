@@ -36,7 +36,7 @@ class KlibBasedSymbolProvider(
 
     override val fragmentNamesInLibraries: Map<String, List<KotlinLibrary>> by lazy {
         buildMap<String, SmartList<KotlinLibrary>> {
-            for ((library, header) in moduleHeaders) {
+            for ([library, header] in moduleHeaders) {
                 for (fragmentName in header.packageFragmentNameList) {
                     getOrPut(fragmentName) { SmartList() }
                         .add(library)
@@ -47,7 +47,7 @@ class KlibBasedSymbolProvider(
 
     override val knownPackagesInLibraries: Set<FqName> by lazy {
         buildSet<FqName> {
-            for ((_, header) in moduleHeaders) {
+            for ([_, header] in moduleHeaders) {
                 for (fragmentName in header.packageFragmentNameList) {
                     var curPackage = FqName(fragmentName)
                     while (!curPackage.isRoot) {

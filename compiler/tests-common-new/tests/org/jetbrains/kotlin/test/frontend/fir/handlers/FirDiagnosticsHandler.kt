@@ -184,7 +184,7 @@ class FirDiagnosticsHandler(testServices: TestServices) : FirAnalysisHandler(tes
 
         val diagnosedRangesToDiagnosticNames = globalMetadataInfoHandler.getExistingMetaInfosForFile(testFile)
             .groupBy(keySelector = { it.start..it.end }, valueTransform = { it.tag })
-            .mapValues { (_, value) -> value.toSet() }
+            .mapValues { [_, value] -> value.toSet() }
 
         val consumer = DebugDiagnosticConsumer(result, diagnosedRangesToDiagnosticNames)
         val shouldRenderDynamic = DiagnosticsDirectives.MARK_DYNAMIC_CALLS in module.directives

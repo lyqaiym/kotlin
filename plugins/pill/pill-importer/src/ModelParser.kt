@@ -87,7 +87,7 @@ class ModelParser(private val modulePrefix: String, private val globalExcludedDi
             }
         }
 
-        for ((sourceSetOutputDir, additionalOutputsForSourceSet) in additionalOutputs) {
+        for ([sourceSetOutputDir, additionalOutputsForSourceSet] in additionalOutputs) {
             val projectPaths = artifacts[sourceSetOutputDir] ?: error("Unknown artifact $sourceSetOutputDir")
             val newPaths = projectPaths + additionalOutputsForSourceSet.mapNotNull { artifacts[it] }.flatten()
             artifacts[sourceSetOutputDir] = newPaths.distinct()

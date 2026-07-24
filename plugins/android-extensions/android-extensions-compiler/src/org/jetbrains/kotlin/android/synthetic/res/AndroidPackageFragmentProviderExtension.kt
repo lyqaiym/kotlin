@@ -69,7 +69,7 @@ abstract class AndroidPackageFragmentProviderExtension : PackageFragmentProvider
 
         // Packages with synthetic properties
         for (variantData in moduleData.variants) {
-            for ((layoutName, layouts) in variantData.layouts) {
+            for ([layoutName, layouts] in variantData.layouts) {
                 fun createPackageFragment(fqNameString: String, forView: Boolean, isDeprecated: Boolean = false) {
                     val fqName = FqName(fqNameString)
 
@@ -144,7 +144,7 @@ class AndroidSyntheticPackageFragmentProvider(
 
     override fun getSubPackagesOf(fqName: FqName, nameFilter: (Name) -> Boolean): List<FqName> {
         return packages.asSequence()
-            .filter { (k, _) -> !k.isRoot && k.parent() == fqName }
+            .filter { [k, _] -> !k.isRoot && k.parent() == fqName }
             .mapTo(mutableListOf()) { it.key }
     }
 }

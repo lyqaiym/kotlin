@@ -1320,7 +1320,7 @@ internal fun FirQualifiedAccessExpression.addNonFatalDiagnostics(candidate: Cand
 
 private fun <K, V : Any> LinkedHashMap<out K, out V?>.filterValuesNotNull(): LinkedHashMap<K, V> {
     val result = LinkedHashMap<K, V>()
-    for ((key, value) in this) {
+    for ([key, value] in this) {
         if (value != null) {
             result[key] = value
         }

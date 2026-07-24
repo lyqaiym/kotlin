@@ -10,13 +10,13 @@ plugins {
 val compilerModules: Array<String> by rootProject.extra
 
 
-val generateTests by generator("org.jetbrains.kotlin.jps.GenerateJpsPluginTestsKt") {
-    javaLauncher.set(
-        javaToolchains.launcherFor {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        }
-    )
-}
+//val generateTests by generator("org.jetbrains.kotlin.jps.GenerateJpsPluginTestsKt") {
+//    javaLauncher.set(
+//        javaToolchains.launcherFor {
+//            languageVersion.set(JavaLanguageVersion.of(17))
+//        }
+//    )
+//}
 
 dependencies {
     compileOnly(project(":jps:jps-platform-api-signatures"))
@@ -39,8 +39,10 @@ dependencies {
 
     implementation(project(":jps:jps-common"))
     compileOnly(libs.intellij.fastutil)
+    compileOnly(intellijPlatformUtil())
     compileOnly(jpsModel())
     compileOnly(jpsBuild())
+    compileOnly(jpsBuildJavacRt())
     compileOnly(jpsModelSerialization())
     compileOnly(intellijJDom())
     testRuntimeOnly(jpsModel())
@@ -96,6 +98,8 @@ sourceSets {
     }
 }
 
+optInToK1Deprecation()
+
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
@@ -141,13 +145,14 @@ tasks.compileKotlin {
 
 testsJar {}
 
-tasks.withType<KotlinCompilationTask<*>>().configureEach {
-    @Suppress("DEPRECATION")
-    compilerOptions.apiVersion.value(KotlinVersion.KOTLIN_1_8).finalizeValueOnRead()
-    @Suppress("DEPRECATION")
-    compilerOptions.languageVersion.value(KotlinVersion.KOTLIN_1_8).finalizeValueOnRead()
-    compilerOptions.freeCompilerArgs.add("-Xsuppress-version-warnings")
-}
+//Language version 1.8 is no longer supported; use version 2.0 or greater instead.
+//tasks.withType<KotlinCompilationTask<*>>().configureEach {
+//    @Suppress("DEPRECATION")
+//    compilerOptions.apiVersion.value(KotlinVersion.KOTLIN_1_8).finalizeValueOnRead()
+//    @Suppress("DEPRECATION")
+//    compilerOptions.languageVersion.value(KotlinVersion.KOTLIN_1_8).finalizeValueOnRead()
+//    compilerOptions.freeCompilerArgs.add("-Xsuppress-version-warnings")
+//}
 
 /**
  * Dependency Security Overrides

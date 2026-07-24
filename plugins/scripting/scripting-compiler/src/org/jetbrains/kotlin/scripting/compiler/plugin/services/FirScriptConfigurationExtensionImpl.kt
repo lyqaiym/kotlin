@@ -95,7 +95,7 @@ class FirScriptConfiguratorExtensionImpl(
                     parameters.add(
                         buildProperty {
                             moduleData = session.moduleData
-                            source = this@configure.source?.fakeElement(KtFakeSourceElementKind.ScriptParameter)
+                            source = this@configure.source.fakeElement(KtFakeSourceElementKind.ScriptParameter)
                             origin = FirDeclarationOrigin.ScriptCustomization.ParameterFromBaseClass
                             // TODO: copy type parameters?
                             returnTypeRef = baseCtorParameter.returnTypeRef
@@ -123,11 +123,11 @@ class FirScriptConfiguratorExtensionImpl(
             )
         }
 
-        configuration[ScriptCompilationConfiguration.providedProperties]?.forEach { (propertyName, propertyType) ->
+        configuration[ScriptCompilationConfiguration.providedProperties]?.forEach { [propertyName, propertyType] ->
             parameters.add(
                 buildProperty {
                     moduleData = session.moduleData
-                    source = this@configure.source?.fakeElement(KtFakeSourceElementKind.ScriptParameter)
+                    source = this@configure.source.fakeElement(KtFakeSourceElementKind.ScriptParameter)
                     origin = FirDeclarationOrigin.ScriptCustomization.Parameter
                     returnTypeRef = this@configure.tryResolveOrBuildParameterTypeRefFromKotlinType(propertyType)
                     name = Name.identifier(propertyName)
@@ -143,7 +143,7 @@ class FirScriptConfiguratorExtensionImpl(
             parameters.add(
                 buildProperty {
                     moduleData = session.moduleData
-                    source = this@configure.source?.fakeElement(KtFakeSourceElementKind.ScriptParameter)
+                    source = this@configure.source.fakeElement(KtFakeSourceElementKind.ScriptParameter)
                     origin = FirDeclarationOrigin.ScriptCustomization.Parameter
                     returnTypeRef = this@configure.tryResolveOrBuildParameterTypeRefFromKotlinType(KotlinType(MutableMap::class))
                     name = Name.identifier(it)

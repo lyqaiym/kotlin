@@ -98,7 +98,7 @@ class PrepareCollectionsToExportLowering(private val context: JsIrBackendContext
     )
 
     private fun IrClass.addCompanionWithJsFactoryFunction() {
-        val (factoryMethodName, factoryMethodForTheCollectionSymbol) =
+        val [factoryMethodName, factoryMethodForTheCollectionSymbol] =
             typesToItsFactoryMethods[symbol] ?: irError("Unexpected collection") {
                 withIrEntry("this", this@addCompanionWithJsFactoryFunction)
             }

@@ -28,7 +28,7 @@ class LastSessionDaemonTest : BaseDaemonSessionTest() {
     @DisplayName("Already leased session can perform compilation")
     @Test
     fun canCompileInLastSessionMode() {
-        val (compileService, sessionId) = leaseSession(logFile = logFile)
+        val [compileService, sessionId] = leaseSession(logFile = logFile)
         sleep(DAEMON_PERIODIC_CHECK_INTERVAL_MS + 1_000)
         logFile.assertLogFileContains("Some sessions are active, waiting for them to finish")
         val testMessageCollector = MessageCollectorImpl()

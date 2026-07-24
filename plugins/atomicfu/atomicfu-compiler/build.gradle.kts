@@ -10,6 +10,7 @@ plugins {
     kotlin("jvm")
     //    id("jps-compatible")
     id("d8-configuration")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 // WARNING: Native target is host-dependent. Re-running the same build on another host OS may bring to a different result.
@@ -79,6 +80,7 @@ dependencies {
     compileOnly(project(":compiler:backend.jvm"))
     compileOnly(project(":compiler:ir.tree"))
 
+    compileOnly(project(":core:descriptors"))
     compileOnly(kotlinStdlib())
 
     testApi(projectTests(":compiler:tests-common"))

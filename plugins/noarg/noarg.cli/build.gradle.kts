@@ -3,6 +3,7 @@ description = "Kotlin NoArg Compiler Plugin (CLI)"
 plugins {
     kotlin("jvm")
     //    id("jps-compatible")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 dependencies {
@@ -10,6 +11,9 @@ dependencies {
     api(project(":kotlin-noarg-compiler-plugin.k1"))
     api(project(":kotlin-noarg-compiler-plugin.k2"))
     api(project(":kotlin-noarg-compiler-plugin.backend"))
+    implementation(project(":compiler:container"))
+    implementation(project(":compiler:frontend"))
+    implementation(project(":core:descriptors"))
     compileOnly(project(":compiler:util"))
     compileOnly(project(":compiler:plugin-api"))
     compileOnly(project(":compiler:fir:entrypoint"))
