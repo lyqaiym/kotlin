@@ -41,7 +41,8 @@ internal fun <T : BuildService<P>, P : BuildServiceParameters> Gradle.registerCl
 internal val BuildIdentifier.buildNameCompat: String
     get() = if (GradleVersion.current() >= GradleVersion.version("8.2"))
         if (buildPath == ":") ":" else buildPath.split(":").last()
-    else @Suppress("DEPRECATION") this.name
+//    else @Suppress("DEPRECATION") this.name
+    else error("can not small 8.2")
 
 
 /**
@@ -51,7 +52,8 @@ internal val BuildIdentifier.buildNameCompat: String
  */
 internal val BuildIdentifier.buildPathCompat: String
     get() = if (GradleVersion.current() >= GradleVersion.version("8.2")) buildPath
-    else @Suppress("DEPRECATION") if (name.startsWith(":")) name else ":$name"
+//    else @Suppress("DEPRECATION") if (name.startsWith(":")) name else ":$name"
+    else error("can not small 8.2")
 
 /**
  * Will return [ProjectComponentIdentifier.getBuildTreePath] for Gradle versions higher than 8.3

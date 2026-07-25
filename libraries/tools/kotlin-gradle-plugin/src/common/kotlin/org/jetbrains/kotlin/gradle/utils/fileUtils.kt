@@ -18,7 +18,7 @@ import java.nio.file.Paths
 import java.util.*
 import java.util.function.Consumer
 import kotlin.collections.map
-import kotlin.use
+//import kotlin.use
 
 /**
  * Create all possible case-sensitive permutations for given [String].
@@ -226,3 +226,29 @@ internal fun getJdkClassesRoots(home: Path, isJre: Boolean): List<File> {
 }
 
 internal val FileCollection.onlyJars: FileCollection get() = filter { it.extension == "jar" }
+
+// stdlib use function adapted AutoClosable
+internal inline fun <T : AutoCloseable?, R> T.use(block: (T) -> R): R {
+    var closed = false
+    try {
+        return block(this)
+    } catch (e: Exception) {
+        closed = true
+        try {
+            this?.close()
+        } catch (_: Exception) {
+        }
+        throw e
+    } finally {
+        if (!closed) {
+            this?.close()
+        }
+    }
+}
+
+// stdlib 'invariantSeparatorsPathString' copied for 'Path'
+internal val Path.invariantSeparatorsPathString: String
+    get() {
+        val separator = fileSystem.separator
+        return if (separator != "/") toString().replace(separator, "/") else toString()
+    }
