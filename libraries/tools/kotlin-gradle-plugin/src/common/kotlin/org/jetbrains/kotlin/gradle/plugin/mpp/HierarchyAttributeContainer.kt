@@ -15,6 +15,7 @@
 
 package org.jetbrains.kotlin.gradle.plugin.mpp
 
+import org.gradle.api.Named
 import org.gradle.api.attributes.Attribute
 import org.gradle.api.attributes.AttributeContainer
 import org.gradle.api.provider.Provider
@@ -34,6 +35,7 @@ class HierarchyAttributeContainer(
 ) : AttributeContainer {
     private val attributesMap = Collections.synchronizedMap(mutableMapOf<Attribute<*>, Any>())
     private val lazyAttributesMap = Collections.synchronizedMap(mutableMapOf<Attribute<*>, Provider<out Any>>())
+    private val otherContainerAttributes = Collections.synchronizedList(listOf<AttributeContainer>())
 
     private fun getFilteredParentAttribute(key: Attribute<*>) =
         if (parent != null && filterParentAttributes(key)) parent.getAttribute(key) else null
@@ -56,6 +58,11 @@ class HierarchyAttributeContainer(
             attributesMap.keys +
             parent?.keySet().orEmpty().toSet().filter(filterParentAttributes)
 
+    override fun <T : Named?> named(type: Class<T>, name: String): T? {
+//        return objectFactory.named(type, name)
+        return null
+    }
+
     override fun <T : Any> attribute(key: Attribute<T>, value: T): AttributeContainer {
         val checkedValue = requireNotNull(value as Any?) { "null values for attributes are not supported" }
         attributesMap[key] = checkedValue
@@ -71,6 +78,11 @@ class HierarchyAttributeContainer(
     ): AttributeContainer {
         lazyAttributesMap[key] = provider
         attributesMap.remove(key)
+        return this
+    }
+
+    override fun addAllLater(other: AttributeContainer): AttributeContainer {
+        otherContainerAttributes.add(other)
         return this
     }
 }

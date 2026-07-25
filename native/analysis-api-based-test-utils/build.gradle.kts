@@ -7,6 +7,7 @@ description = "Test utils for Analysis API-based Objective-C and Swift exports"
 
 dependencies {
     compileOnly(kotlinStdlib())
+    implementation(project(":native:kotlin-native-utils"))
 
     api(project(":analysis:analysis-api-standalone"))
     api(libs.junit.jupiter.api)

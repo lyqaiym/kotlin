@@ -19,7 +19,8 @@ import org.jetbrains.kotlin.gradle.utils.future
 
 internal object ModuleIds {
     fun fromDependency(dependency: Dependency): ModuleDependencyIdentifier = when (dependency) {
-        is ProjectDependency -> @Suppress("DEPRECATION", "DEPRECATION_ERROR") idOfRootModule(dependency.dependencyProject)
+//        is ProjectDependency -> @Suppress("DEPRECATION", "DEPRECATION_ERROR") idOfRootModule(dependency.dependencyProject)
+        is ProjectDependency -> error("can not small 8.11")
         else -> ModuleDependencyIdentifier(dependency.group, dependency.name)
     }
 

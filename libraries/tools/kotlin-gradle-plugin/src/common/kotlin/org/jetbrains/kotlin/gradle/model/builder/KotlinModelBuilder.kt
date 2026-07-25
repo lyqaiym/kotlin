@@ -72,8 +72,9 @@ class KotlinModelBuilder(private val kotlinPluginVersion: String, private val an
                 .filterIsInstance<ProjectDependency>()
                 .mapNotNull {
                     if (GradleVersion.current() < GradleVersion.version("8.11")) {
-                        @Suppress("DEPRECATION")
-                        it.dependencyProject.pathOrName()
+//                        @Suppress("DEPRECATION")
+//                        it.dependencyProject.pathOrName()
+                        error("can not small 8.11")
                     } else {
                         it.path
                     }

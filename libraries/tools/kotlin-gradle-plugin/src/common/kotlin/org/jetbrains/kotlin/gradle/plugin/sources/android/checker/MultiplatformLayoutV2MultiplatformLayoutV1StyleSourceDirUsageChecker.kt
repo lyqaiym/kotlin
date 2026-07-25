@@ -13,7 +13,8 @@ import org.jetbrains.kotlin.gradle.plugin.sources.android.KotlinAndroidSourceSet
 import org.jetbrains.kotlin.gradle.plugin.sources.android.androidSourceSetInfo
 import org.jetbrains.kotlin.gradle.plugin.sources.android.multiplatformAndroidSourceSetLayoutV1
 import org.jetbrains.kotlin.gradle.utils.*
-import kotlin.io.path.relativeTo
+import java.io.File
+//import kotlin.io.path.relativeTo
 
 /**
  * Detects and warns about usage of source directories from multiplatform layout version 1
@@ -48,9 +49,9 @@ internal object MultiplatformLayoutV2MultiplatformLayoutV1StyleSourceDirUsageChe
             diagnosticsCollector.report(
                 target.project,
                 KotlinToolingDiagnostics.SourceSetLayoutV1StyleDirUsageWarning(
-                    v1KotlinSourceDir.toPath().relativeTo(rootDirPath).toString(),
+                    (v1KotlinSourceDir.toPath() as File).relativeTo(rootDirPath as File).toString(),
                     layout.name,
-                    v2SourceDirToUse.toPath().relativeTo(rootDirPath).toString()
+                    (v2SourceDirToUse.toPath() as File).relativeTo(rootDirPath  as File).toString()
                 )
             )
         }

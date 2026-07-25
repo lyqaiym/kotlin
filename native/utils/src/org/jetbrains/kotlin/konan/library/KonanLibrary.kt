@@ -21,3 +21,6 @@ interface KonanLibrary : BitcodeLibrary, KotlinLibrary {
 
 val KonanLibrary.includedHeaders
     get() = manifestProperties.propertyList(KLIB_PROPERTY_INCLUDED_HEADERS, escapeInQuotes = true)
+
+val KotlinLibrary.supportedTargetList: List<String>
+    get() = commonizerNativeTargets?.takeIf(Collection<String>::isNotEmpty) ?: nativeTargets

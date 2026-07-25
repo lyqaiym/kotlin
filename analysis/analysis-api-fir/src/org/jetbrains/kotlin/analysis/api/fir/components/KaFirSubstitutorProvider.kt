@@ -37,7 +37,7 @@ internal class KaFirSubstitutorProvider(
             val baseFirSymbol = subClass.firSymbol
             val superFirSymbol = superClass.firSymbol
             val inheritancePath = collectInheritancePath(baseFirSymbol, superFirSymbol) ?: return null
-            val substitutors = inheritancePath.map { (type, symbol) ->
+            val substitutors = inheritancePath.map { [type, symbol] ->
                 type.substitutorForSuperType(rootModuleSession, symbol)
             }
             return when (substitutors.size) {
@@ -83,7 +83,7 @@ internal class KaFirSubstitutorProvider(
         if (mappings.isEmpty()) return KaSubstitutor.Empty(token)
 
         val firSubstitution = buildMap {
-            mappings.forEach { (ktTypeParameterSymbol, ktType) ->
+            mappings.forEach { [ktTypeParameterSymbol, ktType] ->
                 check(ktTypeParameterSymbol is KaFirTypeParameterSymbol)
                 check(ktType is KaFirType)
                 put(ktTypeParameterSymbol.firSymbol, ktType.coneType)

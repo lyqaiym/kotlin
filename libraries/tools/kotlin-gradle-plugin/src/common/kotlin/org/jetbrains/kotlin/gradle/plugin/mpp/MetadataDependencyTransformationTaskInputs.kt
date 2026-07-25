@@ -101,8 +101,9 @@ internal class MetadataDependencyTransformationTaskInputs(
                 .map { dependency ->
                     if (dependency is ProjectDependency && keepProjectDependencies) {
                         if (GradleVersion.current() < GradleVersion.version("8.11")) {
-                            @Suppress("DEPRECATION")
-                            dependency.dependencyProject.path
+//                            @Suppress("DEPRECATION")
+//                            dependency.dependencyProject.path
+                            error("can not small 8.11")
                         } else {
                             dependency.path
                         }

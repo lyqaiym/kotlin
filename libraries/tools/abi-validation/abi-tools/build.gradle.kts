@@ -34,6 +34,10 @@ dependencies {
 
     implementation(project(":kotlin-metadata-jvm"))
     implementation(project(":kotlin-compiler-embeddable"))
+    implementation(project(":kotlin-util-klib-abi"))
+
+    compileOnly(libs.intellij.asm)
+    embedded(libs.intellij.asm)
 
     implementation(libs.diff.utils)
 

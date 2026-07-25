@@ -54,20 +54,21 @@ kotlin {
 //    }
 }
 
-//registerKotlinSourceForVersionRange(
-//    GradlePluginVariant.GRADLE_MIN,
-//    GradlePluginVariant.GRADLE_82,
-//)
-//
-//registerKotlinSourceForVersionRange(
-//    GradlePluginVariant.GRADLE_MIN,
-//    GradlePluginVariant.GRADLE_86,
-//)
-//
-//registerKotlinSourceForVersionRange(
-//    GradlePluginVariant.GRADLE_MIN,
-//    GradlePluginVariant.GRADLE_811,
-//)
+
+registerKotlinSourceForVersionRange(
+    GradlePluginVariant.GRADLE_MIN,
+    GradlePluginVariant.GRADLE_82,
+)
+
+registerKotlinSourceForVersionRange(
+    GradlePluginVariant.GRADLE_MIN,
+    GradlePluginVariant.GRADLE_86,
+)
+
+registerKotlinSourceForVersionRange(
+    GradlePluginVariant.GRADLE_MIN,
+    GradlePluginVariant.GRADLE_811,
+)
 
 binaryCompatibilityValidator {
     targets.configureEach {
@@ -116,6 +117,7 @@ val unpublishedCompilerRuntimeDependencies = listOf( // TODO: remove in KT-70247
     ":core:compiler.common.jvm", // for FUS statistics parsing all the compiler arguments
     ":core:descriptors", // for `fromUIntToLong`
     ":core:util.runtime", // for stdlib extensions
+    ":core:language.version-settings", // For LanguageFeature
     ":kotlin-build-common", // for incremental compilation setup
     ":wasm:wasm.config", // for k/js task
 )
@@ -125,7 +127,7 @@ dependencies {
     commonApi(project(":kotlin-gradle-plugin-api"))
     commonApi(project(":kotlin-gradle-plugin-model"))
     commonApi(project(":libraries:tools:gradle:fus-statistics-gradle-plugin"))
-
+    api(project(":core:language.version-settings"))
     // Following two dependencies is a workaround for IDEA import to pick-up them correctly
 //    Unable to find a variant of 'project :kotlin-gradle-plugin-api' with the requested capability: 'org.jetbrains.kotlin:kotlin-gradle-plugin-api-common':
 //    - Variant 'apiElements' provides 'org.jetbrains.kotlin:kotlin-gradle-plugin-api:2.4.255-SNAPSHOT'
@@ -188,6 +190,8 @@ dependencies {
     commonCompileOnly(project(":native:swift:swift-export-standalone"))
     commonCompileOnly(libs.intellij.asm) { isTransitive = false }
 
+    commonCompileOnly(libs.develocity.gradlePluginAdapter)
+
     commonImplementation(project(":kotlin-gradle-plugin-idea"))
     commonImplementation(project(":kotlin-gradle-plugin-idea-proto"))
     commonImplementation(project(":native:kotlin-klib-commonizer-api")) // TODO: consider removing in KT-70247
@@ -208,6 +212,7 @@ dependencies {
     embedded(project(":kotlin-gradle-statistics"))
     embedded(libs.intellij.asm) { isTransitive = false }
     embedded(commonDependency("com.google.code.gson:gson")) { isTransitive = false }
+    embedded(libs.develocity.gradlePluginAdapter)
     embedded(libs.guava) { isTransitive = false }
     embedded(libs.guava.failureaccess) { isTransitive = false }
     embedded(commonDependency("org.jetbrains.teamcity:serviceMessages")) { isTransitive = false }

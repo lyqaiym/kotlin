@@ -38,17 +38,17 @@ data class NpmDependency(
 
     override fun getVersion() = version
 
-    override fun resolve(transitive: Boolean): Set<File> =
-        resolve()
+//    override fun resolve(transitive: Boolean): Set<File> =
+//        resolve()
 
     override fun getTargetComponentId(): ComponentIdentifier? = null
-    override fun resolve(): MutableSet<File> = mutableSetOf()
+//    override fun resolve(): MutableSet<File> = mutableSetOf()
 
     override fun getFiles(): FileCollection = objectFactory.fileCollection()
 
-    override fun getBuildDependencies(): TaskDependency = TaskDependency { mutableSetOf() }
+//    override fun getBuildDependencies(): TaskDependency = TaskDependency { mutableSetOf() }
 
-    override fun contentEquals(dependency: Dependency) = this == dependency
+//    override fun contentEquals(dependency: Dependency) = this == dependency
 
     override fun copy(): Dependency = this.copy(name = name)
 

@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 plugins {
     kotlin("jvm")
     //    id("jps-compatible")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 description = "Standalone Runner for Swift Export"
@@ -23,6 +24,7 @@ dependencies {
     implementation(project(":analysis:analysis-api-standalone"))
 
     implementation(project(":native:analysis-api-klib-reader"))
+    implementation(project(":native:kotlin-native-utils"))
 
     testApi(platform(libs.junit.bom))
     testRuntimeOnly(libs.junit.jupiter.engine)

@@ -170,7 +170,7 @@ class DefaultKotlinUsageContext(
         replaceWith = ReplaceWith("usageScope"),
         level = DeprecationLevel.ERROR
     )
-    override fun getUsage(): Usage = error("Usage is no longer supported. Use `usageScope`")
+//    override fun getUsage(): Usage = error("Usage is no longer supported. Use `usageScope`")
 
     override fun getName(): String = dependencyConfigurationName
 

@@ -67,6 +67,7 @@ import org.jetbrains.kotlin.cli.jvm.modules.JavaModuleGraph
 import org.jetbrains.kotlin.config.*
 import org.jetbrains.kotlin.library.KLIB_FILE_EXTENSION
 import org.jetbrains.kotlin.load.kotlin.MetadataFinderFactory
+import org.jetbrains.kotlin.load.kotlin.PackagePartProvider
 import org.jetbrains.kotlin.load.kotlin.VirtualFileFinderFactory
 import org.jetbrains.kotlin.utils.addIfNotNull
 import org.jetbrains.kotlin.utils.addToStdlib.popLast
@@ -498,7 +499,7 @@ object StandaloneProjectFactory {
     fun createPackagePartsProvider(
         libraryRoots: List<JavaRoot>,
         languageVersionSettings: LanguageVersionSettings = latestLanguageVersionSettings,
-    ): (GlobalSearchScope) -> JvmPackagePartProvider = { scope ->
+    ): (GlobalSearchScope) -> PackagePartProvider = { scope ->
         JvmPackagePartProvider(languageVersionSettings, scope).apply {
             addRoots(libraryRoots, MessageCollector.NONE)
         }

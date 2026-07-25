@@ -5,6 +5,7 @@
 
 package org.jetbrains.kotlin.gradle.plugin
 
+import com.gradle.develocity.agent.gradle.adapters.BuildScanAdapter
 import org.gradle.api.Project
 import org.gradle.api.flow.*
 import org.gradle.api.provider.ListProperty
@@ -46,7 +47,7 @@ internal abstract class StatisticsBuildFlowManager @Inject constructor(
         }
     }
 
-    fun subscribeForBuildScan(buildScan: BuildScanApi) {
+    fun subscribeForBuildScan(buildScan: BuildScanAdapter) {
         flowScope.always(
             BuildScanFlowAction::class.java
         ) { spec ->
@@ -61,7 +62,7 @@ internal class BuildScanFlowAction : FlowAction<BuildScanFlowAction.Parameters> 
         val buildMetricService: Property<BuildMetricsService>
 
         @get:Input
-        val buildScan: Property<BuildScanApi>
+        val buildScan: Property<BuildScanAdapter>
     }
 
     override fun execute(parameters: Parameters) {

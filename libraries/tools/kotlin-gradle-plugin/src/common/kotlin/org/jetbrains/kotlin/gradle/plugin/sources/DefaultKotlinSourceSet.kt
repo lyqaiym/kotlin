@@ -145,7 +145,7 @@ abstract class DefaultKotlinSourceSet @Inject constructor(
             metadataTransformation.metadataDependencyResolutionsOrEmpty
                 .associateBy { ModuleIds.fromComponent(project, it.dependency) }
 
-        return metadataDependencyResolutionByModule.mapNotNull { [groupAndName, resolution] ->
+        return metadataDependencyResolutionByModule.mapNotNull { (groupAndName, resolution) ->
             val (group, name) = groupAndName
             val dependencyIdentifier = resolution.dependency.id
             val projectPath = dependencyIdentifier.projectPathOrNull?.takeIf { dependencyIdentifier in project.currentBuild }

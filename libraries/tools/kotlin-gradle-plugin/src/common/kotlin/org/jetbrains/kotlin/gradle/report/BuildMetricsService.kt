@@ -5,6 +5,10 @@
 
 package org.jetbrains.kotlin.gradle.report
 
+import com.gradle.develocity.agent.gradle.adapters.BuildScanAdapter
+import com.gradle.develocity.agent.gradle.adapters.DevelocityAdapter
+import com.gradle.develocity.agent.gradle.adapters.develocity.DevelocityConfigurationAdapter
+import com.gradle.develocity.agent.gradle.adapters.enterprise.GradleEnterpriseExtensionAdapter
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.file.DirectoryProperty
@@ -214,23 +218,23 @@ abstract class BuildMetricsService : BuildService<BuildMetricsService.Parameters
         }
 
         private fun subscribeForTaskEvents(project: Project, buildMetricServiceProvider: Provider<BuildMetricsService>) {
-            val buildScanHolder = initBuildScanHolder(project, buildMetricServiceProvider)
-            if (buildScanHolder != null) {
-                subscribeForTaskEventsForBuildScan(project, buildMetricServiceProvider, buildScanHolder)
+            val buildScanAdapter = initBuildScanAdapter(project, buildMetricServiceProvider)
+            if (buildScanAdapter != null) {
+                subscribeForTaskEventsForBuildScan(project, buildMetricServiceProvider, buildScanAdapter)
             }
 
             val gradle80withBuildScanReport =
-                GradleVersion.current().baseVersion == GradleVersion.version("8.0") && buildScanHolder != null
+                GradleVersion.current().baseVersion == GradleVersion.version("8.0") && buildScanAdapter != null
 
             if (!gradle80withBuildScanReport) {
                 BuildEventsListenerRegistryHolder.getInstance(project).listenerRegistry.onTaskCompletion(buildMetricServiceProvider)
             }
         }
 
-        private fun initBuildScanHolder(
+        private fun initBuildScanAdapter(
             project: Project,
             buildMetricServiceProvider: Provider<BuildMetricsService>,
-        ): BuildScanApi? {
+        ): BuildScanAdapter? {
             buildMetricServiceProvider.get().parameters.reportingSettings.orNull?.buildScanReportSettings ?: return null
 
             val rootProject = if (project.isProjectIsolationEnabled) {
@@ -239,9 +243,11 @@ abstract class BuildMetricsService : BuildService<BuildMetricsService.Parameters
                 project.rootProject
             }
 
-            val buildScan =
-                rootProject.extensions.findByName("develocity")?.let { DevelocityPluginBuildScanWrapper(it) }
-                ?: rootProject.extensions.findByName("buildScan")?.let { BuildScanExtensionHolder(it) }
+            val develocityAdapters: DevelocityAdapter? =
+                rootProject.extensions.findByName("develocity")?.let { DevelocityConfigurationAdapter(it) }
+                    ?: rootProject.extensions.findByName("gradleEnterprise")?.let { GradleEnterpriseExtensionAdapter(it) }
+
+            val buildScan = develocityAdapters?.buildScan
 
             when {
                 buildScan == null && project.isProjectIsolationEnabled ->
@@ -260,24 +266,24 @@ abstract class BuildMetricsService : BuildService<BuildMetricsService.Parameters
         private fun subscribeForTaskEventsForBuildScan(
             project: Project,
             buildMetricServiceProvider: Provider<BuildMetricsService>,
-            buildScanHolder: BuildScanApi,
+            buildScanAdapter: BuildScanAdapter,
         ) {
             when {
                 GradleVersion.current().baseVersion < GradleVersion.version("8.0") -> {
-                    buildScanHolder.buildFinished {
-                        buildMetricServiceProvider.map { it.addBuildScanReport(buildScanHolder) }.get()
+                    buildScanAdapter.buildFinished {
+                        buildMetricServiceProvider.map { it.addBuildScanReport(buildScanAdapter) }.get()
                     }
                 }
                 GradleVersion.current().baseVersion < GradleVersion.version("8.1") -> {
                     val buildMetricService = buildMetricServiceProvider.get()
-                    buildMetricService.buildReportService.initBuildScanTags(buildScanHolder, buildMetricService.parameters.label.orNull)
+                    buildMetricService.buildReportService.initBuildScanTags(buildScanAdapter, buildMetricService.parameters.label.orNull)
                     BuildEventsListenerRegistryHolder.getInstance(project).listenerRegistry.onTaskCompletion(project.provider {
                         OperationCompletionListener { event ->
                             if (event is TaskFinishEvent) {
                                 val buildOperation = buildMetricService.updateBuildOperationRecord(event)
                                 val buildParameters = buildMetricService.parameters.toBuildReportParameters()
                                 val buildReportService = buildMetricServiceProvider.map { it.buildReportService }.get()
-                                buildReportService.addBuildScanReport(event, buildOperation, buildParameters, buildScanHolder)
+                                buildReportService.addBuildScanReport(event, buildOperation, buildParameters, buildScanAdapter)
                                 buildReportService.onFinish(event, buildOperation, buildParameters)
                             }
                         }
@@ -285,7 +291,7 @@ abstract class BuildMetricsService : BuildService<BuildMetricsService.Parameters
                     })
                 }
                 else -> {
-                    StatisticsBuildFlowManager.getInstance(project).subscribeForBuildScan(buildScanHolder)
+                    StatisticsBuildFlowManager.getInstance(project).subscribeForBuildScan(buildScanAdapter)
                 }
             }
         }
@@ -317,7 +323,7 @@ abstract class BuildMetricsService : BuildService<BuildMetricsService.Parameters
         }
     }
 
-    internal fun addBuildScanReport(buildScan: BuildScanApi?) {
+    internal fun addBuildScanReport(buildScan: BuildScanAdapter?) {
         if (buildScan == null) return
         buildReportService.initBuildScanTags(buildScan, parameters.label.orNull)
         buildReportService.addBuildScanReport(buildOperationRecords, parameters.toBuildReportParameters(), buildScan)

@@ -321,8 +321,8 @@ internal abstract class DefaultKotlinJvmBinariesDsl @Inject constructor(
             if (GradleVersion.current() >= GradleVersion.version("8.3")) {
                 binChildSpec.filePermissions { it.unix("rwxr-xr-x") }
             } else {
-                @Suppress("DEPRECATION")
-                binChildSpec.fileMode = 0b111_101_101 // rwxr-xr-x
+//                @Suppress("DEPRECATION")
+//                binChildSpec.fileMode = 0b111_101_101 // rwxr-xr-x
             }
 
             val childSpec = project.copySpec()

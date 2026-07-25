@@ -11,6 +11,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.Application
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.concurrency.AppExecutorUtil
@@ -45,6 +46,7 @@ import org.jetbrains.kotlin.analysis.project.structure.builder.buildProjectStruc
 import org.jetbrains.kotlin.analysis.project.structure.impl.buildKtModuleProviderByCompilerConfiguration
 import org.jetbrains.kotlin.analysis.project.structure.impl.getPsiFilesFromPaths
 import org.jetbrains.kotlin.analysis.project.structure.impl.getSourceFilePaths
+import org.jetbrains.kotlin.cli.jvm.compiler.JvmPackagePartProvider
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreApplicationEnvironmentMode
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreProjectEnvironment
 import org.jetbrains.kotlin.cli.jvm.compiler.setupIdeaStandaloneExecution
@@ -197,7 +199,7 @@ public class StandaloneAnalysisAPISessionBuilder(
             kotlinCoreProjectEnvironment.environment,
         )
 
-        val createPackagePartProvider = StandaloneProjectFactory.createPackagePartsProvider(libraryRoots)
+        val createPackagePartProvider: (GlobalSearchScope) -> PackagePartProvider = StandaloneProjectFactory.createPackagePartsProvider(libraryRoots)
         registerProjectServices(sourceKtFiles, createPackagePartProvider)
 
         return StandaloneAnalysisAPISession(kotlinCoreProjectEnvironment) {

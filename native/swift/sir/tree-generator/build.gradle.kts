@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm")
     //    id("jps-compatible")
     application
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 val runtimeOnly by configurations

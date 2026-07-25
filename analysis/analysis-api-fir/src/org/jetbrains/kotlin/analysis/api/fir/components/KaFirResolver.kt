@@ -486,7 +486,7 @@ internal class KaFirResolver(
 
         val typeMapping = typeArgumentMapping as? TypeArgumentMapping.Mapped
         return buildMap {
-            for ((index, parameterSymbol) in typeParameters.withIndex()) {
+            for ([index, parameterSymbol] in typeParameters.withIndex()) {
                 val explicitTypeArgument = typeMapping?.get(index) as? FirTypeProjectionWithVariance
                 if (explicitTypeArgument != null) {
                     put(parameterSymbol, explicitTypeArgument.typeRef.coneType)
@@ -1152,7 +1152,7 @@ internal class KaFirResolver(
         if (typeArguments.size != typeParameters.size) return emptyMap()
 
         return buildMap(typeArguments.size) {
-            for ((index, projection) in typeArguments.withIndex()) {
+            for ([index, projection] in typeArguments.withIndex()) {
                 if (projection !is ConeKotlinType) return emptyMap()
                 put(typeParameters[index], projection)
             }
@@ -1177,7 +1177,7 @@ internal class KaFirResolver(
 
         val result = mutableMapOf<FirTypeParameterSymbol, ConeKotlinType>()
 
-        for ((index, typeParameter) in typeParameters.withIndex()) {
+        for ([index, typeParameter] in typeParameters.withIndex()) {
             // After resolution all type arguments should be usual types (not FirPlaceholderProjection)
             val typeArgument = typeArguments[index]
             if (typeArgument !is FirTypeProjectionWithVariance || typeArgument.variance != Variance.INVARIANT) return emptyMap()
@@ -1547,7 +1547,7 @@ internal class KaFirResolver(
         }
 
         val ktArgumentMapping = LinkedHashMap<KtExpression, KaVariableSignature<KaValueParameterSymbol>>(size)
-        this.forEach { (firExpression, firValueParameter) ->
+        this.forEach { [firExpression, firValueParameter] ->
             val parameterSymbol = paramSignatureByName[firValueParameter.name] ?: return@forEach
             mapArgumentExpressionToParameter(firExpression, parameterSymbol, ktArgumentMapping)
         }

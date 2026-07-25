@@ -68,8 +68,13 @@ publish()
 
 noDefaultJar()
 
+//Execution failed for task ':kotlin-main-kts:relocatedJar' (registered in build file 'libraries/tools/kotlin-main-kts/build.gradle.kts').
+//> Cannot expand ZIP '/Users/linyuqiang/github/kotlin_16/libraries/tools/kotlin-main-kts/build/classes/java/main' as it does not exist.
+val embeddedConfiguration = configurations.named("embedded")
 val relocatedJar by task<ShadowJar> {
-    configurations = listOf(relocatedJarContents)
+//    configurations = listOf(relocatedJarContents)
+    configurations.set(setOf(embeddedConfiguration.get()))
+    from(mainSourceSet.output)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     destinationDirectory.set(layout.buildDirectory.dir("libs"))
     archiveClassifier.set("before-proguard")

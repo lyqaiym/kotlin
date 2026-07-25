@@ -900,7 +900,7 @@ private class ElementsToShortenCollector(
         val allClassIds = wholeQualifierClassId.outerClassesWithSelf
         val allQualifiedElements = wholeQualifierElement.qualifiedElementsWithSelf
 
-        for ((classId, element) in allClassIds.zip(allQualifiedElements)) {
+        for ([classId, element] in allClassIds.zip(allQualifiedElements)) {
             if (!element.inSelection) continue
 
             shortenClassifierQualifier(positionScopes, classId, element)?.let { return it }

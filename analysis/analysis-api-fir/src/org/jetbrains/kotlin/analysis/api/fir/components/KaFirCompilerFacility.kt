@@ -198,7 +198,7 @@ internal class KaFirCompilerFacility(
 
         val registeredCodeProviders = ArrayList<CompiledCodeProvider>()
 
-        for ((module, chunk) in chunks) {
+        for ([module, chunk] in chunks) {
             ProgressManager.checkCanceled()
 
             val mainFile = chunk.mainFile
@@ -285,7 +285,7 @@ internal class KaFirCompilerFacility(
         compilationPeerData: CompilationPeerData,
         codeFragmentMappings: CodeFragmentMappings?
     ): Map<KaModule, ChunkToCompile> {
-        for ((module, files) in compilationPeerData.peers) {
+        for ([module, files] in compilationPeerData.peers) {
             for (file in files) {
                 chunkRegistrar.submit(file, module)
             }
@@ -476,7 +476,7 @@ internal class KaFirCompilerFacility(
             }
 
             fun process(entries: List<Map.Entry<ChunkSpec, Set<KtFile>>>) {
-                for ((spec, files) in entries) {
+                for ([spec, files] in entries) {
                     if (spec.isDanglingChild) {
                         // Creation of the new dangling file module is explicitly requested.
                         appendDanglingChunk(spec, files.toList())
@@ -617,7 +617,7 @@ internal class KaFirCompilerFacility(
             if (codeFragmentMappings != null) {
                 addAll(codeFragmentMappings.capturedValues)
             }
-            for ((_, _, descriptor) in generationState.newFragmentCaptureParameters) {
+            for ([_, _, descriptor] in generationState.newFragmentCaptureParameters) {
                 if (descriptor is IrBasedDeclarationDescriptor<*>) {
                     addIfNotNull(computeAdditionalCodeFragmentMapping(descriptor))
                 }

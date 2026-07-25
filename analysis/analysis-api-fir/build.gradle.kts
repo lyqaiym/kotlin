@@ -6,6 +6,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":core:descriptors"))
     api(project(":compiler:psi"))
     api(project(":compiler:fir:fir2ir"))
     api(project(":compiler:ir.tree"))
@@ -13,6 +14,9 @@ dependencies {
     api(project(":compiler:fir:providers"))
     api(project(":compiler:fir:semantics"))
     api(project(":compiler:fir:checkers"))
+    implementation(project(":compiler:frontend"))
+    implementation(project(":js:js.frontend"))
+    implementation(project(":wasm:wasm.config"))
     api(project(":compiler:fir:checkers:checkers.jvm"))
     api(project(":compiler:fir:checkers:checkers.js"))
     api(project(":compiler:fir:checkers:checkers.native"))
@@ -33,6 +37,10 @@ dependencies {
     implementation(project(":analysis:analysis-internal-utils"))
     implementation(project(":analysis:kt-references"))
     implementation(project(":analysis:symbol-light-classes"))
+    implementation(project(":native:frontend.native"))
+    implementation(project(":wasm:wasm.frontend"))
+    implementation(project(":compiler:ir.psi2ir"))
+    implementation(project(":compiler:frontend.java"))
     implementation(libs.caffeine)
     implementation(libs.opentelemetry.api)
 

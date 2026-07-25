@@ -2,9 +2,9 @@ plugins {
     kotlin("jvm")
 }
 
-sourceSets {
-    "main" { java.srcDirs("main") }
-}
+//sourceSets {
+//    "main" { java.srcDirs("main") }
+//}
 
 dependencies {
     implementation(projectTests(":native:swift:sir-compiler-bridge"))
@@ -20,4 +20,4 @@ dependencies {
     runtimeOnly(libs.junit.jupiter.api)
 }
 
-val generateTests by generator("org.jetbrains.kotlin.generators.tests.native.swift.sir.GenerateSirTestsKt")
+//val generateTests by generator("org.jetbrains.kotlin.generators.tests.native.swift.sir.GenerateSirTestsKt")

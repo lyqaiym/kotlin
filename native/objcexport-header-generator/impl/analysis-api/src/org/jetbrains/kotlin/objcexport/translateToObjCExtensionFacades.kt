@@ -33,7 +33,7 @@ internal fun ObjCExportContext.translateToObjCExtensionFacades(files: List<KtObj
     return files
         .flatMap { file -> translateToObjCExtensionFacades(with(file) { analysisSession.resolve() }).entries }
         .groupBy({ it.key }, { it.value })
-        .mapValues { (_, facades) ->
+        .mapValues { [_, facades] ->
             mergeExtensionFacades(facades.first().name, facades) //all facades has the same name, so just pick first one
         }
 }

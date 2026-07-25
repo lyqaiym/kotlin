@@ -170,7 +170,7 @@ internal class KaFirExpressionTypeProvider(
             ?.createConeSubstitutorFromTypeArguments(rootModuleSession, discardErrorTypes = !substituteWithErrorTypes)
             ?: ConeSubstitutor.Empty
 
-        return resolvedArgumentMapping?.mapValuesTo(LinkedHashMap()) { (_, parameter) ->
+        return resolvedArgumentMapping?.mapValuesTo(LinkedHashMap()) { [_, parameter] ->
             SubstitutedValueParameter(parameter, substitutor.substituteOrSelf(parameter.returnTypeRef.coneType))
         }
     }

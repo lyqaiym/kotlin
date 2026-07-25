@@ -3,6 +3,8 @@ description = "Kotlin AllOpen Compiler Plugin"
 plugins {
     kotlin("jvm")
 //    id("jps-compatible")
+    //  The binary version of its metadata is 2.4.0, expected version is 2.2.0.
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 dependencies {

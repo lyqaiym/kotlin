@@ -16,5 +16,5 @@ dependencies {
 }
 
 sourceSets {
-    "main" { projectDefault() }
+    "main" { none() }
 }

@@ -4288,9 +4288,9 @@ internal val KT_DIAGNOSTIC_CONVERTER = KaDiagnosticConverterBuilder.buildConvert
     add(FirErrors.ACTUAL_WITHOUT_EXPECT) { firDiagnostic ->
         ActualWithoutExpectImpl(
             firSymbolBuilder.buildSymbol(firDiagnostic.a),
-            firDiagnostic.b.mapKeys { (expectActualCompatibility, _) ->
+            firDiagnostic.b.mapKeys { [expectActualCompatibility, _] ->
                 expectActualCompatibility
-            }.mapValues { (_, collection) -> 
+            }.mapValues { [_, collection] ->
                 collection.map { firBasedSymbol ->
                                     firSymbolBuilder.buildSymbol(firBasedSymbol)
                                 }
@@ -4313,9 +4313,9 @@ internal val KT_DIAGNOSTIC_CONVERTER = KaDiagnosticConverterBuilder.buildConvert
         NoActualClassMemberForExpectedClassImpl(
             firSymbolBuilder.buildSymbol(firDiagnostic.a),
             firDiagnostic.b.map { pair ->
-                firSymbolBuilder.buildSymbol(pair.first) to pair.second.mapKeys { (mismatchOrIncompatible, _) ->
+                firSymbolBuilder.buildSymbol(pair.first) to pair.second.mapKeys { [mismatchOrIncompatible, _] ->
                                     mismatchOrIncompatible
-                                }.mapValues { (_, collection) -> 
+                                }.mapValues { [_, collection] ->
                                     collection.map { firBasedSymbol ->
                                                             firSymbolBuilder.buildSymbol(firBasedSymbol)
                                                         }

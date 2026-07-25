@@ -3,6 +3,7 @@ description = "Kotlin AllOpen Compiler Plugin (K2)"
 plugins {
     kotlin("jvm")
 //    id("jps-compatible")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 dependencies {

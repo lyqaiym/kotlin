@@ -131,7 +131,7 @@ abstract class AbstractKotlinTarget(
                 @Suppress("DEPRECATION_ERROR")
                 producingCompilation is KotlinCompilationToRunnableFiles
             }
-        ).mapTo(mutableSetOf()) { [mavenScope, dependenciesConfigurationName] ->
+        ).mapTo(mutableSetOf()) { (mavenScope, dependenciesConfigurationName) ->
             DefaultKotlinUsageContext(
                 producingCompilation,
                 mavenScope,

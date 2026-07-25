@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     //    id("jps-compatible")
+    id("gradle-plugin-compiler-dependency-configuration")
 }
 
 description = "Implementation of SwiftIR backed by Analysis API"

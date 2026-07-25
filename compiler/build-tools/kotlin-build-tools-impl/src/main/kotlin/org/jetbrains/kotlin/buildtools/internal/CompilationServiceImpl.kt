@@ -246,7 +246,7 @@ internal object CompilationServiceImpl : CompilationService {
             }
         }
 
-        val (daemon, sessionId) = KotlinCompilerRunnerUtils.newDaemonConnection(
+        val [daemon, sessionId] = KotlinCompilerRunnerUtils.newDaemonConnection(
             compilerId,
             clientIsAliveFile,
             sessionIsAliveFlagFile,
