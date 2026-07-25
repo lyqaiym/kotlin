@@ -147,7 +147,7 @@ class KotlinCompilationNpmResolver(
         all.attributes.setAttribute(Usage.USAGE_ATTRIBUTE, KotlinUsages.consumerRuntimeUsage(target))
         all.attributes.setAttribute(Category.CATEGORY_ATTRIBUTE, project.categoryByName(Category.LIBRARY))
         all.attributes.setAttribute(publicPackageJsonAttribute, PUBLIC_PACKAGE_JSON_ATTR_VALUE)
-        all.isVisible = false
+//        all.isVisible = false
         all.description = "NPM configuration for $compilation."
 
         KotlinDependencyScope.values().forEach { scope ->
@@ -172,7 +172,7 @@ class KotlinCompilationNpmResolver(
         all.attributes.setAttribute(Usage.USAGE_ATTRIBUTE, KotlinUsages.consumerRuntimeUsage(target))
         all.attributes.setAttribute(Category.CATEGORY_ATTRIBUTE, project.categoryByName(Category.LIBRARY))
         all.attributes.setAttribute(publicPackageJsonAttribute, PUBLIC_PACKAGE_JSON_ATTR_VALUE)
-        all.isVisible = false
+//        all.isVisible = false
 
         return all
     }

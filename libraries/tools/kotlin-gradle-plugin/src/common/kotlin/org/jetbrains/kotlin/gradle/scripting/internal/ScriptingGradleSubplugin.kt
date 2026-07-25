@@ -47,7 +47,7 @@ class ScriptingGradleSubplugin : Plugin<Project> {
         fun configureForSourceSet(project: Project, sourceSetName: String) {
             val discoveryConfiguration = project.configurations
                 .maybeCreateDependencyScope(getDiscoveryClasspathConfigurationName(sourceSetName)) {
-                    isVisible = false
+//                    isVisible = false
                     description = "Script filename extensions discovery classpath configuration"
                 }
             project.logger.info("$SCRIPTING_LOG_PREFIX created the scripting discovery configuration: ${discoveryConfiguration.name}")

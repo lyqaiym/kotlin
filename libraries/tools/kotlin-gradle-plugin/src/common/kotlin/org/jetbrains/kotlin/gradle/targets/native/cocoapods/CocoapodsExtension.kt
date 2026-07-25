@@ -128,6 +128,7 @@ abstract class CocoapodsExtension @Inject constructor(private val project: Proje
 
     internal val specRepos = SpecRepos()
 
+    @Suppress("DEPRECATION")
     private val _pods = project.container(CocoapodsDependency::class.java)
 
     val podsAsTaskInput: List<CocoapodsDependency>

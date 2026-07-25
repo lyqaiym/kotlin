@@ -45,6 +45,7 @@ abstract class KotlinAndroidTarget @Inject constructor(
     override val platformType: KotlinPlatformType
         get() = KotlinPlatformType.androidJvm
 
+    @Suppress("DEPRECATION")
     override val compilations: NamedDomainObjectContainer<out KotlinJvmAndroidCompilation> =
         project.container(KotlinJvmAndroidCompilation::class.java)
 
@@ -306,7 +307,7 @@ abstract class KotlinAndroidTarget @Inject constructor(
             ?: error("Configuration $apiElementsConfigurationName was not found")
         return project.configurations.createConsumable(sourcesElementsConfigurationName).apply {
             description = "Source files of Android ${variantName}."
-            isVisible = false
+//            isVisible = false
 
             apiElementsConfiguration.copyAttributesTo(project.providers, dest = this)
             configureSourcesPublicationAttributes(this@KotlinAndroidTarget)

@@ -39,6 +39,7 @@ abstract class KotlinNativeBinaryContainer @Inject constructor(
         get() = target.compilations.getByName(KotlinCompilation.TEST_COMPILATION_NAME)
 
     private val nameToBinary = mutableMapOf<String, NativeBinary>()
+    @Suppress("DEPRECATION")
     internal val prefixGroups: NamedDomainObjectSet<PrefixGroup> = project.container(PrefixGroup::class.java)
 
     // region DSL getters.

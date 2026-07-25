@@ -288,6 +288,7 @@ abstract class KotlinJsProjectExtension(project: Project) :
     @Deprecated("Use js instead. Scheduled for removal in Kotlin 2.3.", ReplaceWith("js(body)"), level = DeprecationLevel.ERROR)
     open fun target(body: KotlinJsTargetDsl.() -> Unit) = js(body)
 
+    @Suppress("DEPRECATION")
     @Deprecated(
         "Needed for IDE import using the MPP import mechanism",
         level = DeprecationLevel.HIDDEN

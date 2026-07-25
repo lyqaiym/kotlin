@@ -82,7 +82,7 @@ abstract class DefaultKotlinBasePlugin : KotlinBasePlugin {
         addKotlinCompilerConfiguration(project)
 
         project.configurations.maybeCreateResolvable(PLUGIN_CLASSPATH_CONFIGURATION_NAME).apply {
-            isVisible = false
+//            isVisible = false
             addGradlePluginMetadataAttributes(project)
         }
 
@@ -204,7 +204,7 @@ abstract class KotlinBasePluginWrapper : DefaultKotlinBasePlugin() {
         project.logger.info("Using Kotlin Gradle Plugin $pluginVariant variant")
 
         project.configurations.maybeCreateResolvable(NATIVE_COMPILER_PLUGIN_CLASSPATH_CONFIGURATION_NAME).apply {
-            isVisible = false
+//            isVisible = false
             isTransitive = false
             addGradlePluginMetadataAttributes(project)
         }

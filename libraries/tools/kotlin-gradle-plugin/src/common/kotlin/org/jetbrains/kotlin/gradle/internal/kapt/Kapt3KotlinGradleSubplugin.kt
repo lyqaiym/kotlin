@@ -255,7 +255,7 @@ class Kapt3GradleSubplugin @Inject internal constructor(private val registry: To
 
         val kaptClasspathConfiguration = project.configurations.createResolvable("kaptClasspath_$taskName")
             .setExtendsFrom(kaptClasspathConfigurations).also {
-                it.isVisible = false
+//                it.isVisible = false
             }
         taskConfigAction.configureTaskProvider { taskProvider ->
             taskProvider.dependsOn(generateStubsTask)

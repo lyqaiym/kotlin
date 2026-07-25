@@ -100,6 +100,7 @@ internal class ExternalKotlinTargetImpl internal constructor(
         setOf(ExternalKotlinTargetSoftwareComponent(this))
     }
 
+    @Suppress("DEPRECATION")
     override val compilations: NamedDomainObjectContainer<DecoratedExternalKotlinCompilation> by lazy {
         project.container(DecoratedExternalKotlinCompilation::class.java)
     }

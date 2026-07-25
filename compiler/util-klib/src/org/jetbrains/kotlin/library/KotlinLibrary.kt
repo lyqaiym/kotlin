@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.library
 import org.jetbrains.kotlin.konan.file.File
 import org.jetbrains.kotlin.konan.properties.Properties
 import org.jetbrains.kotlin.konan.properties.propertyList
+import org.jetbrains.kotlin.library.components.ir
 import org.jetbrains.kotlin.library.impl.BuiltInsPlatform
 import org.jetbrains.kotlin.metadata.deserialization.BinaryVersion
 import org.jetbrains.kotlin.metadata.deserialization.MetadataVersion
@@ -84,6 +85,15 @@ interface BaseKotlinLibrary {
     val manifestProperties: Properties
 }
 
+interface BaseKotlinLibraryNew {
+    /** This is the obsolete but still supported way to get the library "location". Please use [Klib.location] instead. */
+    val libraryFile: File
+
+    val versions: KotlinLibraryVersioning
+
+    val manifestProperties: Properties
+}
+
 interface MetadataLibrary {
     val moduleHeaderData: ByteArray
     fun packageMetadataParts(fqName: String): Set<String>
@@ -114,13 +124,35 @@ interface IrLibrary {
 val BaseKotlinLibrary.isNativeStdlib: Boolean
     get() = uniqueName == KOTLIN_NATIVE_STDLIB_NAME && builtInsPlatform == BuiltInsPlatform.NATIVE
 
+val BaseKotlinLibraryNew.isNativeStdlib: Boolean
+    get() = uniqueName == KOTLIN_NATIVE_STDLIB_NAME && builtInsPlatform == BuiltInsPlatform.NATIVE
+
+
 val BaseKotlinLibrary.isJsStdlib: Boolean
+    get() = uniqueName == KOTLIN_JS_STDLIB_NAME && builtInsPlatform == BuiltInsPlatform.JS
+
+val BaseKotlinLibraryNew.isJsStdlib: Boolean
     get() = uniqueName == KOTLIN_JS_STDLIB_NAME && builtInsPlatform == BuiltInsPlatform.JS
 
 val BaseKotlinLibrary.isWasmStdlib: Boolean
     get() = uniqueName == KOTLIN_WASM_STDLIB_NAME && builtInsPlatform == BuiltInsPlatform.WASM
 
+val BaseKotlinLibraryNew.isWasmStdlib: Boolean
+    get() = uniqueName == KOTLIN_WASM_STDLIB_NAME && builtInsPlatform == BuiltInsPlatform.WASM
+
+
+/** Whether [this] is the jklib stdlib. */
+val BaseKotlinLibraryNew.isJklibStdlib: Boolean
+    get() = uniqueName == KOTLIN_JKLIB_STDLIB_NAME && builtInsPlatform == BuiltInsPlatform.JKLIB
+
+/** Whether [this] is either Kotlin/Native, Kotlin/JS, Kotlin/Wasm or jklib stdlib. */
+val BaseKotlinLibraryNew.isAnyPlatformStdlib: Boolean
+    get() = isNativeStdlib || isJsStdlib || isWasmStdlib || isJklibStdlib
+
 val BaseKotlinLibrary.uniqueName: String
+    get() = manifestProperties.getProperty(KLIB_PROPERTY_UNIQUE_NAME)!!
+
+val BaseKotlinLibraryNew.uniqueName: String
     get() = manifestProperties.getProperty(KLIB_PROPERTY_UNIQUE_NAME)!!
 
 val BaseKotlinLibrary.shortName: String?
@@ -137,6 +169,8 @@ val BaseKotlinLibrary.hasDependencies: Boolean
     get() = !manifestProperties.getProperty(KLIB_PROPERTY_DEPENDS).isNullOrBlank()
 
 interface KotlinLibrary : BaseKotlinLibrary, MetadataLibrary, IrLibrary
+
+interface KotlinLibraryNew : Klib, BaseKotlinLibraryNew
 
 @Deprecated(
     "Use BaseKotlinLibrary.isCInteropLibrary() for more precise check",
@@ -163,10 +197,19 @@ val KotlinLibrary.includedForwardDeclarations: List<String>
 val BaseKotlinLibrary.irProviderName: String?
     get() = manifestProperties.getProperty(KLIB_PROPERTY_IR_PROVIDER)
 
+val BaseKotlinLibraryNew.irProviderName: String?
+    get() = manifestProperties.getProperty(KLIB_PROPERTY_IR_PROVIDER)
+
 val BaseKotlinLibrary.nativeTargets: List<String>
     get() = manifestProperties.propertyList(KLIB_PROPERTY_NATIVE_TARGETS)
 
+val BaseKotlinLibraryNew.nativeTargets: List<String>
+    get() = manifestProperties.propertyList(KLIB_PROPERTY_NATIVE_TARGETS)
+
 val BaseKotlinLibrary.wasmTargets: List<String>
+    get() = manifestProperties.propertyList(KLIB_PROPERTY_WASM_TARGETS)
+
+val BaseKotlinLibraryNew.wasmTargets: List<String>
     get() = manifestProperties.propertyList(KLIB_PROPERTY_WASM_TARGETS)
 
 val KotlinLibrary.containsErrorCode: Boolean
@@ -186,7 +229,16 @@ val KotlinLibrary.builtInsPlatform: String?
 val BaseKotlinLibrary.builtInsPlatform: BuiltInsPlatform?
     get() = manifestProperties.getProperty(KLIB_PROPERTY_BUILTINS_PLATFORM)?.let(BuiltInsPlatform::parseFromString)
 
+val BaseKotlinLibraryNew.builtInsPlatform: BuiltInsPlatform?
+    get() = manifestProperties.getProperty(KLIB_PROPERTY_BUILTINS_PLATFORM)?.let(BuiltInsPlatform::parseFromString)
+
+
 val BaseKotlinLibrary.commonizerNativeTargets: List<String>?
+    get() = if (manifestProperties.containsKey(KLIB_PROPERTY_COMMONIZER_NATIVE_TARGETS))
+        manifestProperties.propertyList(KLIB_PROPERTY_COMMONIZER_NATIVE_TARGETS, escapeInQuotes = true)
+    else null
+
+val BaseKotlinLibraryNew.commonizerNativeTargets: List<String>?
     get() = if (manifestProperties.containsKey(KLIB_PROPERTY_COMMONIZER_NATIVE_TARGETS))
         manifestProperties.propertyList(KLIB_PROPERTY_COMMONIZER_NATIVE_TARGETS, escapeInQuotes = true)
     else null
@@ -199,3 +251,6 @@ val KotlinLibrary.metadataVersion: MetadataVersion?
         val versionIntArray = BinaryVersion.parseVersionArray(versionString) ?: return null
         return MetadataVersion(*versionIntArray)
     }
+
+val KotlinLibraryNew.hasAbi: Boolean
+    get() = ir != null || irProviderName != null

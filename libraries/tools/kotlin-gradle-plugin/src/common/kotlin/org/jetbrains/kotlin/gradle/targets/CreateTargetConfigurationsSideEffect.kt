@@ -40,7 +40,7 @@ internal val CreateTargetConfigurationsSideEffect = KotlinTargetSideEffect { tar
 
     configurations.maybeCreateConsumable(target.apiElementsConfigurationName).apply {
         description = "API elements for main."
-        isVisible = false
+//        isVisible = false
         KotlinUsages.configureProducerApiUsage(this, target)
         attributes.setAttribute(Category.CATEGORY_ATTRIBUTE, project.categoryByName(Category.LIBRARY))
         extendsFrom(apiElementScope)
@@ -63,7 +63,7 @@ internal val CreateTargetConfigurationsSideEffect = KotlinTargetSideEffect { tar
     if (mainCompilation is DeprecatedKotlinCompilationToRunnableFiles<*>) {
         configurations.maybeCreateConsumable(target.runtimeElementsConfigurationName).apply {
             description = "Elements of runtime for main."
-            isVisible = false
+//            isVisible = false
             KotlinUsages.configureProducerRuntimeUsage(this, target)
             attributes.setAttribute(Category.CATEGORY_ATTRIBUTE, project.categoryByName(Category.LIBRARY))
             val runtimeConfiguration = mainCompilation.internal.configurations.deprecatedRuntimeConfiguration
@@ -76,7 +76,7 @@ internal val CreateTargetConfigurationsSideEffect = KotlinTargetSideEffect { tar
 
     configurations.maybeCreateConsumable(target.sourcesElementsConfigurationName).apply {
         description = "Source files of main compilation of ${target.name}."
-        isVisible = false
+//        isVisible = false
         configureSourcesPublicationAttributes(target)
         project.launch { isCanBeConsumed = target.internal.isSourcesPublishableFuture.await() }
     }
@@ -84,7 +84,7 @@ internal val CreateTargetConfigurationsSideEffect = KotlinTargetSideEffect { tar
     project.multiplatformExtensionOrNull?.resourcesPublicationExtension?.subscribeOnPublishResources(target) {
         configurations.maybeCreateConsumable(target.internal.resourcesElementsConfigurationName).apply {
             description = "Resource files of main compilation of ${target.name}."
-            isVisible = false
+//            isVisible = false
             // Publish with dependencies of apiElements configuration, so that transitives are resolved correctly. Don't inherit from
             // apiElementsConfiguration directly, because it contains klibs in project dependencies.
             extendsFrom(apiElementScope)
@@ -125,7 +125,7 @@ internal val CreateTargetConfigurationsSideEffect = KotlinTargetSideEffect { tar
             target.commonFakeApiElementsConfigurationName
         ).apply {
             description = "Common Fake API elements for main."
-            isVisible = false
+//            isVisible = false
             KotlinUsages.configureProducerApiUsage(this, target)
             attributes.setAttribute(KotlinPlatformType.attribute, KotlinPlatformType.common)
         }

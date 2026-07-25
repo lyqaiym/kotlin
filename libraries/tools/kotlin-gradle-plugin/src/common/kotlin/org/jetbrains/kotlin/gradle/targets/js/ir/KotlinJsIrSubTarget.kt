@@ -88,6 +88,7 @@ abstract class KotlinJsIrSubTarget(
     internal fun disambiguateCamelCased(vararg names: String?): String =
         lowerCamelCaseName(target.disambiguationClassifier, disambiguationClassifier, *names)
 
+    @Suppress("DEPRECATION")
     private fun configureTests() {
         testRuns = project.container(KotlinJsPlatformTestRun::class.java) { name -> KotlinJsPlatformTestRun(name, target) }.also {
             (this as ExtensionAware).extensions.add(this::testRuns.name, it)

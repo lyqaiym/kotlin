@@ -34,7 +34,7 @@ internal fun KotlinTargetSoftwareComponent(
             val project: Project = target.project
             val publishedConfigurationName = publishedConfigurationName(kotlinUsageContext.name)
             val configuration = project.configurations.maybeCreateDependencyScope(publishedConfigurationName) {
-                isVisible = false
+//                isVisible = false
                 extendsFrom(project.configurations.getByName(kotlinUsageContext.dependencyConfigurationName))
                 artifacts.addAll(kotlinUsageContext.artifacts)
                 // KT-64789: workaround for missing 'org.gradle.libraryelements' attribute on the kotlinUsageContext returned keys Set

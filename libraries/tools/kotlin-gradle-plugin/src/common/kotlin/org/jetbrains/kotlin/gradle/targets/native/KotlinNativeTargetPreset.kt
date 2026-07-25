@@ -51,6 +51,7 @@ abstract class AbstractKotlinNativeTargetPreset<T : KotlinNativeTarget>(
             project.setupNativeCompiler(konanTarget)
         }
 
+        @Suppress("DEPRECATION")
         val result = instantiateTarget(name).apply {
             targetName = name
             disambiguationClassifier = name

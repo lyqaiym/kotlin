@@ -24,7 +24,7 @@ internal val ConfigureFrameworkExportSideEffect = KotlinTargetSideEffect<KotlinN
 
     target.binaries.withType(AbstractNativeLibrary::class.java).all { framework ->
         project.configurations.maybeCreateResolvable(framework.exportConfigurationName).apply {
-            isVisible = false
+//            isVisible = false
             isTransitive = false
             usesPlatformOf(target)
             attributes.setAttribute(Usage.USAGE_ATTRIBUTE, KotlinUsages.consumerApiUsage(target))

@@ -109,7 +109,7 @@ private fun KotlinCompilationDependencyConfigurationsContainer(
         ConfigurationNaming.Default(target, compilationName).name(COMPILE)
     )?.apply {
         setupAsLocalTargetSpecificConfigurationIfSupported(target)
-        isVisible = false
+//        isVisible = false
         description = "Dependencies for $compilation (deprecated, use '${implementationConfigurationName} ' instead)."
     }
 
@@ -118,7 +118,7 @@ private fun KotlinCompilationDependencyConfigurationsContainer(
     )?.apply {
         setupAsLocalTargetSpecificConfigurationIfSupported(target)
         deprecatedCompileConfiguration?.let { extendsFrom(it) }
-        isVisible = false
+//        isVisible = false
         description =
             "Runtime dependencies for $compilation (deprecated, use '${runtimeOnlyConfigurationName} ' instead)."
     } else null
@@ -128,7 +128,7 @@ private fun KotlinCompilationDependencyConfigurationsContainer(
     val apiConfiguration = target.project.configurations.maybeCreateDependencyScope(apiConfigurationName).apply {
         deprecatedCompileConfiguration?.let { extendsFrom(it) }
 
-        isVisible = false
+//        isVisible = false
         description = "API dependencies for '$compilationCoordinates'."
     }
 
@@ -136,7 +136,7 @@ private fun KotlinCompilationDependencyConfigurationsContainer(
         .maybeCreateDependencyScope(implementationConfigurationName).apply {
             extendsFrom(apiConfiguration)
             deprecatedCompileConfiguration?.let { extendsFrom(it) }
-            isVisible = false
+//            isVisible = false
             description = "Implementation only dependencies for '$compilationCoordinates'."
         }
 
@@ -144,12 +144,12 @@ private fun KotlinCompilationDependencyConfigurationsContainer(
         .maybeCreateDependencyScope(compileOnlyConfigurationName).apply {
             setupAsLocalTargetSpecificConfigurationIfSupported(target)
             attributes.setAttribute(Category.CATEGORY_ATTRIBUTE, target.project.categoryByName(Category.LIBRARY))
-            isVisible = false
+//            isVisible = false
             description = "Compile only dependencies for '$compilationCoordinates'."
         }
 
     val runtimeOnlyConfiguration = target.project.configurations.maybeCreateDependencyScope(runtimeOnlyConfigurationName).apply {
-        isVisible = false
+//        isVisible = false
         description = "Runtime only dependencies for '$compilationCoordinates'."
     }
 
@@ -157,7 +157,7 @@ private fun KotlinCompilationDependencyConfigurationsContainer(
         .maybeCreateResolvable(compileClasspathConfigurationName).apply {
             extendsFrom(compileOnlyConfiguration, implementationConfiguration)
             usesPlatformOf(target)
-            isVisible = false
+//            isVisible = false
             attributes.setAttribute(Usage.USAGE_ATTRIBUTE, KotlinUsages.consumerApiUsage(target))
             if (target.platformType != KotlinPlatformType.androidJvm) {
                 attributes.setAttribute(Category.CATEGORY_ATTRIBUTE, target.project.categoryByName(Category.LIBRARY))
@@ -170,7 +170,7 @@ private fun KotlinCompilationDependencyConfigurationsContainer(
             extendsFrom(runtimeOnlyConfiguration, implementationConfiguration)
             deprecatedRuntimeConfiguration?.let { extendsFrom(it) }
             usesPlatformOf(target)
-            isVisible = false
+//            isVisible = false
             attributes.setAttribute(Usage.USAGE_ATTRIBUTE, KotlinUsages.consumerRuntimeUsage(target))
             if (target.platformType != KotlinPlatformType.androidJvm) {
                 attributes.setAttribute(Category.CATEGORY_ATTRIBUTE, target.project.categoryByName(Category.LIBRARY))
@@ -180,7 +180,7 @@ private fun KotlinCompilationDependencyConfigurationsContainer(
 
     val hostSpecificMetadataConfiguration =
         if (withHostSpecificMetadata) target.project.configurations.maybeCreateResolvable(hostSpecificMetadataConfigurationName).apply {
-            isVisible = false
+//            isVisible = false
             description = "Host-specific Metadata dependencies for '$compilationCoordinates'."
             extendsFrom(compileDependencyConfiguration)
             compileDependencyConfiguration.copyAttributesTo(
@@ -199,7 +199,7 @@ private fun KotlinCompilationDependencyConfigurationsContainer(
         } else {
             extendsFrom(target.project.commonKotlinPluginClasspath)
         }
-        isVisible = false
+//        isVisible = false
         description = "Kotlin compiler plugins for $compilation"
     }
 

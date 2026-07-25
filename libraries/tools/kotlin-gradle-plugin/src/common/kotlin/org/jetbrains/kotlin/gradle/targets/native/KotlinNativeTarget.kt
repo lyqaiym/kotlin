@@ -197,6 +197,7 @@ abstract class KotlinNativeTargetWithTests<T : KotlinNativeBinaryTestRun>(
 
 abstract class KotlinNativeTargetWithHostTests @Inject constructor(project: Project, konanTarget: KonanTarget) :
     KotlinNativeTargetWithTests<KotlinNativeHostTestRun>(project, konanTarget) {
+    @Suppress("DEPRECATION")
     override val testRuns: NamedDomainObjectContainer<KotlinNativeHostTestRun> by lazy {
         project.container(KotlinNativeHostTestRun::class.java, KotlinNativeHostTestRunFactory(this))
     }
@@ -204,6 +205,7 @@ abstract class KotlinNativeTargetWithHostTests @Inject constructor(project: Proj
 
 abstract class KotlinNativeTargetWithSimulatorTests @Inject constructor(project: Project, konanTarget: KonanTarget) :
     KotlinNativeTargetWithTests<KotlinNativeSimulatorTestRun>(project, konanTarget) {
+    @Suppress("DEPRECATION")
     override val testRuns: NamedDomainObjectContainer<KotlinNativeSimulatorTestRun> by lazy {
         project.container(KotlinNativeSimulatorTestRun::class.java, KotlinNativeSimulatorTestRunFactory(this))
     }

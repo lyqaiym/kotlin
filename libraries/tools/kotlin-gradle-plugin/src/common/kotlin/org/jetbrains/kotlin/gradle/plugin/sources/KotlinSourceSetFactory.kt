@@ -97,7 +97,7 @@ internal class DefaultKotlinSourceSetFactory(
                 attributes.setAttribute(KotlinPlatformType.attribute, KotlinPlatformType.common)
                 attributes.setAttribute(Usage.USAGE_ATTRIBUTE, project.usageByName(KotlinUsages.KOTLIN_METADATA))
                 attributes.setAttribute(Category.CATEGORY_ATTRIBUTE, project.categoryByName(Category.LIBRARY))
-                isVisible = false
+//                isVisible = false
 
                 if (configurationName != null) {
                     extendsFrom(project.configurations.maybeCreateDependencyScope(configurationName))

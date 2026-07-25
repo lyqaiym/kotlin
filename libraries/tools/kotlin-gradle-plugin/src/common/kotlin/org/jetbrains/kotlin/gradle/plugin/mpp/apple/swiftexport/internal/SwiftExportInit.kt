@@ -66,7 +66,7 @@ internal fun KotlinNativeTarget.exportedSwiftExportApiConfigurationName(buildTyp
 internal fun KotlinNativeTarget.exportedSwiftExportApiConfiguration(buildType: NativeBuildType): Configuration =
     project.configurations.maybeCreateResolvable(exportedSwiftExportApiConfigurationName(buildType)) {
         description = "Swift Export dependencies configuration for $name"
-        isVisible = false
+//        isVisible = false
         isTransitive = false
         usesPlatformOf(this@exportedSwiftExportApiConfiguration)
         attributes.setAttribute(Category.CATEGORY_ATTRIBUTE, project.categoryByName(Category.LIBRARY))

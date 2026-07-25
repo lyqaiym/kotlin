@@ -31,6 +31,7 @@ abstract class KotlinOnlyTargetPreset<R : KotlinOnlyTarget<T>, T : KotlinCompila
     protected abstract fun instantiateTarget(name: String): R
 
     override fun createTargetInternal(name: String): R {
+        @Suppress("DEPRECATION")
         val result = instantiateTarget(name).apply {
             targetName = name
             disambiguationClassifier = provideTargetDisambiguationClassifier(this@apply)

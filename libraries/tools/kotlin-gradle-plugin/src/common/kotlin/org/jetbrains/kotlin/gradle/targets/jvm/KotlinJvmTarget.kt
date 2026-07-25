@@ -47,6 +47,7 @@ abstract class KotlinJvmTarget @Inject constructor(
     HasConfigurableKotlinCompilerOptions<KotlinJvmCompilerOptions>,
     KotlinTargetWithTests<JvmClasspathTestRunSource, KotlinJvmTestRun> {
 
+    @Suppress("DEPRECATION")
     override val testRuns: NamedDomainObjectContainer<KotlinJvmTestRun> by lazy {
         project.container(KotlinJvmTestRun::class.java, KotlinJvmTestRunFactory(this))
     }

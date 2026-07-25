@@ -44,12 +44,14 @@ constructor(
     KotlinPublishingDsl,
     HasConfigurableKotlinCompilerOptions<KotlinCommonCompilerOptions>,
     KotlinMultiplatformSourceSetConventions by KotlinMultiplatformSourceSetConventionsImpl {
+    @Suppress("DEPRECATION")
     @Deprecated(
         PRESETS_API_IS_DEPRECATED_MESSAGE,
         level = DeprecationLevel.ERROR,
     )
     override val presets: NamedDomainObjectCollection<KotlinTargetPreset<*>> = project.container(KotlinTargetPreset::class.java)
 
+    @Suppress("DEPRECATION")
     final override val targets: NamedDomainObjectCollection<KotlinTarget> = project.container(KotlinTarget::class.java)
 
     @Deprecated(

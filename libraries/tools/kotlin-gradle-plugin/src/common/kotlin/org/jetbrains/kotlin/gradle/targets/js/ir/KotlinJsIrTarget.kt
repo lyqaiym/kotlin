@@ -49,10 +49,12 @@ constructor(
 
     private val propertiesProvider = PropertiesProvider(project)
 
+    @Suppress("DEPRECATION")
     override val subTargets: NamedDomainObjectContainer<KotlinJsIrSubTargetWithBinary> = project.container(
         KotlinJsIrSubTargetWithBinary::class.java
     )
 
+    @Suppress("DEPRECATION")
     override val testRuns: NamedDomainObjectContainer<KotlinJsReportAggregatingTestRun> by lazy {
         project.container(KotlinJsReportAggregatingTestRun::class.java, KotlinJsTestRunFactory(this))
     }

@@ -75,6 +75,7 @@ class GradleKotlinCompilerArgumentsPlugin @Inject constructor(
         }
     }
 
+//   KotlinVersion commonCompileOnly(project(":kotlin-gradle-compiler-types"))
     private fun Project.projectLevelLanguageVersion(): Provider<KotlinVersion> {
         return extensions.projectCompilerOptions()?.languageVersion ?: providers.provider { null }
     }
