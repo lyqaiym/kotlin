@@ -288,7 +288,7 @@ internal class EnumStubBuilder(
                         accumulator
                     }
                 }
-        val (canonicalConstants, aliasConstants) = enumDef.constants.partition { canonicalsByValue[it.value] == it }
+        val [canonicalConstants, aliasConstants] = enumDef.constants.partition { canonicalsByValue[it.value] == it }
 
         val canonicalEntriesWithAliases = canonicalConstants
                 .sortedBy { it.value } // TODO: Is it stable enough?

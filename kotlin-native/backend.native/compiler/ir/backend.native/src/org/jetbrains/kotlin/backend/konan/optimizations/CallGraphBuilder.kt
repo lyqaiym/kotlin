@@ -76,7 +76,7 @@ internal class CallGraphBuilder(
         rootSet.forEach { handleRoot(it) }
 
         while (functionStack.isNotEmpty()) {
-            val (caller, calleeFunction) = functionStack.pop()
+            val [caller, calleeFunction] = functionStack.pop()
             val callee = calleeFunction.symbol as DataFlowIR.FunctionSymbol.Declared
             val newFunction = !directEdges.containsKey(callee)
             if (newFunction)

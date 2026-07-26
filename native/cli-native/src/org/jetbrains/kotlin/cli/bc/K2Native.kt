@@ -131,6 +131,7 @@ class K2Native : CLICompiler<K2NativeCompilerArguments>() {
         return environment
     }
 
+    @OptIn(CompilerConfiguration.Internals::class)
     private fun runKonanDriver(
         configuration: CompilerConfiguration,
         environment: KotlinCoreEnvironment,

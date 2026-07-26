@@ -191,7 +191,7 @@ public val CPointer<*>?.rawValue: NativePtr
 public fun <T : CPointed> CPointer<*>.reinterpret(): CPointer<T> = interpretCPointer(this.rawValue)!!
 
 @ExperimentalForeignApi
-public fun <T : CPointed> CPointer<T>?.toLong(): Long = this.rawValue.toLong()
+public fun <T : CPointed> CPointer<T>?.toLong(): Long = this.rawValue
 
 @ExperimentalForeignApi
 public fun <T : CPointed> Long.toCPointer(): CPointer<T>? = interpretCPointer(nativeNullPtr + this)

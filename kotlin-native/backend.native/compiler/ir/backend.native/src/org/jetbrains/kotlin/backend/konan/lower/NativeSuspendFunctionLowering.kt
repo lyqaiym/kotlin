@@ -65,7 +65,7 @@ internal class NativeSuspendFunctionsLowering(
     ) {
         val originalBody = transformingFunction.body!!
 
-        val (thisReceiver, resultArgument) = stateMachineFunction.parameters.also { check(it.size == 2) }
+        val [thisReceiver, resultArgument] = stateMachineFunction.parameters.also { check(it.size == 2) }
 
         val coroutineClass = stateMachineFunction.parentAsClass
 
@@ -171,7 +171,7 @@ internal class NativeSuspendFunctionsLowering(
                 // No constructor argument is first since the call will be lowered to (val inst = alloc(); call(inst, *args); inst)
                 // and therefore an actual first argument will be the just allocated instance.
                 var first = expression !is IrConstructorCall
-                for ((index, child) in children.withIndex()) {
+                for ([index, child] in children.withIndex()) {
                     if (child == null) continue
                     val transformedChild =
                             if (!child.isSpecialBlock())

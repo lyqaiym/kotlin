@@ -415,7 +415,7 @@ private val coroutinesLivenessAnalysisPhase = createFileLoweringPhase(
                 override fun lower(irBody: IrBody, container: IrDeclaration) {
                     val liveVariablesAtSuspensionPoints = context.liveVariablesAtSuspensionPoints
                     LivenessAnalysis.run(irBody) { it is IrSuspensionPoint }
-                            .forEach { (irElement, liveVariables) ->
+                            .forEach { [irElement, liveVariables] ->
                                 liveVariablesAtSuspensionPoints[irElement as IrSuspensionPoint] = liveVariables
                             }
                 }

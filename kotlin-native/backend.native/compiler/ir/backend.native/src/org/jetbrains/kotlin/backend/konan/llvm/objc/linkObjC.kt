@@ -130,7 +130,7 @@ private fun PatchBuilder.buildAndApply(llvmModule: LLVMModuleRef, state: NativeG
     val nameToGlobalPatch = globalPatches.associateNonRepeatingBy { it.globalName }
 
     val sectionToValueToLiteralPatch = literalPatches.groupBy { it.generator.section }
-            .mapValues { (_, patches) ->
+            .mapValues { [_, patches] ->
                 patches.associateNonRepeatingBy { it.value }
             }
 
@@ -190,7 +190,7 @@ private fun getStringValue(initializer: LLVMValueRef): String? = when (LLVMGetVa
 
 private fun <T, K> List<T>.associateNonRepeatingBy(keySelector: (T) -> K): Map<K, T> =
         this.groupBy(keySelector)
-                .mapValues { (key, values) ->
+                .mapValues { [key, values] ->
                     values.singleOrNull()
                             ?: error("multiple values found for $key: ${values.joinToString()}")
                 }

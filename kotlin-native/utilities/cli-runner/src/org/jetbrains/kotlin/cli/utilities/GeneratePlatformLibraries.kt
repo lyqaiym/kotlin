@@ -46,7 +46,7 @@ private class Logger(val level: Level = Level.NORMAL) {
 
 private fun Logger.logFailedLibraries(built: Map<DefFile, ProcessingStatus>) {
     log("Processing platform libraries finished with errors.")
-    built.forEach { (def, status) ->
+    built.forEach { [def, status] ->
         if (status is ProcessingStatus.FAIL) {
             log("    ${def.name}: ${status.error}")
         }
@@ -257,7 +257,7 @@ private fun generateLibrary(
 
     if (outKlib.exists && !rebuild) {
         logger.verbose("Skip generating ${def.name} as it's already generated")
-        return
+        return@with
     }
 
     val tmpKlib = tmpDirectory.child(def.libraryName)
@@ -313,7 +313,7 @@ private fun buildCache(
     val libraryCacheDir = getLibraryCacheDir(def.name, target, cacheDirectory, cacheKind)
     if (libraryCacheDir.listFilesOrEmpty.isNotEmpty() && !rebuild) {
         logger.verbose("Skip precompiling ${def.name} as it's already precompiled")
-        return
+        return@with
     }
 
     if (rebuild) {
@@ -341,7 +341,7 @@ private fun buildStdlibCache(
     val stdlibCacheFile = getLibraryCacheDir("stdlib", target, cacheDirectory, cacheKind)
     if (stdlibCacheFile.exists) {
         logger.verbose("Skip precompiling standard library as it's already precompiled")
-        return
+        return@with
     }
 
     logger.log("Precompiling standard library...")

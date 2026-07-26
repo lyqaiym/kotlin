@@ -207,7 +207,7 @@ internal class DependenciesTrackerImpl(
 
             allDependencies = moduleDependencies.map { DependenciesTracker.ResolvedDependency.wholeModule(it) } +
                     fileDependencies.filterNot { it.key in moduleDependencies }
-                            .map { (library, files) -> DependenciesTracker.ResolvedDependency.certainFiles(library, files.toList()) }
+                            .map { [library, files] -> DependenciesTracker.ResolvedDependency.certainFiles(library, files.toList()) }
         }
 
         private fun resolveDependency(dependency: DependenciesTracker.UnresolvedDependency) =
@@ -233,7 +233,7 @@ internal class DependenciesTrackerImpl(
         }
 
         private fun addDependency(dependency: DependenciesTracker.ResolvedDependency) {
-            val (library, kind) = dependency
+            val [library, kind] = dependency
             if (library in moduleDependencies) return
             val cachedDependency = context.config.cachedLibraries.getLibraryCache(library)
                     ?: error("Library ${library.libraryName} is expected to be cached")
@@ -336,7 +336,7 @@ internal class DependenciesTrackerImpl(
 
 internal object DependenciesSerializer {
     fun serialize(dependencies: List<DependenciesTracker.ResolvedDependency>) =
-            dependencies.flatMap { (library, kind) ->
+            dependencies.flatMap { [library, kind] ->
                 val libName = library.uniqueName
                 when (kind) {
                     DependenciesTracker.DependencyKind.WholeModule -> listOf("$libName$DEPENDENCIES_DELIMITER")
@@ -358,7 +358,7 @@ internal object DependenciesSerializer {
                 fileDependencies.getOrPut(libName) { mutableListOf() }.add(file)
         }
         return wholeModuleDependencies.map { DependenciesTracker.UnresolvedDependency.wholeModule(it) } +
-                fileDependencies.map { (libName, files) -> DependenciesTracker.UnresolvedDependency.certainFiles(libName, files) }
+                fileDependencies.map { [libName, files] -> DependenciesTracker.UnresolvedDependency.certainFiles(libName, files) }
     }
 
     private const val DEPENDENCIES_DELIMITER = '|'

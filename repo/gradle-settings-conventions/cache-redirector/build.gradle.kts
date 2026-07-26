@@ -7,6 +7,7 @@ plugins {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral { setUrl("https://cache-redirector.jetbrains.com/maven-central") }
 }
 

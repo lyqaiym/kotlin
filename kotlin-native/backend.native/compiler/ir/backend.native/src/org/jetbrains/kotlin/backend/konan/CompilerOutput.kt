@@ -87,7 +87,7 @@ private data class LlvmModules(
 private fun collectLlvmModules(generationState: NativeGenerationState, generatedBitcodeFiles: List<String>): LlvmModules {
     val config = generationState.config
 
-    val (bitcodePartOfStdlib, bitcodeLibraries) = generationState.dependenciesTracker.bitcodeToLink
+    val [bitcodePartOfStdlib, bitcodeLibraries] = generationState.dependenciesTracker.bitcodeToLink
             .partition { it.isNativeStdlib && generationState.producedLlvmModuleContainsStdlib }
             .toList()
             .map { libraries ->
@@ -131,7 +131,7 @@ private fun collectLlvmModules(generationState: NativeGenerationState, generated
 }
 
 private fun linkAllDependencies(generationState: NativeGenerationState, generatedBitcodeFiles: List<String>) {
-    val (runtimeModules, additionalModules) = collectLlvmModules(generationState, generatedBitcodeFiles)
+    val [runtimeModules, additionalModules] = collectLlvmModules(generationState, generatedBitcodeFiles)
     // TODO: Possibly slow, maybe to a separate phase?
     val optimizedRuntimeModules = linkRuntimeModules(generationState, runtimeModules)
 

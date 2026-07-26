@@ -68,7 +68,7 @@ internal class NativeRuntimeReflectionIrBuilder(
             elements[it.name.asString()] ?: error("No value for field named ${it.name} provided")
         }
         return irCallConstructor(constructor.symbol, typeArguments).apply {
-            for ((index, arg) in arguments.withIndex()) {
+            for ([index, arg] in arguments.withIndex()) {
                 this.arguments[index] = arg
             }
         }

@@ -406,7 +406,7 @@ internal object DevirtualizationAnalysis {
 
             val nodesMap = mutableMapOf<DataFlowIR.Node, Node>()
 
-            val (instantiatingClasses, directEdges, reversedEdges) = buildConstraintGraph(nodesMap, functions, rootSet)
+            val [instantiatingClasses, directEdges, reversedEdges] = buildConstraintGraph(nodesMap, functions, rootSet)
 
             context.logMultiple {
                 +"FULL CONSTRAINT GRAPH"
@@ -491,7 +491,7 @@ internal object DevirtualizationAnalysis {
                 if (iterations >= maxNumberOfIterations) break
 
                 var end = true
-                for ((sourceNode, edge) in badEdges) {
+                for ([sourceNode, edge] in badEdges) {
                     val distNode = edge.node
                     val missingTypes = sourceNode.types.copy().apply { andNot(distNode.types) }
                     missingTypes.and(edge.suitableTypes)
@@ -509,7 +509,7 @@ internal object DevirtualizationAnalysis {
             var prevFront = IntArray(nodesCount)
             var frontSize = 0
             val tempBitSet = BitSet()
-            for ((sourceNode, edge) in badEdges) {
+            for ([sourceNode, edge] in badEdges) {
                 val distNode = edge.node
                 tempBitSet.clear()
                 tempBitSet.or(sourceNode.types)
@@ -632,7 +632,7 @@ internal object DevirtualizationAnalysis {
 
             context.logMultiple {
                 +"Devirtualized from current module:"
-                result.forEach { (virtualCall, devirtualizedCallSite) ->
+                result.forEach { [virtualCall, devirtualizedCallSite] ->
                     if (virtualCall.irCallSite != null) {
                         +"DEVIRTUALIZED"
                         +"FUNCTION: ${devirtualizedCallSite.second}"
@@ -644,7 +644,7 @@ internal object DevirtualizationAnalysis {
                     }
                 }
                 +"Devirtualized from external modules:"
-                result.forEach { (virtualCall, devirtualizedCallSite) ->
+                result.forEach { [virtualCall, devirtualizedCallSite] ->
                     if (virtualCall.irCallSite == null) {
                         +"DEVIRTUALIZED"
                         +"FUNCTION: ${devirtualizedCallSite.second}"
@@ -667,7 +667,7 @@ internal object DevirtualizationAnalysis {
             val nodesCount = constraintGraph.nodes.size
             constraintGraph.externalVirtualCalls
                     .groupBy { it.returnType }
-                    .forEach { (type, list) ->
+                    .forEach { [type, list] ->
                         val visited = BitSet(nodesCount)
                         val stack = mutableListOf<Node>()
                         list.forEach { call ->
@@ -1535,7 +1535,7 @@ internal object DevirtualizationAnalysis {
                             }
                             val branches = mutableListOf<IrBranchImpl>()
                             bestOrder!!.mapIndexedTo(branches) { index, target ->
-                                val (actualCallee, receiverTypes) = target
+                                val [actualCallee, receiverTypes] = target
                                 val condition = when {
                                     optimize && index == possibleCallees.size - 1 -> {
                                         // Don't check the last type in optimize mode.

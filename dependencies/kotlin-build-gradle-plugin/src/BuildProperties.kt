@@ -65,6 +65,10 @@ class KotlinBuildProperties internal constructor(
 
     val isJpsBuildEnabled: Boolean = getBoolean("jpsBuild")
 
+    fun intProperty(name: String): Provider<Int> = propertiesBuildService.flatMap {
+        it.property(name).map { it.trim().toIntOrNull() }
+    }
+
 //    val isInIdeaSync: Boolean = propertiesProvider.getSystemProperty("idea.sync.active")?.toBoolean() == true
     val isInIdeaSync: Boolean = false
 

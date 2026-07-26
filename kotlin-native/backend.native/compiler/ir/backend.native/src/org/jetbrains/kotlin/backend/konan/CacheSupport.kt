@@ -102,7 +102,7 @@ class CacheSupport(
     internal val cachedLibraries: CachedLibraries = run {
         val explicitCacheFiles = configuration.get(KonanConfigKeys.CACHED_LIBRARIES)!!
 
-        val explicitCaches = explicitCacheFiles.entries.associate { (libraryPath, cachePath) ->
+        val explicitCaches = explicitCacheFiles.entries.associate { [libraryPath, cachePath] ->
             val library = fileToLibrary[File(libraryPath)]
                     ?: configuration.reportCompilationError("cache not applied: library $libraryPath in $cachePath")
 

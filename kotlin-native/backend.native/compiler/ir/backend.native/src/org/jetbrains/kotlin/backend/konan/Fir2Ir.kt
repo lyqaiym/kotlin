@@ -103,7 +103,7 @@ internal fun PhaseContext.fir2Ir(
     }.toList()
 
 
-    val usedLibraries = librariesDescriptors.zip(resolvedLibraries).filter { (module, _) ->
+    val usedLibraries = librariesDescriptors.zip(resolvedLibraries).filter { [module, _] ->
         usedPackages.any { !module.packageFragmentProviderForModuleContentWithoutDependencies.isEmpty(it) }
     }.map { it.second }.toSet()
 

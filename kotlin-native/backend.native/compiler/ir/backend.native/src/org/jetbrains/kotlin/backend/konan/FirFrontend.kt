@@ -37,7 +37,7 @@ internal inline fun <F> PhaseContext.firFrontend(
     val mainModuleName = Name.special("<${config.moduleId}>")
     val syntaxErrors = files.fold(false) { errorsFound, file -> fileHasSyntaxErrors(file) or errorsFound }
     val dependencyList = DependencyListForCliModule.build {
-        val (interopLibs, regularLibs) = config.resolvedLibraries.getFullList().partition { it.isCInteropLibrary() }
+        val [interopLibs, regularLibs] = config.resolvedLibraries.getFullList().partition { it.isCInteropLibrary() }
         defaultDependenciesSet(mainModuleName) {
             dependencies(regularLibs.map { it.libraryFile.absolutePath })
             friendDependencies(config.friendModuleFiles.map { it.absolutePath })
@@ -66,7 +66,7 @@ internal inline fun <F> PhaseContext.firFrontend(
             fileBelongsToModule = fileBelongsToModule,
     )
 
-    val outputs = sessionsWithSources.map { (session, sources) ->
+    val outputs = sessionsWithSources.map { [session, sources] ->
         buildResolveAndCheckFir(session, sources, diagnosticsReporter).also {
             if (shouldPrintFiles()) {
                 it.fir.forEach { file -> println(file.render()) }

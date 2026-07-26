@@ -119,7 +119,11 @@ extern "C" int Kotlin_getSourceInfo_core_symbolication(void* addr, SourceInfo *r
   if (result_size == 0) return 0;
   __block SourceInfo result;
   __block bool continueUpdateResult = true;
-  __block SymbolSourceInfoLimits limits = {.start = -1, .end = -1};
+//    source_info/core_symbolication/cpp/SourceInfo.cpp:122:66: error: missing field 'fileName'
+//    initializer [-Werror,-Wmissing-designated-field-initializers]
+//    122 |   __block SymbolSourceInfoLimits limits = {.start = -1, .end = -1};
+//  __block SymbolSourceInfoLimits limits = {.start = -1, .end = -1};
+  __block SymbolSourceInfoLimits limits = {.fileName = nullptr, .start = -1, .end = -1};
 
   static bool csIsAvailable = TryInitializeCoreSymbolication();
 

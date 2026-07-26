@@ -281,7 +281,7 @@ private fun IrFileEntry.location(offset: Int, offsetToNumber: (Int) -> Int): Int
 }
 
 internal fun IrFileEntry.lineAndColumn(offset: Int): Pair<Int, Int> {
-    val (line, column) = this.getLineAndColumnNumbers(offset)
+    val [line, column] = this.getLineAndColumnNumbers(offset)
     return location(offset) { line } to location(offset) { column }
 }
 
@@ -300,7 +300,7 @@ internal fun String?.toFileAndFolder(config: KonanConfig): FileAndFolder {
     val file = File(this).absoluteFile
     var parent = file.parent
     config.configuration.get(KonanConfigKeys.DEBUG_PREFIX_MAP)?.let { debugPrefixMap ->
-        for ((key, value) in debugPrefixMap) {
+        for ([key, value] in debugPrefixMap) {
             if (parent.startsWith(key)) {
                 parent = value + parent.removePrefix(key)
             }

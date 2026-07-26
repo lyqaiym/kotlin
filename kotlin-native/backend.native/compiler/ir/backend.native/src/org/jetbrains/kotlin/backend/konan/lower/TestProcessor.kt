@@ -71,7 +71,7 @@ internal class TestProcessor(private val context: Context) : FileLoweringPass {
     private fun MutableList<TestFunction>.registerFunction(
             function: IrFunction,
             kinds: Collection<Pair<TestProcessorFunctionKind, /* ignored: */ Boolean>>) =
-        kinds.forEach { (kind, ignored) ->
+        kinds.forEach { [kind, ignored] ->
             add(TestFunction(function, kind, ignored))
         }
 
@@ -93,7 +93,7 @@ internal class TestProcessor(private val context: Context) : FileLoweringPass {
             val builder = context.createIrBuilder(this@apply.symbol).at(this@toReference)
             body = builder.irBlockBody {
                 +irReturn(irCall(this@toReference).apply {
-                    for ((index, param) in parameters.withIndex()) {
+                    for ([index, param] in parameters.withIndex()) {
                         arguments[index] = irGet(param)
                     }
                 })
@@ -217,7 +217,7 @@ internal class TestProcessor(private val context: Context) : FileLoweringPass {
 
             fun warn(msg: String) = context.reportWarning(msg, irFile, function)
 
-            kinds.forEach { (kind, ignored) ->
+            kinds.forEach { [kind, ignored] ->
                 val annotation = kind.annotationFqName
                 when (kind) {
                     in TestProcessorFunctionKind.INSTANCE_KINDS -> with(irClass) {
@@ -608,7 +608,7 @@ internal class TestProcessor(private val context: Context) : FileLoweringPass {
 
         annotationCollector.testClasses.filter {
             it.value.functions.any { it.kind == TestProcessorFunctionKind.TEST }
-        }.forEach { (_, testClass) ->
+        }.forEach { [_, testClass] ->
             statements.add(generateClassSuite(testClass, irFile))
         }
 

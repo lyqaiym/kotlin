@@ -882,7 +882,7 @@ fun NativeLibrary.getHeaderPaths(): NativeLibraryHeaders<String> {
         val translationUnit =
                 this.parse(index, options = CXTranslationUnit_DetailedPreprocessingRecord).ensureNoCompileErrors()
         try {
-            val (headers, _) = UnitsHolder(index).use { unitsHolder ->
+            val [headers, _] = UnitsHolder(index).use { unitsHolder ->
                 getHeadersAndUnits(this, index, translationUnit, unitsHolder)
             }
 

@@ -549,7 +549,7 @@ internal class ObjCExportCodeGenerator(
             unreachable()
         }
 
-        val methods = selectorsToDefine.map { (selector, bridge) ->
+        val methods = selectorsToDefine.map { [selector, bridge] ->
             ObjCDataGenerator.Method(selector, getEncoding(bridge), imp.toConstPointer())
         }
 
@@ -878,7 +878,7 @@ private fun ObjCExportCodeGenerator.generateObjCImp(
         errorOutPtr != null -> kotlinExceptionHandler { exception ->
             callFromBridge(
                     llvm.Kotlin_ObjCExport_RethrowExceptionAsNSError,
-                    listOf(exception, errorOutPtr!!, generateExceptionTypeInfoArray(baseMethod!!))
+                    listOf(exception, errorOutPtr, generateExceptionTypeInfoArray(baseMethod!!))
             )
 
             val returnValue = when (returnType) {
@@ -903,7 +903,7 @@ private fun ObjCExportCodeGenerator.generateObjCImp(
             // Callee haven't suspended, so it isn't going to call the completion. Call it here:
             callFromBridge(
                     context.symbols.objCExportResumeContinuationWithException.owner.llvmFunction,
-                    listOf(continuation!!, exception)
+                    listOf(continuation, exception)
             )
             // Note: completion block could be called directly instead, but this implementation is
             // simpler and avoids duplication.
@@ -1041,7 +1041,7 @@ private fun ObjCExportCodeGenerator.generateKotlinToObjCBridge(
 
         val objCReferenceArgsToRelease = mutableListOf<LLVMValueRef>()
 
-        val objCArgs = methodBridge.parametersAssociated(irFunction).map { (bridge, parameter) ->
+        val objCArgs = methodBridge.parametersAssociated(irFunction).map { [bridge, parameter] ->
             when (bridge) {
                 is MethodBridgeValueParameter.Mapped -> {
                     parameter!!
@@ -1490,7 +1490,7 @@ private fun ObjCExportCodeGenerator.createTypeAdapter(
         null
     }
 
-    val (itable, itableSize) = when {
+    val [itable, itableSize] = when {
         irClass.isInterface -> Pair(emptyList(), context.getLayoutBuilder(irClass).interfaceVTableEntries.size)
         irClass.isAbstract() -> rttiGenerator.interfaceTableRecords(irClass)
         else -> Pair(emptyList(), -1)
@@ -1574,7 +1574,7 @@ private fun ObjCExportCodeGenerator.createReverseAdapters(
 
             val allOverriddenMethods = method.allOverriddenFunctions
 
-            val (inherited, uninherited) = allOverriddenMethods.partition {
+            val [inherited, uninherited] = allOverriddenMethods.partition {
                 it in methodsCoveredByInheritedAdapters
             }
 

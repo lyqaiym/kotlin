@@ -40,7 +40,7 @@ dependencies {
 //    implementation("org.jetbrains.kotlin:kotlin-build-gradle-plugin:${kotlinBuildProperties.buildGradlePluginVersion}")
     implementation(kotlinBuildHelpers())
 //    implementation("org.jetbrains.kotlin:kotlin-native-utils:${project.bootstrapKotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-native-utils:2.4.255-SNAPSHOT")
+    implementation("org.jetbrains.kotlin:kotlin-native-utils:2.2.255-SNAPSHOT")
 
     // To build Konan Gradle plugin
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${project.bootstrapKotlinVersion}")

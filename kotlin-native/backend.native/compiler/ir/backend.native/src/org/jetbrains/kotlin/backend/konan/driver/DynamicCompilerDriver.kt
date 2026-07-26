@@ -62,10 +62,10 @@ internal class DynamicCompilerDriver(private val performanceManager: Performance
     private fun produceObjCFramework(engine: PhaseEngine<PhaseContext>, config: KonanConfig, environment: KotlinCoreEnvironment) {
         val frontendOutput = performanceManager.tryMeasurePhaseTime(PhaseType.Analysis) { engine.runFrontend(config, environment) } ?: return
 
-        val (objCExportedInterface, psiToIrOutput, objCCodeSpec) = performanceManager.tryMeasurePhaseTime(PhaseType.TranslationToIr) {
+        val [objCExportedInterface, psiToIrOutput, objCCodeSpec] = performanceManager.tryMeasurePhaseTime(PhaseType.TranslationToIr) {
             val objCExportedInterface = engine.runPhase(ProduceObjCExportInterfacePhase, frontendOutput)
             engine.runPhase(CreateObjCFrameworkPhase, CreateObjCFrameworkInput(frontendOutput.moduleDescriptor, objCExportedInterface))
-            val (psiToIrOutput, objCCodeSpec) = engine.runPsiToIr(frontendOutput, isProducingLibrary = false) {
+            val [psiToIrOutput, objCCodeSpec] = engine.runPsiToIr(frontendOutput, isProducingLibrary = false) {
                 it.runPhase(CreateObjCExportCodeSpecPhase, objCExportedInterface)
             }
             if (config.omitFrameworkBinary) {
@@ -85,7 +85,7 @@ internal class DynamicCompilerDriver(private val performanceManager: Performance
     private fun produceCLibrary(engine: PhaseEngine<PhaseContext>, config: KonanConfig, environment: KotlinCoreEnvironment) {
         val frontendOutput = performanceManager.tryMeasurePhaseTime(PhaseType.Analysis) { engine.runFrontend(config, environment) } ?: return
 
-        val (psiToIrOutput, cAdapterElements) = performanceManager.tryMeasurePhaseTime(PhaseType.TranslationToIr) {
+        val [psiToIrOutput, cAdapterElements] = performanceManager.tryMeasurePhaseTime(PhaseType.TranslationToIr) {
             engine.runPsiToIr(frontendOutput, isProducingLibrary = false) {
                 if (config.cInterfaceGenerationMode == CInterfaceGenerationMode.V1) {
                     it.runPhase(BuildCExports, frontendOutput)

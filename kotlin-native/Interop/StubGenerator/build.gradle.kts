@@ -31,6 +31,7 @@ dependencies {
     implementation(project(":native:kotlin-native-utils"))
     implementation(project(":compiler:util"))
     implementation(project(":compiler:ir.serialization.common"))
+    implementation(project(":kotlin-util-klib-metadata"))
 
     testImplementation(kotlinTest("junit"))
     testCppRuntime(project(":kotlin-native:libclangInterop"))

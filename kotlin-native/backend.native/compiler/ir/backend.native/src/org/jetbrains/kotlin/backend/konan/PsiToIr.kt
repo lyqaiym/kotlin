@@ -49,7 +49,7 @@ internal fun PsiToIrContext.psiToIr(
         useLinkerWhenProducingLibrary: Boolean
 ): PsiToIrOutput {
     val symbolTable = symbolTable!!
-    val (moduleDescriptor, environment, isProducingLibrary) = input
+    val [moduleDescriptor, environment, isProducingLibrary] = input
     // Translate AST to high level IR.
     val messageCollector = config.configuration.messageCollector
 
@@ -74,7 +74,7 @@ internal fun PsiToIrContext.psiToIr(
     val stdlibIsCached = stdlibModule.konanLibrary?.let { config.cachedLibraries.isLibraryCached(it) } == true
     val stdlibIsBeingCached = libraryToCacheModule == stdlibModule
     require(!(stdlibIsCached && stdlibIsBeingCached)) { "The cache for stdlib is already built" }
-    val kFunctionImplIsBeingCached = stdlibIsBeingCached && libraryToCache?.strategy.containsKFunctionImpl
+    val kFunctionImplIsBeingCached = stdlibIsBeingCached && libraryToCache.strategy.containsKFunctionImpl
     val shouldUseLazyFunctionClasses = (stdlibIsCached || stdlibIsBeingCached) && !kFunctionImplIsBeingCached
 
     val stubGenerator = DeclarationStubGeneratorImpl(
@@ -168,7 +168,7 @@ internal fun PsiToIrContext.psiToIr(
                     val kotlinLibrary = (dependency.getCapability(KlibModuleOrigin.CAPABILITY) as? DeserializedKlibModuleOrigin)?.library
                     val isFullyCachedLibrary = kotlinLibrary != null &&
                             config.cachedLibraries.isLibraryCached(kotlinLibrary) && kotlinLibrary != config.libraryToCache?.klib
-                    if (isFullyCachedLibrary && kotlinLibrary?.isHeader == true)
+                    if (isFullyCachedLibrary && kotlinLibrary.isHeader == true)
                         linker.deserializeHeadersWithInlineBodies(dependency, kotlinLibrary)
                     else if (isProducingLibrary || isFullyCachedLibrary)
                         linker.deserializeOnlyHeaderModule(dependency, kotlinLibrary)

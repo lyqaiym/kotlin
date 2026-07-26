@@ -152,7 +152,7 @@ private class BackendChecker(
 
     private fun IrConstructor.overridesConstructor(other: IrConstructor) =
             this.parameters.size == other.parameters.size &&
-                    this.parameters.zip(other.parameters).all { (l, r) ->
+                    this.parameters.zip(other.parameters).all { [l, r] ->
                         l.name == r.name && l.type == r.type
                     }
 
@@ -407,7 +407,7 @@ private class BackendChecker(
 
         when (val intrinsicType = tryGetIntrinsicType(expression)) {
             IntrinsicType.INTEROP_STATIC_C_FUNCTION -> {
-                val (target, captures) = getUnboundReferencedFunction(expression.arguments[0]!!)
+                val [target, captures] = getUnboundReferencedFunction(expression.arguments[0]!!)
 
                 if (target == null || target.symbol !is IrSimpleFunctionSymbol)
                     reportBoundFunctionReferenceError(expression, callee, captures)
@@ -455,7 +455,7 @@ private class BackendChecker(
                     IntrinsicType.INTEROP_NARROW -> if (receiverTypeIndex < typeOperandIndex)
                         reportError(expression, "unable to narrow ${receiver.type.classFqName} to ${typeOperand.classFqName}")
 
-                    else -> error(intrinsicType)
+//                    else -> error(intrinsicType)
                 }
             }
             IntrinsicType.INTEROP_CONVERT -> {
@@ -467,13 +467,13 @@ private class BackendChecker(
                     reportError(expression, "unable to convert ${receiverType.classFqName} to ${typeOperand.classFqName}")
             }
             IntrinsicType.WORKER_EXECUTE -> {
-                val (function, captures) = getUnboundReferencedFunction(expression.arguments[3]!!)
+                val [function, captures] = getUnboundReferencedFunction(expression.arguments[3]!!)
                 if (function == null)
                     reportBoundFunctionReferenceError(expression, callee, captures)
             }
             else -> when {
                 callee.symbol == symbols.createCleaner -> {
-                    val (function, captures) = getUnboundReferencedFunction(expression.arguments[1]!!)
+                    val [function, captures] = getUnboundReferencedFunction(expression.arguments[1]!!)
                     if (function == null)
                         reportBoundFunctionReferenceError(expression, callee, captures)
                 }
@@ -607,7 +607,7 @@ private fun BackendChecker.checkCanGenerateCCall(expression: IrCall, isInvoke: B
     val callee = expression.symbol.owner
 
     if (isInvoke) {
-        for ((idx, param) in callee.parameters.filter { it.kind == IrParameterKind.Regular }.withIndex()) {
+        for ([idx, param] in callee.parameters.filter { it.kind == IrParameterKind.Regular }.withIndex()) {
             checkCanMapCalleeFunctionParameter(
                     type = expression.typeArguments[idx]!!,
                     isObjCMethod = false,
@@ -626,7 +626,7 @@ private fun BackendChecker.checkCanGenerateCCall(expression: IrCall, isInvoke: B
 }
 
 private fun BackendChecker.checkCanAddArguments(arguments: List<IrExpression?>, callee: IrFunction, isObjCMethod: Boolean) {
-    for ((argument, parameter) in arguments.zip(callee.parameters)) {
+    for ([argument, parameter] in arguments.zip(callee.parameters)) {
         if (parameter.isVararg)
             checkCanHandleArgumentForVarargParameter(argument, isObjCMethod)
         else

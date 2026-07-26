@@ -194,8 +194,8 @@ class KonanDriver(
             it.deleteOnExit()
         }
         compilationSpawner.spawn(emptyList()) {
-            fun <T> copy(key: CompilerConfigurationKey<T>) = putIfNotNull(key, configuration.get(key))
-            fun <T> copyNotNull(key: CompilerConfigurationKey<T>) = put(key, configuration.getNotNull(key))
+            fun <T: Any> copy(key: CompilerConfigurationKey<T>) = putIfNotNull(key, configuration.get(key))
+            fun <T: Any> copyNotNull(key: CompilerConfigurationKey<T>) = put(key, configuration.getNotNull(key))
             // For the first stage, use "-p library" produce mode.
             put(KonanConfigKeys.PRODUCE, CompilerOutputKind.LIBRARY)
             copy(KonanConfigKeys.TARGET)

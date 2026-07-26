@@ -67,8 +67,8 @@ class KonanUserVisibleIrModulesSupport(
         }.toMap()
 
         // Stamp dependencies.
-        return modules.mapValues { (moduleId, moduleWithUninitializedDependencies) ->
-            val (module, outgoingDependencyIds) = moduleWithUninitializedDependencies
+        return modules.mapValues { [moduleId, moduleWithUninitializedDependencies] ->
+            val [module, outgoingDependencyIds] = moduleWithUninitializedDependencies
             outgoingDependencyIds.forEach { outgoingDependencyId ->
                 val outgoingDependencyModule = modules.getValue(outgoingDependencyId).module
                 if (outgoingDependencyId in kotlinNativeBundledLibraries) {
@@ -92,7 +92,7 @@ class KonanUserVisibleIrModulesSupport(
         val platformLibraries: MutableList<ResolvedDependency> = mutableListOf() // All platform libraries to be patched.
         val outgoingDependencyIds: MutableSet<ResolvedDependencyId> = mutableSetOf() // All outgoing dependencies from platform libraries.
 
-        for ((moduleId, module) in compressedModules) {
+        for ([moduleId, module] in compressedModules) {
             if (moduleId.isKonanPlatformLibrary) {
                 if (sourceCodeModuleId !in module.requestedVersionsByIncomingDependencies) {
                     continue

@@ -383,7 +383,7 @@ internal class BuiltInFictitiousFunctionIrClassFactory(
                             descriptor.contextReceiverParameters.associateWith { IrParameterKind.Context } +
                             listOfNotNull(descriptor.extensionReceiverParameter).associateWith { IrParameterKind.ExtensionReceiver } +
                             descriptor.valueParameters.associateWith { IrParameterKind.Regular }
-            newFunction.parameters += descriptorParameters.map { (param, kind) -> newFunction.createValueParameter(param, kind) }
+            newFunction.parameters += descriptorParameters.map { [param, kind] -> newFunction.createValueParameter(param, kind) }
 
             newFunction.correspondingPropertySymbol = property
 
