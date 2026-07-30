@@ -237,25 +237,39 @@ abstract class KotlinBasePluginWrapper : DefaultKotlinBasePlugin() {
     ): Plugin<Project>
 }
 
-abstract class AbstractKotlinPluginWrapper(
-    protected val registry: ToolingModelBuilderRegistry,
-) : KotlinBasePluginWrapper() {
+//abstract class AbstractKotlinPluginWrapper(
+//    protected val registry: ToolingModelBuilderRegistry,
+//) : KotlinBasePluginWrapper() {
+//    override fun getPlugin(project: Project): Plugin<Project> =
+//        KotlinJvmPlugin(registry)
+//
+//    override val projectExtensionClass: KClass<out KotlinJvmProjectExtension>
+//        get() = KotlinJvmProjectExtension::class
+//}
+
+abstract class AbstractKotlinPluginWrapper : KotlinBasePluginWrapper() {
     override fun getPlugin(project: Project): Plugin<Project> =
-        KotlinJvmPlugin(registry)
+        KotlinJvmPlugin()
 
     override val projectExtensionClass: KClass<out KotlinJvmProjectExtension>
         get() = KotlinJvmProjectExtension::class
 }
 
-abstract class AbstractKotlinAndroidPluginWrapper(
-    protected val registry: ToolingModelBuilderRegistry,
-) : KotlinBasePluginWrapper() {
+abstract class AbstractKotlinAndroidPluginWrapper : KotlinBasePluginWrapper() {
     override fun getPlugin(project: Project): Plugin<Project> =
-        KotlinAndroidPlugin(registry)
+        KotlinAndroidPlugin()
 
     override val projectExtensionClass: KClass<out KotlinAndroidProjectExtension>
         get() = KotlinAndroidProjectExtension::class
 }
+
+//abstract class AbstractKotlinOhosPluginWrapper : KotlinBasePluginWrapper() {
+//    override fun getPlugin(project: Project): Plugin<Project> =
+//        KotlinOhosPlugin()
+//
+//    override val projectExtensionClass: KClass<out KotlinAndroidProjectExtension>
+//        get() = KotlinAndroidProjectExtension::class
+//}
 
 abstract class AbstractKotlinJsPluginWrapper : KotlinBasePluginWrapper() {
     override fun getPlugin(project: Project): Plugin<Project> =

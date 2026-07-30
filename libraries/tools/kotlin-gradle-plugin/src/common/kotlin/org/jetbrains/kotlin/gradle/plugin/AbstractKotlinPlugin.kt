@@ -45,7 +45,6 @@ private const val JAVA_TEST_FIXTURES_PLUGIN_ID = "java-test-fixtures"
 
 internal abstract class AbstractKotlinPlugin(
     val tasksProvider: KotlinTasksProvider,
-    val registry: ToolingModelBuilderRegistry,
 ) : Plugin<Project> {
 
     internal abstract fun buildSourceSetProcessor(
@@ -54,7 +53,7 @@ internal abstract class AbstractKotlinPlugin(
     ): KotlinSourceSetProcessor<*>
 
     override fun apply(project: Project) {
-        val kotlinPluginVersion = project.getKotlinPluginVersion()
+//        val kotlinPluginVersion = project.getKotlinPluginVersion()
         project.plugins.apply(JavaPlugin::class.java)
 
         val target = (project.kotlinExtension as KotlinSingleJavaTargetExtension).target
@@ -67,7 +66,7 @@ internal abstract class AbstractKotlinPlugin(
         rewriteMppDependenciesInPom(target)
 
         configureClassInspectionForIC(project)
-        registry.register(KotlinModelBuilder(kotlinPluginVersion, null))
+//        registry.register(KotlinModelBuilder(kotlinPluginVersion, null))
 
         project.components.addAll(target.components)
 

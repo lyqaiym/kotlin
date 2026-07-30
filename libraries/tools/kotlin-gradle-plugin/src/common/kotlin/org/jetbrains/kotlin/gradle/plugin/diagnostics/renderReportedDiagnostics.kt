@@ -10,6 +10,54 @@ import org.gradle.api.logging.Logger
 import org.gradle.api.logging.configuration.WarningMode
 import org.jetbrains.kotlin.gradle.plugin.diagnostics.ToolingDiagnostic.Severity.*
 
+internal sealed class ReportedDiagnostic(val severity: ToolingDiagnostic.Severity) {
+    class Message(
+        severity: ToolingDiagnostic.Severity
+    ) : ReportedDiagnostic(severity)
+
+    class Throwable(
+        severity: ToolingDiagnostic.Severity,
+        val throwable: KotlinDiagnosticsException,
+    ) : ReportedDiagnostic(severity)
+}
+
+internal fun ToolingDiagnostic.renderReportedDiagnostic(
+    logger: Logger,
+    renderingOptions: ToolingDiagnosticRenderingOptions
+): ReportedDiagnostic? {
+    if (isSuppressed(renderingOptions)) return null
+    val effectiveSeverity = renderingOptions.effectiveSeverity(severity) ?: return null
+    val message by lazy { render(renderingOptions, effectiveSeverity = effectiveSeverity) }
+
+    if (renderingOptions.displayDiagnosticsInIdeBuildLog) {
+        /**
+         * IDE parses out the message by \n but also displays \r multiline messages.
+         */
+        val hideTrailingLineFromGeneralLog = "\r "
+        fun makeIdeDisplayMultilineMessage(message: String) = message.replace("\n", "\r") + hideTrailingLineFromGeneralLog
+        when (effectiveSeverity) {
+            WARNING -> logger.warn("warning: ${makeIdeDisplayMultilineMessage(message)}\n")
+            STRONG_WARNING, ERROR -> logger.error("error: ${makeIdeDisplayMultilineMessage(message)}\n")
+            FATAL -> {}
+        }
+    }
+
+    /**
+     * When IDE parses out the diagnostic with "warning/error:" prefix, it doesn't display it in the general build log. Always emit a
+     * duplicate even in IDE to display the diagnostic in the general log also.
+     */
+    when (effectiveSeverity) {
+        WARNING -> logger.warn("w: ${message}\n")
+        STRONG_WARNING, ERROR -> logger.error("e: ${message}\n")
+        FATAL -> {}
+    }
+
+    return if (effectiveSeverity == FATAL)
+        ReportedDiagnostic.Throwable(effectiveSeverity, createAnExceptionForFatalDiagnostic(renderingOptions))
+    else
+        ReportedDiagnostic.Message(effectiveSeverity)
+}
+
 internal fun renderReportedDiagnostics(
     diagnostics: Collection<ToolingDiagnostic>,
     logger: Logger,
@@ -43,7 +91,7 @@ internal fun renderReportedDiagnostic(
 
     when (effectiveSeverity) {
         WARNING -> logger.warn("w: ${diagnostic.render(renderingOptions)}\n")
-        ERROR -> logger.error("e: ${diagnostic.render(renderingOptions)}\n")
+        STRONG_WARNING,ERROR -> logger.error("e: ${diagnostic.render(renderingOptions)}\n")
         FATAL -> throw diagnostic.createAnExceptionForFatalDiagnostic(renderingOptions)
     }
 }
@@ -64,13 +112,18 @@ internal fun ToolingDiagnostic.createAnExceptionForFatalDiagnostic(
 private fun ToolingDiagnostic.render(
     renderingOptions: ToolingDiagnosticRenderingOptions,
     showStacktrace: Boolean = renderingOptions.showStacktrace,
+    coloredOutput: Boolean = renderingOptions.coloredOutput,
+    effectiveSeverity: ToolingDiagnostic.Severity = severity
 ): String = buildString {
     with(renderingOptions) {
-        val diagnosticOutput = if (coloredOutput) styled(showSeverityEmoji) else plain(showSeverityEmoji)
+        val diagnosticOutput = if (coloredOutput)
+            styled(showSeverityEmoji, effectiveSeverity)
+        else
+            plain(showSeverityEmoji, effectiveSeverity)
 
         // Main message
         if (useParsableFormat) {
-            appendLine(this@render)
+            appendLine(parsableFormat(effectiveSeverity))
         } else {
             appendLine(diagnosticOutput.name)
             appendLine(diagnosticOutput.message)

@@ -18,9 +18,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinTasksProvider
 import org.jetbrains.kotlin.gradle.utils.androidPluginIds
 import org.jetbrains.kotlin.gradle.utils.whenEvaluated
 
-internal open class KotlinAndroidPlugin(
-    private val registry: ToolingModelBuilderRegistry
-) : Plugin<Project> {
+internal open class KotlinAndroidPlugin() : Plugin<Project> {
 
     override fun apply(project: Project) {
         project.dynamicallyApplyWhenAndroidPluginIsApplied(
@@ -43,7 +41,7 @@ internal open class KotlinAndroidPlugin(
                 target
             }
         ) { androidTarget ->
-            registry.register(KotlinModelBuilder(project.getKotlinPluginVersion(), androidTarget))
+//            registry.register(KotlinModelBuilder(project.getKotlinPluginVersion(), androidTarget))
             project.whenEvaluated { project.components.addAll(androidTarget.components) }
         }
     }

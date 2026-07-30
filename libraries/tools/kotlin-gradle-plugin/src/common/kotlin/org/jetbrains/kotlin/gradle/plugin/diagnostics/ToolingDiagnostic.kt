@@ -67,6 +67,12 @@ internal data class ToolingDiagnostic(
         ERROR,
 
         /**
+         * Same display as [ERROR] but will not fail the compilation.
+         *
+         * See [org.jetbrains.kotlin.gradle.plugin.diagnostics.CheckKotlinGradlePluginConfigurationErrors]
+         */
+        STRONG_WARNING,
+        /**
          * Aborts the progress of the current process (Gradle build/Import/...).
          *
          * Please use *extremely* sparingly, as failing the current process can:
@@ -86,6 +92,18 @@ internal data class ToolingDiagnostic(
     val id: String get() = identifier.id
     val name: String get() = identifier.displayName
     val group: DiagnosticGroup get() = identifier.group
+
+    internal fun parsableFormat(effectiveSeverity: Severity) = buildString {
+        append("[$id | $effectiveSeverity]")
+        appendLine(" $name")
+        appendLine(message)
+
+        val subLines = solutions + listOfNotNull(documentation?.additionalUrlContext)
+
+        subLines.filter { it.isNotBlank() }.forEach { subLine ->
+            appendLine(subLine)
+        }
+    }.trimEnd()
 
     override fun toString() = buildString {
         append("[$id | $severity]")

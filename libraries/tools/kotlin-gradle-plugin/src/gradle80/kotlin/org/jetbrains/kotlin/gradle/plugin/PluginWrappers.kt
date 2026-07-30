@@ -22,9 +22,7 @@ open class KotlinPluginWrapper : AbstractKotlinPluginWrapper() {
     }
 }
 
-open class KotlinAndroidPluginWrapper @Inject constructor(
-    registry: ToolingModelBuilderRegistry
-) : AbstractKotlinAndroidPluginWrapper(registry) {
+open class KotlinAndroidPluginWrapper : AbstractKotlinAndroidPluginWrapper() {
 
     override val pluginVariant: String = PLUGIN_VARIANT_NAME
 

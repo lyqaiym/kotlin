@@ -114,6 +114,7 @@ fun MavenPublication.configureKotlinPomAttributes(
     packaging: String = "jar",
     explicitName: Provider<String>,
 ) {
+    println("configureKotlinPomAttributes(start):project=${project.name}")
     val publication = this
     pom {
         this.packaging = packaging
@@ -139,6 +140,7 @@ fun MavenPublication.configureKotlinPomAttributes(
             }
         }
     }
+    println("configureKotlinPomAttributes(end):project=${project.name}")
 }
 
 val Project.signLibraryPublication: Boolean

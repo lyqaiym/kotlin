@@ -20,11 +20,79 @@ import java.util.*
  *
  * @since 2.2.0
  */
-internal interface DiagnosticGroup {
+internal sealed interface DiagnosticGroup {
     val groupId: String
     val displayName: String
     val groupPath: String
     val parent: DiagnosticGroup?
+
+    /**
+     * Base implementation for DiagnosticGroup that provides common functionality.
+     */
+    abstract class Base : DiagnosticGroup {
+        override fun toString() = "$groupId | $displayName | parent: [$parent]"
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is DiagnosticGroup) return false
+            return groupId == other.groupId && parent == other.parent
+        }
+
+        override fun hashCode(): Int = Objects.hash(groupId, parent)
+    }
+
+    /**
+     * Represents a diagnostic group for generic Kotlin related diagnostics.
+     */
+    object KotlinDiagnosticGroup : Base() {
+        override val groupId: String = GroupId.KOTLIN
+        override val displayName: String = "Kotlin"
+        override val parent: DiagnosticGroup? = null
+        override val groupPath: String = groupId.lowercase(Locale.getDefault())
+    }
+
+    /**
+     * Represents a hierarchical structure of diagnostic groups related to compiler diagnostics.
+     */
+    sealed class Compiler(
+        private val category: String? = null,
+    ) : Base() {
+        override val groupId: String = when (category) {
+            Category.ERROR, Category.WARNING -> "${GroupId.COMPILER}:$category"
+            else -> GroupId.COMPILER
+        }
+
+        override val parent: DiagnosticGroup = KotlinDiagnosticGroup
+
+        override val displayName: String
+            get() = buildString {
+                append("Kotlin Compiler")
+                category?.let {
+                    append(" ${Category.getDisplayName(it)}")
+                }
+            }
+
+        override val groupPath: String = buildString {
+            append(parent.groupPath)
+            append(":")
+            append(groupId.lowercase(Locale.getDefault()))
+        }
+
+        private object Category {
+            const val ERROR = "ERROR"
+            const val WARNING = "WARNING"
+
+            fun getDisplayName(category: String): String = when (category) {
+                ERROR -> "Error"
+                WARNING -> "Warning"
+                else -> throw IllegalArgumentException("Unknown category: $category")
+            }
+        }
+
+        object Default : Compiler()
+        object Error : Compiler(Category.ERROR)
+        object Warning : Compiler(Category.WARNING)
+    }
 }
 
 /**
@@ -69,10 +137,10 @@ internal object DiagnosticGroups {
  *
  * @since 2.2.0
  */
-private object GroupId {
-    const val KOTLIN = "KOTLIN"
-    const val KGP = "KGP"
-}
+//private object GroupId {
+//    const val KOTLIN = "KOTLIN"
+//    const val KGP = "KGP"
+//}
 
 /**
  * Represents a hierarchical structure of diagnostic groups related to tooling in the Kotlin Gradle Plugin.
@@ -150,4 +218,18 @@ private sealed class ToolingDiagnosticGroup private constructor(
     }
 
     override fun hashCode(): Int = Objects.hash(groupId, parent)
+}
+
+/**
+ * Holds constants representing group identifiers for diagnostic messages within the Kotlin Gradle Plugin.
+ *
+ * These group identifiers are used to classify and organize diagnostics,
+ * ensuring they are correctly grouped and identifiable by their categories.
+ *
+ * @since 2.2.0
+ */
+public object GroupId {
+    const val KOTLIN = "KOTLIN"
+    const val KGP = "KGP"
+    const val COMPILER = "COMPILER"
 }

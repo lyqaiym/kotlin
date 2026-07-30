@@ -26,6 +26,9 @@ dependencies {
 //    api(project(":utilities"))
 //    kotlin-build-gradle-plugin-0.0.40.jar
 //    implementation("org.jetbrains.kotlin:kotlin-build-gradle-plugin:${kotlinBuildProperties.buildGradlePluginVersion}")
+//    java.lang.ExceptionInInitializerError (no error message)
+//    > No XmlService implementation found
+    runtimeOnly(libs.maven.xml.impl)
     implementation(kotlinBuildHelpers())
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.platform.launcher)
