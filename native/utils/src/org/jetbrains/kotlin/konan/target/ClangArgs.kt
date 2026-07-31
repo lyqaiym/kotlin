@@ -162,10 +162,12 @@ sealed class ClangArgs(
         KonanTarget.OHOS_ARM64 -> listOf(
             "-mcpu=$targetCPU",
             "-I$absoluteLlvmHome/include/libcxx-ohos/include/c++/v1",
-            "-I$absoluteLlvmHome/include/libcxx-ohos/include/",
-            "-I$absoluteLlvmHome/include/c++/v1",
-            "-I$absoluteLlvmHome/lib/clang/19/include/",
-            "-I$absoluteLlvmHome/lib/clang/23/include/",
+//            "-I$absoluteLlvmHome/include/libcxx-ohos/include/",
+//            /Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/native/sysroot/usr/include/netinet/in.h:12:9:
+//            error: unknown type name 'uint16_t' at org.jetbrains.kotlin.native.interop.indexer.UtilsKt.ensureNoCompileErrors(Utils.kt:305)
+//            "-I$absoluteLlvmHome/include/c++/v1",
+//            "-I$absoluteLlvmHome/lib/clang/19/include/",
+//            "-I$absoluteLlvmHome/lib/clang/23/include/",
             "-I$absoluteTargetSysRoot/usr/include",
             "-I$absoluteTargetSysRoot/usr/include/$targetTriple",
         )
